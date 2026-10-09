@@ -60,3 +60,13 @@ hoặc file `.json`, và nhập lại ở trình duyệt khác.
 Không dùng GitHub Actions. Chạy `npm run deploy`: build với base `/vibe_code_game/` rồi đẩy `dist/` lên nhánh `gh-pages`.
 Việc thủ công một lần: Settings → Pages → Source = **Deploy from a branch** → nhánh `gh-pages`, thư mục `/ (root)`.
 Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run test:e2e`.
+
+## Subagent cho Claude Code
+
+Định nghĩa trong `.claude/agents/`. Luồng làm việc khuyên dùng:
+
+1. `planner`: khảo sát và ghi kế hoạch vào `docs/plans/` (không viết code)
+2. `gameplay-dev`: làm theo plan, mỗi task có test và một commit
+3. `golden-guardian`: chạy unit, check:handlers và e2e, chẩn đoán khi golden lệch (chỉ báo cáo)
+4. `code-reviewer`: review diff so với `main` trước khi merge hoặc deploy (chỉ đọc)
+5. `balance-analyst`: mô phỏng nhiều seed để phân tích cân bằng game (chỉ đọc)
