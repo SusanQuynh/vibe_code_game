@@ -1,0 +1,45 @@
+/* ===== contents deck ===== */
+.deck{margin-top:22px}
+.dock{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:12px;scroll-snap-type:x proximity}
+.dock::-webkit-scrollbar{display:none}
+.dock button{position:relative;flex:none;min-width:74px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px 11px;border:0;background:none;font:500 12px/1.15 var(--f-body);color:var(--muted);text-align:center;scroll-snap-align:start;transition:color .2s}
+.dock .di{font-size:22px;line-height:1.1;filter:grayscale(.55) brightness(.9);transition:filter .2s,transform .25s cubic-bezier(.2,.8,.2,1)}
+.dock button::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2px;border-radius:2px;background:var(--accent);transform:scaleX(0);transition:transform .25s}
+.dock button.on{color:var(--ink)}
+.dock button.on::after{transform:scaleX(1)}
+.dock button.on .di,.dock button:hover .di{filter:none;transform:translateY(-1px)}
+.dock button:not(.on):hover{color:var(--ink)}
+.dock .badge{top:4px;right:6px}
+.deckin{padding-top:18px;display:flex;flex-direction:column;gap:18px}
+/* PC: every room visible at once, 2 rows x 8, no sideways scrolling */
+@media (min-width:720px){
+  .dock{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;overflow:visible;margin-inline:0;padding:0;border-bottom:0}
+  .dock button{min-width:0;min-height:76px;justify-content:center;gap:6px;padding:10px 4px 9px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:12px;line-height:1.2;text-wrap:balance;transition:color .2s,border-color .2s,background .2s}
+  .dock button:hover{border-color:var(--line2);background:var(--card2)}
+  .dock button.on{background:var(--card2);border-color:rgba(242,85,127,.55)}
+  .dock button::after{left:22%;right:22%;bottom:-1px}
+  .dock .di{font-size:22px}
+  .dock .badge{top:4px;right:4px;white-space:nowrap;font-size:9.5px;padding:0 4px;max-width:calc(100% - 8px);overflow:hidden;text-overflow:ellipsis}
+}
+
+.kick,.outside .lbl{font:500 10px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.outside{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.outside:empty{display:none}
+.outside .lbl{flex-basis:100%;margin-bottom:2px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:3px 11px 3px 3px;font-size:12.5px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;transition:border-color .2s}
+.chip:hover{border-color:var(--muted)}
+.chip .dot{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px}
+
+.trendbar{display:flex;gap:6px 8px;align-items:center;flex-wrap:wrap;width:100%;text-align:left;cursor:pointer;color:var(--ink);font-size:13.5px;
+  background:linear-gradient(90deg,var(--accent-soft),transparent 70%),var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:border-color .2s}
+.trendbar:hover{border-color:rgba(242,85,127,.5)}
+.trendbar b{color:var(--accent);font-weight:600}
+
+.logbox{background:transparent;border-top:1px solid var(--line);padding-top:16px}
+.lhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ava{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:22px;background:var(--card);border:1px solid var(--line2)}
+.logbox h3{font:italic 500 26px/1 var(--f-disp);color:var(--ink)}
+.log{font-size:13.5px;max-height:320px;overflow:auto;scrollbar-width:thin}
+.log div{padding:8px 0;border-bottom:1px solid var(--line);color:#ddd3cb}
+.log .w{font:500 10.5px var(--f-mono);color:var(--dim);margin-right:8px;letter-spacing:.04em}
+.log .good{color:var(--good)} .log .bad{color:var(--bad)} .log .gold{color:var(--warn);font-weight:500}
