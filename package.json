@@ -22,8 +22,6 @@
   "homepage": "https://github.com/SusanQuynh/vibe_code_game#readme",
   "devDependencies": {
     "@playwright/test": "^1.56.0",
-    "acorn": "^8.14.0",
-    "acorn-walk": "^8.3.4",
     "jsdom": "^25.0.1",
     "serve-handler": "^6.1.6",
     "vite": "^5.4.10",
