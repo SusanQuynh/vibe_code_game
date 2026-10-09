@@ -1,0 +1,6 @@
+/* ===== CTA ===== */
+.next{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(728px,calc(100% - 32px));
+  background:var(--accent);color:var(--on-accent);border:0;border-radius:14px;padding:14px 18px;font:italic 600 22px/1.15 var(--f-disp);letter-spacing:-.01em;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 14px 34px -10px rgba(242,85,127,.6);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s}
+.next:hover{background:#f5688d}
+.next:active{transform:translateX(-50%) translateY(2px) scale(.99)}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Starlight Ent.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%9F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,500;0,600;0,700;1,400;1,500;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="hrow">
+      <div class="day"><b id="date"></b><small id="yearL"></small></div>
+      <div class="cash"><small>Quỹ công ty</small><b id="money"></b><span class="meta"><span class="obadge" id="artN"></span> · <span id="fansP"></span></span></div>
+      <div class="hbtns">
+        <button class="rb r1" onclick="view(viewCode)" aria-label="Lưu / chuyển game">🔑</button>
+        <button class="rb r2" onclick="view(viewEvents)" aria-label="Sự kiện">🔔<b id="evn" hidden>0</b></button>
+        <button class="rb r3" onclick="tutStart(1)" aria-label="Hướng dẫn">❓</button>
+      </div>
+    </div>
+  </header>
+  <div class="bld">
+    <div class="stars"></div><div class="sun"></div><div class="cloud" style="top:30px;width:70px;animation-delay:-20s"></div><div class="cloud" style="top:56px;width:48px;animation-duration:120s;animation-delay:-60s"></div>
+    <div class="roof"><span class="ant" style="left:12%"></span><span class="ant" style="right:16%"></span><div class="bill"><span class="sign">Starlight<em>Ent.</em></span><small id="roofInfo"></small></div></div>
+    <div class="facade" id="facade"></div>
+    <div class="ground" aria-hidden="true"></div>
+  </div>
+  <section class="deck">
+    <nav class="dock" id="dock" aria-label="Phòng ban"></nav>
+    <div class="deckin">
+      <div class="outside" id="outside"></div>
+      <button class="trendbar" id="trendBar" onclick="openRoom('market')"></button>
+      <div class="logbox"><div class="lhead"><span class="ava" aria-hidden="true">🐼</span><div><h3>Nhật ký công ty</h3><div class="saved" id="saved"></div></div></div><div class="log" id="log"></div></div>
+    </div>
+  </section>
+  <button class="next" id="nextBtn" onclick="nextWeek()">Kết thúc tuần</button>
+</div>
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeM()"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
