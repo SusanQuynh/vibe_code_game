@@ -376,7 +376,7 @@ const defaultDays=k=>k==='rest'?Array(7).fill('rest'):[k,k,k,k,k,'rest','rest'];
 function ensureDays(a){if(!Array.isArray(a.days)||a.days.length!==7)a.days=defaultDays(a.sched||'vocal');a.days=a.days.map(k=>TRAIN[k]?k:'rest')}
 const daysMini=a=>a.days.map(k=>TIC[k]).join('');
 const trainDays=a=>a.days.filter(k=>k!=='rest').length;
-function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)}
+function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)}
 const TIC={vocal:'🎤',dance:'🪩',rap:'🎧',acting:'🎭',variety:'😂',gym:'🏋️',rest:'🛌'};
 const STAT2T={vocal:'vocal',dance:'dance',rap:'rap',acting:'acting',variety:'variety',visual:'gym',stamina:'gym'};
 function focusKeys(a){const idol=groupsOf(a).length||a.solo;if(a.status==='trainee')return['vocal','dance','rap','visual'];if(a.actor&&!idol)return['acting','visual','variety','stamina'];if(a.actor)return['vocal','dance','acting','visual','variety'];return['vocal','dance','rap','visual','variety','stamina']}
@@ -389,6 +389,7 @@ function planWeek(a,skill=10){
     if(k==='rest'){e=Math.min(100,e+12);mo=Math.min(100,mo+1.2)}else{e=Math.max(0,e+TRAIN[k].e*.3);mo-=.3}
     out.push(k)}
   if(!out.includes('rest'))out[6]='rest';
+  if(a.restRec&&a.restRec>abs()){let c=out.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<(a.restN||3);i--)if(out[i]!=='rest'){out[i]='rest';c++}}
   return out;
 }
 function planWhy(a){if(a.energy<40)return'năng lượng đang thấp nên cần nghỉ trước';if(a.mood<28)return'tâm trạng đang xấu';if(a.wantAct)return'đang muốn đóng phim';const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return`ưu tiên ${STATS[k]} đang yếu nhất (${Math.round(a.st[k])}), nghỉ để giữ năng lượng`}
@@ -1479,7 +1480,7 @@ let toastT;function toast(t){let el=$('#toast');if(!el){el=document.createElemen
 
 /* ================= VIEWS ================= */
 function bars(a){return`<div class="bars">${Object.keys(STATS).map(k=>`<span>${STATS[k]}</span><div class="bar"><i style="width:${a.st[k]}%"></i></div><b>${Math.round(a.st[k])}</b>`).join('')}</div>`}
-function aTags(a){let t=a.status==='trainee'?'<span class="tag">Thực tập sinh</span>':'';groupsOf(a).forEach(g=>t+=`<span class="tag v">👥 ${esc(g.name)}</span>`);if(a.solo)t+='<span class="tag p">Solo</span>';if(a.actor)t+='<span class="tag m">Diễn viên</span>';if(a.scandal)t+='<span class="tag r">Scandal</span>';if(dHold(a))t+='<span class="tag s">🎊 Chừa lịch debut</span>';if(a.mt&&byId(a.mt))t+=`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`;if(a.status==='debuted'&&a.ce&&a.ce-abs()<=8)t+=`<span class="tag r">📄 HĐ còn ${a.ce-abs()}t</span>`;{const h=cbHold(a);if(h)t+=`<span class="tag p">📅 Chừa lịch comeback ${wkLabel(h.w)}</span>`}return t}
+function aTags(a){let t=a.status==='trainee'?'<span class="tag">Thực tập sinh</span>':'';groupsOf(a).forEach(g=>t+=`<span class="tag v">👥 ${esc(g.name)}</span>`);if(a.solo)t+='<span class="tag p">Solo</span>';if(a.actor)t+='<span class="tag m">Diễn viên</span>';if(a.scandal)t+='<span class="tag r">Scandal</span>';if(dHold(a))t+='<span class="tag s">🎊 Chừa lịch debut</span>';if(a.mt&&byId(a.mt))t+=`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`;if(a.status==='debuted'&&a.ce&&a.ce-abs()<=8)t+=`<span class="tag r">📄 HĐ còn ${a.ce-abs()}t</span>`;{const h=cbHold(a);if(h)t+=`<span class="tag p">📅 Chừa lịch comeback ${wkLabel(h.w)}</span>`}if(a.pa)t+=`<span class="tag m">🧑‍💻 ${esc(a.pa.name)}</span>`;if(a.restRec>abs())t+='<span class="tag">🛌 Lịch nghỉ thêm</span>';else if(a.hsF&&a.hsF.w>=abs()-3&&a.hsF.st!=='ok')t+='<span class="tag r">🩺 Cần nghỉ</span>';return t}
 function schedSel(a){const m=mgrSchedules(a);return`<span class="dmini" title="${a.days.map((k,i)=>DAYS[i]+': '+TRAIN[k].n).join(', ')}">${daysMini(a)}</span>`+(m?`<span class="tag v">📋 QL xếp</span>`:`<button class="btn sm" onclick="startPlanOne(${a.id})">Sửa</button>`)}
 function wTable(obj){const ks=Object.keys(STATS);return`<div class="tbl"><table><tr><th></th>${ks.map(k=>`<th>${STATS[k]}</th>`).join('')}</tr>${Object.values(obj).map(c=>`<tr><td><b>${c.n}</b></td>${ks.map(k=>{const v=c.w[k]||0;return`<td>${v?`<span class="hm" style="padding:1px 5px;background:rgba(242,85,127,${v*.75})">${Math.round(v*100)}%</span>`:'·'}</td>`}).join('')}</tr>`).join('')}</table></div>`}
 function artistLine(a,right=''){return`<div class="card row"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.busy?'🚶 '+esc(a.busy.title):daysMini(a)+' · '+TRAIN[a.days[0]].n+' hôm nay'} · ⚡${Math.round(a.energy)} · 🙂${Math.round(a.mood)}</span><span class="sp"></span>${right}</div>`}
@@ -1726,7 +1727,7 @@ const RV={
   },
   vocal(){modal(trainRoom(ROOMS[4],'vocal'))},
   dance(){modal(trainRoom(ROOMS[5],'dance'))},
-  gym(){modal(trainRoom(ROOMS[6],'gym'))},
+  gym(){modal(trainRoom(ROOMS[6],'gym',hsHTML()))},
   pr(){
     const sc=S.artists.filter(a=>a.scandal);
     const pl=prPlans();
@@ -1765,6 +1766,11 @@ const RV={
     for(const a of S.artists)for(const id in a.tag){const k=[a.id,+id].sort().join('-');if(seen.has(k))continue;seen.add(k);const b=byId(+id);if(b)pairs.push({a,b,t:a.tag[id],v:getRel(a,b)})}
     const TN={friend:'🤝 Bạn thân',enemy:'⚡ Mâu thuẫn',dating:'💞 Hẹn hò bí mật',public:'💌 Hẹn hò công khai'};
     modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',`💞 Quan hệ nội bộ (${pairs.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ cùng nhóm hoặc cùng phòng tập dễ thân nhau hơn. Quan hệ tạo ra sự kiện bạn bè, mâu thuẫn, hẹn hò.</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${TN[p.t]} <span class="muted">(${p.v})</span></div>`).join('')||'<div class="card small muted">Chưa có mối quan hệ đặc biệt nào.</div>'}`,true)}`));
+    /* v3: giao lưu ngoài công ty + trợ lý cá nhân */
+    const p=$('#sheet .panel');if(!p)return;
+  const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
+  const ml=S.artists.filter(a=>a.pa);
+  p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 Giao lưu ngoài công ty (${L.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ gặp idol công ty khác ở show âm nhạc, hậu trường, livestream. Quan hệ tốt mở ra lời mời hợp tác; thân quá dễ thành tin đồn.</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||'<div class="small muted">Chưa có giao lưu nào.</div>'}`,false)+(ml.length?det('dm-pa',`🧑‍💻 Trợ lý cá nhân (${ml.length})`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v}</div>`).join(''),false):''));
   }
 };
 
@@ -2018,6 +2024,7 @@ function viewSongs(){curRC='var(--r-studio)';const L=S.songs||[],rv=L.filter(s=>
 /* ---- Thông tin & xử lý sự kiện mới ---- */
 const XK=['mx','mp','disband','renew'];
 function xInfo(e){
+  if(e.kind==='v3')return v3Info(e);
   if(e.kind==='mx'){const D=MXS[e.mx],a=byId(e.a),m=S.managers.find(x=>x.id===e.m);if(!D||!a||!m)return null;return{ic:D.ic,t:D.t(a,m,e),d:D.d(a,m,e),o:D.o(a,m,e)}}
   if(e.kind==='mp'){const m=S.managers.find(x=>x.id===e.m);if(!m)return null;
     if(e.t==='asst')return{ic:'🧑‍💻',t:`QL ${m.name} đề xuất tuyển trợ lý`,d:`${m.name} muốn tuyển trợ lý ${e.name} chuyên ${MSK[e.k]} để san sẻ việc. Kỹ năng ${MSK[e.k]} của quản lý ${effSk(m,e.k)} → ${Math.min(10,effSk(m,e.k)+e.v)} (giúp mọi nghệ sĩ QL phụ trách). Phí tuyển ${fmt(e.fee)}, lương ${fmt(e.sal)}/tuần.`,o:[{k:'yes',l:`Tuyển (${fmt(e.fee)})`},{k:'no',l:'Từ chối'}]};
@@ -2027,6 +2034,7 @@ function xInfo(e){
   if(e.kind==='renew'){const a=byId(e.a);if(!a)return null;return{ic:'📄',t:`Tái ký hợp đồng: ${a.name}`,d:`Hợp đồng của ${a.name} hết hạn sau ${a.ce-abs()} tuần. Nếu không tái ký, nghệ sĩ sẽ rời công ty.`,o:renewOpts(a,e.mul)}}
   return undefined}
 function xResolve(e,k){
+  if(e.kind==='v3')return v3Resolve(e,k);
   if(e.kind==='mx'){const D=MXS[e.mx],a=byId(e.a),m=S.managers.find(x=>x.id===e.m);if(!D||!a||!m||!D.r[k])return;const r=D.r[k](a,m,e);if(r)addLog(r[0],r[1]||'');return}
   if(e.kind==='mp'){const m=S.managers.find(x=>x.id===e.m);if(!m)return;
     if(e.t==='asst'){if(k==='yes'){if(!hireAsst(m.id,e.k,e.v,e.name,e.fee,e.sal))S.events.push(e)}else addLog(`🙅 Từ chối đề xuất tuyển trợ lý của ${m.name}.`);return}
@@ -2042,7 +2050,7 @@ function xResolve(e,k){
 function weekV2(){mentorTick();songTick();digTick();
   {const t=(S.assts||[]).reduce((s,x)=>s+x.sal,0);if(t){S.money-=t;book('mgr',-t)}}
   contractTick();debutHoldTick();disbandTick();mxTick();
-  if(Math.random()<compRep()/120&&S.pool.length<poolSize()+4){const a=genArtist();S.pool.push(a);addLog(`📨 ${a.name} (${a.g==='F'?'nữ':'nam'}, ${a.age}) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.`,'good')}}
+  if(Math.random()<compRep()/120&&S.pool.length<poolSize()+4){const a=genArtist();S.pool.push(a);addLog(`📨 ${a.name} (${a.g==='F'?'nữ':'nam'}, ${a.age}) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.`,'good')};migrateV3();v3Tick()}
 function migrateV2(){S.assts=S.assts||[];S.songs=S.songs||[];S.fin=S.fin||[];
   if(!S.bno)S.bno=Math.max(S.batches.length,...S.batches.map(b=>+((b.n.match(/\d+/)||[0])[0])));
   for(const m of S.managers){if(!m.as)continue;const t=m.as.t;
@@ -2144,7 +2152,6 @@ function hsRisk(a){const td=trainDays(a),r=[];ensureDays(a);if(a.energy<35)r.pus
 function applyRest(a,n){if(a.busy)return;ensureDays(a);const d=a.days.slice();let c=d.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<n;i--)if(d[i]!=='rest'){d[i]='rest';c++}a.days=d}
 function restDo(a,n,by){applyRest(a,n);a.restRec=abs()+2;a.restN=n;if(a.hsF)a.hsF.st='ok';MOOD(a,4);addLog(`🛌 ${by} cho ${a.name} nghỉ ${n} ngày/tuần trong 2 tuần theo khuyến nghị sức khỏe.`,'good')}
 function hsApply(id){const a=byId(id);if(!a||!a.hsF)return;restDo(a,a.hsF.n,'Giám đốc');S.events=S.events.filter(e=>!(e.kind==='v3'&&e.t==='hs'&&e.a===id));act()}
-const _pw=planWeek;planWeek=function(a,skill){const d=_pw(a,skill);if(a.restRec&&a.restRec>abs()){let c=d.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<(a.restN||3);i--)if(d[i]!=='rest'){d[i]='rest';c++}}return d};
 function hsTick(){if(!S.hs)return;let n=0;const ch=.4+S.hs.sk*.12;
   const L=S.artists.filter(a=>!a.busy&&!(a.hsF&&a.hsF.w>abs()-3)&&!(a.restRec>abs())).map(a=>({a,r:hsRisk(a)})).filter(x=>x.r.length).sort((x,y)=>y.r.length-x.r.length);
   for(const {a,r} of L){if(Math.random()>ch)continue;const need=clamp(Math.max(restN(a)+1,2+r.length),2,5),m=mgrOf(a)||null;a.hsF={w:abs(),why:r,n:need,st:'new'};
@@ -2156,7 +2163,6 @@ function hsHTML(){const fl=S.artists.filter(a=>a.hsF&&a.hsF.w>=abs()-3).sort((x,
   else{if(!S.hsC)genHSC();h+=`<div class="small muted" style="margin-bottom:6px">Chưa có chuyên gia. Chuyên gia sẽ phát hiện nghệ sĩ/TTS cần thêm lịch nghỉ và báo quản lý cân nhắc.</div>${S.hsC.map(c=>`<div class="card row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small" style="flex:1"><b>${esc(c.name)}</b><br>Chuyên môn ${c.sk}/5 · lương ${fmt(c.sal)}/tuần</div><button class="btn sm pri" onclick="hsHire(${c.id})">Tuyển (${fmt(c.fee)})</button></div>`).join('')}`}
   h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>Cần thêm lịch nghỉ (${fl.length})</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?'TTS · ':''}${esc(a.hsF.why.join(', '))} · đề xuất ${a.hsF.n} ngày nghỉ${m?' · QL '+esc(m.name):''}</span><span class="sp"></span>${a.hsF.st==='ok'?'<span class="tag m">✓ đã cho nghỉ</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`}).join('')}`:(S.hs?'<div class="small muted">Chưa phát hiện ai cần nghỉ thêm.</div>':'');
   return h}
-const _gym=RV.gym;RV.gym=function(){modal(trainRoom(ROOMS[6],'gym',hsHTML()))};
 
 /* ---- Debut đầu tuần: hỏi nhóm hay solo ---- */
 function dOpts(a){if(a.status!=='trainee')return null;const r=debutRec(a);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];
@@ -2240,8 +2246,6 @@ function v3Tick(){const evN=()=>S.events.filter(e=>e.kind==='v3').length;
   {const t=S.artists.reduce((x,a)=>x+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0);if(t){S.money-=t;book('mgr',-t)}}
   if(S.week%8===0&&!S.hs)genHSC();
 }
-const _w2=weekV2;weekV2=function(){_w2();migrateV3();v3Tick()};
-const _wc=weekCost;weekCost=function(){return _wc()+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)};
 
 /* ---- Sự kiện v3 ---- */
 function v3Info(e){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
@@ -2288,11 +2292,8 @@ function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
     else{setMrel(x,y,mrel(x,y)-10);addLog(`⚡ QL ${x.name} và ${y.name} tự giải quyết nhưng vẫn còn khúc mắc.`)}return}
   case'mmcoach':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;if(k==='yes'&&canKid(x,y)){y.boss=x.id;setMrel(x,y,mrel(x,y)+10);addLog(`👔 QL ${x.name} nhận kèm cặp QL ${y.name}.`,'good')}else setMrel(x,y,mrel(x,y)-5);return}
   }}
-const _xI=xInfo;xInfo=function(e){return e.kind==='v3'?v3Info(e):_xI(e)};
-const _xR=xResolve;xResolve=function(e,k){return e.kind==='v3'?v3Resolve(e,k):_xR(e,k)};
 
 /* ---- Hồ sơ nghệ sĩ & phòng ---- */
-const _aT=aTags;aTags=function(a){let t=_aT(a);if(a.pa)t+=`<span class="tag m">🧑‍💻 ${esc(a.pa.name)}</span>`;if(a.restRec>abs())t+='<span class="tag">🛌 Lịch nghỉ thêm</span>';else if(a.hsF&&a.hsF.w>=abs()-3&&a.hsF.st!=='ok')t+='<span class="tag r">🩺 Cần nghỉ</span>';return t};
 function v3ArtistHTML(a){let h='';
   if(paOK(a))h+=`<div class="card small">🧑‍💻 <b>Trợ lý cá nhân:</b> ${a.pa?`${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v} · ${fmt(a.pa.sal)}/tuần`:'<span class="muted">chưa có</span>'} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?'Đổi trợ lý':'Để '+esc(a.name)+' tự chọn'}</button><br><span class="muted">Nghệ sĩ được quản lý theo nhóm có thể tự chọn trợ lý riêng.</span></div>`;
   if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">🩺 <b>Chuyên gia sức khỏe:</b> ${esc(a.hsF.why.join(', '))}. Đề xuất ${a.hsF.n} ngày nghỉ/tuần. ${a.restRec>abs()?'<span class="good">Đang áp dụng.</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`;
@@ -2301,10 +2302,6 @@ function v3ArtistHTML(a){let h='';
   const xs=Object.keys(a.xr||{}).map(id=>({x:extById(+id),v:a.xr[id]})).filter(z=>z.x).sort((p,q)=>q.v-p.v).slice(0,5);
   if(xs.length)h+=`<div class="card small">🌐 <b>Quan hệ ngoài công ty:</b> ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;
   return h}
-const _dorm=RV.dorm;RV.dorm=function(){_dorm();const p=$('#sheet .panel');if(!p)return;
-  const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
-  const ml=S.artists.filter(a=>a.pa);
-  p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 Giao lưu ngoài công ty (${L.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ gặp idol công ty khác ở show âm nhạc, hậu trường, livestream. Quan hệ tốt mở ra lời mời hợp tác; thân quá dễ thành tin đồn.</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||'<div class="small muted">Chưa có giao lưu nào.</div>'}`,false)+(ml.length?det('dm-pa',`🧑‍💻 Trợ lý cá nhân (${ml.length})`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v}</div>`).join(''),false):''))};
 
 /* ---- Hướng dẫn người mới ---- */
 const TUT=[
@@ -2344,4 +2341,4 @@ const setRepDay=v=>{repDay=v};
 const setPropNext=v=>{propNext=v};
 Object.assign(window,{$,RV,acceptOffer,acceptSel,act,applyLineup,applyRec,assignMgr,batchLive,batchSched,buyBiz,buybackBiz,byId,campKeyOf,cbCancel,cbNow,cbSched,cbSchedRec,cfPick,closeM,cloudCheck,cloudLoad,cloudSave,compPick,compPrev,copyCode,debut,doFM,doLive,dqDo,dqKeep,dqLater,enterComp,fire,fireAsst,fireMgr,hireMgr,holdConcert,hsApply,hsFire,hsHire,invBuy,invOpen,invStart,investOffer,moveBatch,newBatch,nextWeek,ocPick,ocPrev,openRoom,paFire,paHire,paOpen,paRe,planBack,planFill,planGo,planMgr,planNext,planRec,planSel,planSet,planSkip,postAuto,postDo,prGo,preAuto,preDo,produceFilm,propAll,propOk,propOkAll,raiseBiz,recast,rehuntMgr,releaseSingle,renewDo,resetGame,resolveEv,save,sellBiz,setAll,setAllD,setAuto,setBoss,setCurBatch,setMentor,setPropNext,setPs,setRepDay,setSched,setSchedTTS,sign,songAct,songRelease,startPlanOne,studioPick,togD,toggleHold,toggleMA,tutEnd,tutGo,tutStart,upBiz,view,viewArtist,viewCamp,viewCode,viewDebutQ,viewEvents,viewProps,viewRenew,viewReport,viewReportFull,viewSec,viewSong,viewSongs,wPrev,writeSong});
 Object.defineProperty(window,'S',{get:()=>S,configurable:true});
-window.__game={nextWeek:(...a)=>nextWeek(...a),state:()=>S};
+window.__game={nextWeek:(...a)=>nextWeek(...a),state:()=>S,api:{hireMgr,sign,debutIds,acceptOffer}};
