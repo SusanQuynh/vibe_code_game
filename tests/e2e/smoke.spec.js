@@ -15,7 +15,7 @@ test.beforeEach(async ({ page }) => {
 
 test('trang tải không lỗi và mọi phòng trong dock mở/đóng được', async ({ page }) => {
   const errors = trackErrors(page);
-  await page.goto('/');
+  await page.goto('./');
   await expect(page.locator('#date')).not.toBeEmpty();
   const n = await page.locator('#dock button').count();
   expect(n).toBeGreaterThanOrEqual(10);
@@ -30,7 +30,7 @@ test('trang tải không lỗi và mọi phòng trong dock mở/đóng được'
 
 test('vòng tuần: kết thúc tuần 10 lần, ngày thay đổi, autosave qua reload', async ({ page }) => {
   const errors = trackErrors(page);
-  await page.goto('/');
+  await page.goto('./');
   const d0 = await page.locator('#date').innerText();
   for (let i = 0; i < 10; i++) {
     await page.locator('#nextBtn').click();
@@ -53,14 +53,14 @@ test('vòng tuần: kết thúc tuần 10 lần, ngày thay đổi, autosave qua
 
 test('mobile 375x812: không cuộn ngang', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/');
+  await page.goto('./');
   const w = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(w).toBeLessThanOrEqual(375);
 });
 
 test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng tiến trình', async ({ page }) => {
   const errors = trackErrors(page);
-  await page.goto('/');
+  await page.goto('./');
   await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
   await page.evaluate(() => { window.closeM(); });
   const before = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money }));

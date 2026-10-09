@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import { seedScript } from './seed.js';
 
-const TARGET = process.env.GOLDEN_TARGET ?? '/';
+const TARGET = process.env.GOLDEN_TARGET ?? './';
 const GOLDEN = 'tests/golden/week30.json';
 const GOLDEN2 = 'tests/golden/actions110.json';
 
