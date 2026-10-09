@@ -1,24 +1,21 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
+import { clamp, fmt, fmtN } from '../core/util.js';
 import { FN, LNM, MN, SONGS } from '../data/names.js';
 import { CONCEPTS, MSK, STATS } from '../data/rules.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit, genArtist } from './artists.js';
-import { bMem, batchOf } from './batches.js';
+import { bMem } from './batches.js';
 import { avgFit, bestOf, debutRec } from './debut.js';
 import { hasEv, pushEv, removeArtist } from './events.js';
 import { migrateV3, v3Info, v3Resolve, v3Tick } from './ext3.js';
 import { effSk, mgrExp, mgrTargets, msk } from './managers.js';
-import { bizLv, rivalPress, trendB, trendTag } from './market.js';
-import { chem, chemTxt } from './offers.js';
+import { bizLv, rivalPress, trendB } from './market.js';
+import { chem } from './offers.js';
 import { getRel, harmony, setRel, setTag } from './relations.js';
-import { actByKey } from './releases.js';
 import { actFree, acts } from './secretary.js';
 import { focusKeys } from './week.js';
-import { NPC, act, chibiHTML } from '../ui/building.js';
-import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
-import { RV, openRoom } from '../ui/rooms.js';
-import { aTags, bars, det } from '../ui/views.js';
+import { act } from '../ui/building.js';
+import { toast } from '../ui/modal.js';
 
 /* ================= MỞ RỘNG v2 ================= */
 export const MAX_SA=4;
@@ -50,7 +47,6 @@ export function compRep(){const tf=S.artists.reduce((t,a)=>t+a.fans,0),aw=(S.awa
   return clamp(Math.round(Math.min(55,Math.sqrt(tf/1500))+Math.min(20,aw*4)+Math.min(15,hit*3)+(lr===1?10:lr===2?6:lr===3?3:0)),0,100)}
 export const poolSize=()=>3+Math.floor(compRep()/15);
 export const repStars=r=>'★'.repeat(1+Math.floor(Math.min(r,99)/25))+'☆'.repeat(4-Math.floor(Math.min(r,99)/25));
-export function repCard(){const r=compRep();return`<div class="card small">🏢 <b>Danh tiếng công ty: ${r}/100</b> <span style="color:var(--sun)">${repStars(r)}</span><br>Mỗi đợt casting nhận <b>${poolSize()} hồ sơ</b> · mỗi tuần ~${Math.round(r/1.2)}% có TTS tự gửi đơn · chất lượng hồ sơ +${Math.floor(r/12)} chỉ số khởi điểm.<br><span class="muted">Tăng nhờ tổng fan, giải thưởng, single top 10 và hạng công ty cuối năm.</span></div>`}
 /* ---- Lứa TTS tự xoá ---- */
 export function cleanBatches(){if(!Array.isArray(S.batches))return;for(const b of S.batches)if(bMem(b).length)b.had=1;
   const gone=S.batches.filter(b=>b.had&&!bMem(b).length);if(!gone.length)return;
@@ -72,7 +68,6 @@ export function setMentor(tid,mid){const a=byId(tid);if(!a||a.status!=='trainee'
   if(!mid){if(a.mt){const o=byId(a.mt);addLog(`👩‍🏫 ${o?o.name:'Tiền bối'} thôi dẫn dắt ${a.name}.`)}a.mt=0;return act()}
   const m=byId(mid);if(!m||m.status!=='debuted')return act();if(menteesOf(m).filter(x=>x!==a).length>=2){toast(`${m.name} đã dẫn dắt đủ 2 TTS`);return act()}
   a.mt=m.id;setRel(a,m,getRel(a,m)+10);addLog(`👩‍🏫 ${m.name} nhận dẫn dắt thực tập sinh ${a.name}.`,'good');act()}
-export function mentorSel(a){const s=mentorSug(a);return`<select onchange="setMentor(${a.id},this.value)" aria-label="Tiền bối dẫn dắt"><option value="0">— Chưa có tiền bối —</option>${S.artists.filter(m=>m.status==='debuted').sort((x,y)=>((menteesOf(x).length>=2&&a.mt!==x.id)-(menteesOf(y).length>=2&&a.mt!==y.id))||mentorScore(y,a)-mentorScore(x,a)).map(m=>{const full=menteesOf(m).length>=2&&a.mt!==m.id;return`<option value="${m.id}" ${a.mt===m.id?'selected':''} ${full?'disabled':''}>${s===m?'💡 ':''}${esc(m.name)} (+${Math.round(mentorScore(m,a))})${full?' – đủ 2 TTS':''}</option>`}).join('')}</select>`}
 export function mentorTick(){for(const a of S.artists){if(a.status!=='trainee'||!a.mt)continue;const m=byId(a.mt);if(!m||m.status!=='debuted'){a.mt=0;continue}
   if(m.busy)continue;m.energy=clamp(m.energy-3,0,100);MOOD(m,1);MOOD(a,2);setRel(a,m,getRel(a,m)+R(1,4));
   if(!a.tag[m.id]&&getRel(a,m)>=60){setTag(a,m,'friend');addLog(`🤝 ${a.name} và tiền bối ${m.name} trở nên thân thiết.`,'good')}}}
@@ -145,7 +140,6 @@ export function mxTick(){for(const m of S.managers){if(!m.as)continue;const ts=m
     if(ks.length){const k=pick(ks),D=MXS[k],ex=D.pre?D.pre(a,m):{};if(ex)pushEv({kind:'mx',mx:k,a:a.id,m:m.id,...ex})}}}
   if(Math.random()<.045&&asstOf(m).length<2&&!S.events.some(e=>e.kind==='mp'&&e.m===m.id)){const k=Object.keys(MSK).reduce((x,y)=>m.sk[y]<m.sk[x]?y:x),v=R(1,3);pushEv({kind:'mp',t:'asst',m:m.id,k,v,name:pick(LNM)+' '+pick(FN.concat(MN)),fee:v*8e6,sal:v*1e6})}
   else if(Math.random()<.035&&!S.events.some(e=>e.kind==='mp'&&e.t==='scout')){const a=pick(ts),c=genArtist();c.talent=+rnd(1.05,1.3).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(8,15),0,80);pushEv({kind:'mp',t:'scout',m:m.id,a:a.id,cand:c,where:pick(SCOUT_W)})}}}
-export function candBlock(c){return`<div class="card" style="background:var(--bg)"><div class="row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small"><b>${esc(c.name)}</b> · ${c.g==='F'?'Nữ':'Nam'}, ${c.age} · năng khiếu ${STATS[c.spec]} · tố chất x${c.talent}</div></div>${bars(c)}</div>`}
 /* ---- Nhóm giải tán ---- */
 export const gMgr=g=>S.managers.find(m=>m.as&&m.as.t==='g'&&m.as.id===g.id);
 export const gHiatus=k=>{if(!k||k[0]!=='g')return false;const g=S.groups.find(x=>'g'+x.id===k);return!!(g&&g.hiatus>abs())};
@@ -174,10 +168,6 @@ export function renewEval(a,mul=1){const wk=Math.max(1,abs()-(a.cs0||abs()-26)),
   const dem=Math.round(Math.max(a.salary*1.1,1e6+fame(a)*.5e6)*(1-msk(a,'nego')*.02)*mul/1e6)*1e6;
   const p=clamp(.5+(a.mood-50)/120+msk(a,'care')*.03+(fame(a)>60?-.1:0)+(mul>1?.25:0),.08,.97);
   return{sc,rec,L,dem,p}}
-export function renewBlock(a,mul=1){if(!a)return'';const E=renewEval(a,mul);return`<div class="card" style="background:var(--bg);margin-bottom:8px"><div class="row"><b>📊 Đánh giá tái ký</b><span class="sp"></span><span class="tag ${E.rec[1]}">${E.rec[0]}</span></div>
-  <div class="bar" style="margin:4px 0"><i style="width:${E.sc}%"></i></div><div class="small muted">Điểm ${E.sc}/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>
-  <div class="small" style="margin-top:4px">${E.L.join('<br>')}</div>
-  <div class="small" style="margin-top:6px">Nghệ sĩ đòi lương <b>${fmt(E.dem)}</b>/tuần (hiện ${fmt(a.salary)}) · Khả năng đồng ý ~<b>${pct(E.p)}</b> · Phí ký ${fmt(E.dem*4)}/năm · Hết hạn sau <b>${a.ce-abs()}</b> tuần${mul>1?'<br>⚠️ Lần đàm phán thứ hai, nghệ sĩ đòi cao hơn 30%.':''}</div></div>`}
 export function renewOpts(a,mul=1){const E=renewEval(a,mul);return[1,2,3].map(y=>({k:'r'+y,l:`Tái ký ${y} năm (phí ${fmt(E.dem*4*y)})`})).concat([{k:'end',l:'Kết thúc hợp đồng'},{k:'later',l:'Để sau'}])}
 export function renewDo(id,k,mul=1,quiet){const a=byId(id);if(!a)return true;
   if(k[0]==='r'){const y=+k.slice(1),E=renewEval(a,mul),bonus=E.dem*4*y;if(S.money<bonus){toast('Không đủ tiền phí ký hợp đồng');return false}
@@ -189,10 +179,6 @@ export function renewDo(id,k,mul=1,quiet){const a=byId(id);if(!a)return true;
 export function contractTick(){for(const a of [...S.artists]){if(a.status!=='debuted')continue;ctInit(a);const left=a.ce-abs();
   if(left<=0){S.events=S.events.filter(e=>!(e.kind==='renew'&&e.a===a.id));removeArtist(a,'đã hết hạn hợp đồng và rời công ty');continue}
   if(left<=8&&!a.ceNo&&!hasEv(a.id,'renew')){pushEv({kind:'renew',a:a.id,mul:1},true);if(left===8)addLog(`📄 Hợp đồng của ${a.name} còn 8 tuần. Xem đánh giá tái ký ở Phòng Nhân sự.`)}}}
-export function viewRenew(id){const a=byId(id);if(!a)return closeM();const e=S.events.find(x=>x.kind==='renew'&&x.a===id),mul=e?e.mul:1;setCurRC('var(--r-hr)');
-  modal(`<h2>📄 Hợp đồng: ${esc(a.name)}</h2><div class="sub">${aTags(a)} · Lương ${fmt(a.salary)}/tuần</div>${renewBlock(a,mul)}${a.ceNo?'<div class="card small bad">Đã quyết định không tái ký. Vẫn có thể đề nghị lại bên dưới.</div>':''}
-  <div class="row">${renewOpts(a,mul).filter(o=>o.k!=='later').map(o=>`<button class="btn sm ${o.k==='end'?'warn':'pri'}" onclick="if(renewDo(${a.id},'${o.k}',${mul},1)){view(()=>RV.hr());act()}">${o.l}</button>`).join('')}</div>
-  <button class="btn" style="margin-top:10px" onclick="openRoom('hr')">← Phòng Nhân sự</button>`)}
 /* ---- Sáng tác & Giám đốc âm nhạc ---- */
 export const SONGW=['Ngày Mai Sẽ Khác','Gửi Em Mùa Hạ','Không Thể Quên','Bước Qua Đêm Tối','Nắng Ấm','Thanh Xuân','Lạc Lối','Tự Do','Hẹn Mùa Thu','Sóng Vỗ','Đường Về','Thành Phố Ngủ Quên','Một Lần Nữa','Bay Lên','Chạm','Ánh Sao Cuối Trời'];
 export const wp=a=>a.st.vocal*.3+a.st.rap*.3+a.st.variety*.1+a.st.dance*.05+(a.cs||0)*4+a.talent*12;
@@ -209,53 +195,12 @@ export function mdReview(s){const tb=trendB(s.ck),rp=rivalPress(),mk=clamp(Math.
   const sug=acts().map(x=>{const ms=x.m.map(byId).filter(Boolean);if(!ms.length)return null;const own=s.by.some(i=>x.m.includes(i));return{k:x.k,n:x.n,f:Math.round(avgFit(ms,CONCEPTS[s.ck].w)+(own?6:0)),own,free:actFree(x)}}).filter(Boolean).sort((a,b)=>b.f-a.f).slice(0,3);
   return{mk,g,better:clamp(Math.round(mk*1.05-8),1,99),cm,tr,rp,sug}}
 export const GC={S:'s',A:'m',B:'v',C:'',D:'r'};
-export const curSong=()=>(S.songs||[]).find(x=>x.id===+($('#sSong')?.value||0)&&x.st==='ok');
 export const sgBonus=(s,m)=>s?(s.q-50)*.35+(s.by.some(i=>m.includes(i))?4:0):0;
-export function songPrev(x){const s=curSong();if(!s)return' · 🎵 Bài mua ngoài (trả 15% bản quyền nhạc số)';const own=s.by.some(i=>x.m.includes(i)),b=Math.round(sgBonus(s,x.m));return` · ✍️ Bài nội bộ hạng ${s.rv?s.rv.g:'?'} (${b>=0?'+':''}${b} điểm${own?', có tự sáng tác':''}, giữ 100% nhạc số)`}
-export function songOpts(){const L=(S.songs||[]).filter(s=>s.st==='ok');return`<option value="0">🎵 Mua bài nhạc sĩ ngoài</option>${L.map(s=>`<option value="${s.id}">${s.md?'🎼':'✍️'} «${esc(s.t)}»${s.for&&actByKey(s.for)?' · dành cho '+esc(actByKey(s.for).n.slice(2).trim()):''} · hạng ${s.rv?s.rv.g:'?'} · ${CONCEPTS[s.ck].n}</option>`).join('')}`}
-export function songCard(){const n=(S.songs||[]).filter(s=>s.st==='review').length,ok=(S.songs||[]).filter(s=>s.st==='ok').length,wr=(S.songs||[]).filter(s=>s.st==='writing').length;
-  return`<div class="card row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div class="small" style="flex:1"><b>🎼 GĐ Âm nhạc:</b> ${n?`có <b>${n} demo</b> chờ tôi duyệt.`:'chưa có demo mới.'} ${ok?`${ok} bài đã duyệt sẵn sàng phát hành.`:''}${wr?` ${wr} bài đang sáng tác.`:''}</div><button class="btn sm pri" onclick="view(viewSongs)">Sáng tác</button></div>`}
-export function writeSong(){const main=+$('#wMain').value,co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main),ck=$('#wCon').value,t=($('#wTitle').value||'').trim().slice(0,40);
-  if(!main)return toast('Chọn nhạc sĩ chính');if(co.length>2)return toast('Tối đa 2 người hợp tác');
-  const ids=[main,...co],ws=ids.map(byId);if(ws.some(a=>!a||a.busy))return toast('Có người đang bận');
-  if(S.money<5e6)return toast('Không đủ tiền');S.money-=5e6;book('prod',-5e6);
-  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:'Sáng tác «'+s.t+'»',left:1,total:1});
-  addLog(`✍️ ${ws.map(a=>a.name).join(', ')} vào phòng thu sáng tác «${s.t}» (${CONCEPTS[ck].n}). Demo xong sau 1 tuần.`);act()}
-export function wPrev(){const el=$('#wPrev');if(!el)return;const main=byId(+$('#wMain').value);if(!main){el.textContent='';return}
-  const co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main.id);if(co.length>2){el.innerHTML='<span class="bad">Tối đa 2 người hợp tác</span>';return}
-  const ids=[main.id,...co],c=co.length?chem(ids):0,ck=$('#wCon').value,base=wp(main)*.75+(co.length?co.reduce((t,i)=>t+wp(byId(i)),0)/co.length*.25+co.length*3+c*30:wp(main)*.2)+(fit(main,CONCEPTS[ck].w)-40)*.15;
-  el.innerHTML=`Chất lượng dự kiến <b>${Math.round(clamp(base-8,5,98))}–${Math.round(clamp(base+12,5,98))}</b>/100${co.length?` · ${co.length} người hợp tác${c?' · '+chemTxt(c):''}`:''}${trendTag(ck)?` · concept${trendTag(ck)}`:''}`}
 export function songAct(id,k){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return;
   if(k==='ok'){const r=mdReview(s);s.rv={g:r.g,mk:r.mk};s.st='ok';s.by.map(byId).filter(Boolean).forEach(a=>MOOD(a,8));addLog(`✅ GĐ Âm nhạc duyệt «${s.t}» (hạng ${r.g}, điểm thị trường ${r.mk}).`,'good')}
   else if(k==='redo'){if(S.money<3e6)return toast('Không đủ tiền');if((s.rw||0)>=2)return toast('Đã chỉnh sửa tối đa 2 lần');S.money-=3e6;s.rw=(s.rw||0)+1;const d=R(2,9);s.q=clamp(s.q+d,5,98);addLog(`🔁 Chỉnh sửa «${s.t}» theo góp ý của GĐ Âm nhạc: chất lượng +${d}.`)}
   else if(k==='drop'){S.songs=S.songs.filter(x=>x!==s);s.by.map(byId).filter(Boolean).forEach(a=>MOOD(a,-5));addLog(`🗑️ Bỏ bài «${s.t}».`)}
   act()}
-export function songRelease(id,k){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return;if(s.st==='review')songAct(id,'ok');const x=actByKey(k);if(!x||!actFree(x))return toast('Nghệ sĩ này đang bận');
-  openRoom('studio');setTimeout(()=>{if(!$('#sSong'))return;$('#sAct').value=k;$('#sSong').value=id;$('#sSong').onchange&&$('#sSong').onchange();$('#sSong').scrollIntoView({behavior:'smooth',block:'center'})},30)}
-export function viewSong(id){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return view(viewSongs);setCurRC('var(--r-studio)');const r=mdReview(s),by=s.by.map(byId).filter(Boolean);
-  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">«${esc(s.t)}»</h2><div class="small muted">${CONCEPTS[s.ck].n}${trendTag(s.ck)} · sáng tác: ${by.map(a=>esc(a.name)).join(', ')||(s.md?'🎼 GĐ Âm nhạc':'—')} · ${s.st==='ok'?'đã duyệt':s.st==='used'?'đã phát hành':'chờ duyệt'}</div></div></div>
-  <div class="card" style="margin-top:10px"><div class="row"><b>🎼 Đánh giá của GĐ Âm nhạc</b><span class="sp"></span><span class="tag ${GC[r.g]}" style="font-size:14px">Hạng ${r.g}</span></div>
-  <div class="small">Chất lượng bài: <b>${s.q}</b>/100 · Điểm so với thị trường: <b>${r.mk}</b>/100</div><div class="bar" style="margin:4px 0"><i style="width:${r.mk}%"></i></div>
-  <div class="small">📈 Tốt hơn khoảng <b>${r.better}%</b> bài đang phát hành trên thị trường. ${r.tr}${r.rp?` Đối thủ đang comeback (−${Math.round(r.rp*.4)}).`:''}</div>
-  <div class="small" style="margin-top:6px">💬 "${r.cm}"</div></div>
-  ${s.st!=='used'?`<h3>🎯 Nghệ sĩ hợp với bài</h3>${r.sug.length?r.sug.map((x,i)=>`<div class="prow"><b>${i===0?'⭐ ':''}${esc(x.n)}</b><span class="small muted">hợp ${x.f}%${x.own?' · tự sáng tác':''}${x.free?'':' · đang bận'}</span><span class="sp"></span>${x.free&&r.g!=='D'?`<button class="btn sm ${i===0?'pri':''}" onclick="songRelease(${s.id},'${x.k}')">Giao bài</button>`:''}</div>`).join(''):'<div class="small muted">Chưa có nhóm hay solo nào. Debut trước rồi giao bài sau.</div>'}`:`<div class="card small">Đã phát hành, hạng ${s.rank||'?'} (${esc(s.act||'')}).</div>`}
-  <div class="row" style="margin-top:10px">${s.st==='review'?`<button class="btn pri" onclick="songAct(${s.id},'ok');view(viewSongs)">✅ Duyệt vào kho</button>`:''}${s.st!=='used'?`<button class="btn" onclick="songAct(${s.id},'redo')" ${(s.rw||0)>=2?'disabled':''}>🔁 Chỉnh sửa theo góp ý (3 tr, còn ${2-(s.rw||0)} lần)</button><button class="btn warn" onclick="songAct(${s.id},'drop');view(viewSongs)">Bỏ bài</button>`:''}</div>
-  <button class="btn" style="margin-top:10px" onclick="view(viewSongs)">← Danh sách bài</button>`)}
-export function viewSongs(){setCurRC('var(--r-studio)');const L=S.songs||[],rv=L.filter(s=>s.st==='review'),ok=L.filter(s=>s.st==='ok'),wr=L.filter(s=>s.st==='writing'),us=L.filter(s=>s.st==='used');
-  const free=S.artists.filter(a=>!a.busy).sort((x,y)=>wp(y)-wp(x));
-  const row=s=>{const r=mdReview(s);return`<div class="prow"><b>«${esc(s.t)}»</b><span class="small muted">${CONCEPTS[s.ck].n}${trendTag(s.ck)} · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', ')||(s.md?'🎼 GĐ Âm nhạc':'')}${s.for&&actByKey(s.for)?' · dành cho '+esc(actByKey(s.for).n.slice(2).trim()):''}</span><span class="tag ${GC[s.rv?s.rv.g:r.g]}">${s.rv?s.rv.g:r.g}</span><span class="sp"></span><button class="btn sm ${s.st==='review'?'pri':''}" onclick="view(()=>viewSong(${s.id}))">${s.st==='review'?'Duyệt':'Xem'}</button></div>`};
-  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">🎼 Sáng tác & GĐ Âm nhạc</h2><div class="sub" style="margin:0">Nghệ sĩ tự sáng tác hoặc hợp tác. GĐ Âm nhạc chấm bài so với thị trường và gợi ý người hát hợp nhất.</div></div></div>
-  <div class="card small" style="margin-top:8px">Bài nội bộ: không mất 15% bản quyền nhạc số, cộng điểm xếp hạng theo chất lượng, người sáng tác được thêm fan. Nghệ sĩ càng sáng tác nhiều càng viết hay hơn.</div>
-  ${det('sg-rv',`📥 Chờ duyệt (${rv.length})`,rv.map(row).join('')||'<div class="small muted">Không có demo nào chờ duyệt.</div>',true)}
-  ${det('sg-ok',`✅ Kho bài đã duyệt (${ok.length})`,ok.map(row).join('')||'<div class="small muted">Chưa có. Bài đã duyệt sẽ hiện trong mục Phát hành single.</div>',true)}
-  ${wr.length?det('sg-wr',`✍️ Đang sáng tác (${wr.length})`,wr.map(s=>`<div class="small">«${esc(s.t)}» · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', ')} · xong vào tuần tới</div>`).join(''),true):''}
-  ${det('sg-new','✍️ Sáng tác bài mới (5 tr, 1 tuần)',free.length?`<div class="row"><span class="small">Nhạc sĩ chính:</span><select id="wMain" style="flex:1">${free.map(a=>`<option value="${a.id}">${esc(a.name)} · bút lực ${Math.round(wp(a))}${a.cs?` · ${a.cs} bài`:''}</option>`).join('')}</select></div>
-    <div class="row" style="margin-top:6px"><span class="small">Concept:</span><select id="wCon">${Object.keys(CONCEPTS).map(k=>`<option value="${k}">${CONCEPTS[k].n}${trendTag(k)}</option>`).join('')}</select><input type="text" id="wTitle" placeholder="Tên bài (tuỳ chọn)" style="flex:1"></div>
-    <div class="small" style="margin-top:6px">Hợp tác cùng (tối đa 2 nghệ sĩ trong công ty):</div><div class="list">${free.map(a=>`<label><input type="checkbox" class="wco" value="${a.id}" onchange="wPrev()"> <span style="flex:1"><b>${esc(a.name)}</b> <span class="small muted">bút lực ${Math.round(wp(a))} · V${Math.round(a.st.vocal)} R${Math.round(a.st.rap)}</span></span></label>`).join('')}</div>
-    <div class="small muted" id="wPrev" style="margin:6px 0"></div><button class="btn pink" onclick="writeSong()">Bắt đầu sáng tác</button>`:'<div class="small muted">Không có nghệ sĩ nào rảnh.</div>',!rv.length)}
-  ${us.length?det('sg-us',`💿 Đã phát hành (${us.length})`,us.map(s=>`<div class="small">«${esc(s.t)}» · ${esc((s.act||'').slice(2))} · hạng ${s.rank} · GĐ chấm ${s.rv?s.rv.g:'?'}</div>`).join(''),false):''}
-  <button class="btn" style="margin-top:8px" onclick="openRoom('studio')">← Phòng Thu âm</button>`);
-  if($('#wMain')){$('#wMain').onchange=wPrev;$('#wCon').onchange=wPrev;wPrev()}}
 /* ---- Thông tin & xử lý sự kiện mới ---- */
 export const XK=['mx','mp','disband','renew'];
 export function xInfo(e){
@@ -292,36 +237,6 @@ export function migrateV2(){S.assts=S.assts||[];S.songs=S.songs||[];S.fin=S.fin|
     else if(t==='s'||t==='d'){const pool=S.artists.filter(a=>(t==='s'?a.solo&&!a.pm:a.actor)&&!S.managers.some(x=>x!==m&&x.as&&x.as.t!=='s'&&x.as.t!=='d'&&mgrTargets(x).includes(a))).slice(0,MAX_SA);m.as={t:'l',id:0,ids:pool.map(a=>a.id)};addLog(`📋 ${m.name} giờ quản lý danh sách tối đa ${MAX_SA} nghệ sĩ solo/diễn viên.`)}
     else if(t==='l'&&m.as.ids.length>MAX_SA)m.as.ids=m.as.ids.slice(0,MAX_SA)}
   S.artists.forEach(ctInit);S.batches.forEach(b=>{if(bMem(b).length)b.had=1})}
-/* ---- Phòng Kinh doanh ---- */
-export function finChart(L){if(!L.length)return'<div class="small muted">Chưa có dữ liệu. Sang tuần mới để bắt đầu ghi sổ.</div>';const W=320,H=140,n=L.length,bw=W/n,mx=Math.max(1,...L.map(f=>Math.max(fsum(f.i),fsum(f.x))));
-  const bars=L.map((f,i)=>{const hi=fsum(f.i)/mx*(H-26),hx=fsum(f.x)/mx*(H-26),x=i*bw+bw*.15,w=bw*.33;return`<rect x="${x.toFixed(1)}" y="${(H-16-hi).toFixed(1)}" width="${w.toFixed(1)}" height="${hi.toFixed(1)}" rx="2" style="fill:var(--mint)"/><rect x="${(x+w+1).toFixed(1)}" y="${(H-16-hx).toFixed(1)}" width="${w.toFixed(1)}" height="${hx.toFixed(1)}" rx="2" style="fill:var(--red)"/><text x="${(i*bw+bw/2).toFixed(1)}" y="${H-3}" text-anchor="middle" style="fill:var(--muted);font-size:8px">T${f.wk}</text>`}).join('');
-  return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Biểu đồ thu chi 12 tuần"><line x1="0" y1="${H-16}" x2="${W}" y2="${H-16}" style="stroke:var(--line)"/>${bars}</svg><div class="small muted"><span style="color:var(--mint)">■</span> Thu · <span style="color:var(--red)">■</span> Chi</div>`}
-export function catRows(o,lab,col){const ks=Object.keys(o).filter(k=>o[k]>0).sort((a,b)=>o[b]-o[a]),mx=Math.max(1,...ks.map(k=>o[k])),t=fsum(o);return ks.map(k=>`<div class="small" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:6px;align-items:center;margin:2px 0"><span>${lab[k]||k}</span><div class="bar"><i style="width:${o[k]/mx*100}%;background:${col}"></i></div><b>${fmt(o[k])} <span class="muted">${Math.round(o[k]/t*100)}%</span></b></div>`).join('')||'<div class="small muted">Chưa có.</div>'}
 export function aggr(L,f){const o={};L.forEach(e=>{for(const k in e[f])o[k]=(o[k]||0)+e[f][k]});return o}
-RV.sales=function(){
-  const F=S.fin||[],L=F.slice(-12),last=F[F.length-1],fc=fcEnsure(),yr=F.filter(f=>f.y===S.year),yi=yr.reduce((t,f)=>t+fsum(f.i),0),yx=yr.reduce((t,f)=>t+fsum(f.x),0);
-  const l4=F.slice(-4),ai=aggr(l4,'i'),ax=aggr(l4,'x');
-  const dg=S.singles.filter(s=>s.dig),act=dg.filter(s=>!s.end).sort((a,b)=>(b.dl||0)-(a.dl||0)),nx=act.reduce((t,s)=>t+digNext(s),0),dgT=dg.reduce((t,s)=>t+(s.dt||0),0),roy=dg.filter(s=>s.roy).reduce((t,s)=>t+Math.round((s.dt||0)/(1-s.roy)*s.roy),0);
-  const top=S.artists.filter(a=>a.earn).sort((a,b)=>b.earn-a.earn).slice(0,8),mxE=top.length?top[0].earn:1;
-  const net=last?fsum(last.i)-fsum(last.x):0;
-  modal(`<h2>💹 Phòng Kinh doanh</h2><div class="sub">Theo dõi thu nhập, chi phí và doanh thu nhạc số của công ty.</div>
-  <div class="grid2"><div class="card">📥 Thu tuần trước<br><b class="good">${fmt(last?fsum(last.i):0)}</b></div><div class="card">📤 Chi tuần trước<br><b class="bad">${fmt(last?fsum(last.x):0)}</b></div><div class="card">📊 Lãi ròng tuần trước<br><b class="${net<0?'bad':'good'}">${net>=0?'+':''}${fmt(net)}</b></div><div class="card">🗓️ Năm ${S.year} đến nay<br><b class="${yi-yx<0?'bad':'good'}">${yi-yx>=0?'+':''}${fmt(yi-yx)}</b><br><span class="small muted">thu ${fmt(yi)} · chi ${fmt(yx)}</span></div></div>
-  ${det('sl-chart','📈 Thu chi 12 tuần gần nhất',finChart(L),true)}
-  ${det('sl-cat','🧾 Cơ cấu 4 tuần gần nhất',`<h3 style="margin-top:0">Nguồn thu (${fmt(fsum(ai))})</h3>${catRows(ai,FIN_I,'var(--mint)')}<h3>Khoản chi (${fmt(fsum(ax))})</h3>${catRows(ax,FIN_X,'var(--red)')}`,true)}
-  ${det('sl-dig',`🎧 Nhạc số (${act.length} bài đang có doanh thu)`,`<div class="grid2" style="margin-bottom:6px"><div class="card small">Tổng doanh thu nhạc số<br><b>${fmt(dgT)}</b></div><div class="card small">Dự báo tuần tới<br><b>${fmt(nx)}</b></div><div class="card small">Đã trả bản quyền nhạc sĩ ngoài<br><b>${fmt(roy)}</b></div></div>
-    <div class="small muted" style="margin-bottom:4px">Mỗi single thu tiền stream hằng tuần, giảm dần theo thời gian (bài top 10 giữ nhiệt lâu hơn), tối đa 52 tuần. Bài mua ngoài trả 15% bản quyền, bài tự sáng tác giữ trọn.</div>
-    ${act.map(s=>`<div class="prow"><b>«${esc(s.title)}»</b><span class="small muted">${esc(s.act.slice(2))} · hạng ${s.rank} · tuần ${abs()-s.w}/52 · ${s.roy?'bài ngoài':'✍️ nội bộ'}</span><span class="sp"></span><span class="small">+${fmt(s.dl||0)}/tuần · tổng ${fmt(s.dt||0)}</span></div>`).join('')||'<div class="small muted">Chưa có single nào đang có doanh thu stream. Phát hành single ở Phòng Thu âm.</div>'}`,true)}
-  ${det('sl-art',`🌟 Nghệ sĩ mang về doanh thu (${top.length})`,top.map(a=>`<div class="small" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:6px;align-items:center;margin:3px 0"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><div class="bar"><i style="width:${a.earn/mxE*100}%"></i></div><b>${fmt(a.earn)}</b></div>`).join('')||'<div class="small muted">Chưa có dữ liệu. Thù lao dự án, single, nhạc số, concert đều được ghi nhận cho nghệ sĩ.</div>',false)}
-  ${det('sl-now',`⏳ Tuần này (đang diễn ra)`,`<div class="small">Thu: <b class="good">${fmt(fsum(fc.i))}</b> · Chi: <b class="bad">${fmt(fsum(fc.x))}</b> (chưa gồm lương & đào tạo cuối tuần)</div>${catRows(fc.i,FIN_I,'var(--mint)')}${catRows(fc.x,FIN_X,'var(--red)')}`,false)}
-  ${det('sl-hist','📒 Sổ thu chi theo tuần',F.slice(-16).reverse().map(f=>{const n=fsum(f.i)-fsum(f.x);return`<div class="prow"><b>N${f.y}·T${f.wk}</b><span class="small muted">thu ${fmt(fsum(f.i))} · chi ${fmt(fsum(f.x))}</span><span class="sp"></span><b class="${n<0?'bad':'good'}">${n>=0?'+':''}${fmt(n)}</b></div>`}).join('')||'<div class="small muted">Trống.</div>',false)}`);
-};
-RV.hr=function(){
-  const deb=S.artists.filter(a=>a.status==='debuted').sort((a,b)=>(a.ce||1e9)-(b.ce||1e9)),tts=S.artists.filter(a=>a.status==='trainee'),mentors=S.artists.filter(a=>menteesOf(a).length);
-  modal(`<h2>🗂️ Phòng Nhân sự</h2><div class="sub">Hợp đồng nghệ sĩ, tiền bối dẫn dắt thực tập sinh, trợ lý và danh tiếng tuyển dụng.</div>
-  ${repCard()}
-  ${det('hr-ct',`📄 Hợp đồng nghệ sĩ (${deb.length})`,`<div class="small muted" style="margin-bottom:6px">Hợp đồng debut 1 năm. Còn 8 tuần sẽ có đánh giá tái ký: doanh thu mang về so với lương, tăng trưởng fan, danh tiếng, kết quả đánh giá, tâm trạng.</div>`+deb.map(a=>{const E=renewEval(a),l=a.ce-abs();return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">còn <b class="${l<=8?'bad':''}">${l}</b> tuần · ${fmt(a.salary)}/t</span><span class="tag ${E.rec[1]}">${a.ceNo?'Không tái ký':E.rec[0]}</span><span class="sp"></span><button class="btn sm ${l<=8?'pri':''}" onclick="view(()=>viewRenew(${a.id}))">Đánh giá</button></div>`}).join('')||'<div class="small muted">Chưa có nghệ sĩ đã ra mắt.</div>',true)}
-  ${det('hr-mt',`👩‍🏫 Tiền bối dẫn dắt TTS (${tts.filter(a=>a.mt).length}/${tts.length})`,`<div class="small muted" style="margin-bottom:6px">Mỗi nghệ sĩ dẫn dắt tối đa 2 TTS. TTS tập nhanh hơn ở kỹ năng tiền bối giỏi hơn mình (tối đa +40%), vui hơn và thân với tiền bối. Tiền bối tốn ít năng lượng mỗi tuần, được cộng fan khi đàn em debut. 💡 là người hợp nhất.</div>`+(tts.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${esc((batchOf(a)||{n:''}).n)}</span><span class="sp"></span>${mentorSel(a)}</div>`).join('')||'<div class="small muted">Không có thực tập sinh.</div>')+(mentors.length?`<div class="small" style="margin-top:6px"><b>Đang dẫn dắt:</b> ${mentors.map(m=>`${esc(m.name)} → ${menteesOf(m).map(x=>esc(x.name)).join(', ')}`).join(' · ')}</div>`:''),true)}
-  ${det('hr-as',`🧑‍💻 Trợ lý quản lý (${(S.assts||[]).length})`,(S.assts||[]).map(x=>{const m=S.managers.find(z=>z.id===x.mid);return`<div class="prow"><b>${esc(x.name)}</b><span class="small muted">trợ lý QL ${esc(m?m.name:'?')} · ${MSK[x.k]} +${x.v} · ${fmt(x.sal)}/tuần</span><span class="sp"></span><button class="btn sm warn" onclick="fireAsst(${x.id})">Cho nghỉ</button></div>`}).join('')||'<div class="small muted">Chưa có trợ lý. Quản lý sẽ tự đề xuất khi cần.</div>',false)}`);
-};
 /* ================= MỞ RỘNG v3 ================= */
 XK.push('v3');

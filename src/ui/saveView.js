@@ -10,7 +10,7 @@ let ioMsg = '';
 
 const refresh = () => { if (curView) curView(); };
 
-function setPreview(d) {
+function showPreview(d) {
   preview = { d, y: d.year, w: d.week, money: d.money, n: d.artists.length };
   ioMsg = '';
 }
@@ -43,7 +43,7 @@ export async function saveCopyCode() {
 export function saveDownload() { exportFile(S); toast('Đã tải file lưu'); }
 
 export async function saveImportText() {
-  try { setPreview(await parseSaveText($('#codeIn').value)); }
+  try { showPreview(await parseSaveText($('#codeIn').value)); }
   catch (e) { preview = null; ioMsg = '❌ ' + e.message; }
   refresh();
 }
@@ -51,7 +51,7 @@ export async function saveImportText() {
 export async function saveImportFile(input) {
   const f = input.files && input.files[0];
   if (!f) return;
-  try { setPreview(await importFile(f)); }
+  try { showPreview(await importFile(f)); }
   catch (e) { preview = null; ioMsg = '❌ ' + e.message; }
   refresh();
 }

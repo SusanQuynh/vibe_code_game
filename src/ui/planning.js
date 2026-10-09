@@ -3,11 +3,12 @@ import { STATS, TRAIN } from '../data/rules.js';
 import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
 import { mgrOf } from '../systems/managers.js';
-import { propCount, viewProps } from '../systems/proposals.js';
+import { propCount } from '../systems/proposals.js';
 import { DAYN, DAYS, TIC, daysMini, defaultDays, mgrScheduleAll, mgrSchedules, nextWeek, planWeek, planWhy, projEnergy, trainDays, weekCost } from '../systems/week.js';
 import { act, blinkD, chibiHTML, render } from './building.js';
 import { closeM, modal, view } from './modal.js';
 import { aTags, bars, det } from './views.js';
+import { viewProps } from './views/proposals.js';
 
 export let propNext=null;
 export let plan=null;

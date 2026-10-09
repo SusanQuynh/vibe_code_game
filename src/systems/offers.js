@@ -1,5 +1,5 @@
 import { R, pick } from '../core/rng.js';
-import { $, clamp, fmt } from '../core/util.js';
+import { clamp, fmt } from '../core/util.js';
 import { COSTARS } from '../data/names.js';
 import { OFFER, PARTNERS } from '../data/offers.js';
 import { GENRES, STATS } from '../data/rules.js';
@@ -57,7 +57,6 @@ export const slotsOf=of=>of.slots||1;
 export const offerOrder=list=>list.slice().reverse().sort((x,y)=>(byId(x.target)?0:1)-(byId(y.target)?0:1));
 export function cbHold(a){let best=null;for(const p of (S.cbPlan||[])){const x=actByKey(p.k);if(x&&x.m.includes(a.id)&&(!best||p.w<best.w))best=p}return best}
 export function chem(ids){let c=0;const ms=ids.map(byId).filter(Boolean);for(let i=0;i<ms.length;i++)for(let j=i+1;j<ms.length;j++){const t=ms[i].tag[ms[j].id];c+=t==='friend'?.08:t==='enemy'?-.12:(t==='dating'||t==='public')?.04:0;if(sameGroup(ms[i],ms[j]))c+=.05}return clamp(+c.toFixed(2),-.3,.3)}
-export const chemTxt=c=>c>0?`ăn ý +${Math.round(c*100)}%`:c<0?`<span class="bad">lục đục ${Math.round(c*100)}%</span>`:'';
 export function bestCast(of,pool){
   const el=pool.filter(a=>!canTake(of,a));if(!el.length)return null;
   let first;if(of.target){first=el.find(a=>a.id===of.target);if(!first)return null}
@@ -80,12 +79,6 @@ export function acceptCast(ofId,ids,silent){
   addLog(`${O.ic} ${ms.map(a=>a.name).join(', ')} nhận ${O.n} «${of.title}» (${of.partner}), ${of.weeks} tuần${ids.length>1?` · ${ids.length} người${c?(c>0?', ăn ý +':', lục đục ')+Math.round(Math.abs(c)*100)+'%':''}`:''}.`);
   if(!silent)act();
 }
-export function acceptSel(ofId){const ids=[...document.querySelectorAll('.oc'+ofId+':checked')].map(x=>+x.value);acceptCast(ofId,ids)}
-export function ocPrev(ofId,el){const of=S.offers.find(o=>o.id===ofId);if(!of)return;const bx=[...document.querySelectorAll('.oc'+ofId+':checked')];
-  if(el&&bx.length>slotsOf(of)){el.checked=false;toast(`Tối đa ${slotsOf(of)} người`);return ocPrev(ofId)}
-  const ids=bx.map(x=>+x.value),pay=ids.reduce((t,i)=>t+effPay(of,byId(i)),0),c=ids.length>1?chem(ids):0,o=$('#ocp'+ofId);
-  if(o)o.innerHTML=ids.length?`${ids.length}/${slotsOf(of)} người · tổng ${fmt(pay)}${c?' · '+chemTxt(c):''}`:`Chọn tối đa ${slotsOf(of)} người`}
-export function ocPick(ofId){const of=S.offers.find(o=>o.id===ofId);if(!of)return;const c=bestCast(of,S.artists.filter(a=>!a.busy))||[];document.querySelectorAll('.oc'+ofId).forEach(x=>x.checked=c.includes(+x.value));ocPrev(ofId)}
 export function investOffer(ofId){
   const of=S.offers.find(o=>o.id===ofId);if(!of||!of.invest||of.invested)return;
   const cost=Math.round(of.invest.budget*of.invest.share);

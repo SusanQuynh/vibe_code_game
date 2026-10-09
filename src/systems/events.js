@@ -1,13 +1,14 @@
 import { R, pick } from '../core/rng.js';
-import { clamp, esc, fmt } from '../core/util.js';
+import { clamp, fmt } from '../core/util.js';
 import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
-import { XK, pct, xInfo, xResolve } from './ext2.js';
+import { XK, xInfo, xResolve } from './ext2.js';
 import { givePM, msk } from './managers.js';
 import { SXD, sxResolve } from './market.js';
 import { datingPartner, getRel, groupsOf, sameGroup, setRel, setTag } from './relations.js';
 import { act, render, roomOf } from '../ui/building.js';
-import { curView, modal, setCurRC, setCurView, toast } from '../ui/modal.js';
+import { curView, setCurRC, setCurView, toast } from '../ui/modal.js';
+import { viewInv } from '../ui/views/events.js';
 
 /* ================= EVENTS ================= */
 export const hasEv=(id,k)=>S.events.some(e=>e.a===id&&e.kind===k);
@@ -52,27 +53,6 @@ export function invOpen(aId,i){
 export function invBuy(aId){const inv=byId(aId)?.scandal?.inv;if(!inv)return;if(S.money<8e6)return toast('Không đủ tiền');S.money-=8e6;inv.ap++;act()}
 export function invVerdict(p){return p>=.75?{t:'Nhiều khả năng là SỰ THẬT',c:'bad',v:1}:p<=.25?{t:'Nhiều khả năng là TIN SAI',c:'good',v:0}:{t:'Chưa đủ bằng chứng',c:'muted',v:-1}}
 export function invRec(v,dating){return v===1?(dating?'Nên xin lỗi hoặc công khai hẹn hò. Phủ nhận và kiện tụng rất dễ bị lật lại.':'Nên xin lỗi công khai. Phủ nhận hay kiện tụng dễ phản tác dụng.'):v===0?'Nên kiện tụng hoặc phủ nhận. Xin lỗi lúc này khiến fan tin rằng tin đồn là thật.':'Hãy mở thêm hồ sơ để chắc chắn hơn trước khi quyết định.'}
-export function viewInv(aId){
-  const a=byId(aId);
-  if(!a||!a.scandal||!a.scandal.inv){modal(`<h2>🗂️ Hồ sơ đã đóng</h2><div class="sub">Scandal này đã được xử lý.</div><button class="btn pri" onclick="openRoom('pr')">Về Phòng Truyền thông</button>`);return}
-  const sc=a.scandal,inv=sc.inv,pct=Math.round(inv.p*100),vd=invVerdict(inv.p),e=S.events.find(x=>x.kind==='scandal'&&x.a===a.id),info=e&&evInfo(e);
-  const files=inv.leads.map((L,i)=>{const D=LEADS[L.k],rot=`--rot:${(i%3-1)*1.6}deg`;
-    if(L.open){const fr=L.fresh?' flip':'';L.fresh=false;return`<div class="file open ${L.says?'t':'f'}${fr}" style="${rot}"><b>${D.ic} ${D.n}</b>${L.says?D.T:D.F}<br><span class="stamp" style="color:${L.says?'var(--red)':'var(--mint)'}">${L.says?'→ THẬT':'→ SAI'}</span> <span class="small" style="opacity:.7">tin cậy ${Math.round(L.r*100)}%</span></div>`}
-    return`<button class="file" style="${rot}" onclick="invOpen(${a.id},${i})" ${inv.ap<=0?'aria-disabled="true"':''}><b>${D.ic} ${D.n}</b>Độ tin cậy ${'★'.repeat(Math.round(L.r*5))}${'☆'.repeat(5-Math.round(L.r*5))}<div style="margin-top:14px;font-weight:700">🔎 Chạm để điều tra</div></button>`}).join('');
-  modal(`<h2>🕵️ Hồ sơ: ${esc(a.name)}</h2><div class="sub">${esc(sc.t)} · mức ${'🔥'.repeat(sc.sev)} · còn ${sc.left} tuần</div>
-  <div class="card"><div class="row"><b>Lượt điều tra:</b><span style="font-size:18px">${'🔎'.repeat(inv.ap)||'<span class="small muted">hết lượt</span>'}</span><span class="sp"></span><button class="btn sm" onclick="invBuy(${a.id})">+1 lượt (8 tr)</button></div>
-  <div class="meter"><div class="needle" style="left:${pct}%" data-p="${pct}% thật"></div></div><div class="mlab"><span>Tin sai</span><span>Chưa rõ</span><span>Sự thật</span></div></div>
-  <div class="small muted">Mỗi hồ sơ cho một manh mối nghiêng về "thật" hoặc "sai". Hồ sơ nhiều sao đáng tin hơn, nhưng manh mối nào cũng có thể sai. Kỹ năng Truyền thông của quản lý giúp tăng lượt và độ tin cậy.</div>
-  <div class="case">${files}</div>
-  <div class="card" style="border-color:${vd.v===1?'var(--red)':vd.v===0?'var(--mint)':'var(--line)'}"><b class="${vd.c}">Kết luận hiện tại: ${vd.t}</b><div class="small" style="margin:4px 0 8px">👉 ${invRec(vd.v,sc.dating)}</div>
-  ${info?`<div class="row">${info.o.map(o=>`<button class="btn sm ${(vd.v===1&&(o.k==='sorry'||o.k==='public'))||(vd.v===0&&(o.k==='sue'||o.k==='deny'))?'pri':''}" onclick="resolveEv(${e.id},'${o.k}');openRoom('pr')">${o.l}</button>`).join('')}</div>`:'<div class="small muted">Công ty đã chọn im lặng. Chờ dư luận lắng xuống.</div>'}</div>`);
-}
-export function invBlock(a){
-  const sc=a.scandal;if(!sc)return'';invFix(sc);
-  if(!sc.inv)return`<div class="row" style="margin:6px 0"><button class="btn sm pri" onclick="invStart(${a.id})">🕵️ Mở hồ sơ điều tra (10 tr)</button><span class="small muted">Tìm manh mối trước khi chọn cách xử lý</span></div>`;
-  const vd=invVerdict(sc.inv.p);
-  return`<div class="row" style="margin:6px 0"><button class="btn sm pri" onclick="invStart(${a.id})">🕵️ Tiếp tục điều tra</button><span class="small ${vd.c}">${Math.round(sc.inv.p*100)}% thật · ${vd.t}</span></div>`;
-}
 export function randomEvents(){
   const A=S.artists;
   for(const a of A){

@@ -5,19 +5,22 @@ import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
 import { fame } from '../systems/artists.js';
 import { DEBUT_MIN, DR, bestOf, debutRec } from '../systems/debut.js';
-import { evInfo, invBlock } from '../systems/events.js';
-import { candBlock, dHold, menteesOf, mentorScore, mentorSel, renewBlock, wp } from '../systems/ext2.js';
-import { mNameH, v3ArtistHTML } from '../systems/ext3.js';
+import { evInfo } from '../systems/events.js';
+import { dHold, menteesOf, mentorScore, wp } from '../systems/ext2.js';
 import { mBoss, mKids, mgrOf, mgrTargets, targetName } from '../systems/managers.js';
 import { cbHold } from '../systems/offers.js';
 import { propCount } from '../systems/proposals.js';
 import { groupsOf } from '../systems/relations.js';
 import { liveEst } from '../systems/releases.js';
-import { EV_ART, EV_PCT, EV_TTS, evNext, evalBrief, stSum } from '../systems/review.js';
+import { EV_ART, EV_PCT, EV_TTS, evNext, stSum } from '../systems/review.js';
 import { wkLabel } from '../systems/secretary.js';
 import { DAYN, DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/week.js';
 import { blinkD, campKeyOf, chibiHTML } from './building.js';
 import { closeM, modal } from './modal.js';
+import { invBlock } from './views/events.js';
+import { candBlock, mentorSel, renewBlock } from './views/ext2.js';
+import { mNameH, v3ArtistHTML } from './views/ext3.js';
+import { evalBrief } from './views/review.js';
 
 /* ================= THU GỌN ================= */
 export function det(k,sum,body,def){S.ui=S.ui||{};const o=S.ui[k],op=o===undefined?def:o;return`<details class="cl" ${op?'open':''} ontoggle="togD('${k}',this.open)"><summary>${sum}</summary><div class="clb">${body}</div></details>`}

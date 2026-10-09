@@ -8,7 +8,7 @@ import { awardToShow, awards, setAwardToShow } from './awards.js';
 import { compDone, compTick } from './batches.js';
 import { evInfo, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
-import { dqList, viewDebutQ } from './ext3.js';
+import { dqList } from './ext3.js';
 import { effSk, genMgrPool, mgrAuto, mgrExp, mgrOf, msk } from './managers.js';
 import { bizLv, modV, weekWorld } from './market.js';
 import { genOffers } from './offers.js';
@@ -21,6 +21,7 @@ import { act } from '../ui/building.js';
 import { view } from '../ui/modal.js';
 import { startPlan } from '../ui/planning.js';
 import { setRepDay, viewAward, viewReport, viewSkipWarn } from '../ui/views.js';
+import { viewDebutQ } from '../ui/views/ext3.js';
 
 /* ================= WEEK ================= */
 export const TTS_BOOST=3;

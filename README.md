@@ -44,6 +44,7 @@ src/state.js   state toàn cục S (live binding) + setState
 src/systems/   logic game theo từng mảng (artists, managers, week, market, events, releases, awards, ext2, ext3 …)
 src/save/      storage (localStorage + migration), transfer (xuất/nhập mã SL1 & file .json)
 src/ui/        render & view (building, views, rooms, planning, tutorial, saveView, globals)
+src/ui/views/  HTML/handler giao diện tách khỏi systems/* (cùng tên file với hệ thống tương ứng)
 src/styles/    CSS tách theo khu vực
 ```
 

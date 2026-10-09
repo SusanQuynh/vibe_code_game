@@ -1,23 +1,19 @@
-import { R } from '../core/rng.js';
-import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
+import { clamp } from '../core/util.js';
 import { CONCEPTS } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fame } from './artists.js';
 import { avgFit } from './debut.js';
 import { gHiatus } from './ext2.js';
-import { rivalPress, trendB, trendTag } from './market.js';
-import { PROMO_WK } from './promo.js';
+import { rivalPress, trendB } from './market.js';
 import { harmony } from './relations.js';
-import { actByKey, doSingle, fanHTML } from './releases.js';
-import { NPC, act, chibiHTML } from '../ui/building.js';
-import { modal, toast } from '../ui/modal.js';
-import { det } from '../ui/views.js';
+import { actByKey, doSingle } from './releases.js';
+import { act } from '../ui/building.js';
+import { toast } from '../ui/modal.js';
 
 /* ================= SINGLES / CONCERTS / FILMS / DEBUT ================= */
 export function acts(){const r=[];S.groups.forEach(g=>r.push({k:'g'+g.id,n:'👥 '+g.name,m:g.members}));S.artists.filter(a=>a.solo).forEach(a=>r.push({k:'s'+a.id,n:'🎤 '+a.name+' (solo)',m:[a.id]}));return r}
 export const actFree=x=>x.m.length&&!gHiatus(x.k)&&x.m.every(id=>{const a=byId(id);return a&&!a.busy});
 export function conceptRec(x){const m=x.m.map(byId).filter(Boolean);return Object.keys(CONCEPTS).map(k=>{const f=avgFit(m,CONCEPTS[k].w);return{k,f,s:f+trendB(k)}}).sort((a,b)=>b.s-a.s)}
-export function studioPick(k,c){if(!$('#sAct'))return;$('#sAct').value=k;$('#sCon').value=c;$('#sCon').onchange();$('#sAct').scrollIntoView({behavior:'smooth',block:'center'})}
 /* ---- Thư ký: kế hoạch comeback ---- */
 export const BUDN={30e6:'Tiết kiệm',80e6:'Tiêu chuẩn',200e6:'Bom tấn'};
 export function lastSingleW(x){const s=S.singles.find(z=>z.k?z.k===x.k:z.act===x.n);return s?(s.w||(s.y-1)*52+1):null}
@@ -53,20 +49,3 @@ export function runCbPlans(){if(!S.cbPlan||!S.cbPlan.length)return;const now=abs
     const q=secPlan(x),ck=q?q.ck:p.ck;
     if(actFree(x)&&S.money>=p.bud&&doSingle(p.k,ck,p.bud,null,true))addLog(`🗒️ Thư ký triển khai comeback đã hẹn cho ${p.n.slice(2).trim()} (${CONCEPTS[ck].n}).`,'good');
     else{p.tries++;p.w=now+1;if(p.tries>3){S.cbPlan=S.cbPlan.filter(z=>z!==p);addLog(`🗒️ Hủy lịch comeback của ${p.n.slice(2).trim()} vì hoãn quá 3 lần.`,'bad')}else addLog(`🗒️ Lùi comeback của ${p.n.slice(2).trim()} 1 tuần (${actFree(x)?'thiếu tiền':'thành viên đang bận'}).`)}}}
-export function secCard(p,rec){const name=esc(p.n);
-  const st=p.plan?`<span class="tag v">📅 Đã hẹn ${wkLabel(p.plan.w)}</span>`:p.wait?`<span class="tag">⏳ Chờ ${p.wait} tuần</span>`:'<span class="tag m">✅ Sẵn sàng</span>';
-  const body=`<div class="small">⭐ ${CONCEPTS[p.ck].n}${trendTag(p.ck)} (${Math.round(p.fit)}%) · ${BUDN[p.bud]} ${fmt(p.bud)} · dự kiến hạng ~<b>${p.rank}</b></div>
-  <div class="small muted">💬 ${esc(p.why.join('; '))}.</div>
-  ${(()=>{const c=S.camp[p.k];return c&&c.ph==='post'?`<div class="small">📣 Đang quảng bá «${esc(c.t)}»: hạng #${c.rank}, ${c.wins} cúp, tuần ${c.wn+1}/${PROMO_WK}.</div>`:(p.wait||p.plan)?`<div class="small">📣 ${c?`Hype ${c.hype}.`:'Chưa teaser.'} Tận dụng thời gian chờ để tung teaser, tạo hype trước comeback.</div>`:c&&c.hype?`<div class="small">📣 Hype ${c.hype} sẵn sàng cho comeback.</div>`:''})()}
-  ${p.concert?`<div class="small">🏟️ Đủ ${fmtN(p.tf)} fan và lâu rồi chưa diễn: nên tổ chức concert (200 tr). <button class="btn sm" onclick="holdConcert('${p.k}')">Tổ chức</button></div>`:''}
-  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="view(()=>viewCamp('${p.k}'))">📣 Quảng bá</button><span class="sp"></span>${p.plan?`<button class="btn sm" onclick="cbCancel('${p.k}')">Hủy hẹn</button>`:p.wait?`<button class="btn sm pri" onclick="cbSched('${p.k}')">Hẹn tuần ${wkLabel(abs()+p.wait)}</button>`:`<button class="btn sm" onclick="cbSched('${p.k}')">Hẹn tuần sau</button><button class="btn sm pink" onclick="cbNow('${p.k}')">Comeback ngay</button>`}</div>`;
-  return det('sec-c'+p.k,`<b>${name}</b> ${st} <span class="small muted">· hạng ~${p.rank}${rec?' ⭐':''}</span>`,body,rec||(!p.wait&&!p.plan))}
-export function viewSec(){const L=secPlans(),R=secSchedRec(),rk=new Set(R.map(p=>p.k)),due=L.filter(p=>rk.has(p.k)||(!p.wait&&!p.plan)),rest=L.filter(p=>!due.includes(p)),ready=L.filter(p=>!p.wait&&!p.plan).length,cb=S.rivals.filter(r=>r.cb&&r.cb.w>=abs()-1);
-  modal(`<div class="row" style="padding-right:42px"><div class="chibi mini">${chibiHTML(NPC[1])}</div><div><h2 style="margin:0;font-size:21px">🗒️ Kế hoạch comeback</h2><div class="small muted">Thư ký tổng hợp: xu hướng, đối thủ, năng lượng, quỹ.</div></div></div>
-  <div class="card small">🔥 Hot: <b>${S.trend.hot.map(k=>CONCEPTS[k].n).join(', ')}</b> (còn ${S.trend.until-abs()} tuần)${cb.length?` · ⚔️ ${cb.map(r=>esc(r.n)).join(', ')} đang comeback`:' · Không có đối thủ comeback'} · 💰 Quỹ ${fmt(S.money)}<br>${L.length?`👉 ${ready?`<b>${ready}</b> nhóm/solo nên comeback ngay.`:'Chưa ai nên comeback ngay, xem lịch hẹn bên dưới.'}`:'Chưa có nhóm hay solo nào. Debut ở Sảnh Tuyển dụng trước nhé.'}</div>
-  <div class="card small">🗒️ ${R.length?`<b>Thư ký khuyến nghị hẹn:</b> ${R.map(p=>`${esc(p.n.slice(2).trim())} (${wkLabel(abs()+p.wait)}, ${esc(p.recWhy)})`).join(' · ')} <button class="btn sm pri" onclick="cbSchedRec()">Hẹn theo khuyến nghị</button>`:'Chưa cần hẹn thêm ai.'}</div>
-  ${L.length?`<div class="row" style="margin-bottom:6px"><span class="sp"></span><button class="btn sm" onclick="setAllD('sec-',false)">Thu gọn hết</button><button class="btn sm" onclick="setAllD('sec-',true)">Mở hết</button></div>`:''}
-  ${due.length?det('sec-due',`✅ Nên xử lý (${due.length})`,due.map(p=>secCard(p,rk.has(p.k))).join(''),true):''}
-  ${rest.length?det('sec-rest',`📅 Đã hẹn & đang chờ (${rest.length})`,rest.map(p=>secCard(p,rk.has(p.k))).join(''),false):''}
-  ${det('sec-fan','💬 Đề xuất giao lưu fan (fan meeting, livestream)',fanHTML(),true)}
-  <div class="small muted">Lịch đã hẹn sẽ được thư ký tự triển khai vào đầu tuần đó, concept được chọn lại theo xu hướng lúc ấy. Nếu thành viên bận hoặc thiếu tiền, lịch tự lùi 1 tuần (tối đa 3 lần).</div>`)}

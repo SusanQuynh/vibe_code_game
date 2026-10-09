@@ -49,11 +49,6 @@ export function evalAll(){const R0={w:abs(),y:S.year,wk:S.week,t:[],a:[]};
   const ex=R0.a.filter(x=>x.g==='Xuất sắc'),fa=R0.a.filter(x=>x.g==='Không đạt'),tf=R0.t.filter(x=>x.g==='Không đạt');
   addLog(`📋 Đánh giá định kỳ: TTS ${R0.t.length-tf.length}/${R0.t.length} đạt · Nghệ sĩ ${ex.length} xuất sắc${ex.length?` (thưởng ${fmt(-ex.reduce((t,x)=>t+x.money,0))})`:''}, ${fa.length} không đạt${fa.length?` (trừ ${fmt(fa.reduce((t,x)=>t+x.money,0))})`:''}.`,fa.length||tf.length?'':'good');
 }
-export function evalBrief(E){if(!E)return'';const tf=E.t.filter(x=>x.g==='Không đạt'),ex=E.a.filter(x=>x.g==='Xuất sắc'),fa=E.a.filter(x=>x.g==='Không đạt');
-  return`<div class="card rep">📋 <b>Đánh giá định kỳ</b> (T${E.wk} N${E.y})<br>🌱 TTS: ${E.t.length-tf.length}/${E.t.length} đạt${tf.length?` · <span class="w">${tf.map(x=>esc(x.n)+(x.out?' bị loại':` ${x.f}/${EV_TTS}`)).join(', ')}</span>`:''}<br>⭐ Nghệ sĩ: ${ex.length?`🏅 ${ex.map(x=>esc(x.n)).join(', ')} (+thưởng)`:'không ai xuất sắc'}${fa.length?` · <span class="w">${fa.map(x=>esc(x.n)+(x.out?' bị chấm dứt HĐ':` ${x.f}/${EV_ART}`)).join(', ')}</span>`:''}</div>`}
-export function evalTable(E){if(!E)return'<div class="small muted">Chưa có kỳ đánh giá nào.</div>';const gc=g=>g==='Xuất sắc'?'tag s':g==='Tốt'||g==='Đạt'?'tag m':'tag r';
-  return`${E.t.length?`<div class="small"><b>🌱 Thực tập sinh</b> (tổng chỉ số phải tăng trên ${EV_PCT}% so với 4 tuần trước; bản thân đã đủ điểm debut trên ${DEBUT_MIN}% cũng tính đạt)</div>${E.t.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.p>=0?'+':''}${x.p}%${x.g==='Không đạt'?` · ${x.out?'đã bị loại':`trượt ${x.f}/${EV_TTS} liên tiếp`}`:''}</span></div>`).join('')}`:''}
-  ${E.a.length?`<div class="small" style="margin-top:6px"><b>⭐ Nghệ sĩ</b> (điểm = % fan tăng + 6/hoạt động − scandal; ≥20 xuất sắc, ≥5 đạt)</div>${E.a.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.pts} điểm${x.money<0?` · thưởng ${fmt(-x.money)}`:x.money>0?` · trừ ${fmt(x.money)}`:''}${x.g==='Không đạt'?` · ${x.out?'đã chấm dứt HĐ':`trượt ${x.f}/${EV_ART} liên tiếp`}`:''}</span></div>`).join('')}`:''}`}
 /* ---- Phòng Truyền thông: đề xuất kế hoạch quảng bá ---- */
 export const PRP={
   sns:{n:'Chạy quảng cáo SNS',ic:'📱',c:15e6},
@@ -85,9 +80,6 @@ export function prPlans(){const L=[],now=abs();
   if(tts.length>=2&&!prCool('tts','tts'))L.push({pri:4,ic:PRP.tts.ic,t:`${PRP.tts.n} (tất cả ${tts.length} thực tập sinh)`,why:'Xây fan cho cả lứa trước khi debut, các bạn cũng vui hơn.',cost:PRP.tts.c,go:`prDo('tts','tts')`});
   for(const f of fanSugs().slice(0,3))L.push(f.t==='fm'?{pri:6,ic:'💝',t:`Fan meeting: ${esc(f.n.slice(2).trim())}`,why:`${esc(f.why)}. Ước tính ~${fmtN(f.est)} chỗ.`,cost:f.cost,go:`doFM('${f.k}')`}:{pri:2,ic:'📱',t:`Livestream: ${esc(f.n)}`,why:`${esc(f.why)}. Dự kiến thu ~${fmt(liveEst([byId(f.id)]))}.`,cost:1e6,go:`doLive([${f.id}])`});
   return L.sort((a,b)=>b.pri-a.pri)}
-export function prHTML(L){const sk=prSk();
-  return`<div class="small muted" style="margin-bottom:6px">Phòng Truyền thông đề xuất dựa trên lịch comeback, tin đồn và mức độ chú ý của từng nhóm, solo, diễn viên. Kỹ năng Truyền thông cao nhất trong đội quản lý: <b>${sk}</b> (+${Math.round(sk*4)}% hiệu quả).</div>`+
-  (L.map(p=>`<div class="card prp ${p.hot?'hot':''}"><div class="row"><b>${p.ic} ${p.t}</b><span class="sp"></span><span class="small muted">${p.cost?fmt(p.cost):'miễn phí'}</span></div><div class="small muted">${p.why}</div><div class="row" style="margin-top:6px"><span class="sp"></span><button class="btn sm pri" onclick="prGo(this)" data-t="${p.t}" data-go="${p.go}">Duyệt</button></div></div>`).join('')||'<div class="small muted">Chưa có kế hoạch mới. Các nhóm đang được quảng bá đúng nhịp.</div>')}
 export function prGo(btn){const f=btn.dataset.go,t=btn.dataset.t||'';S.prHist=S.prHist||[];S.prHist.unshift(`${wkLabel(abs())}: ${t.replace(/<[^>]+>/g,'')}`);if(S.prHist.length>40)S.prHist.length=40;new Function(f)()}
 export function prDo(t,k){const P=PRP[t];if(!P)return;if(S.money<P.c)return toast('Không đủ tiền');const ms=prMem(k);if(!ms.length)return;
   S.money-=P.c;S.prUsed=S.prUsed||{};S.prUsed[t+':'+k]=abs();const mu=1+prSk()*.04,nm=prName(k);let tf=0;

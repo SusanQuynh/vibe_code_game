@@ -3,23 +3,29 @@ import { OFFER } from '../data/offers.js';
 import { CONCEPTS, GENRES, MSK, MSKD, ROOMS, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, byId } from '../state.js';
 import { fame, fit } from '../systems/artists.js';
-import { bMem, batchHTML, compHTML } from '../systems/batches.js';
-import { DEBUT_COST, DEBUT_MIN, bestLineup, bestOf, debutAnalysis, recLine } from '../systems/debut.js';
-import { evInfo, invBlock } from '../systems/events.js';
-import { MAX_SA, asstOf, curSong, otherMgr, repCard, songCard, songOpts, songPrev } from '../systems/ext2.js';
-import { dElig, dqBanner, eligSort, extById, hsHTML, mNameH, mgrBossHTML, relTxt } from '../systems/ext3.js';
+import { bMem } from '../systems/batches.js';
+import { DEBUT_COST, DEBUT_MIN, bestLineup, bestOf } from '../systems/debut.js';
+import { evInfo } from '../systems/events.js';
+import { MAX_SA, asstOf, otherMgr } from '../systems/ext2.js';
+import { dElig, eligSort, extById } from '../systems/ext3.js';
 import { inSub, mBoss, mCap, mKids, mgrOf, mgrTargets, targetName } from '../systems/managers.js';
 import { BIZ, bizLv, bizOwn, bizVal, bizWait, modV, rivalPress, totalFans, trendB, trendTag, upCost } from '../systems/market.js';
 import { canTake, effPay, offerOrder, slotsOf } from '../systems/offers.js';
 import { PROMO_WK } from '../systems/promo.js';
 import { getRel, groupsOf, harmony } from '../systems/relations.js';
 import { actByKey, fanSugs } from '../systems/releases.js';
-import { EV_ART, EV_PCT, EV_TTS, evNext, evalTable, prHTML, prPlans } from '../systems/review.js';
+import { EV_ART, EV_PCT, EV_TTS, evNext, prPlans } from '../systems/review.js';
 import { actFree, acts, conceptRec, secPlans, secSchedRec } from '../systems/secretary.js';
 import { defaultDays, weekCost } from '../systems/week.js';
 import { NPC, act, chibiHTML, lastRoom, renderDock, setLastRoom } from './building.js';
 import { curView, modal, setCurRC, setCurView } from './modal.js';
 import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './views.js';
+import { batchHTML, compHTML } from './views/batches.js';
+import { debutAnalysis, recLine } from './views/debut.js';
+import { invBlock } from './views/events.js';
+import { curSong, repCard, rvHr, rvSales, songCard, songOpts, songPrev } from './views/ext2.js';
+import { dqBanner, hsHTML, mNameH, mgrBossHTML, relTxt } from './views/ext3.js';
+import { evalTable, prHTML } from './views/review.js';
 
 export function openRoom(id){if(lastRoom!==id){setLastRoom(id);renderDock()}setCurRC(`var(--r-${id})`);setCurView(()=>RV[id]());curView()}
 export function ttsSplit(arr,fn,key,empty,ttsBtn){const tt=arr.filter(a=>a.status==='trainee').sort(eligSort),ot=arr.filter(a=>a.status!=='trainee');
@@ -206,5 +212,8 @@ export const RV={
   const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
   const ml=S.artists.filter(a=>a.pa);
   p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 Giao lưu ngoài công ty (${L.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ gặp idol công ty khác ở show âm nhạc, hậu trường, livestream. Quan hệ tốt mở ra lời mời hợp tác; thân quá dễ thành tin đồn.</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||'<div class="small muted">Chưa có giao lưu nào.</div>'}`,false)+(ml.length?det('dm-pa',`🧑‍💻 Trợ lý cá nhân (${ml.length})`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v}</div>`).join(''),false):''));
-  }
+  },
+  // v2: Phòng Kinh doanh & Nhân sự (trước đây gán đè RV.sales / RV.hr sau khi tạo object)
+  sales:rvSales,
+  hr:rvHr
 };
