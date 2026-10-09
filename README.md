@@ -57,5 +57,6 @@ hoặc file `.json`, và nhập lại ở trình duyệt khác.
 
 ## Deploy
 
-GitHub Actions (`.github/workflows/deploy.yml`) chạy test rồi deploy lên GitHub Pages khi push vào `main`.
-Việc thủ công một lần: Settings → Pages → Source = **GitHub Actions**.
+Không dùng GitHub Actions. Chạy `npm run deploy`: build với base `/vibe_code_game/` rồi đẩy `dist/` lên nhánh `gh-pages`.
+Việc thủ công một lần: Settings → Pages → Source = **Deploy from a branch** → nhánh `gh-pages`, thư mục `/ (root)`.
+Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run test:e2e`.

@@ -10,7 +10,8 @@
     "preview": "vite preview --port 4173",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "check:handlers": "node scripts/check-handlers.mjs"
+    "check:handlers": "node scripts/check-handlers.mjs",
+    "deploy": "node scripts/deploy.mjs"
   },
   "repository": {
     "type": "git",
