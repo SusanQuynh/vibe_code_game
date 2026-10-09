@@ -21,7 +21,7 @@ import { act, campKeyOf } from '../ui/building.js';
 import { closeM, view } from '../ui/modal.js';
 import { planBack, planFill, planGo, planMgr, planNext, planRec, planSel, planSet, planSkip, setPropNext, startPlanOne } from '../ui/planning.js';
 import { RV, openRoom, setSchedTTS } from '../ui/rooms.js';
-import { cloudCheck, cloudLoad, cloudSave, copyCode, viewCode } from '../ui/saveView.js';
+import { saveCopyCode, saveDownload, saveImportApply, saveImportFile, saveImportText, viewCode } from '../ui/saveView.js';
 import { tutEnd, tutGo, tutStart } from '../ui/tutorial.js';
 import { setAllD, setRepDay, togD, viewArtist, viewEvents, viewReport, viewReportFull } from '../ui/views.js';
 
@@ -46,12 +46,8 @@ Object.assign(window, {
   cbSchedRec,
   cfPick,
   closeM,
-  cloudCheck,
-  cloudLoad,
-  cloudSave,
   compPick,
   compPrev,
-  copyCode,
   debut,
   doFM,
   doLive,
@@ -134,6 +130,11 @@ Object.assign(window, {
   view,
   viewArtist,
   viewCamp,
+  saveCopyCode,
+  saveDownload,
+  saveImportApply,
+  saveImportFile,
+  saveImportText,
   viewCode,
   viewDebutQ,
   viewEvents,

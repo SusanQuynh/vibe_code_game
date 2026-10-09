@@ -6,7 +6,7 @@ import { S, setState, abs, addLog, uid, newGame, byId } from '../../src/state.js
 import { genArtist, fit, fame } from '../../src/systems/artists.js';
 import { STATS } from '../../src/data/rules.js';
 import { weekCost, nextWeek, trainDays } from '../../src/systems/week.js';
-import { save, load, KEY } from '../../src/save/storage.js';
+import { save, load, KEY, replaceSave, setSavedHook } from '../../src/save/storage.js';
 import { TRAIN_COST } from '../../src/data/rules.js';
 
 beforeEach(() => {
@@ -93,6 +93,26 @@ describe('tuần', () => {
 });
 
 describe('lưu / tải', () => {
+  it('save báo trạng thái qua hook thay vì chạm DOM', () => {
+    newGame();
+    const seen = [];
+    setSavedHook((ok) => seen.push(ok));
+    expect(save()).toBe(true);
+    const orig = Storage.prototype.setItem;
+    Storage.prototype.setItem = () => { throw new Error('quota'); };
+    expect(save()).toBe(false);
+    Storage.prototype.setItem = orig;
+    expect(seen).toEqual([true, false]);
+    setSavedHook(() => {});
+  });
+  it('replaceSave nạp state khác qua load() và từ chối dữ liệu hỏng', () => {
+    newGame(); nextWeek(true, true);
+    const d = JSON.parse(JSON.stringify(S)); d.money = 123e6;
+    newGame();
+    expect(replaceSave(d)).toBe(true);
+    expect(S.money).toBe(123e6);
+    expect(replaceSave({ foo: 1 })).toBe(false);
+  });
   it('save → load round-trip', () => {
     newGame(); nextWeek(true, true);
     const snap = JSON.stringify(S);

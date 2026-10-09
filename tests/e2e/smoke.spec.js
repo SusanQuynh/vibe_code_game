@@ -57,3 +57,35 @@ test('mobile 375x812: không cuộn ngang', async ({ page }) => {
   const w = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(w).toBeLessThanOrEqual(375);
 });
+
+test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng tiến trình', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('/');
+  await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
+  await page.evaluate(() => { window.closeM(); });
+  const before = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money }));
+  expect(before.w).toBe(4);
+
+  await page.locator('.hbtns .r1').click();
+  const code = await expect.poll(async () => page.locator('#codeShow').inputValue()).toMatch(/^SL1\./).then(() => page.locator('#codeShow').inputValue());
+
+  // máy khác: xoá sạch rồi nạp lại
+  await page.evaluate(() => { localStorage.clear(); localStorage.setItem('__golden', '1'); });
+  await page.reload();
+  expect(await page.evaluate(() => __game.state().week)).toBe(1);
+
+  await page.locator('.hbtns .r1').click();
+  await page.locator('#codeIn').fill(code);
+  await page.getByRole('button', { name: 'Xem trước' }).click();
+  await expect(page.locator('#sheet')).toContainText('Tuần 4');
+  await page.getByRole('button', { name: 'Ghi đè game hiện tại' }).click();
+  const after = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money }));
+  expect(after).toEqual(before);
+
+  // mã rác bị từ chối, game không đổi (cửa sổ vẫn mở sau khi nạp)
+  await page.locator('#codeIn').fill('SL1.rac-ruoi');
+  await page.getByRole('button', { name: 'Xem trước' }).click();
+  await expect(page.locator('#sheet')).toContainText('❌');
+  expect(await page.evaluate(() => __game.state().week)).toBe(4);
+  expect(errors).toEqual([]);
+});

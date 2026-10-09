@@ -20,7 +20,6 @@ import { runCbPlans } from './secretary.js';
 import { act } from '../ui/building.js';
 import { view } from '../ui/modal.js';
 import { startPlan } from '../ui/planning.js';
-import { cloudAuto } from '../ui/saveView.js';
 import { setRepDay, viewAward, viewReport, viewSkipWarn } from '../ui/views.js';
 
 /* ================= WEEK ================= */
@@ -152,7 +151,7 @@ export function nextWeek(force,planned){
   if(S.week>52){awards();S.week=1;S.year++}
   runCbPlans();
   {const ix=S.log.indexOf(logMark);rep.ev=(ix<0?S.log:S.log.slice(0,ix)).slice(0,30).map(l=>l.t);rep.m1=S.money;if(S.lastEval&&S.lastEval.w===abs()-1)rep.evl=1;rep.biz=bizP;for(const a of S.artists)if(rep.a[a.id])rep.a[a.id].f=a.fans-(f0[a.id]||0);S.lastRep=rep}
-  act();cloudAuto();
+  act();
   setRepDay(0);
   if(awardToShow){const e=awardToShow;setAwardToShow(null);view(()=>viewAward(e))}
   else if(S.dqOn!==false&&dqList().length)view(viewDebutQ);
