@@ -1,0 +1,9 @@
+export const FN=['Hà Linh','Minh Thư','Bảo Ngọc','Khánh Vy','Thảo My','Ngọc Anh','Phương Nhi','Gia Hân','Tuệ Lâm','An Nhiên','Diệp Chi','Mai Phương','Quỳnh Như','Tú Anh','Yến Nhi','Lan Chi','Hải Yến','Kim Ngân','Thanh Trúc','Bảo Hân','Cát Tường','Hạ Vy','Ánh Dương','Thu Hà','Linh Đan','Khả Hân'];
+export const MN=['Minh Khôi','Gia Huy','Hoàng Nam','Đức Anh','Quang Vinh','Tuấn Kiệt','Bảo Long','Nhật Minh','Thành Đạt','Khải Hưng','Phúc An','Trung Kiên','Duy Khánh','Hải Đăng','Việt Hoàng','Lâm Phong','Thiên Ân','Đăng Khoa','Hữu Phước','Gia Bảo','Tùng Lâm','Minh Quân','Khánh Duy','An Khang'];
+export const LNM=['Nguyễn','Trần','Lê','Phạm','Hoàng','Vũ','Đặng','Bùi','Đỗ','Hồ'];
+export const MGN=['Thu Hương','Văn Hải','Minh Tâm','Quốc Huy','Ngọc Lan','Thanh Bình','Hồng Nhung','Đức Thắng','Mỹ Linh','Hoài Nam','Kim Oanh','Tiến Dũng'];
+export const COSTARS=['Trần Bảo Châu','Lê Hữu Thắng','Ngô Kiều Anh','Phạm Quốc Bảo','Vũ Diệu Linh','Đỗ Minh Hiếu','Hồ Thu Trang','Lý Gia Bảo','Mai Tuyết Nhung','Tôn Đức Thịnh'];
+export const FT1=['Mùa Hạ','Hẹn Ước','Thành Phố','Ánh Trăng','Bí Mật','Người Thừa Kế','Đêm Đông','Gió Ngược','Ký Ức','Bản Tình Ca','Hoàng Cung','Cánh Diều','Lời Nguyền','Vệt Nắng'];
+export const FT2=['Cuối Cùng','Của Em','Không Tên','Rực Lửa','Năm Ấy','Lặng Im','Màu Xanh','Phía Trước','Tan Vỡ','Bất Tận'];
+export const SONGS=['Butterfly','Neon','Pink Moon','Starlight','Run','Bad Love','Hello Summer','Echo','Midnight','Fever','Cherry','Bloom','Firework','Lucky','Blue Ocean','Galaxy','Sugar Rush','Mirror','Paradise','Wild Heart'];
+export const GNAMES=['Lumina','Nova','Seraph','Velvet Moon','StarPop','Aurora','Mirage','Sunday Club','Prism','Crimson','Blossom','Eclipse','Halo','Neon Tide','Petal Nine','Orbit'];
