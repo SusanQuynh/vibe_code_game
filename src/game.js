@@ -1578,7 +1578,7 @@ function viewReport(){
   ${cards}${free.length?briefCard('<b>👔 Chưa có quản lý</b>',free):''}
   ${(()=>{const P=S.props&&S.props.w===abs()?S.props:null;if(!P)return'';const nb=Object.values(P.st.boss).reduce((a,b)=>a+b,0),pd=P.c.filter(c=>c.pend).length;return(nb||P.st.auto||P.st.res||pd)?`<div class="card small rep">📨 Duyệt tuần mới: ${nb?`cấp trên duyệt ${nb}`:''}${P.st.auto?` · tự duyệt ${P.st.auto}`:''}${P.st.res?` · ⚖️ ${P.st.res} xung đột đã xử lý`:''}${pd?` · <span class="w">⚠️ ${pd} xung đột chờ bạn</span>`:''}</div>`:''})()}
   ${L.ev.length?`<h3>Đáng chú ý</h3><div class="card rep">${L.ev.slice(0,5).map(t=>`<div>${esc(t)}</div>`).join('')}${L.ev.length>5?`<div class="muted">+${L.ev.length-5} sự kiện khác trong Nhật ký</div>`:''}</div>`:''}
-  <div class="row" style="margin-top:10px"><button class="btn" onclick="repDay=7;view(viewReportFull)">Chi tiết theo ngày</button>${pc?`<button class="btn" onclick="propNext=null;view(viewProps)">📋 ${pc} đề xuất</button>`:''}<span class="sp"></span><button class="btn pri" onclick="closeM()">Đóng</button></div>`);
+  <div class="row" style="margin-top:10px"><button class="btn" onclick="setRepDay(7);view(viewReportFull)">Chi tiết theo ngày</button>${pc?`<button class="btn" onclick="setPropNext(null);view(viewProps)">📋 ${pc} đề xuất</button>`:''}<span class="sp"></span><button class="btn pri" onclick="closeM()">Đóng</button></div>`);
 }
 function viewReportFull(){
   const R=S.lastRep;if(!R){modal('<h2>📑 Báo cáo</h2><div class="sub">Chưa có báo cáo. Hãy chơi qua một tuần.</div>');return}
@@ -1590,11 +1590,11 @@ function viewReportFull(){
     ${kids.length?`<ul>${kids.map(node).join('')}</ul>`:''}</li>`};
   const top=S.managers.filter(m=>!mBoss(m)),free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
   modal(`<h2>📑 Báo cáo tuần ${R.w} · Năm ${R.y}</h2><div class="sub">${d===7?'Tổng kết cả tuần':'Báo cáo cuối ngày '+DAYN[d]} theo sơ đồ quản lý.</div>
-  <div class="tabs">${DAYS.map((x,i)=>`<button class="${i===d?'on':''}" onclick="repDay=${i};viewReportFull()">${x}</button>`).join('')}<button class="${d===7?'on':''}" onclick="repDay=7;viewReportFull()">Cả tuần</button></div>
+  <div class="tabs">${DAYS.map((x,i)=>`<button class="${i===d?'on':''}" onclick="setRepDay(${i});viewReportFull()">${x}</button>`).join('')}<button class="${d===7?'on':''}" onclick="setRepDay(7);viewReportFull()">Cả tuần</button></div>
   <div class="tree"><div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Gửi Giám đốc</b><div class="small muted">${warnCount(S.artists,d)} nghệ sĩ cần chú ý ${d===7?'cuối tuần':'hôm nay'}</div></div></div>
   <ul>${top.map(node).join('')}${free.length?`<li><div class="card" style="margin:0"><b>👔 Báo cáo trực tiếp (chưa có quản lý)</b><div class="rep" style="margin-top:4px">${free.map(a=>artDayLine(a,d)).join('')}</div></div></li>`:''}</ul></div>
   ${d===7&&R.ev.length?`<h3>Sự kiện trong tuần</h3><div class="card rep">${R.ev.map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
-  <div class="row" style="margin-top:10px">${d>0?`<button class="btn" onclick="repDay=${d-1};viewReportFull()">◀ Hôm trước</button>`:''}<span class="sp"></span>${d<7?`<button class="btn pri" onclick="repDay=${d+1};viewReportFull()">${d===6?'Tổng kết tuần ▶':'Hôm sau ▶'}</button>`:'<button class="btn" onclick="view(viewReport)">◀ Bản gọn</button><button class="btn pri" onclick="closeM()">Đóng</button>'}</div>`);
+  <div class="row" style="margin-top:10px">${d>0?`<button class="btn" onclick="setRepDay(${d-1});viewReportFull()">◀ Hôm trước</button>`:''}<span class="sp"></span>${d<7?`<button class="btn pri" onclick="setRepDay(${d+1});viewReportFull()">${d===6?'Tổng kết tuần ▶':'Hôm sau ▶'}</button>`:'<button class="btn" onclick="view(viewReport)">◀ Bản gọn</button><button class="btn pri" onclick="closeM()">Đóng</button>'}</div>`);
 }
 function mgrBars(m){return`<div class="bars">${Object.keys(MSK).map(k=>`<span>${MSK[k]}</span><div class="bar"><i style="width:${m.sk[k]*10}%"></i></div><b>${m.sk[k]}</b>`).join('')}</div>`}
 const RV={
@@ -1619,7 +1619,7 @@ const RV={
       <div class="row" style="margin-top:6px"><span class="small">Tự nhận lời mời:</span><select onchange="setAuto(${m.id},this.value)"><option value="off" ${m.auto==='off'?'selected':''}>Tắt</option><option value="short" ${m.auto==='short'?'selected':''}>Chỉ việc ngắn (≤ 2 tuần)</option><option value="all" ${m.auto==='all'?'selected':''}>Mọi lời mời</option></select><span class="sp"></span><button class="btn sm warn" onclick="fireMgr(${m.id},this)">Cho nghỉ</button></div>`;
       return det('mg-'+m.id,sum,body,false)};
     modal(`<h2>📋 Văn phòng Quản lý</h2><div class="sub">Chạm vào từng mục để mở hoặc thu gọn.</div>
-    <div class="row" style="margin-bottom:4px"><button class="btn pri" onclick="view(viewReport)" ${S.lastRep?'':'disabled'}>📑 Báo cáo tuần trước</button><button class="btn" onclick="propNext=null;view(viewProps)">📋 Đề xuất tuần này</button></div>
+    <div class="row" style="margin-bottom:4px"><button class="btn pri" onclick="view(viewReport)" ${S.lastRep?'':'disabled'}>📑 Báo cáo tuần trước</button><button class="btn" onclick="setPropNext(null);view(viewProps)">📋 Đề xuất tuần này</button></div>
     <label class="small row"><input type="checkbox" ${S.repOn!==false?'checked':''} onchange="S.repOn=this.checked;save()"> Tự hiện báo cáo sau mỗi tuần</label>
     <label class="small row"><input type="checkbox" ${S.autoAppr!==false?'checked':''} onchange="S.autoAppr=this.checked;save()"> Tự duyệt đề xuất không xung đột của quản lý báo cáo trực tiếp cho bạn</label>
     ${(()=>{const nb=(S.batches||[]).filter(b=>bMem(b).length&&!S.managers.some(m=>m.as&&m.as.t==='b'&&m.as.id===b.id));return nb.length?`<div class="card small">🌱 ${nb.map(b=>esc(b.n)).join(', ')} chưa có quản lý. Quản lý thực tập sinh giờ phụ trách theo từng lứa.</div>`:''})()}
@@ -2338,4 +2338,10 @@ if(!load())newGame();
 migrateV3();render();save();
 if(!S.tut&&!localStorage.getItem('__golden'))setTimeout(()=>tutStart(0),400);
 (async()=>{try{if(window.claude&&window.claude.use){DB=await window.claude.use('db')}}catch(e){DB=null}dbState='done';save();if(curView)curView()})();
-window.__game = { nextWeek: (...a) => nextWeek(...a), state: () => S };
+
+/* ===== cầu nối inline handler -> window (task 10 chuyển sang ui/globals.js) ===== */
+const setRepDay=v=>{repDay=v};
+const setPropNext=v=>{propNext=v};
+Object.assign(window,{$,RV,acceptOffer,acceptSel,act,applyLineup,applyRec,assignMgr,batchLive,batchSched,buyBiz,buybackBiz,byId,campKeyOf,cbCancel,cbNow,cbSched,cbSchedRec,cfPick,closeM,cloudCheck,cloudLoad,cloudSave,compPick,compPrev,copyCode,debut,doFM,doLive,dqDo,dqKeep,dqLater,enterComp,fire,fireAsst,fireMgr,hireMgr,holdConcert,hsApply,hsFire,hsHire,invBuy,invOpen,invStart,investOffer,moveBatch,newBatch,nextWeek,ocPick,ocPrev,openRoom,paFire,paHire,paOpen,paRe,planBack,planFill,planGo,planMgr,planNext,planRec,planSel,planSet,planSkip,postAuto,postDo,prGo,preAuto,preDo,produceFilm,propAll,propOk,propOkAll,raiseBiz,recast,rehuntMgr,releaseSingle,renewDo,resetGame,resolveEv,save,sellBiz,setAll,setAllD,setAuto,setBoss,setCurBatch,setMentor,setPropNext,setPs,setRepDay,setSched,setSchedTTS,sign,songAct,songRelease,startPlanOne,studioPick,togD,toggleHold,toggleMA,tutEnd,tutGo,tutStart,upBiz,view,viewArtist,viewCamp,viewCode,viewDebutQ,viewEvents,viewProps,viewRenew,viewReport,viewReportFull,viewSec,viewSong,viewSongs,wPrev,writeSong});
+Object.defineProperty(window,'S',{get:()=>S,configurable:true});
+window.__game={nextWeek:(...a)=>nextWeek(...a),state:()=>S};
