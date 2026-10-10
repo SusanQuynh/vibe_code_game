@@ -1,7 +1,7 @@
 import { R } from '../core/rng.js';
 import { esc, fmt, fmtN } from '../core/util.js';
 import { CONCEPTS, GENRES, MSK, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
-import { lbl } from '../i18n/index.js';
+import { lbl, t } from '../i18n/index.js';
 import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
 import { fame } from '../systems/artists.js';
@@ -9,13 +9,13 @@ import { DEBUT_MIN, DR, bestOf, debutRec } from '../systems/debut.js';
 import { evInfo, invBlock } from '../systems/events.js';
 import { candBlock, dHold, menteesOf, mentorScore, mentorSel, renewBlock, wp } from '../systems/ext2.js';
 import { mNameH, v3ArtistHTML } from '../systems/ext3.js';
-import { mBoss, mKids, mgrOf, mgrTargets, targetName } from '../systems/managers.js';
+import { mBoss, mKids, mgrOf, mgrTargets, targetNameT } from '../systems/managers.js';
 import { cbHold } from '../systems/offers.js';
 import { propCount } from '../systems/proposals.js';
 import { groupsOf } from '../systems/relations.js';
 import { liveEst } from '../systems/releases.js';
 import { EV_ART, EV_PCT, EV_TTS, evNext, evalBrief, stSum } from '../systems/review.js';
-import { wkLabel } from '../systems/secretary.js';
+import { wkLabelT } from '../systems/secretary.js';
 import { DAYN, DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/week.js';
 import { blinkD, campKeyOf, chibiHTML } from './building.js';
 import { closeM, modal } from './modal.js';
@@ -26,10 +26,10 @@ export function togD(k,v){S.ui=S.ui||{};if(S.ui[k]===v)return;S.ui[k]=v;save()}
 export function setAllD(pre,v){S.ui=S.ui||{};document.querySelectorAll('details.cl').forEach(d=>{const m=(d.getAttribute('ontoggle')||'').match(/togD\('([^']+)'/);if(m&&m[1].startsWith(pre)){S.ui[m[1]]=v;d.open=v}});save()}
 /* ================= VIEWS ================= */
 export function bars(a){return`<div class="bars">${Object.keys(STATS).map(k=>`<span>${lbl('stat',k)}</span><div class="bar"><i style="width:${a.st[k]}%"></i></div><b>${Math.round(a.st[k])}</b>`).join('')}</div>`}
-export function aTags(a){let t=a.status==='trainee'?'<span class="tag">Thực tập sinh</span>':'';groupsOf(a).forEach(g=>t+=`<span class="tag v">👥 ${esc(g.name)}</span>`);if(a.solo)t+='<span class="tag p">Solo</span>';if(a.actor)t+='<span class="tag m">Diễn viên</span>';if(a.scandal)t+='<span class="tag r">Scandal</span>';if(dHold(a))t+='<span class="tag s">🎊 Chừa lịch debut</span>';if(a.mt&&byId(a.mt))t+=`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`;if(a.status==='debuted'&&a.ce&&a.ce-abs()<=8)t+=`<span class="tag r">📄 HĐ còn ${a.ce-abs()}t</span>`;{const h=cbHold(a);if(h)t+=`<span class="tag p">📅 Chừa lịch comeback ${wkLabel(h.w)}</span>`}if(a.pa)t+=`<span class="tag m">🧑‍💻 ${esc(a.pa.name)}</span>`;if(a.restRec>abs())t+='<span class="tag">🛌 Lịch nghỉ thêm</span>';else if(a.hsF&&a.hsF.w>=abs()-3&&a.hsF.st!=='ok')t+='<span class="tag r">🩺 Cần nghỉ</span>';return t}
+export function aTags(a){let h=a.status==='trainee'?`<span class="tag">${t('tag.trainee')}</span>`:'';groupsOf(a).forEach(g=>h+=`<span class="tag v">👥 ${esc(g.name)}</span>`);if(a.solo)h+='<span class="tag p">Solo</span>';if(a.actor)h+=`<span class="tag m">${t('tag.actor')}</span>`;if(a.scandal)h+='<span class="tag r">Scandal</span>';if(dHold(a))h+=`<span class="tag s">🎊 ${t('tag.debutHold')}</span>`;if(a.mt&&byId(a.mt))h+=`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`;if(a.status==='debuted'&&a.ce&&a.ce-abs()<=8)h+=`<span class="tag r">📄 ${t('tag.contract',{n:a.ce-abs()})}</span>`;{const hd=cbHold(a);if(hd)h+=`<span class="tag p">📅 ${t('tag.cbHold',{w:wkLabelT(hd.w)})}</span>`}if(a.pa)h+=`<span class="tag m">🧑‍💻 ${esc(a.pa.name)}</span>`;if(a.restRec>abs())h+=`<span class="tag">🛌 ${t('tag.extraRest')}</span>`;else if(a.hsF&&a.hsF.w>=abs()-3&&a.hsF.st!=='ok')h+=`<span class="tag r">🩺 ${t('tag.needRest')}</span>`;return h}
 export function schedSel(a){const m=mgrSchedules(a);return`<span class="dmini" title="${a.days.map((k,i)=>lbl('day',i)+': '+lbl('train.n',k)).join(', ')}">${daysMini(a)}</span>`+(m?`<span class="tag v">📋 QL xếp</span>`:`<button class="btn sm" onclick="startPlanOne(${a.id})">Sửa</button>`)}
 export function wTable(obj,ns){const ks=Object.keys(STATS);return`<div class="tbl"><table><tr><th></th>${ks.map(k=>`<th>${lbl('stat',k)}</th>`).join('')}</tr>${Object.keys(obj).map(i=>{const c=obj[i];return`<tr><td><b>${lbl(ns,i)}</b></td>${ks.map(k=>{const v=c.w[k]||0;return`<td>${v?`<span class="hm" style="padding:1px 5px;background:rgba(242,85,127,${v*.75})">${Math.round(v*100)}%</span>`:'·'}</td>`}).join('')}</tr>`}).join('')}</table></div>`}
-export function artistLine(a,right=''){return`<div class="card row"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.busy?'🚶 '+esc(a.busy.title):daysMini(a)+' · '+TRAIN[a.days[0]].n+' hôm nay'} · ⚡${Math.round(a.energy)} · 🙂${Math.round(a.mood)}</span><span class="sp"></span>${right}</div>`}
+export function artistLine(a,right=''){return`<div class="card row"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.busy?'🚶 '+esc(a.busy.title):daysMini(a)+' · '+t('line.today',{k:lbl('train.n',a.days[0])})} · ⚡${Math.round(a.energy)} · 🙂${Math.round(a.mood)}</span><span class="sp"></span>${right}</div>`}
 export function viewArtist(id){
   const a=byId(id);if(!a)return closeM();
   const rels=Object.keys(a.rel).map(i=>({o:byId(+i),v:a.rel[i],t:a.tag[i]})).filter(x=>x.o).sort((x,y)=>Math.abs(y.v)-Math.abs(x.v)).slice(0,8);
@@ -69,41 +69,41 @@ export function viewAward(e){
   <button class="btn pri" onclick="${S.repOn!==false&&S.lastRep?'view(viewReport)':'closeM()'}">Tiếp tục</button>`);
 }
 export let repDay=0;
-export function tnode(m){const ts=mgrTargets(m);return`<div class="tnode"><div class="chibi mini">${chibiHTML(m)}</div><div style="min-width:0">${mNameH(m)} <span class="tag v">Cấp ${m.lv}</span><div class="small muted">${m.as?'Phụ trách '+esc(targetName(m))+` (${ts.length})`:'Chưa phân công'}${m.ps===1?' · tự xếp lịch':m.ps===2?' · đề xuất lịch':''}${m.auto!=='off'?' · tự nhận việc':''}</div></div></div>`}
+export function tnode(m){const ts=mgrTargets(m);return`<div class="tnode"><div class="chibi mini">${chibiHTML(m)}</div><div style="min-width:0">${mNameH(m)} <span class="tag v">${t('org.lv',{n:m.lv})}</span><div class="small muted">${m.as?t('org.charge',{who:esc(targetNameT(m)),n:ts.length}):t('mgr.tgt.none')}${m.ps===1?` · ${t('org.ps1')}`:m.ps===2?` · ${t('org.ps2')}`:''}${m.auto!=='off'?` · ${t('org.auto')}`:''}</div></div></div>`}
 export function orgTree(){
   const sub=m=>{const k=mKids(m);if(!k.length)return`<li>${tnode(m)}</li>`;const op=!(S.ui&&S.ui['ot-'+m.id]===false);
-    return`<li><details class="tdet" ${op?'open':''} ontoggle="togD('ot-${m.id}',this.open)"><summary>${tnode(m)}<span class="tcnt">${teamOf(m).length} người · ${k.length} cấp dưới</span></summary><ul>${k.map(sub).join('')}</ul></details></li>`};
+    return`<li><details class="tdet" ${op?'open':''} ontoggle="togD('ot-${m.id}',this.open)"><summary>${tnode(m)}<span class="tcnt">${t('org.team',{n:teamOf(m).length,k:k.length})}</span></summary><ul>${k.map(sub).join('')}</ul></details></li>`};
   const top=S.managers.filter(m=>!mBoss(m));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Giám đốc (bạn)</b><div class="small muted">${S.managers.length} quản lý · ${free.length} nghệ sĩ báo cáo trực tiếp</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:'<div class="small muted" style="margin:6px 0 0 20px">Chưa có quản lý.</div>'}`;
+  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>${t('org.ceo')}</b><div class="small muted">${t('org.ceoSub',{m:S.managers.length,a:free.length})}</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:`<div class="small muted" style="margin:6px 0 0 20px">${t('org.noMgr')}</div>`}`;
 }
 export function artDayLine(a,d){
   const r=S.lastRep&&S.lastRep.a[a.id];
-  if(!r)return`<div>🆕 <b>${esc(a.name)}</b>: mới gia nhập, chưa có số liệu.</div>`;
-  if(r.b)return`<div>🚶 <b>${esc(a.name)}</b>: làm việc bên ngoài – ${esc(r.b)}.</div>`;
+  if(!r)return`<div>🆕 <b>${esc(a.name)}</b>: ${t('dayln.new')}</div>`;
+  if(r.b)return`<div>🚶 <b>${esc(a.name)}</b>: ${t('dayln.out',{b:esc(r.b)})}</div>`;
   if(d===7){const g=r.d.reduce((s,x)=>s+x[1],0),tr=r.d.filter(x=>x[0]!=='rest').length,end=r.d[6];
-    return`<div>${daysMini({days:r.d.map(x=>x[0])})} <b>${esc(a.name)}</b>: ${tr} ngày tập, +${g.toFixed(1)} điểm chỉ số · cuối tuần ⚡${end[2]} 🙂${end[3]}${end[2]<30?' <span class="w">⚠️ kiệt sức</span>':''}</div>`}
+    return`<div>${daysMini({days:r.d.map(x=>x[0])})} <b>${esc(a.name)}</b>: ${t('dayln.week',{tr,g:g.toFixed(1),e:end[2],m:end[3]})}${end[2]<30?` <span class="w">⚠️ ${t('dayln.exhausted')}</span>`:''}</div>`}
   const [k,g,e,mo]=r.d[d];
-  const warn=(e<30?' <span class="w">⚠️ cần nghỉ</span>':'')+(mo<30?' <span class="w">💢 tâm trạng xấu</span>':'');
-  return`<div>${TIC[k]} <b>${esc(a.name)}</b>: ${TRAIN[k].n}${g?` (+${g.toFixed(1)})`:''} · ⚡${e} · 🙂${mo}${warn}</div>`;
+  const warn=(e<30?` <span class="w">⚠️ ${t('dayln.needRest')}</span>`:'')+(mo<30?` <span class="w">💢 ${t('dayln.badMood')}</span>`:'');
+  return`<div>${TIC[k]} <b>${esc(a.name)}</b>: ${lbl('train.n',k)}${g?` (+${g.toFixed(1)})`:''} · ⚡${e} · 🙂${mo}${warn}</div>`;
 }
 export function teamOf(m){let r=[...mgrTargets(m)];for(const k of mKids(m))r=r.concat(teamOf(k));return[...new Set(r)]}
 export function warnCount(arts,d){if(!S.lastRep)return 0;return arts.filter(a=>{const r=S.lastRep.a[a.id];if(!r||!r.d)return false;const x=r.d[d===7?6:d];return x[2]<30||x[3]<30}).length}
 export function briefOf(arts){const L=S.lastRep;let g=0,tr=0,fans=0;const warn=[],wn=[],done=[],out=[];
   for(const a of arts){const r=L.a[a.id];if(!r)continue;fans+=r.f||0;if(r.done)done.push(`${a.name} «${r.done}»`);
-    if(r.d){g+=r.d.reduce((t,x)=>t+x[1],0);tr++;const e=r.d[6];if(e[2]<30){warn.push(`${a.name} kiệt sức`);wn.push(a.name)}else if(e[3]<30){warn.push(`${a.name} tâm trạng xấu`);wn.push(a.name)}}else if(!r.done)out.push(a.name)}
+    if(r.d){g+=r.d.reduce((t,x)=>t+x[1],0);tr++;const e=r.d[6];if(e[2]<30){warn.push(t('brief.exhausted',{n:a.name}));wn.push(a.name)}else if(e[3]<30){warn.push(t('brief.badMood',{n:a.name}));wn.push(a.name)}}else if(!r.done)out.push(a.name)}
   return{g,tr,fans,warn,wn,done,out,dec:arts.reduce((t,a)=>t+((L.a[a.id]||{}).dec||0),0)}}
 export function briefCard(title,arts,m){const b=briefOf(arts);
-  let tip='';if(b.wn.length)tip=`cho ${b.wn.join(', ')} nghỉ 2–3 ngày`;
+  let tip='';if(b.wn.length)tip=t('brief.tipRest',{n:b.wn.join(t('list.sep'))});
   else{const t=arts.find(a=>a.status==='trainee'&&!a.busy&&debutRec(a).t!=='wait');if(t)tip=`${t.name} ${debutRec(t).short}`}
-  const l1=`${arts.length} người · 📈 +${(b.g/Math.max(b.tr,1)).toFixed(1)}/người${b.dec?` · 📉 −${b.dec.toFixed(1)} (TTS sa sút)`:''} · 💗 ${b.fans>=0?'+':''}${fmtN(b.fans)}${b.out.length?` · 🚶 ${b.out.length} đi làm`:''}`;
-  return`<div class="card rep" style="margin:0 0 6px">${title}<div>${l1}</div><div>${b.warn.length?`<span class="w">⚠️ ${esc(b.warn.join(', '))}</span>`:'✅ Ổn định'}${b.done.length?` · 🎬 Xong ${esc(b.done.join(', '))}`:''}</div>${tip?`<div class="muted">💡 ${esc(tip)}</div>`:''}</div>`}
+  const l1=`${t('brief.l1',{n:arts.length,g:(b.g/Math.max(b.tr,1)).toFixed(1)})}${b.dec?` · ${t('brief.dec',{d:b.dec.toFixed(1)})}`:''} · 💗 ${b.fans>=0?'+':''}${fmtN(b.fans)}${b.out.length?` · ${t('brief.out',{n:b.out.length})}`:''}`;
+  return`<div class="card rep" style="margin:0 0 6px">${title}<div>${l1}</div><div>${b.warn.length?`<span class="w">⚠️ ${esc(b.warn.join(', '))}</span>`:`✅ ${t('brief.ok')}`}${b.done.length?` · 🎬 ${t('brief.done',{d:esc(b.done.join(', '))})}`:''}</div>${tip?`<div class="muted">💡 ${esc(tip)}</div>`:''}</div>`}
 export function viewReport(){
   const L=S.lastRep;if(!L){modal('<h2>📑 Báo cáo</h2><div class="sub">Chưa có báo cáo. Hãy chơi qua một tuần.</div>');return}
   const dm=L.m1!=null?L.m1-L.m0:null,fans=Object.values(L.a).reduce((t,r)=>t+(r.f||0),0),dn=Object.values(L.a).filter(r=>r.done).length,wc=warnCount(S.artists,7);
   const lst=[],walk=(m,d)=>{lst.push([m,d]);mKids(m).forEach(k=>walk(k,d+1))};S.managers.filter(m=>!mBoss(m)).forEach(m=>walk(m,0));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`<b>📋 ${esc(m.name)}</b> <span class="muted">· ${esc(targetName(m))}</span>`,ts,m)}</div>`}).join('');
+  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`<b>📋 ${esc(m.name)}</b> <span class="muted">· ${esc(targetNameT(m))}</span>`,ts,m)}</div>`}).join('');
   const pc=propCount();
   modal(`<h2>📑 Báo cáo tuần ${L.w} · Năm ${L.y}</h2>
   <div class="grid2" style="margin-bottom:8px"><div class="card small">💰 <b class="${dm<0?'bad':'good'}">${dm==null?'—':(dm>=0?'+':'')+fmt(dm)}</b></div><div class="card small">💗 <b>${fans>=0?'+':''}${fmtN(fans)}</b> fan</div><div class="card small">🎬 <b>${dn}</b> dự án xong</div><div class="card small">⚠️ <b class="${wc?'bad':''}">${wc}</b> cần chú ý</div>${L.biz?`<div class="card small">📈 Kinh doanh <b class="${L.biz<0?'bad':'good'}">${L.biz>=0?'+':''}${fmt(L.biz)}</b></div>`:''}</div>

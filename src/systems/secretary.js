@@ -2,6 +2,7 @@ import { R } from '../core/rng.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { CONCEPTS } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
+import { t } from '../i18n/index.js';
 import { fame } from './artists.js';
 import { avgFit } from './debut.js';
 import { gHiatus } from './ext2.js';
@@ -47,6 +48,8 @@ export function cbSched(k){const x=actByKey(k),p=secPlan(x);if(!p)return;S.cbPla
   addLog(`🗒️ Hẹn comeback cho ${p.n.slice(2).trim()} vào tuần ${((w-1)%52)+1}. Đã tự chừa lịch: thành viên không nhận dự án hay cuộc thi kéo dài qua tuần này.`);
   const late=x.m.map(byId).filter(a=>a&&a.busy&&abs()+a.busy.left>w);if(late.length)addLog(`⚠️ ${late.map(a=>a.name).join(', ')} đang bận ${late.map(a=>'«'+a.busy.title+'»').join(', ')} quá tuần comeback, có thể phải lùi lịch.`,'bad');act()}
 export function cbCancel(k){S.cbPlan=(S.cbPlan||[]).filter(x=>x.k!==k);act()}
+// Bản UI của wkLabel (vi: T5 N2, en: W5 Y2). wkLabel giữ nguyên vì đi vào S.prHist.
+export const wkLabelT=w=>{const y=Math.ceil(w/52);return t(y!==S.year?'week.labelY':'week.label',{w:((w-1)%52)+1,y})};
 export const wkLabel=w=>`T${((w-1)%52)+1}${Math.ceil(w/52)!==S.year?' N'+Math.ceil(w/52):''}`;
 export function runCbPlans(){if(!S.cbPlan||!S.cbPlan.length)return;const now=abs();
   for(const p of [...S.cbPlan]){if(p.w>now)continue;const x=actByKey(p.k);if(!x){S.cbPlan=S.cbPlan.filter(z=>z!==p);continue}
