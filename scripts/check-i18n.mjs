@@ -11,6 +11,13 @@ for (const f of fs.readdirSync(DIR).filter(f => f.endsWith('.js')))
 if (!locs.vi) { console.error('Thiếu locale chuẩn vi.js'); process.exit(1); }
 const errs = [];
 const base = locs.vi.dict;
+// Giá trị chuỗi: không chứa handler inline, và không còn dấu " ngoài thẻ HTML (giá trị có thể nằm trong thuộc tính title="…")
+for (const [code, L] of Object.entries(locs))
+  for (const [k, v] of Object.entries(L.dict)) {
+    if (typeof v !== 'string') continue;
+    if (/\bon\w+\s*=/i.test(v)) errs.push(`${code}: key '${k}' chứa handler inline (on*=), đặt handler trong template`);
+    if (v.replace(/<[^>]*>/g, '').includes('"')) errs.push(`${code}: key '${k}' chứa dấu " ngoài thẻ HTML (vỡ thuộc tính)`);
+  }
 for (const [code, L] of Object.entries(locs)) {
   if (L.meta.code !== code) errs.push(`${code}.js: meta.code='${L.meta.code}' không khớp tên file`);
   if (code === 'vi') continue;

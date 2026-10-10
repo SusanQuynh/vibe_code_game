@@ -20,6 +20,8 @@ npm run build    # ra thư mục dist/
 npm test                 # unit (Vitest + jsdom)
 npm run check:handlers   # mọi handler inline (onclick="…") phải có trên window
 npm run check:i18n       # locale đủ/đúng key và placeholder so với vi; key dùng trong code phải tồn tại
+npm run check:literals   # chuỗi tiếng Việt viết cứng trong src/ (allowlist + bộ đếm todo); thêm -- --report để xem tiến độ
+node scripts/rng-diff.mjs  # so chuỗi lời gọi RNG theo khai báo giữa HEAD và cây làm việc
 npm run test:e2e         # Playwright: golden master + smoke
 ```
 

@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "check:handlers": "node scripts/check-handlers.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
+    "check:literals": "node scripts/check-literals.mjs",
     "deploy": "node scripts/deploy.mjs"
   },
   "repository": {
