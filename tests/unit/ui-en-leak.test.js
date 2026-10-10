@@ -28,6 +28,9 @@ const VERBATIM = [
   /^lastRep\.ev\.\d+$/, // dòng sự kiện tuần trong báo cáo (đi từ log)
   /^lastRep\.a\.\d+\.(b|done)$/, // việc ngoài / dự án xong của nghệ sĩ trong báo cáo
   /^awards\.\d+\.res\.\d+\.(cat|note)$/, // hạng mục + ghi chú giải thưởng
+  /^props\.m\.\d+\.s\.\d+\.why$/, // lý do quản lý đề xuất lịch (shortWhy lưu vào S.props)
+  /^props\.m\.\d+\.d\.\d+\.txt$/, // gợi ý debut (debutRec().short lưu vào S.props)
+  /^props\.c\.\d+\.txt$/, // mô tả xung đột (routeProps lưu vào S.props)
 ];
 function names(v, out = new Set(), key, path = '') {
   if (typeof v === 'string') {
