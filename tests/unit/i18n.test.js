@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { t, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
+import { t, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
 import { diffLocales } from '../../src/i18n/check.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
@@ -47,6 +47,13 @@ describe('i18n lõi', () => {
     sp.mockRestore();
   });
   it('langs(): vi đứng đầu', () => expect(langs()[0].code).toBe('vi'));
+});
+
+describe('money', () => {
+  it('theo ngôn ngữ', () => {
+    setLang('en'); expect(money(600e6)).toBe('600M'); expect(money(1.5e9)).toBe('1.5B');
+    setLang('vi'); expect(money(600e6)).toBe('600 tr');
+  });
 });
 
 describe('parity locale', () => {

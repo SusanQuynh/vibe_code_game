@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fmt, fmtN, clamp, esc } from '../../src/core/util.js';
+import { fmt, fmtN, FMT_VI, clamp, esc } from '../../src/core/util.js';
 
 describe('fmt', () => {
   it('tỷ / triệu / nghìn', () => {
@@ -7,6 +7,15 @@ describe('fmt', () => {
     expect(fmt(600e6)).toBe('600 tr');
     expect(fmt(-2e6)).toBe('-2 tr');
     expect(fmt(4500)).toBe('5k');
+  });
+  it('mặc định == FMT_VI trên cả dải giá trị', () => {
+    for (let x = -3e9; x <= 3e9; x += 7_654_321.5) expect(fmt(x)).toBe(fmt(x, FMT_VI));
+  });
+  it('nhận bảng đơn vị khác', () => {
+    const u = { b: 'B', m: 'M', k: 'K' };
+    expect(fmt(1.5e9, u)).toBe('1.5B');
+    expect(fmt(600e6, u)).toBe('600M');
+    expect(fmt(4500, u)).toBe('5K');
   });
 });
 

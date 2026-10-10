@@ -3,5 +3,6 @@ export default {
   dict: {
     'lang.title': 'Language',
     'lang.current': 'Current: {name}',
+    'fmt.units': { b: 'B', m: 'M', k: 'K' },
   },
 };

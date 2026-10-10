@@ -1,3 +1,4 @@
+import { fmt } from '../core/util.js';
 // Lõi i18n: module lá (không import system/UI, không chạm DOM, không gọi RNG).
 const mods = import.meta.glob('./locales/*.js', { eager: true });
 let DICTS = Object.fromEntries(Object.values(mods).map(m => [m.default.meta.code, m.default]));
@@ -15,3 +16,5 @@ export function t(k, p) {
   return typeof v === 'function' ? v(p || {}) : p ? v.replace(/\{(\w+)\}/g, (m, n) => (n in p ? p[n] : m)) : v;
 }
 export const __setDicts = d => { DICTS = d; }; // chỉ cho test
+// Tiền hiển thị theo ngôn ngữ. fmt() mặc định (vi) vẫn dùng cho addLog để S không phụ thuộc ngôn ngữ.
+export const money = m => fmt(m, t('fmt.units'));

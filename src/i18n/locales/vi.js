@@ -4,5 +4,6 @@ export default {
   dict: {
     'lang.title': 'Ngôn ngữ',
     'lang.current': 'Đang dùng: {name}',
+    'fmt.units': { b: ' tỷ', m: ' tr', k: 'k' },
   },
 };
