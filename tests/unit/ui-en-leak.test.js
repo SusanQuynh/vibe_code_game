@@ -15,7 +15,7 @@ const FX = Object.fromEntries(['new', 'rich'].map(k => [k, JSON.parse(fs.readFil
 const SKIP = new Set(['log', 'hist', 'prHist']);
 const VI = /[À-ỹĐđ]/;
 // tiếng Việt không dấu: tiền "600 tr", TTS, QL, nhãn tuần "T5 N2"
-const VI_PLAIN = /\d tr\b|\bTTS\b|\bQL\b|\bT\d+( N\d+)?\b/;
+const VI_PLAIN = /\d tr\b|\bTTS\b|\bQL\b|\bT\d+( N\d+)?\b|\b(thu|chi|Nam)\b/; // + vài từ không dấu hay lọt: thu, chi, Nam
 
 // Chỉ gỡ NGUYÊN chuỗi giá trị của field kiểu tên/tiêu đề (không gỡ theo từ: "Không", "tuần", "Năm"… phải còn bị bắt). Thêm biến thể bỏ emoji/ký hiệu đầu (n của nhóm là "⭐ Tên").
 const NAME_KEYS = new Set(['name', 'names', 'title', 't', 'partner', 'costar', 'n']);

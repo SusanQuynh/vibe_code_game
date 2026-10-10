@@ -100,6 +100,20 @@ describe('mọi key kiểu hàm (số nhiều)', () => {
     expect(t('evframe.skipTitle', { n: 1 })).toBe('1 unresolved event'); expect(t('evframe.skipTitle', { n: 3 })).toBe('3 unresolved events');
     expect(t('artist.hs.rec', { n: 1 })).toBe('Suggests 1 rest day/week.');
   });
+  it('en (soát giai đoạn 2): số ít/số nhiều của kinh doanh, nhân sự, gia hạn, thư ký', () => {
+    setLang('en');
+    expect(t('hr.ctLeft', { c: '', l: 1, s: '5M' })).toBe('<b class="">1</b> week left · 5M/wk'); expect(t('hr.ctLeft', { c: 'bad', l: 2, s: '5M' })).toContain('2</b> weeks left');
+    expect(t('renew.opt.re', { y: 1, m: '9M' })).toBe('Renew for 1 year (fee 9M)'); expect(t('renew.opt.re', { y: 2, m: '9M' })).toBe('Renew for 2 years (fee 9M)');
+    expect(t('sales.dig', { n: 1 })).toContain('1 song earning'); expect(t('sales.dig', { n: 2 })).toContain('2 songs earning');
+    expect(t('renew.ev.fails', { n: 1 })).toBe(' (failed 1 time in a row)'); expect(t('renew.ev.fails', { n: 3 })).toBe(' (failed 3 times in a row)');
+    expect(t('sec.readyN', { n: 1 })).toBe('<b>1</b> group/solo should make a comeback now.'); expect(t('sec.readyN', { n: 2 })).toBe('<b>2</b> groups/solos should make a comeback now.');
+    expect(t('props.sumSolved', { n: 1 })).toBe('⚖️ 1 conflict resolved'); expect(t('props.sumSolved', { n: 2 })).toBe('⚖️ 2 conflicts resolved');
+    expect(t('mgr.kidN', { n: 1 })).toBe('coaches 1 manager'); expect(t('mgr.kidN', { n: 2 })).toBe('coaches 2 managers');
+    expect(t('meet.secFan', { n: 1 })).toBe(' 💬 1 fan-interaction suggestion.');
+    expect(t('studio.hidden', { n: 1 })).toBe('Hiding 1 busy act.'); expect(t('studio.hidden', { n: 4 })).toBe('Hiding 4 busy acts.');
+    setLang('vi');
+    expect(t('sec.readyN', { n: 2 })).toBe('<b>2</b> nhóm/solo nên comeback ngay.'); expect(t('mgr.kidN', { n: 2 })).toBe('kèm 2 QL');
+  });
 });
 
 describe('task 8: lịch tập, lưu/chuyển game', () => {
