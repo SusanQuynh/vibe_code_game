@@ -69,7 +69,7 @@ describe('tuần', () => {
     newGame();
     const train = S.artists.reduce((s, a) => s + (a.busy ? 0 : trainDays(a) * TRAIN_COST / 5), 0);
     expect(weekCost()).toBe(S.artists.reduce((s, a) => s + a.salary, 0) + train + S.managers.reduce((s, m) => s + m.salary, 0) + (S.assts || []).reduce((s, x) => s + x.sal, 0));
-    // lương PA & chuyên gia (lớp vá v3 đã gộp vào hàm gốc)
+    // PA & specialist salaries (v3 patch merged into the original function)
     const base = weekCost();
     S.artists[0].pa = { sal: 5e6 };
     expect(weekCost()).toBe(base + 5e6);

@@ -4,7 +4,7 @@ import { S } from '../state.js';
 import { t } from '../i18n/index.js';
 import { closeM } from './modal.js';
 
-/* ---- Hướng dẫn người mới ---- */
+/* ---- New-player tutorial ---- */
 export const TUT=[
  {id:'welcome',first:1},
  {id:'top',sel:'.top'},

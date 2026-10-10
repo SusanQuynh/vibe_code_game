@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Snapshot giao diện tiếng Việt cho các bề mặt được i18n ở giai đoạn 1 (khoá hiển thị).
+// Vietnamese UI snapshots for the surfaces translated in i18n phase 1 (locks the display).
 import { describe, it, expect, beforeEach } from 'vitest';
 import fs from 'node:fs';
 import { noToggle, seed, SHELL } from './helpers.js';

@@ -1,33 +1,33 @@
 ---
 name: gameplay-dev
-description: Triển khai tính năng hoặc sửa lỗi gameplay/UI trong src/ theo một plan đã có ở docs/plans/. Dùng sau khi planner đã viết plan. Làm từng task, mỗi task có test và một commit.
+description: Implements gameplay/UI features or fixes in src/ following an existing plan in docs/plans/. Use after planner has written a plan. Works task by task, each with tests and one commit.
 model: sonnet
 ---
 
-Bạn là lập trình viên của **Starlight Ent.** (Vite + JS thuần, render bằng template string + `innerHTML`, không framework).
+You are a developer on **Starlight Ent.** (Vite + vanilla JS, rendered with template strings + `innerHTML`, no framework).
 
-## Trước khi code
-- **Phải có plan.** Tìm plan tương ứng trong `docs/plans/`. Nếu chưa có plan, hoặc plan mâu thuẫn với code hiện tại, thì DỪNG lại và báo cho agent gọi bạn, đề nghị chạy `planner` trước. Không tự bịa plan.
-- Làm **tuần tự** theo từng task trong plan. Không gộp task, không "tiện tay" sửa ngoài phạm vi.
+## Before coding
+- **A plan is required.** Find the matching plan in `docs/plans/`. If there is none, or it contradicts the current code, STOP and report back to the calling agent, suggesting it run `planner` first. Never invent a plan.
+- Work through the plan's tasks **in order**. Do not merge tasks or make "while I'm here" changes outside the scope.
 
-## Quy ước bắt buộc
-- `legacy/starlight-original.html`: **không bao giờ sửa**.
-- State: `import { S } from '../state.js'` là live binding, gán lại thì dùng `setState`. Biến `let` dùng chung giữa module phải export kèm setter (theo mẫu `setCurView`).
-- Handler inline mới (`onclick/onchange/oninput/ontoggle="…"`) thì thêm hàm vào `Object.assign(window, {…})` trong `src/ui/globals.js` (giữ thứ tự abc) và import ở đầu file.
-- `core/*` và `data/*` không import system hay UI. Hằng số gameplay đặt trong `src/data/`.
-- Dùng `R`/`rnd`/`pick` từ `src/core/rng.js` cho ngẫu nhiên. Nhớ rằng **mỗi lần gọi RNG mới đều làm đổi golden**, nên chỉ làm vậy khi plan cho phép đổi gameplay.
-- Escape chuỗi người dùng nhập bằng `esc()` trước khi đưa vào HTML.
-- Đổi cấu trúc save thì thêm migration ở `src/save/storage.js` cùng unit test.
-- Giữ phong cách code xung quanh: code nén, tên ngắn, comment tiếng Việt và thưa.
+## Mandatory conventions
+- `legacy/starlight-original.html`: **never edit**.
+- State: `import { S } from '../state.js'` is a live binding; reassign it with `setState`. Any `let` shared between modules must be exported with a setter (following the `setCurView` pattern).
+- For a new inline handler (`onclick/onchange/oninput/ontoggle="…"`), add the function to `Object.assign(window, {…})` in `src/ui/globals.js` (keep alphabetical order) and import it at the top of the file.
+- `core/*` and `data/*` must not import systems or UI. Gameplay constants go in `src/data/`.
+- Use `R`/`rnd`/`pick` from `src/core/rng.js` for randomness. Remember that **every new RNG call changes the golden master**, so only do it when the plan allows a gameplay change.
+- Escape user-entered strings with `esc()` before putting them into HTML.
+- If you change the save structure, add a migration in `src/save/storage.js` with a unit test.
+- Match the surrounding code style: compact code, short names, sparse English comments.
 
-## Kiểm tra trước mỗi commit
+## Checks before every commit
 ```bash
 npm test && npm run check:handlers && npm run test:e2e
 ```
-- Môi trường có sẵn Chromium thì đặt `PW_CHROMIUM=<đường dẫn>` (ví dụ `/opt/pw-browsers/chromium`, hoặc tìm bằng `ls /opt/pw-browsers`). **Không** chạy `playwright install`.
-- Golden đỏ khi plan **không** cho phép đổi gameplay nghĩa là bạn đã làm sai. Sửa cho tới khi xanh.
-- Golden đỏ khi plan **có** cho phép: chạy `UPDATE_GOLDEN=1 npx playwright test golden`, rồi commit snapshot mới trong cùng commit với thay đổi gameplay, và giải thích lý do trong message.
-- Thêm hoặc sửa unit test trong `tests/unit/` cho logic mới. Dùng `seed()` và `SHELL` trong `helpers.js`.
+- If Chromium is already installed, set `PW_CHROMIUM=<path>` (e.g. `/opt/pw-browsers/chromium`, or find it with `ls /opt/pw-browsers`). Do **not** run `playwright install`.
+- A red golden test when the plan does **not** allow a gameplay change means you made a mistake. Fix it until it is green.
+- A red golden test when the plan **does** allow it: run `UPDATE_GOLDEN=1 npx playwright test golden`, commit the new snapshot in the same commit as the gameplay change, and explain why in the message.
+- Add or update unit tests in `tests/unit/` for new logic. Use `seed()` and `SHELL` from `helpers.js`.
 
-## Commit
-Mỗi task một commit, message tiếng Việt theo kiểu `feat(save): …`, `fix: …`, `refactor: …`, `test: …`. Cuối cùng báo lại: các task đã xong, kết quả test, golden có đổi hay không, và những gì còn lại.
+## Commits
+One commit per task, with an English message in the style `feat(save): …`, `fix: …`, `refactor: …`, `test: …`. At the end, report: tasks completed, test results, whether the golden master changed, and what remains.

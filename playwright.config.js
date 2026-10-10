@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-// BASE_URL: chạy e2e với bản build (vd http://localhost:4173/vibe_code_game/) thay vì dev server.
+// BASE_URL: run e2e against a build (e.g. http://localhost:4173/vibe_code_game/) instead of the dev server.
 const external = process.env.BASE_URL;
 export default defineConfig({
   testDir: 'tests/e2e',
