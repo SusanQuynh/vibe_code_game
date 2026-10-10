@@ -179,3 +179,26 @@ describe('task 15: tên lứa và tên cuộc thi hiển thị', () => {
     expect([1, '2–5'].map(n => t('comp.toast.need', { n }))).toEqual(['Need 1 trainee', 'Need 2–5 trainees']);
   });
 });
+
+describe('task 16: Văn phòng Quản lý', () => {
+  it('targetNameT: tên lứa ở en là "Batch N", không rò chữ Việt', () => {
+    setState(rich()); setLang('en');
+    const m = S.managers[0]; m.as = { t: 'b', id: S.batches[0].id };
+    expect(targetNameT(m)).toBe('trainees of Batch 4');
+  });
+  it('en: mẹo ở màn xếp lịch (plan.tip) gọi đúng tên tuỳ chọn của quản lý (mgr.psLbl)', () => {
+    setLang('en');
+    expect(t('plan.tip')).toContain(t('mgr.psLbl').replace(/:$/, ''));
+    setLang('vi');
+  });
+  it('mgr.help/picked/lvSub/freeTts/bossTitle: số nhiều và placeholder lặp ở en', () => {
+    setLang('en');
+    expect(t('mgr.picked', { a: 2, m: 4 })).toBe('Selected <b>2/4</b>. Each manager can only handle up to 4 solo artists/actors; to cover more, let a senior manager coach other managers.');
+    expect([1, 2].map(n => t('mgr.lvSub', { m: n, a: n }))).toEqual(['1 manager · 1 artist in charge', '2 managers · 2 artists in charge']);
+    expect([1, 2].map(n => t('mgr.freeTts', { n }))).toEqual(['🌱 <b>1 trainee</b> — assign a manager by batch', '🌱 <b>2 trainees</b> — assign a manager by batch']);
+    expect([1, 2].map(n => t('mgr.bossTitle', { n }))).toEqual(['👔 Managers of managers (1 team leader)', '👔 Managers of managers (2 team leaders)']);
+    expect(t('mgr.help', { m: 4 })).toContain('up to 4 solo artists/actors');
+    setLang('vi');
+    expect(t('mgr.help', { m: 4 })).toContain('danh sách tối đa 4 nghệ sĩ');
+  });
+});

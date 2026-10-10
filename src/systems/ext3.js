@@ -11,7 +11,7 @@ import { batchNameT, batchOf } from './batches.js';
 import { DEBUT_COST, DEBUT_MIN, DRT, bestOf, debutIds, debutRec, debutRecT, lineupWith } from './debut.js';
 import { pushEv } from './events.js';
 import { MOOD, SONGW, book, compRep, dHold, ensureCurBatch, gMgr, lowK, mdReview, menteesOf, mentorScore, mxP, songRelease } from './ext2.js';
-import { effSk, inSub, mBoss, mCap, mKids, mgrExp, mgrOf, targetName } from './managers.js';
+import { effSk, inSub, mBoss, mCap, mKids, mgrExp, mgrOf, targetNameT } from './managers.js';
 import { trendTag } from './market.js';
 import { acceptCast, canTake, slotsOf } from './offers.js';
 import { datingPartner, getRel, groupsOf, harmony, setRel, setTag } from './relations.js';
@@ -38,15 +38,15 @@ export function mgrBossHTML(){
   if(!S.managers.length)return'';
   const L=S.managers.slice().sort((a,b)=>mKids(b).length-mKids(a).length||b.lv-a.lv);
   const lvs=[...new Set(S.managers.map(m=>m.lv))].sort((a,b)=>a-b);
-  const legend=`<div class="small" style="margin-bottom:6px">Quản lý có cấp trên là quản lý khác sẽ hiện tên màu theo cấp (cùng cấp cùng màu): ${lvs.map(l=>`<b style="color:${lvColor(l)}">● Cấp ${l}</b>`).join(' ')} · tên màu thường là người báo cáo trực tiếp Giám đốc.</div>`;
+  const legend=`<div class="small" style="margin-bottom:6px">${t('mgr.legend',{l:lvs.map(l=>`<b style="color:${lvColor(l)}">● ${t('org.lv',{n:l})}</b>`).join(' ')})}</div>`;
   const row=m=>{const ks=mKids(m),cand=S.managers.filter(x=>canKid(m,x)).sort((a,b)=>(a.boss?1:0)-(b.boss?1:0)||a.lv-b.lv);
-    return`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(m)}</div><div style="flex:1;min-width:0">${mNameH(m)} <span class="tag v">Cấp ${m.lv}</span>${ks.length?' <span class="tag s">👔 Trưởng nhóm</span>':''}<div class="small muted">${mBoss(m)?'Báo cáo cho '+esc(mBoss(m).name):'Báo cáo trực tiếp Giám đốc'} · kèm cặp ${ks.length}/${mCap(m)} quản lý · cả đội ${teamOf(m).length} nghệ sĩ</div></div></div>
-    ${ks.length?ks.map(k=>`<div class="prow">↳ ${mNameH(k)}<span class="small muted">Cấp ${k.lv} · ${esc(targetName(k))} · quan hệ ${relTxt(mrel(m,k))}${mKids(k).length?` · kèm ${mKids(k).length} QL`:''}</span><span class="sp"></span><button class="btn sm" onclick="setBoss(${k.id},'')">Tách ra</button></div>`).join(''):'<div class="small muted" style="margin-top:4px">Chưa kèm cặp quản lý nào.</div>'}
-    ${cand.length?`<div class="row" style="margin-top:6px"><select onchange="if(this.value)setBoss(+this.value,${m.id})" style="flex:1;min-width:0" aria-label="Giao quản lý cấp dưới"><option value="">+ Giao quản lý cấp dưới cho ${esc(m.name)}…</option>${cand.map(x=>`<option value="${x.id}">${esc(x.name)} (cấp ${x.lv})${x.boss?' – đang dưới '+esc((mBoss(x)||{}).name||''):''}</option>`).join('')}</select></div>`:(ks.length>=mCap(m)?'<div class="small muted">Đã đủ số cấp dưới ở cấp hiện tại.</div>':'')}</div>`};
+    return`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(m)}</div><div style="flex:1;min-width:0">${mNameH(m)} <span class="tag v">${t('org.lv',{n:m.lv})}</span>${ks.length?` <span class="tag s">${t('mgr.leader')}</span>`:''}<div class="small muted">${t('mgr.rowSub',{r:mBoss(m)?t('mgr.reportsTo',{n:esc(mBoss(m).name)}):t('mgr.reportsCeo'),k:ks.length,c:mCap(m),n:teamOf(m).length})}</div></div></div>
+    ${ks.length?ks.map(k=>`<div class="prow">↳ ${mNameH(k)}<span class="small muted">${t('mgr.kid',{lv:t('org.lv',{n:k.lv}),w:esc(targetNameT(k)),r:relTxt(mrel(m,k)),x:mKids(k).length?` · ${t('mgr.kidN',{n:mKids(k).length})}`:''})}</span><span class="sp"></span><button class="btn sm" onclick="setBoss(${k.id},'')">${t('mgr.detach')}</button></div>`).join(''):`<div class="small muted" style="margin-top:4px">${t('mgr.noKids')}</div>`}
+    ${cand.length?`<div class="row" style="margin-top:6px"><select onchange="if(this.value)setBoss(+this.value,${m.id})" style="flex:1;min-width:0" aria-label="${t('mgr.assignAria')}"><option value="">${t('mgr.assignOpt',{n:esc(m.name)})}</option>${cand.map(x=>`<option value="${x.id}">${t('mgr.candOpt',{n:esc(x.name),l:x.lv,x:x.boss?t('mgr.under',{b:esc((mBoss(x)||{}).name||'')}):''})}</option>`).join('')}</select></div>`:(ks.length>=mCap(m)?`<div class="small muted">${t('mgr.capFull')}</div>`:'')}</div>`};
   const pairs=[];for(let i=0;i<S.managers.length;i++)for(let j=i+1;j<S.managers.length;j++){const x=S.managers[i],y=S.managers[j],v=mrel(x,y);if(v)pairs.push({x,y,v})}
   pairs.sort((a,b)=>Math.abs(b.v)-Math.abs(a.v));
-  const rel=`<h3 style="margin-top:10px">🤝 Quan hệ giữa các quản lý</h3>${pairs.slice(0,12).map(p=>`<div class="small">${mNameH(p.x)} & ${mNameH(p.y)}: ${relTxt(p.v)} ${p.v>=50?'· thân thiết, hay chia sẻ kinh nghiệm':p.v<=-30?'· hay bất đồng':''}</div>`).join('')||'<div class="small muted">Các quản lý chưa có tương tác đáng kể. Họ sẽ đi cà phê, tranh luận hoặc kèm cặp nhau theo thời gian.</div>'}`;
-  return det('mg-boss',`👔 Quản lý các quản lý (${S.managers.filter(m=>mKids(m).length).length} trưởng nhóm)`,legend+L.map(row).join('')+rel,true);
+  const rel=`<h3 style="margin-top:10px">${t('mgr.relTitle')}</h3>${pairs.slice(0,12).map(p=>`<div class="small">${mNameH(p.x)} & ${mNameH(p.y)}: ${relTxt(p.v)} ${p.v>=50?t('mgr.relGood'):p.v<=-30?t('mgr.relBad'):''}</div>`).join('')||`<div class="small muted">${t('mgr.relNone')}</div>`}`;
+  return det('mg-boss',t('mgr.bossTitle',{n:S.managers.filter(m=>mKids(m).length).length}),legend+L.map(row).join('')+rel,true);
 }
 /* ---- Trợ lý cá nhân cho nghệ sĩ quản lý theo nhóm ---- */
 export const paOK=a=>a.status==='debuted'&&groupsOf(a).length>0&&!a.pm;
