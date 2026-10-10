@@ -1,5 +1,6 @@
 // Quét AST tìm literal tiếng Việt. Thuần: scan(code, file) → [{at, text, ctx, cmp, plain?}]; scanCss(code, file) cho content: trong CSS.
 // ctx: ui | toast (đối số toast(), không bao giờ được miễn theo khai báo) | log (addLog/pushEv hoặc biến cục bộ chảy vào chúng) | name (data/names.js) | css.
+// sink (tuỳ chọn, cần cfg.sinks): id của sink cấu hình bắt được literal (đi vào S/log qua tham số hàm, thuộc tính object ghi vào S, hoặc bảng dữ liệu mà log đọc). Xem scripts/i18n-literals.json#sinks.
 // cmp: literal dùng để so sánh logic (===, switch, includes/startsWith/indexOf/has, khoá object tra bằng [x], regex). plain: tiếng Việt không dấu (TTS, QL, "80 tr", nhãn tuần N<năm>/T<tuần>).
 let parseAst;
 try { ({ parseAst } = await import('rollup/parseAst')); }
@@ -91,11 +92,77 @@ function cmpPos(n, anc, rs) {
   return false;
 }
 
-export function scan(code, file) {
+
+// ---- Sink cấu hình (đi vào S/log mà bộ quét không tự thấy) ----
+// call: literal nằm trong đối số arg của lời gọi hàm/method tên fn ('removeArtist', 'hist.unshift'); cả biến cục bộ chảy vào đối số đó.
+// prop: literal là giá trị của khoá key trong object literal, vế phải của phép gán vào thuộc tính key, hoặc khởi tạo của biến tên key, trong các khai báo `in`.
+// data: mọi literal (hoặc chỉ khoá key nếu có) trong các khai báo `in` (bảng dữ liệu/hàm mà log hoặc S đọc nguyên văn).
+const calleeText = c => c.type === 'Identifier' ? c.name : c.type === 'MemberExpression' && !c.computed ? (calleeText(c.object) ?? '') + '.' + c.property.name : null;
+const fnMatch = (txt, fn) => txt != null && (txt === fn || txt.endsWith('.' + fn));
+const keyName = p => p.type === 'Property' && !p.computed ? (p.key.name ?? p.key.value) : null;
+// Biến cục bộ chảy vào đối số `arg` của lời gọi khớp fn (kể cả destructuring trong for-of): literal gán cho chúng thuộc sink
+function sinkVars(root, fn, arg) {
+  const vars = new Set(), asg = [], forOf = [];
+  const w = n => {
+    if (n.type === 'CallExpression' && fnMatch(calleeText(n.callee), fn) && n.arguments[arg]) idents(n.arguments[arg], vars);
+    else if (n.type === 'VariableDeclarator' && n.init) asg.push([n.id, n.init]);
+    else if (n.type === 'AssignmentExpression') asg.push([n.left, n.right]);
+    else if (n.type === 'ForOfStatement') forOf.push(n);
+    for (const c of kids(n)) w(c);
+  };
+  w(root);
+  const names = (pat, o = new Set()) => { if (pat.type === 'Identifier') o.add(pat.name); else for (const c of kids(pat)) names(c, o); return o; };
+  for (let ch = true; ch;) {
+    ch = false;
+    for (const [l, r] of asg) if (l.type === 'Identifier' && vars.has(l.name)) for (const i of idents(r)) if (!vars.has(i)) { vars.add(i); ch = true; }
+    for (const f of forOf) { const L = f.left.type === 'VariableDeclaration' ? f.left.declarations[0].id : f.left; if ([...names(L)].some(x => vars.has(x))) for (const i of idents(f.right)) if (!vars.has(i)) { vars.add(i); ch = true; } }
+  }
+  return vars;
+}
+// Trả id sink khớp literal n (tổ tiên anc, khai báo at), hoặc null. sv = { [sinkId]: Set biến } đã tính cho khai báo này
+function sinkOf(n, anc, at, sinks, sv) {
+  for (const s of sinks) {
+    if (s.kind === 'data') {
+      if (!s.in.includes(at)) continue;
+      if (!s.key || anc.some(a => keyName(a) === s.key)) return s.id;
+    } else if (s.kind === 'prop') {
+      if (!s.in.includes(at)) continue;
+      for (let i = anc.length - 1; i >= 0; i--) {
+        const a = anc[i];
+        if (a.type === 'Property' && keyName(a) === s.key && (a.value === n || anc.includes(a.value))) return s.id;
+        if (a.type === 'VariableDeclarator' && a.id.type === 'Identifier' && a.id.name === s.key && a.init && (a.init === n || anc.includes(a.init))) return s.id;
+        if (a.type === 'AssignmentExpression' && a.left.type === 'MemberExpression' && !a.left.computed && a.left.property.name === s.key && (a.right === n || anc.includes(a.right))) return s.id;
+      }
+    } else if (s.kind === 'call') {
+      if (s.in && !s.in.includes(at)) continue;
+      for (const a of anc) if (a.type === 'CallExpression' && fnMatch(calleeText(a.callee), s.fn) && a.arguments[s.arg] && (a.arguments[s.arg] === n || anc.includes(a.arguments[s.arg]))) return s.id;
+      const vars = sv[s.id];
+      if (vars && vars.size) {
+        if (anc.some(a => (a.type === 'VariableDeclarator' && a.id.type === 'Identifier' && vars.has(a.id.name) && a.init && (a.init === n || anc.includes(a.init))) || (a.type === 'AssignmentExpression' && a.left.type === 'Identifier' && vars.has(a.left.name) && (a.right === n || anc.includes(a.right))))) return s.id;
+        if (anc.some(a => a.type === 'ForOfStatement' && (a.right === n || anc.includes(a.right)) && [...idents(a.left.type === 'VariableDeclaration' ? a.left.declarations[0].id : a.left)].some(x => vars.has(x)))) return s.id;
+      }
+    }
+  }
+  return null;
+}
+
+// Tên hàm khai báo trong file (function, const x = () =>, method): để validate sink call trỏ tới hàm có thật
+export function declaredFns(code) {
+  const out = new Set(), w = n => {
+    if (n.type === 'FunctionDeclaration' && n.id) out.add(n.id.name);
+    else if (n.type === 'VariableDeclarator' && n.id.type === 'Identifier' && n.init && /Function/.test(n.init.type)) out.add(n.id.name);
+    for (const c of kids(n)) w(c);
+  };
+  w(parseAst(code));
+  return out;
+}
+
+export function scan(code, file, sinks = []) {
   const prog = parseAst(code), res = [], rs = recvSets(prog);
   const isName = /(^|\/)src\/data\/names\.js$/.test(file);
   for (const u of units(prog)) {
-    const at = `${file}#${u.name}`, lv = logVars(u.node);
+    const at = `${file}#${u.name}`, lv = logVars(u.node), sv = {};
+    for (const sk of sinks) if (sk.kind === 'call' && (!sk.in || sk.in.includes(at))) sv[sk.id] = sinkVars(u.node, sk.fn, sk.arg);
     const walk = (n, anc) => {
       let raw = null, first = true, last = true, cmp = false;
       if (n.type === 'Literal' && typeof n.value === 'string') raw = n.value;
@@ -113,6 +180,7 @@ export function scan(code, file) {
           }
           const r = { at, text: norm(raw), ctx, cmp };
           if (plain) r.plain = true;
+          if (sinks.length && !isName && ctx !== 'toast') { const sk = sinkOf(n, anc, at, sinks, sv); if (sk) r.sink = sk; }
           res.push(r);
         }
       }

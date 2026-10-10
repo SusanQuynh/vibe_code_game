@@ -260,57 +260,225 @@
     }
   ],
   "todo": {
-    "src/core/util.js#FMT_VI": 1,
-    "src/data/offers.js#OFFER": 37,
-    "src/data/rules.js#CONCEPTS": 2,
-    "src/data/rules.js#GENRES": 7,
-    "src/data/rules.js#MSK": 4,
-    "src/data/rules.js#MSKD": 4,
-    "src/data/rules.js#STATS": 4,
-    "src/data/rules.js#TRAIN": 5,
-    "src/state.js#addLog": 2,
-    "src/systems/artists.js#fire": 1,
-    "src/systems/awards.js#awards": 13,
-    "src/systems/batches.js#COMP": 6,
-    "src/systems/batches.js#compDone": 6,
-    "src/systems/batches.js#enterComp": 1,
-    "src/systems/batches.js#initBatches": 1,
-    "src/systems/debut.js#debutRec": 12,
-    "src/systems/debut.js#DR": 2,
-    "src/systems/debut.js#DRT": 2,
-    "src/systems/ext2.js#contractTick": 1,
-    "src/systems/ext2.js#disbandGroup": 3,
-    "src/systems/ext2.js#mdReview": 5,
-    "src/systems/ext2.js#writeSong": 1,
-    "src/systems/ext3.js#dWish": 8,
-    "src/systems/ext3.js#hsRisk": 6,
-    "src/systems/ext3.js#v3Resolve": 4,
-    "src/systems/managers.js#targetName": 9,
-    "src/systems/market.js#BIZ": 7,
-    "src/systems/market.js#rivalsTick": 3,
-    "src/systems/offers.js#investOffer": 1,
-    "src/systems/promo.js#POST": 7,
-    "src/systems/promo.js#PRE": 4,
-    "src/systems/proposals.js#cfPick": 2,
-    "src/systems/proposals.js#CFT": 5,
-    "src/systems/proposals.js#propOk": 2,
-    "src/systems/proposals.js#routeProps": 17,
-    "src/systems/proposals.js#shortWhy": 4,
-    "src/systems/releases.js#doLive": 1,
-    "src/systems/releases.js#doSingle": 6,
-    "src/systems/releases.js#produceFilm": 1,
-    "src/systems/review.js#evalAll": 4,
-    "src/systems/review.js#PRP": 5,
-    "src/systems/review.js#prPlans": 6,
-    "src/systems/secretary.js#BUDN": 3,
-    "src/systems/secretary.js#wkLabel": 1,
-    "src/systems/week.js#completeBusy": 6,
-    "src/systems/week.js#releaseFilm": 1
+    "src/systems/ext3.js#v3Resolve": 4
   },
   "allowCount": {
     "cmp": 24,
     "event": 414,
     "name": 59,
     "state": 49
+  },
+  "sinks": [
+    {
+      "id": "removeArtist#1",
+      "kind": "call",
+      "fn": "removeArtist",
+      "arg": 1,
+      "why": "lý do rời công ty (đối số 2) được removeArtist ghép vào addLog; chữ tiếng Việt lưu trong S.log"
+    },
+    {
+      "id": "hist.unshift#0",
+      "kind": "call",
+      "fn": "hist.unshift",
+      "arg": 0,
+      "why": "dòng lịch sử nghệ sĩ a.hist (S.artists[].hist), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "lessons.unshift#0",
+      "kind": "call",
+      "fn": "lessons.unshift",
+      "arg": 0,
+      "why": "bài học rút ra a.lessons (S.artists[].lessons), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "give#0",
+      "kind": "call",
+      "fn": "give",
+      "arg": 0,
+      "in": [
+        "src/systems/awards.js#awards"
+      ],
+      "why": "tên hạng mục giải thưởng: give() đẩy vào S.awards[].res[].cat và a.hist"
+    },
+    {
+      "id": "give#4",
+      "kind": "call",
+      "fn": "give",
+      "arg": 4,
+      "in": [
+        "src/systems/awards.js#awards"
+      ],
+      "why": "ghi chú giải thưởng: give() đẩy vào S.awards[].res[].note"
+    },
+    {
+      "id": "approveIt#2",
+      "kind": "call",
+      "fn": "approveIt",
+      "arg": 2,
+      "in": [
+        "src/systems/proposals.js#cfPick"
+      ],
+      "why": "người duyệt \"Giám đốc\": approveIt lưu vào S.props x.by (UI hiển thị qua sv())"
+    },
+    {
+      "id": "busy.title",
+      "kind": "prop",
+      "key": "title",
+      "in": [
+        "src/systems/batches.js#enterComp",
+        "src/systems/ext2.js#writeSong",
+        "src/systems/releases.js#doSingle"
+      ],
+      "why": "tiêu đề việc đang bận a.busy.title (S.artists[].busy), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "film.status",
+      "kind": "prop",
+      "key": "status",
+      "in": [
+        "src/systems/offers.js#investOffer",
+        "src/systems/releases.js#produceFilm",
+        "src/systems/week.js#completeBusy",
+        "src/systems/week.js#releaseFilm"
+      ],
+      "why": "trạng thái phim S.films[].status, đồng thời được so sánh bằng === ở week.js; UI hiển thị qua sv()"
+    },
+    {
+      "id": "scandal.t",
+      "kind": "prop",
+      "key": "t",
+      "in": [
+        "src/systems/releases.js#doLive"
+      ],
+      "why": "nội dung scandal a.scandal.t (S.artists[].scandal), thuộc nội dung sự kiện, dịch ở giai đoạn 3"
+    },
+    {
+      "id": "log.w",
+      "kind": "prop",
+      "key": "w",
+      "in": [
+        "src/state.js#addLog"
+      ],
+      "why": "nhãn tuần của dòng log, lưu trong S.log[].w"
+    },
+    {
+      "id": "batch.n",
+      "kind": "prop",
+      "key": "n",
+      "in": [
+        "src/systems/batches.js#initBatches"
+      ],
+      "why": "tên lứa S.batches[].n, đọc bằng regex /\\d+/ ở nhiều nơi; UI hiển thị qua batchNameT()"
+    },
+    {
+      "id": "mdReview.cm",
+      "kind": "prop",
+      "key": "cm",
+      "in": [
+        "src/systems/ext2.js#mdReview"
+      ],
+      "why": "nhận xét GĐ Âm nhạc r.cm: chỉ dùng dựng mô tả sự kiện md (v3Info, nội dung sự kiện dịch ở giai đoạn 3); UI bài hát dùng r.cmT"
+    },
+    {
+      "id": "props.by",
+      "kind": "prop",
+      "key": "by",
+      "in": [
+        "src/systems/proposals.js#cfPick",
+        "src/systems/proposals.js#propOk"
+      ],
+      "why": "người duyệt S.props x.by/c.by; UI hiển thị qua sv(), so sánh bằng === ở viewProps/passAll"
+    },
+    {
+      "id": "rival.last",
+      "kind": "prop",
+      "key": "last",
+      "in": [
+        "src/systems/market.js#rivalsTick"
+      ],
+      "why": "hành động gần nhất của đối thủ S.rivals[].last, UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "prHist.h",
+      "kind": "prop",
+      "key": "h",
+      "in": [
+        "src/systems/review.js#prPlans"
+      ],
+      "why": "chữ lưu vào S.prHist qua data-t/prGo (quy định thiết kế 3 của plan)"
+    },
+    {
+      "id": "data.fmt",
+      "kind": "data",
+      "in": [
+        "src/core/util.js#FMT_VI"
+      ],
+      "why": "đơn vị tiền mặc định (vi) của fmt() cho addLog; UI dùng money() với fmt.units của từ điển"
+    },
+    {
+      "id": "data.label.log",
+      "kind": "data",
+      "in": [
+        "src/data/offers.js#OFFER",
+        "src/data/rules.js#CONCEPTS",
+        "src/data/rules.js#GENRES",
+        "src/data/rules.js#MSK",
+        "src/data/rules.js#STATS",
+        "src/data/rules.js#TRAIN",
+        "src/systems/batches.js#COMP",
+        "src/systems/debut.js#DRT",
+        "src/systems/market.js#BIZ",
+        "src/systems/promo.js#POST",
+        "src/systems/promo.js#PRE",
+        "src/systems/proposals.js#CFT",
+        "src/systems/review.js#PRP"
+      ],
+      "why": "bảng dữ liệu có field n/chữ mà addLog, S.offers[].title, S.props why2, busy.title/lessons/hist đọc nguyên văn (quyết định thiết kế 1: giữ n, UI tra lbl); giai đoạn 3 bỏ field n"
+    },
+    {
+      "id": "data.label.dead",
+      "kind": "data",
+      "in": [
+        "src/data/rules.js#MSKD",
+        "src/systems/secretary.js#BUDN",
+        "src/systems/debut.js#DR"
+      ],
+      "why": "bảng nhãn gốc không còn code đọc (UI đã dùng lbl); chỉ test khoá vi==bảng. Xoá cùng field n ở giai đoạn 3"
+    },
+    {
+      "id": "data.ret.log",
+      "kind": "data",
+      "in": [
+        "src/systems/managers.js#targetName",
+        "src/systems/secretary.js#wkLabel",
+        "src/systems/debut.js#debutRec",
+        "src/systems/ext3.js#dWish",
+        "src/systems/ext3.js#hsRisk",
+        "src/systems/proposals.js#shortWhy",
+        "src/systems/proposals.js#routeProps"
+      ],
+      "why": "hàm sinh chuỗi mà caller ghi vào addLog/S (S.props why/txt/path, a.dw.why, a.hsF.why, S.prHist, log); bản UI có hậu tố T hoặc render qua sv()"
+    }
+  ],
+  "sinkCount": {
+    "approveIt#2": 1,
+    "batch.n": 1,
+    "busy.title": 3,
+    "data.fmt": 1,
+    "data.label.dead": 9,
+    "data.label.log": 95,
+    "data.ret.log": 57,
+    "film.status": 4,
+    "give#0": 8,
+    "give#4": 4,
+    "hist.unshift#0": 15,
+    "lessons.unshift#0": 5,
+    "log.w": 2,
+    "mdReview.cm": 5,
+    "prHist.h": 6,
+    "props.by": 3,
+    "removeArtist#1": 6,
+    "rival.last": 3,
+    "scandal.t": 1
   }
 }

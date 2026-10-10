@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
-import { scan, scanCss } from '../../scripts/lib/scan-literals.mjs';
+import { declaredFns, scan, scanCss } from '../../scripts/lib/scan-literals.mjs';
 
 describe('scan-literals', () => {
   it('addLog → ctx log', () => {
@@ -69,5 +69,47 @@ describe('scan-literals', () => {
   it('css: content có chữ Việt → ctx css, at = file#selector', () => {
     const r = scanCss('.a{color:red}\n.tile.rec::after{content:"Gợi ý";top:0}\n.b::after{content:\' ▸\'}', 's.css');
     expect(r).toEqual([{ at: 's.css#.tile.rec::after', text: 'Gợi ý', ctx: 'css', cmp: false }]);
+  });
+});
+
+// ---- sink cấu hình: literal đi vào S/log qua tham số hàm, thuộc tính object, bảng dữ liệu ----
+const sk = (s, code, file = 'f.js') => Object.fromEntries(scan(code, file, s).map(v => [v.text, v.sink ?? v.ctx]));
+describe('scan-literals: sink', () => {
+  it('call: literal ở đúng vị trí đối số (trực tiếp, template, ternary, biến cục bộ, for-of destructuring); literal UI cạnh đó vẫn ui', () => {
+    const S = [{ id: 'rm#1', kind: 'call', fn: 'rm', arg: 1 }];
+    expect(sk(S, "function f(a){rm(a,'đã nghỉ');modal('Cửa sổ')}")).toEqual({ 'đã nghỉ': 'rm#1', 'Cửa sổ': 'ui' });
+    expect(sk(S, "function f(a,x){rm(a,x?'Một':`Hai là ${a}`)}")).toEqual({ 'Một': 'rm#1', 'Hai là': 'rm#1' });
+    expect(sk(S, "function f(a){let w='Lý do';if(a)w='Lý do khác';rm(a,w);const u='Chữ UI'}")).toEqual({ 'Lý do': 'rm#1', 'Lý do khác': 'rm#1', 'Chữ UI': 'ui' });
+    expect(sk(S, "function f(a){for(const [g,lab] of [['M','Nam'],['F','Nữ']])rm(a,`${lab} xin chào`)}")).toEqual({ 'Nữ': 'rm#1', 'xin chào': 'rm#1' });
+    // âm: sai vị trí đối số, hàm khác, biến không chảy vào sink
+    expect(sk(S, "function f(a){rm('Đối số đầu',a);other(a,'Hàm khác');const q='Biến lạ';show(q)}")).toEqual({ 'Đối số đầu': 'ui', 'Hàm khác': 'ui', 'Biến lạ': 'ui' });
+  });
+  it('call: method dotted (hist.unshift) khớp theo đuôi, không khớp tên chỉ trùng một phần; in giới hạn khai báo; toast không bao giờ là sink', () => {
+    const S = [{ id: 'hist#0', kind: 'call', fn: 'hist.unshift', arg: 0 }];
+    expect(sk(S, "function f(a){a.hist.unshift(`N1: Đã xong`);a.xhist.unshift('Không khớp');a.hist.push('Sai phương thức')}")).toEqual({ 'N1: Đã xong': 'hist#0', 'Không khớp': 'ui', 'Sai phương thức': 'ui' });
+    const S2 = [{ id: 'rm#0', kind: 'call', fn: 'rm', arg: 0, in: ['f.js#g'] }];
+    expect(sk(S2, "function f(){rm('Ở f')}function g(){rm('Ở g')}")).toEqual({ 'Ở f': 'ui', 'Ở g': 'rm#0' });
+    expect(sk([{ id: 'rm#0', kind: 'call', fn: 'rm', arg: 0 }], "function f(){rm(toast('Đang bận'))}")).toEqual({ 'Đang bận': 'toast' });
+  });
+  it('prop: khoá object literal, phép gán thuộc tính, biến tên key; chỉ trong khai báo in; khoá khác vẫn ui', () => {
+    const S = [{ id: 'busy.title', kind: 'prop', key: 'title', in: ['f.js#f'] }];
+    expect(sk(S, "function f(a){a.busy={kind:'x',title:'Quảng bá «'+a.t+' ✓',note:'Ghi chú UI'}}")).toEqual({ 'Quảng bá «': 'busy.title', 'Ghi chú UI': 'ui' });
+    expect(sk(S, "function f(o){o.title='Gán thẳng';o.other='Gán khác'}")).toEqual({ 'Gán thẳng': 'busy.title', 'Gán khác': 'ui' });
+    expect(sk([{ id: 'cm', kind: 'prop', key: 'cm', in: ['f.js#f'] }], "function f(g){const cm={S:'Tốt',A:'Khá'}[g];const other='Giao diện'}")).toEqual({ 'Tốt': 'cm', 'Khá': 'cm', 'Giao diện': 'ui' });
+    // âm: khoá title ở khai báo không nằm trong in
+    expect(sk(S, "function g(a){a.busy={title:'Ở g'}}")).toEqual({ 'Ở g': 'ui' });
+    // lồng sâu: khoá title nằm trong giá trị khác không bị nhầm với literal anh em
+    expect(sk(S, "function f(){return {title:'Có', label:'Không'}}")).toEqual({ 'Có': 'busy.title', 'Không': 'ui' });
+  });
+  it('data: cả khai báo, hoặc chỉ khoá key; khai báo khác vẫn ui', () => {
+    expect(sk([{ id: 'tbl', kind: 'data', in: ['f.js#T'] }], "export const T={a:{n:'Nhảy',d:'Mô tả'}};export const U={n:'Khác'}")).toEqual({ 'Nhảy': 'tbl', 'Mô tả': 'tbl', 'Khác': 'ui' });
+    expect(sk([{ id: 'tbl.n', kind: 'data', key: 'n', in: ['f.js#T'] }], "export const T={a:{n:'Nhảy',d:'Mô tả UI'}}")).toEqual({ 'Nhảy': 'tbl.n', 'Mô tả UI': 'ui' });
+  });
+  it('ưu tiên: literal so sánh không bị sink bắt, log vẫn là log; src/data/names.js là name', () => {
+    const r = scan("function f(x){rm(x,'Tốt');if(x==='Tốt')addLog('Đã xong')}", 'f.js', [{ id: 'rm#1', kind: 'call', fn: 'rm', arg: 1 }]);
+    expect(r.map(v => [v.text, v.ctx, v.cmp, v.sink])).toEqual([['Tốt', 'ui', false, 'rm#1'], ['Tốt', 'ui', true, undefined], ['Đã xong', 'log', false, undefined]]);
+  });
+  it('declaredFns thấy function, const arrow, hàm cục bộ', () => {
+    expect([...declaredFns('export function a(){const give=(x)=>x;function loc(){}}const b=function(){};const c=3')].sort()).toEqual(['a', 'b', 'give', 'loc']);
   });
 });

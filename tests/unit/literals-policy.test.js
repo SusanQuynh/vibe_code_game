@@ -133,3 +133,59 @@ describe('check-literals CLI', () => {
     expect(r.stderr).toMatch(/zzz: không còn khớp/);
   });
 });
+
+describe('sink trong chính sách', () => {
+  const S1 = { id: 'rm#1', kind: 'call', fn: 'rm', arg: 1, why: 'lý do vào log' };
+  const SP = { id: 'busy.title', kind: 'prop', key: 'title', in: ['f#a'], why: 'S.busy' };
+  it('literal sink không vào todo, không tính allowCount; đếm theo id; toast/cmp không bị nuốt', () => {
+    const cfg = cfg0({ sinks: [S1, SP] });
+    const r = classify([it_('f#a', 'Một', { sink: 'rm#1' }), it_('f#a', 'Hai', { sink: 'busy.title' }), it_('f#b', 'Ba', { sink: 'rm#1' }), it_('f#a', 'Lỗi', { ctx: 'toast', sink: 'rm#1' }), it_('f#a', 'Tốt', { cmp: true, sink: 'rm#1' })], cfg);
+    expect(r.sink).toEqual({ 'rm#1': 2, 'busy.title': 1 });
+    expect(r.exempt).toEqual({});
+    expect(r.todo).toEqual({ 'f#a': 1 });
+    expect(r.cmpBad).toHaveLength(1);
+  });
+  it('allow cấp khai báo được ưu tiên trước sink (allowCount event không đổi)', () => {
+    const r = classify([it_('f#a', 'Sự kiện', { sink: 'rm#1' })], cfg0({ allow: { 'f#a': ev }, sinks: [S1] }));
+    expect(r.exempt).toEqual({ event: 1 });
+    expect(r.sink).toEqual({});
+  });
+  it('sink không bắt literal nào / khai báo in không khớp / hàm đích không tồn tại → stale', () => {
+    const cfg = cfg0({ sinks: [S1, { ...SP, in: ['f#a', 'f#gone'] }] });
+    const r = classify([it_('f#a', 'Hai', { sink: 'busy.title' })], cfg, { declared: new Set(['other']) });
+    const m = r.stale.join('\n');
+    expect(m).toMatch(/sink rm#1: không bắt được literal nào/);
+    expect(m).toMatch(/sink rm#1: không có hàm rm khai báo/);
+    expect(m).toMatch(/sink busy.title: khai báo f#gone không có literal nào khớp/);
+    expect(classify([it_('f#a', 'Một', { sink: 'rm#1' })], cfg0({ sinks: [S1] }), { declared: new Set(['rm']) }).stale).toEqual([]);
+    expect(classify([it_('f#a', 'Một', { sink: 'h#0' })], cfg0({ sinks: [{ id: 'h#0', kind: 'call', fn: 'hist.unshift', arg: 0, why: 'w' }] }), { declared: new Set() }).stale).toEqual([]); // method dotted không cần khai báo
+  });
+  it('validateConfig: kind lạ, thiếu why, thiếu tham số, trùng id, in sai dạng', () => {
+    const e = validateConfig(cfg0({ sinks: [{ id: 'a', kind: 'zzz', why: 'w' }, { id: 'b', kind: 'call', why: '' , fn: 'x'}, { id: 'c', kind: 'prop', why: 'w', key: 'k' }, { id: 'c', kind: 'data', why: 'w', in: ['không-hợp-lệ'] }] })).join('\n');
+    expect(e).toMatch(/sink a: kind lạ/);
+    expect(e).toMatch(/sink b: thiếu why/);
+    expect(e).toMatch(/sink b: call cần fn và arg/);
+    expect(e).toMatch(/sink c: prop cần in/);
+    expect(e).toMatch(/sink c: trùng id/);
+    expect(e).toMatch(/phải dạng src\//);
+    expect(validateConfig(cfg0({ sinks: [S1, { ...SP, in: ['src/a.js#f'] }] }))).toEqual([]);
+  });
+  it('bánh cóc sink: tăng/giảm đều báo; chưa có sinkCount thì đòi baseline', () => {
+    const res = { todo: {}, exempt: {}, sink: { x: 3 } };
+    const base = { todo: {}, allowCount: {} };
+    expect(checkBaseline(res, { ...base, sinkCount: { x: 3 } })).toEqual([]);
+    expect(checkBaseline(res, { ...base, sinkCount: { x: 2 } }).join()).toMatch(/sink x tăng 2 → 3/);
+    expect(checkBaseline(res, { ...base, sinkCount: { x: 4 } }).join()).toMatch(/sink x giảm 4 → 3/);
+    expect(checkBaseline(res, base).join()).toMatch(/thiếu sinkCount/);
+  });
+  it('--update: sink tăng bị từ chối (kể cả --force thiếu env); ghi được khi có env; giảm thì không cần force', () => {
+    const res = classify([it_('f#a', 'Một', { sink: 'rm#1' })], cfg0({ sinks: [S1] }));
+    const base = cfg0({ sinks: [S1], todo: {}, allowCount: {}, sinkCount: {} });
+    expect(decideUpdate(res, base).ok).toBe(false);
+    expect(decideUpdate(res, base).msg).toMatch(/sink rm#1/);
+    expect(decideUpdate(res, base, { force: true }).ok).toBe(false);
+    const d = decideUpdate(res, base, { force: true, envForce: true });
+    expect(d.ok).toBe(true); expect(d.next.sinkCount).toEqual({ 'rm#1': 1 });
+    expect(decideUpdate(classify([], cfg0({ sinks: [] })), cfg0({ todo: {}, allowCount: {}, sinkCount: { 'rm#1': 1 } })).ok).toBe(true);
+  });
+});
