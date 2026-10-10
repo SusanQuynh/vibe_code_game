@@ -21,14 +21,14 @@ const REAL = { vi: viL, en: enL };
 beforeEach(() => localStorage.clear());
 afterEach(() => { __setDicts(REAL); setLang('vi'); });
 
-describe('i18n lõi', () => {
-  it('key thiếu trả về chính key', () => expect(t('x.missing')).toBe('x.missing'));
-  it('thay placeholder, giữ nguyên nếu thiếu tham số', () => {
+describe('i18n core', () => {
+  it('a missing key returns the key itself', () => expect(t('x.missing')).toBe('x.missing'));
+  it('replaces placeholders, keeps them when a parameter is missing', () => {
     expect(t('lang.current', { name: 'X' })).toBe('Đang dùng: X');
     expect(t('lang.current', {})).toBe('Đang dùng: {name}');
     expect(t('lang.current')).toBe('Đang dùng: {name}');
   });
-  it('fallback về vi khi locale hiện tại thiếu key; giá trị hàm được gọi', () => {
+  it('falls back to vi when the current locale lacks a key; function values are called', () => {
     __setDicts({
       vi: { meta: { code: 'vi' }, dict: { a: 'A-vi', b: p => `b${p.n}` } },
       zz: { meta: { code: 'zz' }, dict: { b: p => `zz${p.n}` } },
@@ -37,7 +37,7 @@ describe('i18n lõi', () => {
     expect(t('a')).toBe('A-vi');
     expect(t('b', { n: 1 })).toBe('zz1');
   });
-  it('setLang: mã lạ bị bỏ qua; mã hợp lệ được ghi vào localStorage', () => {
+  it('setLang: unknown codes are ignored; valid codes are written to localStorage', () => {
     expect(setLang('xx')).toBe(false);
     expect(getLang()).toBe('vi');
     expect(localStorage.getItem(LANG_KEY)).toBeNull();
@@ -45,7 +45,7 @@ describe('i18n lõi', () => {
     expect(getLang()).toBe('en');
     expect(localStorage.getItem('starlight_lang')).toBe('en');
   });
-  it('initLang: mặc định vi, đọc key hợp lệ, bỏ qua key rác', () => {
+  it('initLang: defaults to vi, reads a valid key, ignores junk', () => {
     expect(initLang()).toBe('vi');
     localStorage.setItem(LANG_KEY, 'en');
     expect(initLang()).toBe('en');
@@ -55,24 +55,24 @@ describe('i18n lõi', () => {
       expect(setLang(bad)).toBe(false);
     }
   });
-  it('không gọi Math.random', () => {
+  it('does not call Math.random', () => {
     const sp = vi.spyOn(Math, 'random');
     t('lang.title'); setLang('en'); initLang(); langs();
     expect(sp).not.toHaveBeenCalled();
     sp.mockRestore();
   });
-  it('langs(): vi đứng đầu', () => expect(langs()[0].code).toBe('vi'));
+  it('langs(): vi comes first', () => expect(langs()[0].code).toBe('vi'));
 });
 
 describe('money', () => {
-  it('theo ngôn ngữ', () => {
+  it('follows the language', () => {
     setLang('en'); expect(money(600e6)).toBe('600M'); expect(money(1.5e9)).toBe('1.5B');
     setLang('vi'); expect(money(600e6)).toBe('600 tr');
   });
 });
 
 describe('parity locale', () => {
-  it('mọi locale có đúng bộ key và placeholder của vi', () => {
+  it('every locale has exactly the keys and placeholders of vi', () => {
     for (const m of langs()) {
       expect(m.code).toBeTruthy();
     }
@@ -81,11 +81,11 @@ describe('parity locale', () => {
       expect(d).toEqual({ missing: [], extra: [], badParams: [] });
     }
   });
-  it('diffLocales bắt object thiếu key con (vd fmt.units)', () => {
+  it('diffLocales catches objects missing child keys (e.g. fmt.units)', () => {
     const d = diffLocales({ u: { b: 'B', m: 'M', k: 'K' } }, { u: { b: 'B', m: 'M' } });
     expect(d.badParams).toEqual(['u']);
   });
-  it('diffLocales bắt thiếu, thừa, lệch placeholder, lệch kiểu', () => {
+  it('diffLocales catches missing, extra, placeholder and type mismatches', () => {
     const d = diffLocales({ a: '{x}', b: 'b', c: p => p, d: 'd' }, { a: '{y}', c: 'c', e: 'e', d: 'd' });
     expect(d.missing).toEqual(['b']);
     expect(d.extra).toEqual(['e']);
@@ -93,9 +93,9 @@ describe('parity locale', () => {
   });
 });
 
-describe('masthead & khung tĩnh', () => {
+describe('masthead & static shell', () => {
   beforeEach(() => { document.body.innerHTML = SHELL; seed(42); newGame(); });
-  it('renderTop theo ngôn ngữ', () => {
+  it('renderTop follows the language', () => {
     setLang('en'); renderTop();
     expect(document.getElementById('nextBtn').textContent).toBe('End week 1');
     expect(document.getElementById('yearL').textContent).toBe('Year 1');
@@ -103,7 +103,7 @@ describe('masthead & khung tĩnh', () => {
     setLang('vi'); renderTop();
     expect(document.getElementById('nextBtn').textContent).toBe('Kết thúc tuần 1');
   });
-  it('applyStatic đổi textContent và aria-label', () => {
+  it('applyStatic updates textContent and aria-label', () => {
     const d = document.createElement('div');
     d.innerHTML = '<small data-i18n="top.fund">x</small><button data-i18n-aria="top.help" aria-label="x"></button>';
     setLang('en'); applyStatic(d);
@@ -112,13 +112,13 @@ describe('masthead & khung tĩnh', () => {
   });
 });
 
-describe('phòng, dock, NPC', () => {
+describe('rooms, dock, NPCs', () => {
   beforeEach(() => { document.body.innerHTML = SHELL; seed(42); newGame(); });
-  it('mọi phòng/NPC có key trong vi', () => {
+  it('every room/NPC has a key in vi', () => {
     for (const r of ROOMS) for (const k of ['name', 'dock', 'desc']) expect(viL.dict[`room.${r.id}.${k}`], r.id + k).toBeTypeOf('string');
     for (const n of NPC) expect(viL.dict[`npc.${n.id}`]).toBeTypeOf('string');
   });
-  it('en: dock không còn chữ Phòng; tiêu đề phòng dịch', () => {
+  it('en: dock no longer says Phòng; room titles are translated', () => {
     setLang('en'); renderDock();
     expect(document.getElementById('dock').innerHTML).not.toContain('Phòng');
     openRoom('ceo');
@@ -128,9 +128,9 @@ describe('phòng, dock, NPC', () => {
   });
 });
 
-describe('nút chung', () => {
+describe('common buttons', () => {
   beforeEach(() => { document.body.innerHTML = SHELL; });
-  it('en: đóng và chạm lần nữa', () => {
+  it('en: close and tap again', () => {
     setLang('en');
     modal('<h2>x</h2>');
     expect(document.querySelector('#sheet .x').getAttribute('aria-label')).toBe('Close');
@@ -142,10 +142,10 @@ describe('nút chung', () => {
 
 describe('tutorial', () => {
   beforeEach(() => { document.body.innerHTML = SHELL; });
-  it('mọi bước có key .t/.d trong vi', () => {
+  it('every step has .t/.d keys in vi', () => {
     for (const s of TUT) for (const k of ['t', 'd']) expect(viL.dict[`tut.${s.id}.${k}`], s.id).toBeTypeOf('string');
   });
-  it('en: tiêu đề và nhắc nút 🌐', () => {
+  it('en: titles and mention of the 🌐 button', () => {
     setLang('en'); tutStart(1);
     expect(document.querySelector('#tut h3').textContent).toBe('Top bar');
     expect(document.querySelector('#tut .small:not(.muted)').innerHTML).toContain('🌐');
@@ -155,7 +155,7 @@ describe('tutorial', () => {
 
 describe('chooseLang', () => {
   beforeEach(() => { document.body.innerHTML = SHELL; seed(42); newGame(); renderTop(); });
-  it('đổi tại chỗ, không đụng S, lưu localStorage', () => {
+  it('switches in place, leaves S untouched, persists to localStorage', () => {
     const snap = JSON.stringify(S);
     chooseLang('en');
     expect(document.documentElement.lang).toBe('en');
@@ -166,7 +166,7 @@ describe('chooseLang', () => {
     expect(getLang()).toBe('en');
     chooseLang('vi'); applyHtmlLang();
   });
-  it('sheet đang mở được render lại', () => {
+  it('re-renders the open sheet', () => {
     view(viewLang);
     expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
     chooseLang('en');

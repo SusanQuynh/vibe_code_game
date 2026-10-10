@@ -21,7 +21,7 @@ import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
 import { RV, openRoom } from '../ui/rooms.js';
 import { aTags, bars, det } from '../ui/views.js';
 
-/* ================= MỞ RỘNG v2 ================= */
+/* ================= EXTENSION v2 ================= */
 export const MAX_SA=4;
 export const CT_WK=52;
 export const pct=p=>Math.round(p*100)+'%';
@@ -29,7 +29,7 @@ export const MOOD=(a,d)=>a.mood=clamp(a.mood+d,0,100);
 export const asstOf=m=>(S.assts||[]).filter(x=>x.mid===m.id);
 export const asstB=(m,k)=>asstOf(m).filter(x=>x.k===k).reduce((t,x)=>t+x.v,0);
 export const otherMgr=(a,m)=>S.managers.find(x=>x!==m&&x.as&&mgrTargets(x).includes(a));
-/* ---- Sổ thu chi ---- */
+/* ---- Income & expense ledger ---- */
 export const FIN_I={dig:'🎧 Nhạc số',sgl:'💿 Bán single',job:'📨 Thù lao dự án',con:'🏟️ Concert & fan meeting',film:'🎞️ Phim',live:'📱 Livestream & quảng bá',biz:'📈 Đầu tư',oth:'➕ Khác'};
 export const FIN_X={sal:'💵 Lương nghệ sĩ',mgr:'📋 Lương quản lý & trợ lý',trn:'🏫 Đào tạo',prod:'🎬 Sản xuất & debut',hr:'🗂️ Hợp đồng & tuyển dụng',oth:'➖ Khác'};
 export function fcEnsure(){if(!S.fc)S.fc={w:abs(),m0:S.money,i:{},x:{}};return S.fc}
@@ -40,31 +40,31 @@ export function finClose(){const f=fcEnsure(),o=Math.round((S.money-f.m0)-(fsum(
   if(o>0)f.i.oth=(f.i.oth||0)+o;else if(o<0)f.x.oth=(f.x.oth||0)-o;
   S.fin=S.fin||[];S.fin.push({w:abs(),y:S.year,wk:S.week,i:f.i,x:f.x});if(S.fin.length>104)S.fin=S.fin.slice(-104);
   S.fc={w:abs()+1,m0:S.money,i:{},x:{}}}
-/* ---- Nhạc số ---- */
+/* ---- Digital music ---- */
 export function digTick(){let t=0;for(const s of S.singles){if(!s.dig||s.end)continue;const wk=abs()-s.w;if(wk<1)continue;
   const v=Math.round(s.dig*Math.pow(s.dk||.88,wk-1)*(1+bizLv('media')*.05)/1e4)*1e4;if(v<1e5||wk>52){s.end=1;continue}
   const net=Math.round(v*(1-(s.roy||0))/1e4)*1e4;s.dt=(s.dt||0)+net;s.dl=net;s.dlw=abs();t+=net;S.money+=net;book('dig',net,(s.m||[]).map(byId).filter(Boolean))}
   if(t)addLog(`🎧 Doanh thu nhạc số tuần này: ${fmt(t)}.`,'good');return t}
 export const digNext=s=>{if(!s.dig||s.end)return 0;const wk=abs()-s.w+1;const v=s.dig*Math.pow(s.dk||.88,wk-1);return v<1e5||wk>52?0:Math.round(v*(1-(s.roy||0)))};
-/* ---- Danh tiếng & tuyển TTS ---- */
+/* ---- Reputation & trainee recruiting ---- */
 export function compRep(){const tf=S.artists.reduce((t,a)=>t+a.fans,0),aw=(S.awards||[]).reduce((s,e)=>s+e.res.filter(r=>r.ok).length,0),hit=(S.singles||[]).filter(s=>s.rank<=10).length,lr=(S.awards||[]).length?S.awards[S.awards.length-1].rank:0;
   return clamp(Math.round(Math.min(55,Math.sqrt(tf/1500))+Math.min(20,aw*4)+Math.min(15,hit*3)+(lr===1?10:lr===2?6:lr===3?3:0)),0,100)}
 export const poolSize=()=>3+Math.floor(compRep()/15);
 export const repStars=r=>'★'.repeat(1+Math.floor(Math.min(r,99)/25))+'☆'.repeat(4-Math.floor(Math.min(r,99)/25));
 export function repCard(){const r=compRep();return`<div class="card small">🏢 <b>Danh tiếng công ty: ${r}/100</b> <span style="color:var(--sun)">${repStars(r)}</span><br>Mỗi đợt casting nhận <b>${poolSize()} hồ sơ</b> · mỗi tuần ~${Math.round(r/1.2)}% có TTS tự gửi đơn · chất lượng hồ sơ +${Math.floor(r/12)} chỉ số khởi điểm.<br><span class="muted">Tăng nhờ tổng fan, giải thưởng, single top 10 và hạng công ty cuối năm.</span></div>`}
-/* ---- Lứa TTS tự xoá ---- */
+/* ---- Auto-remove empty trainee batches ---- */
 export function cleanBatches(){if(!Array.isArray(S.batches))return;for(const b of S.batches)if(bMem(b).length)b.had=1;
   const gone=S.batches.filter(b=>b.had&&!bMem(b).length);if(!gone.length)return;
   S.batches=S.batches.filter(b=>!gone.includes(b));
   for(const b of gone){addLog(`🗑️ ${b.n} không còn thực tập sinh nên đã tự xoá.`);for(const m of S.managers)if(m.as&&m.as.t==='b'&&m.as.id===b.id){m.as=null;addLog(`📋 ${m.name} rảnh việc vì ${b.n} đã giải thể, hãy giao lứa khác.`)}}
   if(!S.batches.some(b=>b.id===S.curBatch))S.curBatch=S.batches.length?S.batches[S.batches.length-1].id:0;S.props=null}
 export function ensureCurBatch(){if(!S.batches.some(b=>b.id===S.curBatch)){const b={id:uid(),n:'Lứa '+(++S.bno),w:abs()};S.batches.push(b);S.curBatch=b.id;addLog(`🌱 Tự mở ${b.n} cho thực tập sinh mới.`,'good')}return S.curBatch}
-/* ---- Chừa lịch debut ---- */
+/* ---- Hold schedule for debut ---- */
 export const dHold=a=>a.status==='trainee'&&a.dReady&&!a.noHold;
 export function debutHoldTick(){for(const a of S.artists){if(a.status!=='trainee')continue;const r=debutRec(a),ok=r.t!=='wait';
   if(ok&&!a.dReady){a.dReady=1;addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${r.short}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')}else if(!ok)a.dReady=0}}
 export function toggleHold(id){const a=byId(id);if(a){a.noHold=!a.noHold;addLog(a.noHold?`📅 Mở lịch cho ${a.name} nhận dự án dù đã đủ điều kiện debut.`:`📅 Chừa lịch debut cho ${a.name}.`);act()}}
-/* ---- Tiền bối dẫn dắt ---- */
+/* ---- Senior mentors ---- */
 export const menteesOf=m=>S.artists.filter(a=>a.status==='trainee'&&a.mt===m.id);
 export function mtB(a,s){if(!a.mt)return 1;const m=byId(a.mt);if(!m||m.busy)return 1;return 1+clamp((m.st[s]-a.st[s])/150,0,.4)}
 export function mentorScore(m,a){return focusKeys(a).reduce((t,k)=>t+Math.max(0,m.st[k]-a.st[k]),0)/4+(a.tag[m.id]==='friend'?6:a.tag[m.id]==='enemy'?-20:0)}
@@ -77,11 +77,11 @@ export function mentorSel(a){const s=mentorSug(a);return`<select onchange="setMe
 export function mentorTick(){for(const a of S.artists){if(a.status!=='trainee'||!a.mt)continue;const m=byId(a.mt);if(!m||m.status!=='debuted'){a.mt=0;continue}
   if(m.busy)continue;m.energy=clamp(m.energy-3,0,100);MOOD(m,1);MOOD(a,2);setRel(a,m,getRel(a,m)+R(1,4));
   if(!a.tag[m.id]&&getRel(a,m)>=60){setTag(a,m,'friend');addLog(`🤝 ${a.name} và tiền bối ${m.name} trở nên thân thiết.`,'good')}}}
-/* ---- Trợ lý quản lý ---- */
+/* ---- Manager assistants ---- */
 export function hireAsst(mid,k,v,name,fee,sal){const m=S.managers.find(x=>x.id===mid);if(!m)return false;if(asstOf(m).length>=2){toast('Mỗi quản lý tối đa 2 trợ lý');return false}if(S.money<fee){toast('Không đủ tiền');return false}
   S.money-=fee;book('hr',-fee);S.assts=S.assts||[];S.assts.push({id:uid(),mid,k,v,name,sal});addLog(`🧑‍💻 Tuyển trợ lý ${name} cho QL ${m.name}: ${MSK[k]} +${v}.`,'good');return true}
 export function fireAsst(id){const x=(S.assts||[]).find(z=>z.id===id);if(!x)return;S.assts=S.assts.filter(z=>z!==x);addLog(`👋 Cho trợ lý ${x.name} nghỉ việc.`);act()}
-/* ---- Tình huống quản lý & nghệ sĩ ---- */
+/* ---- Manager & artist situations ---- */
 export const mxP=(m,k,b)=>clamp(b+(m?effSk(m,k):0)*.06,.05,.95);
 export const lowK=a=>focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);
 export const SCOUT_W=['ở quán cà phê gần phim trường','trong buổi fan meeting','ở một lễ hội âm nhạc trường học','tại cuộc thi hát karaoke khu phố','trên chuyến tàu đi quay ngoại cảnh','khi xem một buổi diễn đường phố'];
@@ -147,7 +147,7 @@ export function mxTick(){for(const m of S.managers){if(!m.as)continue;const ts=m
   if(Math.random()<.045&&asstOf(m).length<2&&!S.events.some(e=>e.kind==='mp'&&e.m===m.id)){const k=Object.keys(MSK).reduce((x,y)=>m.sk[y]<m.sk[x]?y:x),v=R(1,3);pushEv({kind:'mp',t:'asst',m:m.id,k,v,name:pick(LNM)+' '+pick(FN.concat(MN)),fee:v*8e6,sal:v*1e6})}
   else if(Math.random()<.035&&!S.events.some(e=>e.kind==='mp'&&e.t==='scout')){const a=pick(ts),c=genArtist();c.talent=+rnd(1.05,1.3).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(8,15),0,80);pushEv({kind:'mp',t:'scout',m:m.id,a:a.id,cand:c,where:pick(SCOUT_W)})}}}
 export function candBlock(c){return`<div class="card" style="background:var(--bg)"><div class="row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small"><b>${esc(c.name)}</b> · ${c.g==='F'?'Nữ':'Nam'}, ${c.age} · năng khiếu ${STATS[c.spec]} · tố chất x${c.talent}</div></div>${bars(c)}</div>`}
-/* ---- Nhóm giải tán ---- */
+/* ---- Group disbanding ---- */
 export const gMgr=g=>S.managers.find(m=>m.as&&m.as.t==='g'&&m.as.id===g.id);
 export const gHiatus=k=>{if(!k||k[0]!=='g')return false;const g=S.groups.find(x=>'g'+x.id===k);return!!(g&&g.hiatus>abs())};
 export function disbandTick(){for(const g of S.groups){if(g.hiatus){if(g.hiatus<=abs()){g.hiatus=0;addLog(`🎉 Nhóm ${g.name} kết thúc thời gian tạm ngừng, sẵn sàng hoạt động trở lại.`,'good')}else continue}
@@ -161,7 +161,7 @@ export function disbandGroup(g,why){const ms=g.members.map(byId).filter(Boolean)
   ms.forEach(a=>{a.fans=Math.round(a.fans*.88);MOOD(a,-8);a.hist.unshift(`N${S.year}: Nhóm ${g.name} giải tán`)});
   S.props=null;addLog(`💔 Nhóm ${g.name} chính thức giải tán (${why}). Các thành viên vẫn ở lại công ty, có thể ra solo, làm diễn viên hoặc vào nhóm mới.`,'bad')}
 export const fixP=g=>{const m=gMgr(g);return clamp(.35+(m?effSk(m,'care')*.05:0)+(harmony(g.members)>=0?.15:0),.1,.92)};
-/* ---- Hợp đồng & tái ký ---- */
+/* ---- Contracts & renewals ---- */
 export function ctInit(a){if(a.status==='debuted'&&!a.ce){a.ce=abs()+R(10,40);a.cs0=abs()-R(5,30);a.earnC=a.earnC||0;if(a.cf0==null)a.cf0=Math.round(a.fans*.7)}}
 export function renewEval(a,mul=1){const wk=Math.max(1,abs()-(a.cs0||abs()-26)),cost=a.salary*wk,earn=Math.round(a.earnC||0),roi=earn/Math.max(cost,1),grow=a.fans-(a.cf0||0),gp=grow/Math.max(a.cf0||0,3000)*100,L=[];let sc=50;
   sc+=clamp((roi-1)*20,-25,25);L.push(`💰 Doanh thu mang về ${fmt(earn)} so với lương đã trả ~${fmt(cost)} (x${roi.toFixed(2)})`);
@@ -194,7 +194,7 @@ export function viewRenew(id){const a=byId(id);if(!a)return closeM();const e=S.e
   modal(`<h2>📄 Hợp đồng: ${esc(a.name)}</h2><div class="sub">${aTags(a)} · Lương ${fmt(a.salary)}/tuần</div>${renewBlock(a,mul)}${a.ceNo?'<div class="card small bad">Đã quyết định không tái ký. Vẫn có thể đề nghị lại bên dưới.</div>':''}
   <div class="row">${renewOpts(a,mul).filter(o=>o.k!=='later').map(o=>`<button class="btn sm ${o.k==='end'?'warn':'pri'}" onclick="if(renewDo(${a.id},'${o.k}',${mul},1)){view(()=>RV.hr());act()}">${o.l}</button>`).join('')}</div>
   <button class="btn" style="margin-top:10px" onclick="openRoom('hr')">← Phòng Nhân sự</button>`)}
-/* ---- Sáng tác & Giám đốc âm nhạc ---- */
+/* ---- Songwriting & Music Director ---- */
 export const SONGW=['Ngày Mai Sẽ Khác','Gửi Em Mùa Hạ','Không Thể Quên','Bước Qua Đêm Tối','Nắng Ấm','Thanh Xuân','Lạc Lối','Tự Do','Hẹn Mùa Thu','Sóng Vỗ','Đường Về','Thành Phố Ngủ Quên','Một Lần Nữa','Bay Lên','Chạm','Ánh Sao Cuối Trời'];
 export const wp=a=>a.st.vocal*.3+a.st.rap*.3+a.st.variety*.1+a.st.dance*.05+(a.cs||0)*4+a.talent*12;
 export function mkSong(ids,ck,title,writing){const ws=ids.map(byId).filter(Boolean);if(!ws.length)return null;const main=ws[0],co=ws.slice(1);
@@ -257,7 +257,7 @@ export function viewSongs(){setCurRC('var(--r-studio)');const L=S.songs||[],rv=L
   ${us.length?det('sg-us',`💿 Đã phát hành (${us.length})`,us.map(s=>`<div class="small">«${esc(s.t)}» · ${esc((s.act||'').slice(2))} · hạng ${s.rank} · GĐ chấm ${s.rv?s.rv.g:'?'}</div>`).join(''),false):''}
   <button class="btn" style="margin-top:8px" onclick="openRoom('studio')">← Phòng Thu âm</button>`);
   if($('#wMain')){$('#wMain').onchange=wPrev;$('#wCon').onchange=wPrev;wPrev()}}
-/* ---- Thông tin & xử lý sự kiện mới ---- */
+/* ---- Info & resolution for new events ---- */
 export const XK=['mx','mp','disband','renew'];
 export function xInfo(e){
   if(e.kind==='v3')return v3Info(e);
@@ -281,7 +281,7 @@ export function xResolve(e,k){
     else{g.hiatus=abs()+8;ms.forEach(a=>MOOD(a,15));for(const a of ms)for(const b of ms)if(a!==b&&a.tag[b.id]==='enemy'&&Math.random()<.5){setTag(a,b,null);setRel(a,b,0)}S.cbPlan=(S.cbPlan||[]).filter(p=>p.k!=='g'+g.id);addLog(`⏸️ Nhóm ${g.name} tạm ngừng hoạt động 8 tuần để các thành viên nghỉ ngơi.`)}
     return}
   if(e.kind==='renew'){if(!renewDo(e.a,k,e.mul,true))S.events.push(e)}}
-/* ---- Tick tuần ---- */
+/* ---- Weekly tick ---- */
 export function weekV2(){mentorTick();songTick();digTick();
   {const t=(S.assts||[]).reduce((s,x)=>s+x.sal,0);if(t){S.money-=t;book('mgr',-t)}}
   contractTick();debutHoldTick();disbandTick();mxTick();
@@ -293,7 +293,7 @@ export function migrateV2(){S.assts=S.assts||[];S.songs=S.songs||[];S.fin=S.fin|
     else if(t==='s'||t==='d'){const pool=S.artists.filter(a=>(t==='s'?a.solo&&!a.pm:a.actor)&&!S.managers.some(x=>x!==m&&x.as&&x.as.t!=='s'&&x.as.t!=='d'&&mgrTargets(x).includes(a))).slice(0,MAX_SA);m.as={t:'l',id:0,ids:pool.map(a=>a.id)};addLog(`📋 ${m.name} giờ quản lý danh sách tối đa ${MAX_SA} nghệ sĩ solo/diễn viên.`)}
     else if(t==='l'&&m.as.ids.length>MAX_SA)m.as.ids=m.as.ids.slice(0,MAX_SA)}
   S.artists.forEach(ctInit);S.batches.forEach(b=>{if(bMem(b).length)b.had=1})}
-/* ---- Phòng Kinh doanh ---- */
+/* ---- Sales Room ---- */
 export function finChart(L){if(!L.length)return'<div class="small muted">Chưa có dữ liệu. Sang tuần mới để bắt đầu ghi sổ.</div>';const W=320,H=140,n=L.length,bw=W/n,mx=Math.max(1,...L.map(f=>Math.max(fsum(f.i),fsum(f.x))));
   const bars=L.map((f,i)=>{const hi=fsum(f.i)/mx*(H-26),hx=fsum(f.x)/mx*(H-26),x=i*bw+bw*.15,w=bw*.33;return`<rect x="${x.toFixed(1)}" y="${(H-16-hi).toFixed(1)}" width="${w.toFixed(1)}" height="${hi.toFixed(1)}" rx="2" style="fill:var(--mint)"/><rect x="${(x+w+1).toFixed(1)}" y="${(H-16-hx).toFixed(1)}" width="${w.toFixed(1)}" height="${hx.toFixed(1)}" rx="2" style="fill:var(--red)"/><text x="${(i*bw+bw/2).toFixed(1)}" y="${H-3}" text-anchor="middle" style="fill:var(--muted);font-size:8px">T${f.wk}</text>`}).join('');
   return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Biểu đồ thu chi 12 tuần"><line x1="0" y1="${H-16}" x2="${W}" y2="${H-16}" style="stroke:var(--line)"/>${bars}</svg><div class="small muted"><span style="color:var(--mint)">■</span> Thu · <span style="color:var(--red)">■</span> Chi</div>`}
@@ -324,5 +324,5 @@ RV.hr=function(){
   ${det('hr-mt',`👩‍🏫 Tiền bối dẫn dắt TTS (${tts.filter(a=>a.mt).length}/${tts.length})`,`<div class="small muted" style="margin-bottom:6px">Mỗi nghệ sĩ dẫn dắt tối đa 2 TTS. TTS tập nhanh hơn ở kỹ năng tiền bối giỏi hơn mình (tối đa +40%), vui hơn và thân với tiền bối. Tiền bối tốn ít năng lượng mỗi tuần, được cộng fan khi đàn em debut. 💡 là người hợp nhất.</div>`+(tts.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${esc((batchOf(a)||{n:''}).n)}</span><span class="sp"></span>${mentorSel(a)}</div>`).join('')||'<div class="small muted">Không có thực tập sinh.</div>')+(mentors.length?`<div class="small" style="margin-top:6px"><b>Đang dẫn dắt:</b> ${mentors.map(m=>`${esc(m.name)} → ${menteesOf(m).map(x=>esc(x.name)).join(', ')}`).join(' · ')}</div>`:''),true)}
   ${det('hr-as',`🧑‍💻 Trợ lý quản lý (${(S.assts||[]).length})`,(S.assts||[]).map(x=>{const m=S.managers.find(z=>z.id===x.mid);return`<div class="prow"><b>${esc(x.name)}</b><span class="small muted">trợ lý QL ${esc(m?m.name:'?')} · ${MSK[x.k]} +${x.v} · ${fmt(x.sal)}/tuần</span><span class="sp"></span><button class="btn sm warn" onclick="fireAsst(${x.id})">Cho nghỉ</button></div>`}).join('')||'<div class="small muted">Chưa có trợ lý. Quản lý sẽ tự đề xuất khi cần.</div>',false)}`);
 };
-/* ================= MỞ RỘNG v3 ================= */
+/* ================= EXTENSION v3 ================= */
 XK.push('v3');

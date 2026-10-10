@@ -8,7 +8,7 @@ import { actFree } from './secretary.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
-/* ---- Chiến dịch quảng bá trước & sau comeback ---- */
+/* ---- Promotion campaigns before & after a comeback ---- */
 export const PROMO_WK=3;
 export const PRE={
   sched:{n:'Lịch trình comeback',ic:'🗓️',c:3e6,h:4,e:0,d:'Công bố ngày ra mắt'},

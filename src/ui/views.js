@@ -19,7 +19,7 @@ import { DAYN, DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/w
 import { blinkD, campKeyOf, chibiHTML } from './building.js';
 import { closeM, modal } from './modal.js';
 
-/* ================= THU GỌN ================= */
+/* ================= COLLAPSIBLES ================= */
 export function det(k,sum,body,def){S.ui=S.ui||{};const o=S.ui[k],op=o===undefined?def:o;return`<details class="cl" ${op?'open':''} ontoggle="togD('${k}',this.open)"><summary>${sum}</summary><div class="clb">${body}</div></details>`}
 export function togD(k,v){S.ui=S.ui||{};if(S.ui[k]===v)return;S.ui[k]=v;save()}
 export function setAllD(pre,v){S.ui=S.ui||{};document.querySelectorAll('details.cl').forEach(d=>{const m=(d.getAttribute('ontoggle')||'').match(/togD\('([^']+)'/);if(m&&m[1].startsWith(pre)){S.ui[m[1]]=v;d.open=v}});save()}

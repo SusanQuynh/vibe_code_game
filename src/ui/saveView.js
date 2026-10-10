@@ -5,7 +5,7 @@ import { S, addLog } from '../state.js';
 import { act, setPos } from './building.js';
 import { curView, modal, toast } from './modal.js';
 
-let preview = null;   // { d, y, w, money, n } — dữ liệu đã đọc, chờ xác nhận ghi đè
+let preview = null;   // { d, y, w, money, n } — parsed data awaiting overwrite confirmation
 let ioMsg = '';
 
 const refresh = () => { if (curView) curView(); };

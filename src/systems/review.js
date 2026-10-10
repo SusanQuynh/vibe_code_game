@@ -13,7 +13,7 @@ import { actFree, acts, lastSingleW, secPlan, wkLabel } from './secretary.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
-/* ---- Đánh giá định kỳ 4 tuần ---- */
+/* ---- 4-week periodic reviews ---- */
 export const EV_TTS=5;
 export const EV_ART=10;
 export const EV_PCT=20;
@@ -54,7 +54,7 @@ export function evalBrief(E){if(!E)return'';const tf=E.t.filter(x=>x.g==='Không
 export function evalTable(E){if(!E)return'<div class="small muted">Chưa có kỳ đánh giá nào.</div>';const gc=g=>g==='Xuất sắc'?'tag s':g==='Tốt'||g==='Đạt'?'tag m':'tag r';
   return`${E.t.length?`<div class="small"><b>🌱 Thực tập sinh</b> (tổng chỉ số phải tăng trên ${EV_PCT}% so với 4 tuần trước; bản thân đã đủ điểm debut trên ${DEBUT_MIN}% cũng tính đạt)</div>${E.t.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.p>=0?'+':''}${x.p}%${x.g==='Không đạt'?` · ${x.out?'đã bị loại':`trượt ${x.f}/${EV_TTS} liên tiếp`}`:''}</span></div>`).join('')}`:''}
   ${E.a.length?`<div class="small" style="margin-top:6px"><b>⭐ Nghệ sĩ</b> (điểm = % fan tăng + 6/hoạt động − scandal; ≥20 xuất sắc, ≥5 đạt)</div>${E.a.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.pts} điểm${x.money<0?` · thưởng ${fmt(-x.money)}`:x.money>0?` · trừ ${fmt(x.money)}`:''}${x.g==='Không đạt'?` · ${x.out?'đã chấm dứt HĐ':`trượt ${x.f}/${EV_ART} liên tiếp`}`:''}</span></div>`).join('')}`:''}`}
-/* ---- Phòng Truyền thông: đề xuất kế hoạch quảng bá ---- */
+/* ---- PR Room: suggested promotion plans ---- */
 export const PRP={
   sns:{n:'Chạy quảng cáo SNS',ic:'📱',c:15e6},
   press:{n:'Phỏng vấn & thông cáo báo chí',ic:'📰',c:5e6},

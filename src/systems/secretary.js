@@ -18,7 +18,7 @@ export function acts(){const r=[];S.groups.forEach(g=>r.push({k:'g'+g.id,n:'👥
 export const actFree=x=>x.m.length&&!gHiatus(x.k)&&x.m.every(id=>{const a=byId(id);return a&&!a.busy});
 export function conceptRec(x){const m=x.m.map(byId).filter(Boolean);return Object.keys(CONCEPTS).map(k=>{const f=avgFit(m,CONCEPTS[k].w);return{k,f,s:f+trendB(k)}}).sort((a,b)=>b.s-a.s)}
 export function studioPick(k,c){if(!$('#sAct'))return;$('#sAct').value=k;$('#sCon').value=c;$('#sCon').onchange();$('#sAct').scrollIntoView({behavior:'smooth',block:'center'})}
-/* ---- Thư ký: kế hoạch comeback ---- */
+/* ---- Secretary: comeback planning ---- */
 export const BUDN={30e6:'Tiết kiệm',80e6:'Tiêu chuẩn',200e6:'Bom tấn'};
 export function lastSingleW(x){const s=S.singles.find(z=>z.k?z.k===x.k:z.act===x.n);return s?(s.w||(s.y-1)*52+1):null}
 export function estRank(x,ck,bud,rp){const mem=x.m.map(byId).filter(Boolean);if(!mem.length)return 100;const ft=avgFit(mem,CONCEPTS[ck].w),fm=mem.reduce((t,a)=>t+fame(a),0)/mem.length,bb=bud>=200e6?16:bud>=80e6?8:0;

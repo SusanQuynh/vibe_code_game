@@ -14,7 +14,7 @@ import { actFree, acts } from './secretary.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
-/* ================= THỊ TRƯỜNG: XU HƯỚNG, ĐỐI THỦ, BIẾN CỐ ================= */
+/* ================= MARKET: TRENDS, RIVALS, SURPRISES ================= */
 export const modV=k=>{const m=S.mods&&S.mods[k];return m&&m.until>abs()?m.v:1};
 export const setMod=(k,v,w,n)=>{S.mods=S.mods||{};S.mods[k]={v,until:abs()+w,n}};
 export const trendB=k=>S.trend?(S.trend.hot.includes(k)?12:S.trend.cold===k?-8:0):0;
@@ -85,7 +85,7 @@ export function sxResolve(e,k){
     case'investor:yes':S.money+=e.v;S.loan={pay:Math.round(e.v*1.3/26/1e6)*1e6,left:26,n:e.p};addLog(`💼 Nhận ${fmt(e.v)} từ ${e.p}. Trả dần ${fmt(S.loan.pay)}/tuần trong 26 tuần.`,'good');break;
   }
 }
-/* ---- đầu tư kinh doanh ---- */
+/* ---- business investments ---- */
 export const BIZ={
   cafe:{n:'Cà phê thần tượng',ic:'☕',cost:150e6,base:5e6,syn:.8,vol:.3,d:'Fan càng đông càng đắt khách.'},
   food:{n:'Chuỗi nhà hàng',ic:'🍜',cost:350e6,base:11e6,syn:.2,vol:.25,d:'Ổn định, ít phụ thuộc fan.'},

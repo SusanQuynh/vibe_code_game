@@ -14,7 +14,7 @@ import { modal, toast } from '../ui/modal.js';
 import { propNext, setPropNext } from '../ui/planning.js';
 import { det } from '../ui/views.js';
 
-/* ---- đề xuất của quản lý ---- */
+/* ---- manager proposals ---- */
 export function shortWhy(a){if(a.energy<40)return'năng lượng thấp, nghỉ trước';if(a.mood<28)return'tâm trạng xấu, cho nghỉ';if(a.wantAct)return'muốn đóng phim, tập diễn';const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return'bù '+STATS[k]+' ('+Math.round(a.st[k])+')'}
 export function buildProps(){
   if(S.props&&S.props.w===abs()&&S.props.c)return S.props;
@@ -30,7 +30,7 @@ export function buildProps(){
     if(it.s.length||it.p.length||it.d.length)P.m[m.id]=it}
   S.props=P;routeProps(P);return P;
 }
-/* ---- luồng duyệt: quản lý → cấp trên → … → Giám đốc ---- */
+/* ---- approval flow: manager → boss → … → Director ---- */
 export const CFT={overlap:'Trùng người',offer:'Tranh cùng lời mời',tired:'Quá sức',enemy:'Bạn diễn mâu thuẫn',scandal:'Đang dính scandal'};
 export const mById=id=>S.managers.find(m=>m.id===id);
 export const chainUp=m=>{const r=[];let b=mBoss(m);while(b&&!r.includes(b)){r.push(b);b=mBoss(b)}return r};

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`snapshot UI tiếng Việt > khung tĩnh index.html 1`] = `
+exports[`Vietnamese UI snapshots > index.html static shell 1`] = `
 {
   "btns": [
     "Lưu / chuyển game",
@@ -14,17 +14,7 @@ exports[`snapshot UI tiếng Việt > khung tĩnh index.html 1`] = `
 }
 `;
 
-exports[`snapshot UI tiếng Việt > nút chạm lần nữa 1`] = `
-{
-  "fire": "Chạm lần nữa để xác nhận",
-  "fireMgr": "Chạm lần nữa để xác nhận",
-  "hsFire": "Chạm lần nữa",
-  "reset": "Chạm lần nữa: xoá toàn bộ dữ liệu",
-  "sellBiz": "Chạm lần nữa",
-}
-`;
-
-exports[`snapshot UI tiếng Việt > renderBuilding: nhãn phòng và nhãn NPC 1`] = `
+exports[`Vietnamese UI snapshots > renderBuilding: room and NPC labels 1`] = `
 [
   {
     "aria": "Phòng Kinh doanh",
@@ -133,9 +123,9 @@ exports[`snapshot UI tiếng Việt > renderBuilding: nhãn phòng và nhãn NPC
 ]
 `;
 
-exports[`snapshot UI tiếng Việt > renderDock 1`] = `"<button class="on" onclick="openRoom('ceo')"><span class="di">💼</span><span>Giám đốc</span></button><button class="" onclick="openRoom('meet')"><span class="di">📨</span><span>Họp</span><span class="badge">5</span></button><button class="" onclick="openRoom('studio')"><span class="di">🎙️</span><span>Thu âm</span></button><button class="" onclick="openRoom('acting')"><span class="di">🎬</span><span>Diễn xuất</span></button><button class="" onclick="openRoom('vocal')"><span class="di">🎤</span><span>Vocal</span></button><button class="" onclick="openRoom('dance')"><span class="di">🪩</span><span>Nhảy</span></button><button class="" onclick="openRoom('gym')"><span class="di">🏋️</span><span>Gym &amp; Làm đẹp</span></button><button class="" onclick="openRoom('pr')"><span class="di">📰</span><span>Truyền thông</span><span class="badge" style="background:var(--violet)">1 📣</span></button><button class="" onclick="openRoom('lobby')"><span class="di">🌟</span><span>Sảnh Tuyển dụng</span><span class="badge" style="background:var(--violet)">2 TTS · 🏅2</span></button><button class="" onclick="openRoom('dorm')"><span class="di">🛏️</span><span>Ký túc xá</span></button><button class="" onclick="openRoom('mgr')"><span class="di">📋</span><span>Văn phòng Quản lý</span></button><button class="" onclick="openRoom('roof')"><span class="di">☕</span><span>Sân thượng</span></button><button class="" onclick="openRoom('invest')"><span class="di">📈</span><span>Đầu tư</span></button><button class="" onclick="openRoom('market')"><span class="di">📊</span><span>Thị trường</span></button><button class="" onclick="openRoom('sales')"><span class="di">💹</span><span>Kinh doanh</span></button><button class="" onclick="openRoom('hr')"><span class="di">🗂️</span><span>Nhân sự</span></button>"`;
+exports[`Vietnamese UI snapshots > renderDock 1`] = `"<button class="on" onclick="openRoom('ceo')"><span class="di">💼</span><span>Giám đốc</span></button><button class="" onclick="openRoom('meet')"><span class="di">📨</span><span>Họp</span><span class="badge">5</span></button><button class="" onclick="openRoom('studio')"><span class="di">🎙️</span><span>Thu âm</span></button><button class="" onclick="openRoom('acting')"><span class="di">🎬</span><span>Diễn xuất</span></button><button class="" onclick="openRoom('vocal')"><span class="di">🎤</span><span>Vocal</span></button><button class="" onclick="openRoom('dance')"><span class="di">🪩</span><span>Nhảy</span></button><button class="" onclick="openRoom('gym')"><span class="di">🏋️</span><span>Gym &amp; Làm đẹp</span></button><button class="" onclick="openRoom('pr')"><span class="di">📰</span><span>Truyền thông</span><span class="badge" style="background:var(--violet)">1 📣</span></button><button class="" onclick="openRoom('lobby')"><span class="di">🌟</span><span>Sảnh Tuyển dụng</span><span class="badge" style="background:var(--violet)">2 TTS · 🏅2</span></button><button class="" onclick="openRoom('dorm')"><span class="di">🛏️</span><span>Ký túc xá</span></button><button class="" onclick="openRoom('mgr')"><span class="di">📋</span><span>Văn phòng Quản lý</span></button><button class="" onclick="openRoom('roof')"><span class="di">☕</span><span>Sân thượng</span></button><button class="" onclick="openRoom('invest')"><span class="di">📈</span><span>Đầu tư</span></button><button class="" onclick="openRoom('market')"><span class="di">📊</span><span>Thị trường</span></button><button class="" onclick="openRoom('sales')"><span class="di">💹</span><span>Kinh doanh</span></button><button class="" onclick="openRoom('hr')"><span class="di">🗂️</span><span>Nhân sự</span></button>"`;
 
-exports[`snapshot UI tiếng Việt > renderTop 1`] = `
+exports[`Vietnamese UI snapshots > renderTop 1`] = `
 {
   "artN": "2 nghệ sĩ",
   "date": "<small>Tuần</small>1",
@@ -147,7 +137,7 @@ exports[`snapshot UI tiếng Việt > renderTop 1`] = `
 }
 `;
 
-exports[`snapshot UI tiếng Việt > tiêu đề sheet của từng phòng 1`] = `
+exports[`Vietnamese UI snapshots > sheet title for each room 1`] = `
 {
   "acting": {
     "h2": "<h2>🎬 Phòng Diễn xuất</h2>",
@@ -216,7 +206,17 @@ exports[`snapshot UI tiếng Việt > tiêu đề sheet của từng phòng 1`] 
 }
 `;
 
-exports[`snapshot UI tiếng Việt > tutorial từng bước 1`] = `
+exports[`Vietnamese UI snapshots > tap-again buttons 1`] = `
+{
+  "fire": "Chạm lần nữa để xác nhận",
+  "fireMgr": "Chạm lần nữa để xác nhận",
+  "hsFire": "Chạm lần nữa",
+  "reset": "Chạm lần nữa: xoá toàn bộ dữ liệu",
+  "sellBiz": "Chạm lần nữa",
+}
+`;
+
+exports[`Vietnamese UI snapshots > tutorial step by step 1`] = `
 [
   "<h3>👋 Chào mừng Giám đốc!</h3><div class="small">Bạn vừa tiếp quản <b>Starlight Ent.</b> với 600 triệu và 2 thực tập sinh. Mục tiêu: đào tạo, debut và đưa nghệ sĩ lên đỉnh. Bạn đã biết chơi rồi thì có thể bỏ qua hướng dẫn.</div>
   <div class="row" style="margin-top:10px"><button class="btn" onclick="tutEnd()">Bỏ qua, tôi đã biết chơi</button><span class="sp"></span><button class="btn pri" onclick="tutGo(1)">Xem hướng dẫn ➜</button></div>

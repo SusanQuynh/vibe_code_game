@@ -1,4 +1,4 @@
-// Xuất / nhập save không cần server: JSON → gzip → base64url, tiền tố "SL1.".
+// Serverless save export / import: JSON → gzip → base64url, prefixed "SL1.".
 const PREFIX = 'SL1.';
 const MAX_CODE = 30 * 1024 * 1024;
 
@@ -34,7 +34,7 @@ export async function importCode(code) {
   return checkSave(d);
 }
 
-// Nhận cả mã SL1.… lẫn nội dung file .json
+// Accepts both SL1.… codes and .json file contents
 export async function parseSaveText(text) {
   const t = String(text ?? '').trim();
   if (t.startsWith(PREFIX)) return importCode(t);
