@@ -16,6 +16,7 @@ import { planWhy } from '../../src/systems/week.js';
 import { lbl } from '../../src/i18n/index.js';
 import { view } from '../../src/ui/modal.js';
 import { COMP, batchNameT, compNameT } from '../../src/systems/batches.js';
+import { MSK } from '../../src/data/rules.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -200,5 +201,23 @@ describe('task 16: Văn phòng Quản lý', () => {
     expect(t('mgr.help', { m: 4 })).toContain('up to 4 solo artists/actors');
     setLang('vi');
     expect(t('mgr.help', { m: 4 })).toContain('danh sách tối đa 4 nghệ sĩ');
+  });
+});
+
+describe('task 17: trợ lý cá nhân, chuyên gia sức khỏe', () => {
+  const WHY = { care: 'muốn có người lắng nghe, giữ tinh thần ổn định', nego: 'muốn được hỗ trợ đàm phán thù lao tốt hơn', pr: 'lo truyền thông, muốn có người giữ gìn hình ảnh', plan: 'lịch trình dày, cần người sắp xếp thời gian' };
+  it('pa.why.<khoá MSK>: đủ key ở mọi ngôn ngữ, vi giữ nguyên chữ cũ, en không rò', () => {
+    expect(Object.keys(WHY).sort()).toEqual(Object.keys(MSK).sort());
+    for (const k of Object.keys(MSK)) {
+      expect(`pa.why.${k}` in viL.dict && `pa.why.${k}` in enL.dict, k).toBe(true);
+      setLang('vi'); expect(lbl('pa.why', k)).toBe(WHY[k]);
+      setLang('en'); expect(lbl('pa.why', k)).not.toMatch(VI);
+    }
+    setLang('vi');
+  });
+  it('hs.sug số ít/số nhiều ở en', () => {
+    setLang('en');
+    expect([1, 3].map(n => t('hs.sug', { n }))).toEqual(['suggests 1 rest day', 'suggests 3 rest days']);
+    setLang('vi');
   });
 });
