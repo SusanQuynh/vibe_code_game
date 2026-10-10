@@ -57,6 +57,6 @@ export const SURFACES = [
 
 // Bề mặt đã dịch xong (ui-en-leak kiểm không rò chữ Việt). Mỗi task trích chuỗi thêm id vào đây.
 export const DONE = new Set(['outside', 'trendBar', 'artist.trainee', 'artist.trainee.new', 'artist.solo', 'artist.group', 'artist.actor', 'report', 'reportFull', 'award', 'skipWarn', 'events.new', 'plan', 'plan.new', 'code',
-  ...['ceo', 'roof', 'dorm', 'vocal', 'dance', 'acting'].flatMap(r => [`room.${r}.new`, `room.${r}.rich`])]);
+  ...['ceo', 'meet', 'roof', 'dorm', 'vocal', 'dance', 'acting'].flatMap(r => [`room.${r}.new`, `room.${r}.rich`])]);
 // Bề mặt chứa nội dung sự kiện (giai đoạn 3), luôn được loại khỏi kiểm rò chữ Việt ở en.
 export const EXCLUDED = new Set(['events', 'inv']);

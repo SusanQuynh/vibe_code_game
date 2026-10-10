@@ -16,7 +16,7 @@ import { nextWeek } from '../../src/systems/week.js';
 import { hireMgr } from '../../src/systems/managers.js';
 import { setAll, setSched, sign } from '../../src/systems/artists.js';
 import { debutIds } from '../../src/systems/debut.js';
-import { acceptOffer } from '../../src/systems/offers.js';
+import { acceptCast, acceptOffer, bestCast, investOffer, slotsOf } from '../../src/systems/offers.js';
 import { acts } from '../../src/systems/secretary.js';
 import { doSingle } from '../../src/systems/releases.js';
 import { postAuto, postDo, preDo } from '../../src/systems/promo.js';
@@ -39,6 +39,9 @@ function run(lang, weeks = 40) {
     if (i % 3 === 0 && S.artists.length < 5 && S.money > 150e6) for (const p of [...S.pool].slice(0, 1)) sign(p.id);
     for (const a of [...S.artists]) if (a.status === 'trainee' && a.dReady) debutIds('solo', [a.id], '');
     for (const o of [...S.offers].slice(0, 3)) { const a = S.artists.find(x => !x.busy && x.status === 'debuted'); if (a) acceptOffer(o.id, a.id, true); }
+    { const o = S.offers.find(q => slotsOf(q) > 1), c = o && bestCast(o, S.artists.filter(a => !a.busy)); if (c && i === 21) acceptCast(o.id, c, true); } // lời mời nhiều người (ăn ý, mời đích danh)
+    { const o = S.offers.find(q => q.invest && !q.invested); if (o && i === 17 && S.money > 150e6) investOffer(o.id); } // góp vốn phim
+    acceptCast(-1, [], true); acceptCast(S.offers[0]?.id, [], true); // đường toast lỗi
     const x = acts().find(z => z.m.every(id => { const a = S.artists.find(q => q.id === id); return a && a.status === 'debuted' && !a.busy; }));
     if (x) {
       if (!S.camp[x.k] && i % 4 === 0) for (const id of ['photo', 'vpre', 'pre']) preDo(x.k, id, true);
