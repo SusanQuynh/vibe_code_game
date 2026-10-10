@@ -477,5 +477,26 @@
     "removeArtist#1": 6,
     "rival.last": 3,
     "scandal.t": 1
+  },
+  "logCount": {
+    "src/save/storage.js": 1,
+    "src/state.js": 2,
+    "src/systems/artists.js": 3,
+    "src/systems/awards.js": 4,
+    "src/systems/batches.js": 12,
+    "src/systems/debut.js": 6,
+    "src/systems/events.js": 44,
+    "src/systems/ext2.js": 66,
+    "src/systems/ext3.js": 98,
+    "src/systems/managers.js": 12,
+    "src/systems/market.js": 50,
+    "src/systems/offers.js": 7,
+    "src/systems/promo.js": 18,
+    "src/systems/proposals.js": 2,
+    "src/systems/releases.js": 19,
+    "src/systems/review.js": 20,
+    "src/systems/secretary.js": 14,
+    "src/systems/week.js": 14,
+    "src/ui/saveView.js": 1
   }
 }

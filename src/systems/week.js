@@ -115,7 +115,9 @@ export function nextWeek(force,planned){
   if(!planned)buildProps();
   if(!planned&&((S.planOn!==false&&S.artists.some(a=>!a.busy))||propCount()))return startPlan(force);
   mgrScheduleAll();
-  if(force)for(const e of [...S.events]){const inf=evInfo(e);if(inf)resolveEv(e.id,inf.o[inf.o.length-1].k,true);else S.events=S.events.filter(x=>x!==e)}
+  // Sự kiện mồ côi (evInfo null) luôn bị dọn, kể cả khi không force: chuông/chặn đã bỏ qua chúng (liveEvents),
+  // nếu để lại chúng sẽ chặn sự kiện mới của cùng nghệ sĩ/loại và chiếm chỗ trong giới hạn 7 của pushEv.
+  for(const e of [...S.events]){const inf=evInfo(e);if(!inf)S.events=S.events.filter(x=>x!==e);else if(force)resolveEv(e.id,inf.o[inf.o.length-1].k,true)}
   const now=abs(),logMark=S.log[0],rep={y:S.year,w:S.week,a:{},ev:[],m0:S.money},f0={};S.artists.forEach(a=>f0[a.id]=a.fans);
   promoWeek();
   for(const a of [...S.artists]){

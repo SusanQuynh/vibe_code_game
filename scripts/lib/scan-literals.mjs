@@ -42,6 +42,7 @@ const idents = (n, out = new Set()) => {
   if (n.type === 'Identifier') out.add(n.name);
   else if (n.type === 'MemberExpression') { idents(n.object, out); if (n.computed) idents(n.property, out); }
   else if (n.type === 'Property') { if (n.computed) idents(n.key, out); idents(n.value, out); }
+  else if (n.type === 'ArrowFunctionExpression' || n.type === 'FunctionExpression') {} // tham số/biến của hàm lồng (vd .find(r=>…)) không phải biến chảy vào log
   else for (const c of kids(n)) idents(c, out);
   return out;
 };

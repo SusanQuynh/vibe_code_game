@@ -49,7 +49,7 @@ export function classify(items, cfg, { declared } = {}) {
   // Một (khai báo, chữ) có thể có nhiều mục (vd một mục cmp + một mục state n=2); mục cmp thử trước
   const T = new Map(), TL = [];
   for (const e of [...cfg.allowText].sort((a, b) => (b.kind === 'cmp') - (a.kind === 'cmp'))) { const r = { e, used: 0, seen: 0 }; TL.push(r); const k = tk(e.at, e.text); T.set(k, [...(T.get(k) ?? []), r]); }
-  const declHit = new Set(), todoItems = [], todo = {}, exempt = {}, cmpBad = [], per = {}, sink = {}, sinkAt = {};
+  const declHit = new Set(), todoItems = [], todo = {}, exempt = {}, cmpBad = [], per = {}, sink = {}, sinkAt = {}, log = {};
   let total = 0;
   const bump = (row, k) => { row[k] = (row[k] ?? 0) + 1; };
   for (const x of items) {
@@ -64,7 +64,7 @@ export function classify(items, cfg, { declared } = {}) {
       if (t) { t.used++; bump(exempt, t.e.kind); bump(row, t.e.kind); continue; }
     }
     if (x.cmp) { cmpBad.push(x); row.todo++; continue; }
-    if (x.ctx === 'log') { row.log++; continue; }
+    if (x.ctx === 'log') { row.log++; bump(log, x.at.split('#')[0]); continue; }
     if (x.ctx === 'name') { row.name++; continue; }
     if (d && !NEVER_DECL.has(x.ctx)) { bump(exempt, d.kind); bump(row, d.kind); continue; }
     if (x.sink && !NEVER_DECL.has(x.ctx)) { bump(sink, x.sink); bump(row, 'sink'); (sinkAt[x.sink] ??= {})[x.at] = 1; continue; }
@@ -82,7 +82,7 @@ export function classify(items, cfg, { declared } = {}) {
     for (const at of k.in ?? []) if (!sinkAt[k.id]?.[at]) stale.push(`sink ${k.id}: khai báo ${at} không có literal nào khớp, xoá khỏi in`);
     if (k.kind === 'call' && declared && !k.fn.includes('.') && !declared.has(k.fn)) stale.push(`sink ${k.id}: không có hàm ${k.fn} khai báo trong src/`);
   }
-  return { todo, todoItems, exempt, cmpBad, stale, per, total, sink };
+  return { todo, todoItems, exempt, cmpBad, stale, per, total, sink, log };
 }
 
 // So với baseline (cfg.todo, cfg.allowCount). Trả về lỗi; rỗng = khớp.
@@ -100,6 +100,13 @@ export function checkBaseline(res, cfg) {
     if (n > m) errs.push(`số literal được miễn (${k}) tăng ${m} → ${n}: không thêm allow/allowText để lách, dịch chuỗi`);
     else if (n < m) errs.push(`số literal được miễn (${k}) giảm ${m} → ${n}, chạy: npm run check:literals -- --update`);
   }
+  // Literal ctx log (addLog/pushEv trực tiếp hoặc qua biến) cũng khoá theo file: chữ UI mới bị nhận nhầm là log sẽ làm số tăng → đỏ.
+  if (!cfg.logCount) { if (Object.keys(res.log ?? {}).length) errs.push('thiếu logCount trong cấu hình (cần ghi baseline: --update --force với I18N_LITERALS_FORCE=1)'); }
+  else for (const k of new Set([...Object.keys(res.log ?? {}), ...Object.keys(cfg.logCount)])) {
+    const n = res.log?.[k] ?? 0, m = cfg.logCount[k] ?? 0;
+    if (n > m) errs.push(`số literal log ở ${k} tăng ${m} → ${n}: kiểm tra chuỗi mới đúng là log (addLog/pushEv), không phải chữ UI`);
+    else if (n < m) errs.push(`số literal log ở ${k} giảm ${m} → ${n}, chạy: npm run check:literals -- --update`);
+  }
   if (!cfg.sinkCount) { if (Object.keys(res.sink).length) errs.push('thiếu sinkCount trong cấu hình (cần ghi baseline: --update --force với I18N_LITERALS_FORCE=1)'); }
   else for (const k of new Set([...Object.keys(res.sink), ...Object.keys(cfg.sinkCount)])) {
     const n = res.sink[k] ?? 0, m = cfg.sinkCount[k] ?? 0;
@@ -109,22 +116,28 @@ export function checkBaseline(res, cfg) {
   return errs;
 }
 
+const upsOf = (res, cfg) => [
+  ...Object.keys(res.exempt).filter(k => res.exempt[k] > (cfg.allowCount?.[k] ?? 0)).map(k => 'miễn ' + k),
+  ...Object.keys(res.sink).filter(k => res.sink[k] > (cfg.sinkCount?.[k] ?? 0)).map(k => 'sink ' + k),
+  ...Object.keys(res.log ?? {}).filter(k => cfg.logCount && res.log[k] > (cfg.logCount[k] ?? 0)).map(k => 'log ' + k),
+];
 // Quyết định --update. env = process.env.I18N_LITERALS_FORCE === '1'. Trả {ok, msg, next} (next = phần todo/allowCount mới).
 export function decideUpdate(res, cfg, { force = false, envForce = false } = {}) {
   const bad = [...validateConfig(cfg), ...res.stale, ...res.cmpBad.map(x => `${x.at}: literal dùng để so sánh logic phải vào allowText (kind cmp, kèm why): "${x.text}"`)];
   if (bad.length) return { ok: false, msg: bad.join('\n') };
-  const next = { todo: Object.fromEntries(Object.entries(res.todo).sort((a, b) => a[0].localeCompare(b[0]))), allowCount: Object.fromEntries(Object.entries(res.exempt).sort()), sinkCount: Object.fromEntries(Object.entries(res.sink).sort()) };
-  const strict = !cfg.todo && !!cfg.allowCount; // chế độ chặt: đã xoá todo, không bao giờ ghi lại todo
+  const next = { todo: Object.fromEntries(Object.entries(res.todo).sort((a, b) => a[0].localeCompare(b[0]))), allowCount: Object.fromEntries(Object.entries(res.exempt).sort()), sinkCount: Object.fromEntries(Object.entries(res.sink).sort()), logCount: Object.fromEntries(Object.entries(res.log ?? {}).sort()) };
+  const strict = !cfg.todo && !!(cfg.allowCount || cfg.sinkCount || cfg.logCount); // chế độ chặt: không có khoá todo mà đã có baseline nào đó (xoá tay riêng allowCount không mở lại todo); cấu hình mới tinh vẫn ghi baseline được
   if (strict && Object.keys(res.todo).length) return { ok: false, msg: 'Chế độ chặt: không còn baseline todo, dịch hoặc phân loại các chuỗi sau (không ghi được): ' + Object.keys(res.todo).join(', ') };
   if (cfg.todo || strict) {
     const ups = Object.keys(res.todo).filter(k => res.todo[k] > (cfg.todo?.[k] ?? 0)).map(k => 'todo ' + k);
     for (const k of Object.keys(res.exempt)) if (res.exempt[k] > (cfg.allowCount?.[k] ?? 0)) ups.push('miễn ' + k);
     for (const k of Object.keys(res.sink)) if (res.sink[k] > (cfg.sinkCount?.[k] ?? 0)) ups.push('sink ' + k);
+    for (const k of Object.keys(res.log ?? {})) if (cfg.logCount && res.log[k] > (cfg.logCount[k] ?? 0)) ups.push('log ' + k);
     if (ups.length) {
       if (!force) return { ok: false, msg: 'Từ chối --update: số tăng ở ' + ups.join(', ') };
       if (!envForce) return { ok: false, msg: 'Từ chối --force: đã có baseline. Chỉ ghi tăng được khi đặt I18N_LITERALS_FORCE=1 (và nêu lý do trong commit). Tăng ở ' + ups.join(', ') };
     }
   }
   if (strict) delete next.todo;
-  return { ok: true, next };
+  return { ok: true, next, forced: (cfg.todo || strict) ? upsOf(res, cfg) : [] };
 }

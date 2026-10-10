@@ -3,6 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { declaredFns, scan, scanCss } from '../../scripts/lib/scan-literals.mjs';
 
 describe('scan-literals', () => {
+  it('tham số của hàm lồng (vd .find(r=>…)) không biến literal UI cùng tên thành log', () => {
+    const src = "function f(b){const m=S.ms.find(r=>r.id===b);addLog(`QL ${m.name} nhận việc`);{const r=`<b>Hạng mới</b>`;el.innerHTML=r}}";
+    const ui = scan(src, 'f.js').find(x => x.text === '<b>Hạng mới</b>');
+    expect(ui.ctx).toBe('ui');
+  });
   it('addLog → ctx log', () => {
     const r = scan('function f(x){addLog(`Ký ${x} thành công`)}', 'f.js');
     expect(r.length).toBe(2);

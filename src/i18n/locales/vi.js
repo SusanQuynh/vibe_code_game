@@ -200,6 +200,7 @@ export default {
     'fin.x.trn': '🏫 Đào tạo',
     'fin.x.prod': '🎬 Sản xuất & debut',
     'fin.x.hr': '🗂️ Hợp đồng & tuyển dụng',
+    'fin.x.biz': '📉 Lỗ đầu tư',
     'fin.x.oth': '➖ Khác',
     'dr.group': '👥 Nhóm nhạc',
     'dr.solo': '🎤 Solo',

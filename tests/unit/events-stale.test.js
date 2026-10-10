@@ -31,4 +31,11 @@ describe('sự kiện mồ côi', () => {
     nextWeek();
     expect(curView).toBe(viewSkipWarn);
   });
+  it('sang tuần (không force) dọn sự kiện mồ côi thay vì giữ mãi', () => {
+    S.events = [{ id: 9005, kind: 'req_rest', a: 424242 }];
+    const w0 = S.week;
+    nextWeek(false, true);
+    expect(S.week).not.toBe(w0);
+    expect(S.events.find(e => e.id === 9005)).toBeUndefined();
+  });
 });

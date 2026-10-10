@@ -206,6 +206,7 @@ export default {
     'fin.x.trn': '🏫 Training',
     'fin.x.prod': '🎬 Production & debut',
     'fin.x.hr': '🗂️ Contracts & recruiting',
+    'fin.x.biz': '📉 Investment losses',
     'fin.x.oth': '➖ Other',
     'dr.group': '👥 Group',
     'dr.solo': '🎤 Solo',
