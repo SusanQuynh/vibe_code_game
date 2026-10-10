@@ -5,7 +5,7 @@ import { S, abs, byId } from '../state.js';
 import { fame, fit } from '../systems/artists.js';
 import { bMem, batchHTML, batchNameT, compHTML } from '../systems/batches.js';
 import { DEBUT_COST, DEBUT_MIN, bestLineup, bestOf, debutAnalysis, recLine } from '../systems/debut.js';
-import { evInfo, invBlock } from '../systems/events.js';
+import { evInfo, invBlock, liveEvents } from '../systems/events.js';
 import { MAX_SA, asstOf, curSong, otherMgr, repCard, songCard, songOpts, songPrev } from '../systems/ext2.js';
 import { dElig, dqBanner, eligSort, extById, hsHTML, mNameH, mgrBossHTML, relTxt } from '../systems/ext3.js';
 import { inSub, mBoss, mCap, mKids, mgrOf, mgrTargets, targetNameT } from '../systems/managers.js';
@@ -108,7 +108,7 @@ export const RV={
     const now=abs();
     const avail=S.artists.filter(a=>!a.busy);
     modal(`<h2>📨 ${roomName('meet')}</h2><div class="sub">${t('meet.sub')}</div>
-    ${S.events.length?`<button class="btn pink" onclick="view(viewEvents)">🔔 ${t('meet.events',{n:S.events.length})}</button>`:''}
+    ${liveEvents().length?`<button class="btn pink" onclick="view(viewEvents)">🔔 ${t('meet.events',{n:liveEvents().length})}</button>`:''}
     ${(()=>{const L=secPlans();if(!L.length)return'';const r=L.filter(p=>!p.wait&&!p.plan),pl=L.filter(p=>p.plan),sr=secSchedRec();return`<div class="card row"><div class="chibi mini">${chibiHTML(NPC[1])}</div><div class="small" style="flex:1"><b>${t('meet.secLbl')}</b> ${r.length?t('meet.secCb',{n:r.map(p=>esc(p.n.slice(2).trim())).join(t('list.sep')),c:lbl('concept',r[0].ck),tr:trendTag(r[0].ck)}):t('meet.secNoCb')}${sr.length?t('meet.secBook',{n:sr.map(p=>esc(p.n.slice(2).trim())).join(t('list.sep'))}):''}${pl.length?t('meet.secPlans',{n:pl.length}):''}${Object.values(S.camp).some(c=>c.ph==='post')?t('meet.secPromo',{n:Object.values(S.camp).filter(c=>c.ph==='post').length}):''}${fanSugs().length?t('meet.secFan',{n:fanSugs().length}):''}</div>${sr.length?`<button class="btn sm" onclick="cbSchedRec()">${t('meet.bookRec')}</button>`:''}<button class="btn sm pri" onclick="view(viewSec)">${t('meet.plan')}</button></div>`})()}
     ${(()=>{const offCard=of=>{const O=OFFER[of.type],tg=of.target?byId(of.target):null;
       const opts=avail.slice().sort((x,y)=>(canTake(of,x)?1:0)-(canTake(of,y)?1:0)||(y.id===of.target)-(x.id===of.target)).map(a=>{const why=canTake(of,a);return`<option value="${a.id}" ${why?'disabled':''}>${esc(a.name)} – ${why||t('meet.fitPay',{f:Math.round(fit(a,of.w)),m:money(effPay(of,a))})}</option>`}).join('');

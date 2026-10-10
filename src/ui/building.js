@@ -7,6 +7,7 @@ import { S, abs } from '../state.js';
 import { cleanBatches } from '../systems/ext2.js';
 import { mgrTargets, targetNameT } from '../systems/managers.js';
 import { campMem } from '../systems/promo.js';
+import { liveEvents } from '../systems/events.js';
 import { datingPartner } from '../systems/relations.js';
 import { prPlans } from '../systems/review.js';
 import { lbl, money, roomName, t } from '../i18n/index.js';
@@ -46,7 +47,7 @@ export function roomOf(a){if(a.busy)return null;const k=a.days?a.days[0]:a.sched
 export function mgrRoom(m){if(!m.as)return'mgr';for(const a of mgrTargets(m)){const r=roomOf(a);if(r)return r}return null}
 export const NPC=[{id:'n1',room:'ceo',look:{hair:'#2b2233',skin:'#f8d0b0',out:'#333a56',style:'short'}},{id:'n2',room:'meet',look:{hair:'#5a3825',skin:'#ffe0c7',out:'#e9e9f2',style:'bun',skirt:true}},{id:'n3',room:'lobby',look:{hair:'#c98b4b',skin:'#eebf98',out:'#16b98f',style:'pony',skirt:true}},{id:'n4',room:'studio',look:{hair:'#1d1d2b',skin:'#eebf98',out:'#9b5de5',style:'spiky'}}];
 export function roomBadge(id){
-  if(id==='meet'){const n=S.offers.length+S.events.length;return n?`<span class="badge">${n}</span>`:''}
+  if(id==='meet'){const n=S.offers.length+liveEvents().length;return n?`<span class="badge">${n}</span>`:''}
   if(id==='pr'){const n=S.artists.filter(a=>a.scandal).length,p=prPlans().length;return n?`<span class="badge">${n}🚨</span>`:p?`<span class="badge" style="background:var(--violet)">${p} 📣</span>`:''}
   if(id==='mgr'){const n=S.managers.filter(m=>!m.as).length;return n?`<span class="badge" style="background:var(--violet)">${t('badge.idle',{n})}</span>`:''}
   if(id==='studio'){const n=(S.songs||[]).filter(s=>s.st==='review').length;return n?`<span class="badge" style="background:var(--violet)">${n} 🎼</span>`:''}
@@ -90,7 +91,7 @@ export function renderTop(){
   $('#date').innerHTML=`<small>${t('top.week')}</small>${S.week}`;$('#yearL').textContent=t('top.year',{n:S.year});$('#nextBtn').textContent=t('top.next',{n:S.week});
   const tf=S.artists.reduce((s,a)=>s+a.fans,0);
   $('#fansP').textContent=t('top.fans',{n:fmtN(tf)});$('#artN').textContent=t('top.artists',{n:S.artists.length});
-  const n=S.events.length;$('#evn').hidden=!n;$('#evn').textContent=n;
+  const n=liveEvents().length;$('#evn').hidden=!n;$('#evn').textContent=n;
   $('#roofInfo').textContent=t('top.roof',{g:S.groups.length,s:S.artists.filter(a=>a.solo).length,a:S.artists.filter(a=>a.actor).length});
   const out=S.artists.filter(a=>a.busy),mo=S.managers.filter(m=>m.as&&!mgrRoom(m));
   $('#outside').innerHTML=out.length?`<span class="lbl">🚐 ${t('outside.title')}</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>${t('outside.mgrWith',{m:esc(m.name),who:esc(targetNameT(m))})}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} ${t('outside.left',{n:a.busy.left})}</button>`).join(''):'';

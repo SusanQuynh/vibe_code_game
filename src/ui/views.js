@@ -6,7 +6,7 @@ import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
 import { fame } from '../systems/artists.js';
 import { DEBUT_MIN, bestOf, debutRecT } from '../systems/debut.js';
-import { evInfo, invBlock } from '../systems/events.js';
+import { evInfo, invBlock, liveEvents } from '../systems/events.js';
 import { candBlock, dHold, menteesOf, mentorScore, mentorSel, renewBlock, wp } from '../systems/ext2.js';
 import { mNameH, v3ArtistHTML } from '../systems/ext3.js';
 import { mBoss, mKids, mgrOf, mgrTargets, targetNameT } from '../systems/managers.js';
@@ -60,7 +60,7 @@ export function viewEvents(){
   modal(`<h2>🔔 ${t('evframe.title')}</h2><div class="sub">${t('evframe.sub')}</div>${list.length?list.map(({e,i})=>`<div class="card"><b>${i.ic} ${esc(i.t)}</b><div class="small muted" style="margin:4px 0 8px">${esc(i.d)}</div>${e.kind==='scandal'?invBlock(byId(e.a)):''}${e.kind==='renew'?renewBlock(byId(e.a),e.mul):''}${(e.kind==='mp'||e.kind==='v3')&&e.cand?candBlock(e.cand):''}<div class="row">${i.o.map(o=>`<button class="btn sm ${o.k==='yes'||o.k==='fix'||o.k==='talk'||o.k==='r1'?'pri':o.k==='end'||o.k==='split'?'warn':''}" onclick="resolveEv(${e.id},'${o.k}')">${o.l}</button>`).join('')}</div></div>`).join(''):`<div class="card muted">${t('evframe.none')}</div>`}`);
 }
 export function viewSkipWarn(){
-  modal(`<h2>${t('evframe.skipTitle',{n:S.events.length})}</h2><div class="sub">${t('evframe.skipSub')}</div><div class="row"><button class="btn pri" onclick="view(viewEvents)">${t('evframe.handle')}</button><button class="btn" onclick="closeM();nextWeek(true)">${t('evframe.skip')}</button></div>`);
+  modal(`<h2>${t('evframe.skipTitle',{n:liveEvents().length})}</h2><div class="sub">${t('evframe.skipSub')}</div><div class="row"><button class="btn pri" onclick="view(viewEvents)">${t('evframe.handle')}</button><button class="btn" onclick="closeM();nextWeek(true)">${t('evframe.skip')}</button></div>`);
 }
 export function viewAward(e){
   modal(`<div class="stage">🏆</div><h2 style="text-align:center">${t('award.title',{y:e.y})}</h2><div class="sub" style="text-align:center">${t('award.sub')}</div>

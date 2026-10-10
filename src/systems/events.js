@@ -100,6 +100,9 @@ export function randomEvents(){
     }
   }
 }
+// Sự kiện còn hiển thị được: sự kiện "mồ côi" (nghệ sĩ liên quan đã rời đi…) bị viewEvents lọc bỏ,
+// nên mọi chỗ đếm/chặn sang tuần phải dùng cùng danh sách này.
+export const liveEvents=()=>S.events.filter(e=>evInfo(e));
 export function evInfo(e){
   {const x=xInfo(e);if(x!==undefined)return x}
   if(e.kind==='sx'){const D=SXD[e.sx];return D?{ic:D.ic,t:D.t,d:D.d(e),o:D.o(e)}:null}

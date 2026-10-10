@@ -7,7 +7,7 @@ import { S, abs, addLog, byId } from '../state.js';
 import { fame, fit, genPool } from './artists.js';
 import { awardToShow, awards, setAwardToShow } from './awards.js';
 import { compDone, compTick } from './batches.js';
-import { evInfo, randomEvents, resolveEv } from './events.js';
+import { evInfo, liveEvents, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
 import { dqList, viewDebutQ } from './ext3.js';
 import { effSk, genMgrPool, mgrAuto, mgrExp, mgrOf, msk } from './managers.js';
@@ -111,7 +111,7 @@ export const mgrSchedules=a=>{if(a.pm)return a.pm;const m=mgrOf(a);return m&&m.p
 export function mgrScheduleAll(){for(const a of S.artists){if(a.busy)continue;const m=mgrSchedules(a);if(m)a.days=planWeek(a,effSk(m,'plan'))}}
 export function setPs(id,v){const m=S.managers.find(x=>x.id===id);if(m){S.props=null;m.ps=+v;if(m.ps===1)mgrScheduleAll();act()}}
 export function nextWeek(force,planned){
-  if(S.events.length&&!force)return view(viewSkipWarn);
+  if(liveEvents().length&&!force)return view(viewSkipWarn);
   if(!planned)buildProps();
   if(!planned&&((S.planOn!==false&&S.artists.some(a=>!a.busy))||propCount()))return startPlan(force);
   mgrScheduleAll();
