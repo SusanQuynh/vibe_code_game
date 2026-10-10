@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function trackErrors(page) {
   const errors = [];
@@ -167,6 +169,35 @@ for (const [lang, want] of [['vi', 'Gợi ý'], ['en', 'Suggested']]) {
     await page.evaluate(() => window.startPlanOne(__game.state().artists[0].id));
     const got = await page.evaluate(() => { const e = document.querySelector('.tile.rec'); return e ? getComputedStyle(e, '::after').content : null; });
     expect(got).toBe(`"${want}"`);
+    expect(errors).toEqual([]);
+  });
+}
+
+// Mở lần lượt mọi phòng trong dock với save giàu (fixture ui-rich) ở màn hẹp: không lỗi trang, không cuộn ngang (trang lẫn khung phòng), ô tick không tách dòng khỏi nhãn
+const RICH = fs.readFileSync(path.join(process.cwd(), 'tests/fixtures/ui-rich.json'), 'utf8');
+for (const lang of ['en', 'vi']) {
+  test(`390x844: mở mọi phòng với save giàu, không cuộn ngang, ô tick cùng dòng nhãn [${lang}]`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await page.addInitScript(([l, d]) => { localStorage.setItem('starlight_lang', l); localStorage.setItem('starlight_idol_save_v1', d); }, [lang, RICH]);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('./');
+    await page.evaluate(() => window.closeM());
+    const n = await page.locator('#dock button').count();
+    expect(n).toBeGreaterThanOrEqual(10);
+    for (let i = 0; i < n; i++) {
+      await page.locator('#dock button').nth(i).click();
+      await expect(page.locator('#sheet')).toHaveClass(/on/);
+      const r = await page.evaluate(() => {
+        const sh = document.querySelector('#sheet .panel') || document.querySelector('#sheet');
+        const bad = [...document.querySelectorAll('#sheet label.row')].filter(l => { const c = l.querySelector('input[type=checkbox]'); if (!c) return false; const tn = [...l.childNodes].filter(x => x.nodeType === 3 && x.textContent.trim()).pop(); if (!tn) return false; const rg = document.createRange(); rg.selectNodeContents(tn); const a = rg.getClientRects()[0], b = c.getBoundingClientRect(); return !a || a.top > b.bottom; }).map(l => l.textContent.trim().slice(0, 40));
+        return { page: document.documentElement.scrollWidth, sheet: sh.scrollWidth - sh.clientWidth, bad, title: (document.querySelector('#sheet h2') || {}).textContent };
+      });
+      expect(r.page, `trang cuộn ngang ở phòng #${i} (${r.title})`).toBeLessThanOrEqual(390);
+      expect(r.sheet, `khung phòng #${i} (${r.title}) tràn ngang`).toBeLessThanOrEqual(1);
+      expect(r.bad, `ô tick tách dòng khỏi nhãn ở phòng #${i}`).toEqual([]);
+      await page.locator('#sheet .x').first().click();
+      await expect(page.locator('#sheet')).not.toHaveClass(/on/);
+    }
     expect(errors).toEqual([]);
   });
 }

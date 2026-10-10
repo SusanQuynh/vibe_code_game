@@ -88,8 +88,8 @@ export function classify(items, cfg, { declared } = {}) {
 // So với baseline (cfg.todo, cfg.allowCount). Trả về lỗi; rỗng = khớp.
 export function checkBaseline(res, cfg) {
   const errs = [];
-  if (!cfg.todo) { for (const [at, n] of Object.entries(res.todo)) errs.push(`${at}: ${n} chuỗi tiếng Việt chưa phân loại`); return errs; }
-  for (const at of new Set([...Object.keys(res.todo), ...Object.keys(cfg.todo)])) {
+  if (!cfg.todo) { for (const [at, n] of Object.entries(res.todo)) errs.push(`${at}: ${n} chuỗi tiếng Việt chưa phân loại`); } // chế độ chặt (không có khoá todo): mọi chuỗi phải dịch hoặc có allow/sink; allowCount và sinkCount vẫn khoá bánh cóc
+  else for (const at of new Set([...Object.keys(res.todo), ...Object.keys(cfg.todo)])) {
     const n = res.todo[at] ?? 0, m = cfg.todo[at] ?? 0;
     if (n > m) errs.push(`chuỗi viết cứng mới ở ${at}: ${n} > ${m}`);
     else if (n < m) errs.push(`${at}: todo giảm ${m} → ${n}, chạy: npm run check:literals -- --update`);
@@ -114,14 +114,17 @@ export function decideUpdate(res, cfg, { force = false, envForce = false } = {})
   const bad = [...validateConfig(cfg), ...res.stale, ...res.cmpBad.map(x => `${x.at}: literal dùng để so sánh logic phải vào allowText (kind cmp, kèm why): "${x.text}"`)];
   if (bad.length) return { ok: false, msg: bad.join('\n') };
   const next = { todo: Object.fromEntries(Object.entries(res.todo).sort((a, b) => a[0].localeCompare(b[0]))), allowCount: Object.fromEntries(Object.entries(res.exempt).sort()), sinkCount: Object.fromEntries(Object.entries(res.sink).sort()) };
-  if (cfg.todo) {
-    const ups = Object.keys(res.todo).filter(k => res.todo[k] > (cfg.todo[k] ?? 0)).map(k => 'todo ' + k);
+  const strict = !cfg.todo && !!cfg.allowCount; // chế độ chặt: đã xoá todo, không bao giờ ghi lại todo
+  if (strict && Object.keys(res.todo).length) return { ok: false, msg: 'Chế độ chặt: không còn baseline todo, dịch hoặc phân loại các chuỗi sau (không ghi được): ' + Object.keys(res.todo).join(', ') };
+  if (cfg.todo || strict) {
+    const ups = Object.keys(res.todo).filter(k => res.todo[k] > (cfg.todo?.[k] ?? 0)).map(k => 'todo ' + k);
     for (const k of Object.keys(res.exempt)) if (res.exempt[k] > (cfg.allowCount?.[k] ?? 0)) ups.push('miễn ' + k);
     for (const k of Object.keys(res.sink)) if (res.sink[k] > (cfg.sinkCount?.[k] ?? 0)) ups.push('sink ' + k);
     if (ups.length) {
       if (!force) return { ok: false, msg: 'Từ chối --update: số tăng ở ' + ups.join(', ') };
-      if (!envForce) return { ok: false, msg: 'Từ chối --force: đã có baseline todo. Chỉ ghi tăng được khi đặt I18N_LITERALS_FORCE=1 (và nêu lý do trong commit). Tăng ở ' + ups.join(', ') };
+      if (!envForce) return { ok: false, msg: 'Từ chối --force: đã có baseline. Chỉ ghi tăng được khi đặt I18N_LITERALS_FORCE=1 (và nêu lý do trong commit). Tăng ở ' + ups.join(', ') };
     }
   }
+  if (strict) delete next.todo;
   return { ok: true, next };
 }

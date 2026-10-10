@@ -189,3 +189,20 @@ describe('sink trong chính sách', () => {
     expect(decideUpdate(classify([], cfg0({ sinks: [] })), cfg0({ todo: {}, allowCount: {}, sinkCount: { 'rm#1': 1 } })).ok).toBe(true);
   });
 });
+
+describe('chế độ chặt (không có khoá todo)', () => {
+  const strictCfg = (o = {}) => cfg0({ allow: { 'f#a': ev }, allowCount: { event: 1 }, sinkCount: {}, ...o });
+  it('mọi chuỗi chưa phân loại là lỗi; allowCount và sinkCount vẫn khoá bánh cóc', () => {
+    const c = strictCfg();
+    expect(checkBaseline(classify([it_('f#a', 'Sự kiện')], c), c)).toEqual([]);
+    expect(checkBaseline(classify([it_('f#a', 'Sự kiện'), it_('f#b', 'Chữ UI')], c), c).join()).toMatch(/f#b: 1 chuỗi tiếng Việt chưa phân loại/);
+    expect(checkBaseline(classify([it_('f#a', 'Sự kiện'), it_('f#a', 'Hai')], c), c).join()).toMatch(/số literal được miễn \(event\) tăng 1 → 2/);
+    expect(checkBaseline(classify([], c), c).join()).toMatch(/event\) giảm 1 → 0/);
+  });
+  it('--update không bao giờ ghi lại todo; từ chối khi còn chuỗi chưa phân loại (kể cả force + env)', () => {
+    const c = strictCfg();
+    expect(decideUpdate(classify([it_('f#b', 'Chữ UI')], c), c, { force: true, envForce: true }).ok).toBe(false);
+    const d = decideUpdate(classify([it_('f#a', 'Sự kiện')], c), c);
+    expect(d.ok).toBe(true); expect('todo' in d.next).toBe(false); expect(d.next.allowCount).toEqual({ event: 1 });
+  });
+});

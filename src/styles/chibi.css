@@ -39,3 +39,4 @@
 .chibi.big{left:50%;bottom:4px;transform:scale(2.4);transform-origin:50% 100%;transition:none;cursor:default}
 .chibi.mini{position:relative;left:0;bottom:0;margin:0 10px 0 0;flex:none}
 .row:has(> .chibi.mini){flex-wrap:nowrap}
+.row:has(> .chibi.mini)>:not(.chibi){min-width:0}

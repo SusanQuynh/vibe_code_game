@@ -1345,6 +1345,8 @@ export default {
     'renew.contract': '📄 Contract: {n}',
     'renew.salary': 'Salary {s}/week',
     'renew.declined': 'You decided not to renew. You can still make an offer below.',
+    'ev.toast.gone': 'No longer a good fit',
+    'ev.toast.busy': 'Busy',
     'fmt.units': { b: 'B', m: 'M', k: 'K' },
   },
 };

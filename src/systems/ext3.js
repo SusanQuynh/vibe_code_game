@@ -189,18 +189,18 @@ export function v3Info(e){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
   }return null}
 export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
   switch(e.t){
-  case'mtreq':if(!a||!b)return;if(k==='yes'){if(b.status!=='trainee'||b.mt||menteesOf(a).length>=2)return toast('Không còn phù hợp');b.mt=a.id;setRel(a,b,getRel(a,b)+10);MOOD(a,6);MOOD(b,4);addLog(`👩‍🏫 ${a.name} tự đề xuất và được duyệt dẫn dắt TTS ${b.name}.`,'good')}else{MOOD(a,-3);addLog(`🙅 Từ chối đề xuất dẫn dắt ${b.name} của ${a.name}.`)}return;
+  case'mtreq':if(!a||!b)return;if(k==='yes'){if(b.status!=='trainee'||b.mt||menteesOf(a).length>=2)return toast(t('ev.toast.gone'));b.mt=a.id;setRel(a,b,getRel(a,b)+10);MOOD(a,6);MOOD(b,4);addLog(`👩‍🏫 ${a.name} tự đề xuất và được duyệt dẫn dắt TTS ${b.name}.`,'good')}else{MOOD(a,-3);addLog(`🙅 Từ chối đề xuất dẫn dắt ${b.name} của ${a.name}.`)}return;
   case'mtjob':{const of=S.offers.find(o=>o.id===e.of);if(!a||!b||!of)return;if(k!=='yes'){addLog(`🙅 Từ chối dự án ${a.name} giới thiệu cho ${b.name}.`);return}
     const old=of.target;of.target=b.id;const why=canTake(of,b);if(why){of.target=old;toast(b.name+': '+why);return}acceptCast(of.id,[b.id],true);
     if(!S.offers.includes(of)){S.partners[of.partner]=(S.partners[of.partner]||0)+2;setRel(a,b,getRel(a,b)+5);MOOD(a,4);MOOD(b,5);addLog(`🤝 Nhờ tiền bối ${a.name} giới thiệu, ${b.name} nhận «${of.title}».`,'good')}return}
-  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast('Không đủ tiền');S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(`💌 ${c.name} được ${a.name} giới thiệu, ký hợp đồng TTS vào ${(S.batches.find(x=>x.id===c.batch)||{n:''}).n}.`,'gold');return}
+  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast(t('common.noMoney'));S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(`💌 ${c.name} được ${a.name} giới thiệu, ký hợp đồng TTS vào ${(S.batches.find(x=>x.id===c.batch)||{n:''}).n}.`,'gold');return}
   case'paask':if(!a)return;if(k==='yes')setTimeout(()=>paOpen(a.id),0);else MOOD(a,-3);return;
   case'hs':{if(!a)return;const m=e.m?S.managers.find(x=>x.id===e.m):null;if(k==='yes')restDo(a,e.n,'Giám đốc');
     else if(k==='mgr'&&m){if(Math.random()<mxP(m,'care',.45)){restDo(a,e.n,'QL '+m.name);mgrExp(m,.5)}else{if(a.hsF)a.hsF.st='kept';MOOD(a,-2);addLog(`📋 QL ${m.name} cân nhắc và giữ lịch hiện tại cho ${a.name} vì lịch trình đang quan trọng.`)}}
     else{if(a.hsF)a.hsF.st='kept';MOOD(a,-3);addLog(`⚠️ Giữ nguyên lịch của ${a.name} dù chuyên gia khuyên nghỉ thêm.`,'bad')}return}
   case'md':{const s=e.song;if(!s)return;if(k==='no'){addLog(`🎼 Bài «${s.t}» của GĐ Âm nhạc không được sử dụng.`);return}S.songs=S.songs||[];S.songs.unshift(s);if(S.songs.length>40)S.songs.length=40;
     if(k==='give'){s.for=e.k;const x=actByKey(e.k);addLog(`🎼 GĐ Âm nhạc giao bài «${s.t}» (hạng ${s.rv.g}) cho ${x?x.n.slice(2).trim():''}.`,'good');if(x&&actFree(x))setTimeout(()=>songRelease(s.id,e.k),0)}else addLog(`🎼 Lưu bài «${s.t}» của GĐ Âm nhạc vào kho.`);return}
-  case'xcollab':{const x=extById(e.x);if(!a||!x)return;if(k!=='yes'){setXr(a,x,xRel(a,x)-8);return}if(a.busy)return toast('Đang bận');
+  case'xcollab':{const x=extById(e.x);if(!a||!x)return;if(k!=='yes'){setXr(a,x,xRel(a,x)-8);return}if(a.busy)return toast(t('ev.toast.busy'));
     const g=Math.round(Math.min(x.fans,a.fans*3+20000)*rnd(.03,.08)),pay=R(10,40)*1e6;a.fans+=g;a.yr.fans+=g;S.money+=pay;book('job',pay,[a]);setXr(a,x,xRel(a,x)+15);a.busy={kind:'promo',title:'Hợp tác với '+x.name,left:1,total:1};a.hist.unshift(`N${S.year} T${S.week}: hợp tác với ${x.name} (${x.co})`);addLog(`🎙️ ${a.name} hợp tác với ${x.name} (${x.co}): +${fmtN(g)} fan, +${fmt(pay)}.`,'good');return}
   case'xrumor':{const x=extById(e.x);if(!a||!x)return;
     if(k==='deny'){if(Math.random()<.7){MOOD(a,-2);addLog(`📰 ${a.name} phủ nhận tin đồn với ${x.name}, dư luận lắng xuống.`)}else{a.fans=Math.round(a.fans*.97);addLog(`📰 Lời phủ nhận của ${a.name} bị nghi ngờ, fan giảm 3%.`,'bad')}}
@@ -208,7 +208,7 @@ export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):
     else if(Math.random()<.5){a.fans=Math.round(a.fans*.96);addLog(`📰 ${a.name} im lặng trước tin đồn với ${x.name}, fan giảm 4%.`,'bad')}else addLog(`📰 Tin đồn ${a.name} & ${x.name} tự lắng xuống.`);return}
   case'amgr':{const m=S.managers.find(x=>x.id===e.m);if(!a||!m)return;if(k==='rest'){restDo(a,3,'QL '+m.name);MOOD(a,4)}else{MOOD(a,-6);mgrExp(m,.3);addLog(`📋 Giám đốc ủng hộ QL ${m.name}, ${a.name} không vui.`,'bad')}return}
   case'mmclash':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;
-    if(k==='meet'){if(S.money<5e6){toast('Không đủ tiền');S.events.push(e);return}S.money-=5e6;book('oth',-5e6);setMrel(x,y,mrel(x,y)+20);mgrExp(x,.3);mgrExp(y,.3);addLog(`🕊️ Buổi họp hòa giải giúp QL ${x.name} và ${y.name} hiểu nhau hơn.`,'good')}
+    if(k==='meet'){if(S.money<5e6){toast(t('common.noMoney'));S.events.push(e);return}S.money-=5e6;book('oth',-5e6);setMrel(x,y,mrel(x,y)+20);mgrExp(x,.3);mgrExp(y,.3);addLog(`🕊️ Buổi họp hòa giải giúp QL ${x.name} và ${y.name} hiểu nhau hơn.`,'good')}
     else if(k==='x'||k==='y'){const w=k==='x'?x:y,l=k==='x'?y:x;mgrExp(w,.6);setMrel(x,y,mrel(x,y)-15);addLog(`⚖️ Giám đốc đứng về phía QL ${w.name}; QL ${l.name} không phục.`)}
     else{setMrel(x,y,mrel(x,y)-10);addLog(`⚡ QL ${x.name} và ${y.name} tự giải quyết nhưng vẫn còn khúc mắc.`)}return}
   case'mmcoach':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;if(k==='yes'&&canKid(x,y)){y.boss=x.id;setMrel(x,y,mrel(x,y)+10);addLog(`👔 QL ${x.name} nhận kèm cặp QL ${y.name}.`,'good')}else setMrel(x,y,mrel(x,y)-5);return}

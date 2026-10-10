@@ -59,9 +59,8 @@ export const SURFACES = [
   V('trendBar', 'rich', () => render(), '#trendBar'),
 ];
 
-// Bề mặt đã dịch xong (ui-en-leak kiểm không rò chữ Việt). Mỗi task trích chuỗi thêm id vào đây.
-export const DONE = new Set(['outside', 'trendBar', 'artist.trainee', 'artist.trainee.new', 'artist.solo', 'artist.group', 'artist.actor', 'report', 'reportFull', 'award', 'skipWarn', 'events.new', 'plan', 'plan.new', 'code', 'props', 'props.conflict', 'camp', 'sec', 'sec.new', 'songs', 'songs.new', 'song',
-  ...['ceo', 'meet', 'studio', 'roof', 'dorm', 'vocal', 'dance', 'acting', 'lobby', 'mgr', 'gym', 'invest', 'market', 'sales', 'hr'].flatMap(r => [`room.${r}.new`, `room.${r}.rich`]), 'room.lobby.rich.group', 'room.lobby.rich.actor', 'debutQ', 'pa', 'renew', 'room.pr.new', 'room.pr.rich.quiet']);
 // Bề mặt chứa nội dung sự kiện (giai đoạn 3), luôn được loại khỏi kiểm rò chữ Việt ở en.
 // room.pr.rich dựng invBlock/evInfo (nút và mô tả điều tra scandal là nội dung sự kiện): phần còn lại được kiểm ở room.pr.rich.quiet
 export const EXCLUDED = new Set(['events', 'inv', 'room.pr.rich']);
+// Bề mặt đã dịch xong (ui-en-leak kiểm không rò chữ Việt): mọi bề mặt trừ EXCLUDED
+export const DONE = new Set(SURFACES.map(s => s.id).filter(id => !EXCLUDED.has(id)));

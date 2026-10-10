@@ -42,7 +42,7 @@ if (args.has('--update')) {
   const old = cfg.todo ?? {};
   const d = decideUpdate(res, cfg, { force: args.has('--force'), envForce: process.env.I18N_LITERALS_FORCE === '1' });
   if (!d.ok) { console.error(d.msg); process.exit(1); }
-  cfg.todo = d.next.todo; cfg.allowCount = d.next.allowCount; cfg.sinkCount = d.next.sinkCount;
+  if (d.next.todo) cfg.todo = d.next.todo; else delete cfg.todo; cfg.allowCount = d.next.allowCount; cfg.sinkCount = d.next.sinkCount;
   fs.writeFileSync(CFG, JSON.stringify(cfg, null, 2) + '\n');
   console.log(`Đã ghi todo: ${nTodo} chuỗi ở ${Object.keys(res.todo).length} khai báo (trước: ${sum(old)}); miễn: ${JSON.stringify(d.next.allowCount)}; sink: ${sum(d.next.sinkCount)} ${JSON.stringify(d.next.sinkCount)}`);
   process.exit(0);

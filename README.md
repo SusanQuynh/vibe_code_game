@@ -20,19 +20,24 @@ npm run build    # ra thư mục dist/
 npm test                 # unit (Vitest + jsdom)
 npm run check:handlers   # mọi handler inline (onclick="…") phải có trên window
 npm run check:i18n       # locale đủ/đúng key và placeholder so với vi; key dùng trong code phải tồn tại
-npm run check:literals   # chuỗi tiếng Việt viết cứng trong src/ (allowlist + bộ đếm todo); thêm -- --report để xem tiến độ
+npm run check:literals   # chuỗi tiếng Việt viết cứng trong src/ (chế độ chặt: allowlist, sink, bánh cóc); thêm -- --report để xem phân loại
 node scripts/rng-diff.mjs  # so chuỗi lời gọi RNG theo khai báo giữa HEAD và cây làm việc (REV mặc định HEAD)
 npm run test:e2e         # Playwright: golden master + smoke
 ```
 
 #### check:literals
 
-Quét AST `src/**/*.js` (literal, template, regex) và `content:` trong `src/styles/*.css`; mỗi literal tiếng Việt (kể cả không dấu: `TTS`, `QL`, `80 tr`, nhãn tuần `N<năm>·T<tuần>`) hoặc nằm trong
-allowlist `scripts/i18n-literals.json` hoặc tính vào `todo` (bộ đếm chỉ được giảm).
-- Phân loại tự động: `log` (trong `addLog`/`pushEv` hoặc biến cục bộ chảy vào chúng), `name` (`data/names.js`), `toast` và `css` luôn là todo.
+Quét AST `src/**/*.js` (literal, template, regex) và `content:` trong `src/styles/*.css`; mỗi literal tiếng Việt (kể cả không dấu: `TTS`, `QL`, `80 tr`, nhãn tuần `N<năm>·T<tuần>`) phải
+được phân loại, nếu không thì lỗi (**chế độ chặt**: `scripts/i18n-literals.json` không còn khoá `todo`). Chữ hiển thị cho người chơi phải đi qua từ điển; chữ nào thật sự đi vào `S`/log thì
+được phân loại, không dịch (giai đoạn 3 mới chuyển sang key).
+- Tự nhận: `log` (trong `addLog`/`pushEv` hoặc biến cục bộ chảy vào chúng), `name` (`data/names.js`). `toast` và `css` luôn phải dịch.
 - `allow` (theo khai báo) là `{kind: state|name|event|log, why}`; **không** miễn toast, CSS hay literal so sánh. Wildcard `#*` chỉ cho `src/data/names.js`.
 - `allowText` (theo khai báo + chữ): `kind: cmp` chỉ miễn literal đang dùng để so sánh logic; `state|name|event|log` phải có `n` (số lần được miễn).
-- Tổng số literal được miễn khoá theo kind (`allowCount`), mục allow không còn khớp bị báo lỗi. Muốn tăng todo/allowCount phải `--update --force` kèm `I18N_LITERALS_FORCE=1` (chỉ khi thật sự cần, nêu lý do trong commit).
+- `sinks` (literal đi vào `S`/log qua tham số hàm, thuộc tính object hoặc bảng dữ liệu mà log đọc; ctx `sink` trong `--report`): `call` (`fn` + `arg`, ví dụ `removeArtist#1`, `hist.unshift#0`),
+  `prop` (`key` trong các khai báo `in`, ví dụ `busy.title`) và `data` (cả bảng/hàm trong `in`). Mỗi sink có `why`, phải bắt được literal thật (nếu không bị báo xoá) và hàm đích phải tồn tại.
+  Sink không tính vào `allowCount` nhưng tổng theo từng sink khoá bằng `sinkCount`.
+- **Khi nào được thêm allow/sink:** chỉ khi chuỗi thật sự được ghi vào `S`/log (hoặc là nội dung sự kiện, tên riêng) và có lý do rõ trong `why`. Chuỗi chỉ để hiển thị thì dịch, không bao giờ phân loại để lách.
+- Bánh cóc: `allowCount` (theo kind) và `sinkCount` (theo sink) tăng là lỗi, giảm mà chưa `--update` cũng là lỗi. Muốn tăng phải `I18N_LITERALS_FORCE=1 npm run check:literals -- --update --force` và nêu lý do trong commit.
 - Khi review: `node scripts/rng-diff.mjs <base>` (ví dụ `origin/main`) để thấy lời gọi RNG đổi so với nhánh gốc; không đối số thì so với HEAD nên ngay sau commit luôn xanh.
 
 Trong môi trường đã có sẵn Chromium: `PW_CHROMIUM=/đường/dẫn/chrome npm run test:e2e`
@@ -68,20 +73,31 @@ Biến `let` dùng chung giữa module có setter (`setState`, `setCurView`, …
 
 Mặc định tiếng Việt (`vi`, nguồn chuẩn); có thêm tiếng Anh (`en`, beta). Người chơi đổi bằng nút 🌐 trên thanh trên
 cùng, game render lại tại chỗ. Lựa chọn lưu ở `localStorage['starlight_lang']`, tách khỏi save và mã `SL1.`.
-Giai đoạn 1 mới dịch giao diện cố định (thanh trên cùng, tên phòng, dock, nút chung, tutorial).
+Giai đoạn 1 dịch giao diện cố định; giai đoạn 2 dịch toàn bộ chữ hiển thị của các phòng, hồ sơ, báo cáo, bài hát, chiến dịch…
+Chưa dịch (giai đoạn 3): nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả), dòng log, lịch sử nghệ sĩ và mọi chuỗi đã nằm trong `S`.
 
 **Thêm ngôn ngữ:** chép `src/i18n/locales/en.js` thành `xx.js`, sửa `meta` (`code`, `name`, `htmlLang`), dịch `dict`, rồi
 chạy `npm run check:i18n`. Registry tự nhận file mới.
 
-**Key:** phẳng, có dấu chấm, `vi.js` là chuẩn: `top.*`, `room.<id>.{name,dock,desc}`, `npc.<id>`, `btn.*`,
-`tut.<id>.{t,d}`, `lang.*`, `saved.*`, `fmt.units`. Giá trị là chuỗi có `{x}` hoặc hàm `(p) => string` (số nhiều).
+**Key:** phẳng, có dấu chấm, tối đa 4 cấp, camelCase, `vi.js` là chuẩn. Namespace theo phòng/màn hình: `<roomId>.*` (`mgr`, `invest`, `market`, `ceo`, `meet`, `studio`, `acting`, `pr`, `lobby`, `dorm`, `roof`, `sales`, `hr`…),
+`artist.*`, `report.*`, `evframe.*`, `award.*`, `plan.*`, `save.*`, `song.*`, `camp.*`, `props.*`, `debut.*`, `batch.*`, `comp.*`, `dq.*`, `pa.*`, `hs.*`, `renew.*`; toast nằm trong namespace chủ (`studio.toast.noMoney`);
+từ vựng chung `common.*`, `unit.*`, `list.*`. Một câu = một key; HTML cấu trúc (div, button, `on*=`) ở lại template, HTML bao cụm từ nằm trong giá trị. Giá trị là chuỗi có `{x}` hoặc hàm `(p) => string` (số nhiều, cùng kiểu ở mọi ngôn ngữ).
+- **Nhãn dữ liệu:** bảng trong `src/data/*` giữ field `n` chỉ cho log/`S`; UI tra `lbl(ns, id)` (`stat`, `genre`, `concept`, `offer`, `msk`, `biz`, `fin.i`, `fin.x`, `prp`, `pre`, `post`…). `check:i18n` không thấy được key động nên mỗi tiền tố có test duyệt bảng nguồn.
+- **Cặp hàm tách đôi:** hàm vừa phục vụ UI vừa ghi log/`S` giữ bản cũ (literal tiếng Việt, caller ghi vào `S`) và có bản hậu tố `T` cho UI (`targetNameT`, `batchNameT`, `wkLabelT`, `debutRecT`…); ở `vi` hai bản cho cùng kết quả.
+- **Giá trị lưu trong `S` mà UI hiển thị:** tra qua `sv(giá trị)` (key `sv.<giá trị>`); so sánh logic luôn dùng giá trị thô, không dùng giá trị đã dịch. `sv` chỉ dùng trong `innerHTML`.
+- **Tiền:** `money()` để hiển thị (đơn vị theo ngôn ngữ), `fmt()` chỉ cho `addLog`.
 
 **Quy tắc:**
 - Không gọi `t()` ở top-level module (ngôn ngữ chưa khởi tạo); tra lúc render.
 - Từ điển là HTML tin cậy: tham số truyền vào `t()` phải `esc()` nếu là dữ liệu người dùng.
-- Không đưa chuỗi đã dịch vào `S` (`addLog`, `title`…); `fmt()` giữ đơn vị tiếng Việt cho log, chỉ dùng `money()` để hiển thị.
-- `src/i18n/` là module lá: không import system/UI, không chạm DOM, không gọi RNG.
+- Không đưa chuỗi đã dịch vào `S` (`addLog`, `title`…). `lang-invariant` chạy cùng kịch bản ở `vi` và `en` và đòi `S`, số lần gọi RNG và dấu vết log y hệt; `ui-en-leak` render từng bề mặt ở `en` và bắt chữ Việt còn sót.
+- `src/i18n/` là module lá: không import system/UI, không chạm DOM, không gọi RNG; `core/*` và `data/*` không gọi `t()`.
 - Khung tĩnh trong `index.html` dùng `data-i18n` / `data-i18n-aria`.
+- `check:i18n` cảnh báo (không đỏ) key `vi` không được tham chiếu tĩnh và không thuộc tiền tố động.
+
+**Bảng thuật ngữ (vi → en):** Thực tập sinh (TTS) = Trainee · Quản lý (QL) = Manager · Giám đốc = CEO · Thư ký = Secretary · GĐ Âm nhạc = Music Director · Trợ lý cá nhân = Personal assistant ·
+Chuyên gia sức khỏe = Health specialist · Tiền bối / đàn em = Senior / junior · Lứa = Batch · Lời mời = Offer · Thù lao = Fee · Lương = Salary · Quỹ công ty = Company funds · Tạp kỹ = Variety ·
+Thể lực = Stamina · Hòa hợp = Harmony · Nhạc số = Digital · `T5 N2` = `W5 Y2`. `debut`, `comeback`, `hype`, `scandal` giữ nguyên.
 
 ## Lưu game
 
@@ -92,7 +108,7 @@ hoặc file `.json`, và nhập lại ở trình duyệt khác.
 
 Không dùng GitHub Actions. Chạy `npm run deploy`: build với base `/vibe_code_game/` rồi đẩy `dist/` lên nhánh `gh-pages`.
 Việc thủ công một lần: Settings → Pages → Source = **Deploy from a branch** → nhánh `gh-pages`, thư mục `/ (root)`.
-Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e`.
+Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run check:i18n && npm run check:literals && npm run test:e2e`.
 
 ## Subagent cho Claude Code
 

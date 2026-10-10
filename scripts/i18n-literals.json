@@ -259,9 +259,6 @@
       "why": "tên người quyết định truyền vào restDo → log (S)"
     }
   ],
-  "todo": {
-    "src/systems/ext3.js#v3Resolve": 4
-  },
   "allowCount": {
     "cmp": 24,
     "event": 414,

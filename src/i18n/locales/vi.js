@@ -1339,6 +1339,8 @@ export default {
     'renew.contract': '📄 Hợp đồng: {n}',
     'renew.salary': 'Lương {s}/tuần',
     'renew.declined': 'Đã quyết định không tái ký. Vẫn có thể đề nghị lại bên dưới.',
+    'ev.toast.gone': 'Không còn phù hợp',
+    'ev.toast.busy': 'Đang bận',
     'fmt.units': { b: ' tỷ', m: ' tr', k: 'k' },
   },
 };
