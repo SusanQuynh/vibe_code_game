@@ -17,6 +17,7 @@ import { lbl } from '../../src/i18n/index.js';
 import { view } from '../../src/ui/modal.js';
 import { COMP, batchNameT, compNameT } from '../../src/systems/batches.js';
 import { MSK } from '../../src/data/rules.js';
+import { prHTML, prPlans } from '../../src/systems/review.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -219,5 +220,19 @@ describe('task 17: trợ lý cá nhân, chuyên gia sức khỏe', () => {
     setLang('en');
     expect([1, 3].map(n => t('hs.sug', { n }))).toEqual(['suggests 1 rest day', 'suggests 3 rest days']);
     setLang('vi');
+  });
+});
+
+describe('task 18: Phòng Truyền thông', () => {
+  it('prPlans: ở vi h === t (chữ lưu vào S.prHist); ở en h vẫn là chữ vi còn t/why đã dịch', () => {
+    setState(rich()); S.prUsed = {};
+    const vi = prPlans(); expect(vi.length).toBeGreaterThan(3);
+    for (const p of vi) expect(p.h, p.t).toBe(p.t);
+    setLang('en'); const en = prPlans();
+    expect(en.map(p => p.h)).toEqual(vi.map(p => p.h));
+    for (const p of en) { expect(p.t.replace(/Gia Hân|Duy Khánh|An Nhiên|Khánh Vy|Nova Star/g, '')).not.toMatch(VI); expect(p.why.replace(/Gia Hân|Duy Khánh|An Nhiên|Khánh Vy|Nova Star/g, '')).not.toMatch(VI); }
+    const html = prHTML(en);
+    expect(html).toContain(`data-t="${en.find(p => VI.test(p.h)).h}"`); // nút giữ data-t chữ vi cho prGo
+    expect(html).toContain('>Approve</button>');
   });
 });

@@ -320,17 +320,14 @@
     "src/systems/releases.js#doSingle": 6,
     "src/systems/releases.js#produceFilm": 1,
     "src/systems/review.js#evalAll": 4,
-    "src/systems/review.js#prDo": 1,
-    "src/systems/review.js#prHTML": 5,
     "src/systems/review.js#PRP": 5,
-    "src/systems/review.js#prPlans": 24,
+    "src/systems/review.js#prPlans": 6,
     "src/systems/secretary.js#BUDN": 3,
     "src/systems/secretary.js#wkLabel": 1,
     "src/systems/week.js#completeBusy": 6,
     "src/systems/week.js#releaseFilm": 1,
     "src/ui/rooms.js#RV.invest": 29,
-    "src/ui/rooms.js#RV.market": 15,
-    "src/ui/rooms.js#RV.pr": 11
+    "src/ui/rooms.js#RV.market": 15
   },
   "allowCount": {
     "cmp": 24,

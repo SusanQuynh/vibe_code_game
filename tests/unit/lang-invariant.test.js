@@ -22,11 +22,12 @@ import { acceptCast, acceptOffer, bestCast, investOffer, slotsOf } from '../../s
 import { acts, cbNow, cbSched, cbSchedRec, viewSec } from '../../src/systems/secretary.js';
 import { cfPick, propAll, viewProps } from '../../src/systems/proposals.js';
 import { doFM, doLive, doSingle, holdConcert, viewCamp } from '../../src/systems/releases.js';
-import { postAuto, postDo, preDo } from '../../src/systems/promo.js';
-import { prDo } from '../../src/systems/review.js';
+import { postAuto, postDo, preAuto, preDo } from '../../src/systems/promo.js';
+import { prDo, prGo } from '../../src/systems/review.js';
 import { mkSong, songAct, viewSong, viewSongs, writeSong } from '../../src/systems/ext2.js';
 
 noToggle();
+Object.assign(globalThis, { doFM, doLive, postAuto, preAuto, prDo }); // prGo chạy chuỗi data-go bằng new Function nên cần các hàm này ở phạm vi toàn cục (như globals.js)
 
 // Kịch bản: hành động của golden 110 tuần, cộng mở mọi phòng mỗi 5 tuần (đường render có thể ensure*), cộng quảng bá và các hành động ghi S của từng khu vực.
 // Hành động không gắn vào may rủi của kịch bản: mỗi hành động tự dựng tiền đề (bơm tiền, giải phóng busy, nới yêu cầu lời mời, bật đề xuất cho quản lý…) giống hệt ở vi và en, rồi bọc trong T(tag, fn):
@@ -83,6 +84,10 @@ function run(lang, weeks = 40) {
       openRoom('gym'); closeM(); if (S.hsC && !S.hs) T('hsHire', () => hsHire(S.hsC[0].id));
       const b = S.artists.find(q => q.status === 'debuted'); if (b && S.hs) { b.hsF = { w: abs(), why: ['năng lượng chỉ còn 20'], n: 3, st: 'new' }; openRoom('gym'); closeM(); T('hsApply', () => hsApply(b.id)); }
     }
+    if (i === 22) { // Phòng Truyền thông: render kế hoạch đề xuất ở ngôn ngữ đang chạy rồi bấm "Duyệt" (prGo ghi S.prHist từ data-t, luôn là chữ vi)
+      rich(); S.prUsed = {}; openRoom('pr'); const bs = [...document.querySelectorAll('#sheet [data-go]')].slice(0, 3); did.prBtn = bs.length;
+      for (const b of bs) T('prGo', () => prGo(b)); closeM(); did.prHist = (S.prHist || []).length;
+    }
     if (i === 38 && S.hs) T('hsFire', () => hsFire({ dataset: { c: '1' }, textContent: '' })); // cho chuyên gia nghỉ việc (đã bấm xác nhận)
     if (i === 38 && S.managers.length > 1) T('mFire', () => fireMgr(S.managers.at(-1).id, { dataset: { c: '1' }, textContent: '' })); // cho quản lý nghỉ việc (đã bấm xác nhận)
     if (i === 17) { rich(); let o = S.offers.find(q => q.invest && !q.invested); if (!o) { o = S.offers.find(q => q.genre && !q.invested); if (o) o.invest = { budget: 300e6, share: .1 }; } if (o) T('invest', () => investOffer(o.id)); } // góp vốn phim (bơm tiền; nếu thiếu thì gắn mục góp vốn vào một lời mời phim, vì phim cần thể loại)
@@ -131,9 +136,10 @@ describe('S độc lập ngôn ngữ', () => {
     // mỗi hành động đã ghi log ít nhất một lần (không chỉ đi đường toast lỗi) và dấu vết đúng của nó có mặt
     const must = { comp: /lên đường dự thi «/, newBatch: /Mở Lứa \d+/, moveBatch: /Chuyển .+ sang Lứa/, batchLive: /livestream trò chuyện/, dqDo: /vui vì được debut|tiếc vì muốn debut/, dqKeep: /tiếp tục làm thực tập sinh/, offer: /nhận .+ «/, cast: /· \d+ người/, invest: /Góp vốn .+ vào phim «/, pre: /Ảnh teaser/, single: /Single «Bài thử»/, post: /lên radio/, pr: /Quảng cáo SNS cho/,
       write: /vào phòng thu sáng tác «/, write2: /vào phòng thu sáng tác «/, songOk: /GĐ Âm nhạc duyệt «/, songRedo: /Chỉnh sửa «/, songDrop: /Bỏ bài «/, live: /livestream trò chuyện/, fm: /Fan meeting của/, concert: /Concert của/,
-      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: /Quản lý .+ phụ trách|phụ trách/, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, paHire: /trợ lý cá nhân|Công ty chọn trợ lý/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
+      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: /Quản lý .+ phụ trách|phụ trách/, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, paHire: /trợ lý cá nhân|Công ty chọn trợ lý/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, prGo: /Fan meeting|livestream|Quảng cáo SNS|lên tạp chí|phỏng vấn|Clip của|quảng bá hình ảnh/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
     for (const [k, re] of Object.entries(must)) { expect(vi.did[k], `hành động ${k} phải có tác dụng`).toBeGreaterThan(0); expect(vi.tr, `dấu vết log của ${k}`).toMatch(re); }
     // đề xuất của quản lý: có mục lịch, dự án và xung đột treo chờ Giám đốc (cfHTML/itDesc/stTag được render và so sánh)
+    expect(vi.did.prBtn).toBeGreaterThan(0); expect(vi.did.prHist).toBeGreaterThan(0); expect(vi.s).toMatch(/"prHist":\["T\d+: /); // S.prHist luôn là chữ vi dù render ở en
     for (const k of ['paC', 'paRe', 'paHas', 'hsF']) expect(vi.did[k], `PA/HS ${k}`).toBeGreaterThan(0);
     for (const k of ['mList', 'mLoop', 'mTaken', 'mAuto', 'mRehunt']) expect(vi.did[k], `quản lý ${k}`).toBe(1);
     expect(vi.did.compSel).toBeGreaterThan(0); expect(vi.did.batchSched).toBe(1); expect(vi.did.dqLater).toBe(1); // gợi ý cuộc thi chọn được người; xếp lịch cả lứa ghi a.days; hoãn debut ghi dqSkip
