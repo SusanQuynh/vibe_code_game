@@ -9,6 +9,8 @@ import { openRoom } from '../../src/ui/rooms.js';
 import { closeM, view } from '../../src/ui/modal.js';
 import { viewArtist, viewEvents, viewReport, viewReportFull, viewSkipWarn } from '../../src/ui/views.js';
 import { viewInv } from '../../src/systems/events.js';
+import { planFill, planNext, planRec, planSel, startPlanOne } from '../../src/ui/planning.js';
+import { viewCode } from '../../src/ui/saveView.js';
 import { setLang } from '../../src/i18n/index.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { hireMgr } from '../../src/systems/managers.js';
@@ -47,6 +49,7 @@ function run(lang, weeks = 40) {
     if (i % 5 === 0) { for (const r of ROOMS) openRoom(r.id); closeM(); render(); }
     if (i % 10 === 0) { for (const a of [...S.artists]) view(() => viewArtist(a.id)); closeM(); } // hồ sơ nghệ sĩ (dWish ghi a.dw lúc render)
     if (i % 10 === 5) { for (const f of [viewReport, viewReportFull, viewEvents, viewSkipWarn]) view(f); for (const a of S.artists) if (a.scandal) view(() => viewInv(a.id)); closeM(); } // báo cáo, khung sự kiện, hồ sơ điều tra
+    if (i % 10 === 3) { for (const a of S.artists.slice(0, 2)) { startPlanOne(a.id); planSel(2); planRec(); planFill(); planNext(); } view(viewCode); closeM(); } // xếp lịch lẻ (ghi a.days) + màn lưu
     nextWeek(true, true);
   }
   return { s: JSON.stringify(S), n };

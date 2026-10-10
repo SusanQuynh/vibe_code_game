@@ -157,3 +157,16 @@ for (const lang of ['vi', 'en']) for (const [w, h] of [[390, 844], [375, 812]]) 
     expect(errors).toEqual([]);
   });
 }
+
+// Nhãn "Gợi ý" của ô lịch nằm trong CSS content nhưng lấy chữ từ biến --t-rec (từ điển), đổi theo ngôn ngữ
+for (const [lang, want] of [['vi', 'Gợi ý'], ['en', 'Suggested']]) {
+  test(`nhãn gợi ý trên ô lịch tập [${lang}]`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await page.addInitScript(l => localStorage.setItem('starlight_lang', l), lang);
+    await page.goto('./');
+    await page.evaluate(() => window.startPlanOne(__game.state().artists[0].id));
+    const got = await page.evaluate(() => { const e = document.querySelector('.tile.rec'); return e ? getComputedStyle(e, '::after').content : null; });
+    expect(got).toBe(`"${want}"`);
+    expect(errors).toEqual([]);
+  });
+}

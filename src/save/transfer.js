@@ -1,4 +1,5 @@
 // Xuất / nhập save không cần server: JSON → gzip → base64url, tiền tố "SL1.".
+import { t } from '../i18n/index.js';
 const PREFIX = 'SL1.';
 const MAX_CODE = 30 * 1024 * 1024;
 
@@ -9,8 +10,11 @@ function toB64u(u8) {
 }
 const fromB64u = (t) => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
+// Lỗi có mã: message tra từ điển lúc ném (vi trùng chữ cũ), UI dịch lại theo code lúc hiển thị
+const err = (code) => Object.assign(new Error(t(`save.err.${code}`)), { code });
+
 export function checkSave(d) {
-  if (!d || typeof d !== 'object' || !Array.isArray(d.artists)) throw new Error('Dữ liệu không phải save Starlight');
+  if (!d || typeof d !== 'object' || !Array.isArray(d.artists)) throw err('notSave');
   return d;
 }
 
@@ -21,16 +25,16 @@ export async function exportCode(state) {
 
 export async function importCode(code) {
   code = String(code ?? '').trim().replace(/\s+/g, '');
-  if (!code.startsWith(PREFIX) || code.length > MAX_CODE) throw new Error('Mã không hợp lệ');
+  if (!code.startsWith(PREFIX) || code.length > MAX_CODE) throw err('badCode');
   let txt;
   try {
     const bin = fromB64u(code.slice(PREFIX.length));
     txt = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   } catch {
-    throw new Error('Mã không hợp lệ hoặc bị cắt cụt');
+    throw err('truncated');
   }
   let d;
-  try { d = JSON.parse(txt); } catch { throw new Error('Mã không hợp lệ'); }
+  try { d = JSON.parse(txt); } catch { throw err('badCode'); }
   return checkSave(d);
 }
 
@@ -40,15 +44,15 @@ export async function parseSaveText(text) {
   if (t.startsWith(PREFIX)) return importCode(t);
   if (t.startsWith('{')) {
     let d;
-    try { d = JSON.parse(t); } catch { throw new Error('File không phải JSON hợp lệ'); }
+    try { d = JSON.parse(t); } catch { throw err('badJson'); }
     return checkSave(d);
   }
-  throw new Error('Mã không hợp lệ');
+  throw err('badCode');
 }
 
 export const importFile = async (file) => parseSaveText(await file.text());
 
-export const saveFileName = (state) => `starlight-N${state.year}-T${state.week}.json`;
+export const saveFileName = (state) => t('save.fileName', { y: state.year, w: state.week });
 
 export function exportFile(state) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(state)], { type: 'application/json' }));

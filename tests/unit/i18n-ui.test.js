@@ -9,6 +9,12 @@ import { targetName, targetNameT } from '../../src/systems/managers.js';
 import { wkLabel, wkLabelT } from '../../src/systems/secretary.js';
 import { debutRec, debutRecT } from '../../src/systems/debut.js';
 import { sv } from '../../src/i18n/index.js';
+import { saveImportText, viewCode } from '../../src/ui/saveView.js';
+import { applyStatic } from '../../src/ui/lang.js';
+import { saveFileName } from '../../src/save/transfer.js';
+import { planWhy } from '../../src/systems/week.js';
+import { lbl } from '../../src/i18n/index.js';
+import { view } from '../../src/ui/modal.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -90,5 +96,40 @@ describe('mọi key kiểu hàm (số nhiều)', () => {
     expect(t('report.done', { n: 1 })).toBe('<b>1</b> project done'); expect(t('report.done', { n: 2 })).toBe('<b>2</b> projects done');
     expect(t('evframe.skipTitle', { n: 1 })).toBe('1 unresolved event'); expect(t('evframe.skipTitle', { n: 3 })).toBe('3 unresolved events');
     expect(t('artist.hs.rec', { n: 1 })).toBe('Suggests 1 rest day/week.');
+  });
+});
+
+describe('task 8: lịch tập, lưu/chuyển game', () => {
+  it('save.err.*: đủ 5 mã ở cả hai ngôn ngữ, en không còn chữ Việt', () => {
+    for (const c of ['notSave', 'badCode', 'truncated', 'badJson', 'corrupt']) {
+      expect(`save.err.${c}` in viL.dict && `save.err.${c}` in enL.dict, c).toBe(true);
+      expect(enL.dict[`save.err.${c}`]).not.toMatch(VI);
+    }
+  });
+  it('nhập mã hỏng ở en: màn hiện lỗi tiếng Anh, đổi lại vi thì hiện tiếng Việt (dịch lúc render)', async () => {
+    setState(rich()); setLang('en');
+    document.querySelector('#sheet') || (document.body.innerHTML = SHELL);
+    view(viewCode);
+    document.querySelector('#codeIn').value = 'xyz';
+    await saveImportText();
+    expect(document.querySelector('#sheet .panel').textContent).toContain('❌ Invalid code');
+    setLang('vi'); view(viewCode);
+    expect(document.querySelector('#sheet .panel').textContent).toContain('❌ Mã không hợp lệ');
+  });
+  it('tên file lưu và nhãn CSS "Gợi ý" theo ngôn ngữ', () => {
+    setState(rich());
+    expect(saveFileName({ year: 2, week: 7 })).toBe('starlight-N2-T7.json');
+    applyStatic(); expect(document.documentElement.style.getPropertyValue('--t-rec')).toBe('"Gợi ý"');
+    setLang('en'); expect(saveFileName({ year: 2, week: 7 })).toBe('starlight-Y2-W7.json');
+    applyStatic(); expect(document.documentElement.style.getPropertyValue('--t-rec')).toBe('"Suggested"');
+  });
+  it('planWhy: vi giữ chữ cũ, en không rò', () => {
+    setState(rich());
+    const a = S.artists.find(x => x.status === 'trainee') || S.artists[0];
+    for (const mut of [() => { a.energy = 10; }, () => { a.energy = 90; a.mood = 5; }, () => { a.mood = 90; a.wantAct = 5; }, () => { a.wantAct = 0; }]) {
+      mut(); setLang('vi'); const v = planWhy(a); setLang('en'); const e = planWhy(a);
+      expect(v).toMatch(VI); expect(e).not.toMatch(VI);
+    }
+    setLang('vi'); a.energy = 10; expect(planWhy(a)).toBe('năng lượng đang thấp nên cần nghỉ trước');
   });
 });

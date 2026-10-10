@@ -66,7 +66,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .tile:hover{border-color:var(--muted)}
 .tile .ti{font-size:24px;line-height:1.15;margin-bottom:2px}.tile b{display:block;font-size:13px}
 .tile.on{border-color:var(--accent);background:linear-gradient(var(--accent-soft),var(--accent-soft)),var(--card)}
-.tile.rec::after{content:"Gợi ý";position:absolute;top:-8px;right:6px;background:var(--warn);color:var(--on-accent);font:600 9.5px/1.6 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:0 5px}
+.tile.rec::after{content:var(--t-rec,"");position:absolute;top:-8px;right:6px;background:var(--warn);color:var(--on-accent);font:600 9.5px/1.6 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:0 5px}
 .case{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:16px 10px;margin:14px 0 8px}
 .file{position:relative;min-height:118px;border-radius:2px 10px 10px 10px;background:#e8cf98;color:#2e2210;padding:12px 10px 10px;box-shadow:0 6px 14px -6px rgba(0,0,0,.7);border:0;text-align:left;transform:rotate(var(--rot,0deg));font-size:12px}
 .file::before{content:"";position:absolute;top:-9px;left:0;width:50px;height:10px;background:inherit;border-radius:6px 6px 0 0}

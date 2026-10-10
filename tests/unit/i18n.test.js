@@ -18,7 +18,9 @@ import enL from '../../src/i18n/locales/en.js';
 import { STATS, TRAIN, GENRES, CONCEPTS, MSK, MSKD } from '../../src/data/rules.js';
 import { OFFER } from '../../src/data/offers.js';
 import { BIZ } from '../../src/systems/market.js';
-import { DAYS, DAYN } from '../../src/systems/week.js';
+import { DAYS } from '../../src/systems/week.js';
+// DAYN đã bỏ khỏi src (chỉ UI dùng, qua lbl): nguồn chuẩn của tên ngày tiếng Việt nằm ở đây
+const DAYN = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
 import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
 import { DR, DRT } from '../../src/systems/debut.js';
 import { CFT } from '../../src/systems/proposals.js';
