@@ -1,6 +1,7 @@
 ---
 name: golden-guardian
 description: Chạy toàn bộ bộ kiểm tra (unit, check:handlers, e2e golden master + smoke) và chẩn đoán khi đỏ, đặc biệt là sai lệch hành vi so với bản gốc legacy. Dùng sau mỗi thay đổi code và trước khi deploy. Chỉ báo cáo, không sửa code.
+model: sonnet
 tools: Read, Grep, Glob, Bash
 ---
 

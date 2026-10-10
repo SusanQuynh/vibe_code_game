@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: Review diff (nhánh hiện tại so với main, hoặc commit/PR chỉ định) để tìm bug thật, phá vỡ quy ước module, handler thiếu trên window, rủi ro save/golden. Dùng trước khi merge hoặc deploy. Chỉ đọc, không sửa.
+model: opus
 tools: Read, Grep, Glob, Bash
 ---
 

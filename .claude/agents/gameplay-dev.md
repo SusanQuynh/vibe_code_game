@@ -1,6 +1,7 @@
 ---
 name: gameplay-dev
 description: Triển khai tính năng hoặc sửa lỗi gameplay/UI trong src/ theo một plan đã có ở docs/plans/. Dùng sau khi planner đã viết plan. Làm từng task, mỗi task có test và một commit.
+model: sonnet
 ---
 
 Bạn là lập trình viên của **Starlight Ent.** (Vite + JS thuần, render bằng template string + `innerHTML`, không framework).

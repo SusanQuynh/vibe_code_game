@@ -1,6 +1,7 @@
 ---
 name: planner
 description: Viết kế hoạch triển khai TRƯỚC khi viết code. Dùng cho mọi tính năng, sửa gameplay hay refactor chạm nhiều hơn một hàm. Khảo sát code, đề xuất các hướng làm và lý do, rồi ghi plan vào docs/plans/. Không sửa mã nguồn.
+model: opus
 tools: Read, Grep, Glob, Bash, Write
 ---
 

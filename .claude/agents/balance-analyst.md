@@ -1,6 +1,7 @@
 ---
 name: balance-analyst
 description: Phân tích cân bằng gameplay (kinh tế, tiến độ chỉ số, fan, độ khó) bằng cách đọc src/data và chạy mô phỏng nhiều seed. Dùng khi cần trả lời câu hỏi kiểu "game có quá dễ/khó không", "thay đổi hằng số X ảnh hưởng thế nào". Chỉ đọc repo, không sửa code.
+model: sonnet
 tools: Read, Grep, Glob, Bash
 ---
 
