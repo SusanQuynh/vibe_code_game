@@ -1,0 +1,257 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`snapshot UI tiếng Việt > khung tĩnh index.html 1`] = `
+{
+  "btns": [
+    "Lưu / chuyển game",
+    "Sự kiện",
+    "Hướng dẫn",
+  ],
+  "dock": "Phòng ban",
+  "fund": "Quỹ công ty",
+  "logTitle": "Nhật ký công ty",
+}
+`;
+
+exports[`snapshot UI tiếng Việt > nút chạm lần nữa 1`] = `
+{
+  "fire": "Chạm lần nữa để xác nhận",
+  "fireMgr": "Chạm lần nữa để xác nhận",
+  "hsFire": "Chạm lần nữa",
+  "reset": "Chạm lần nữa: xoá toàn bộ dữ liệu",
+  "sellBiz": "Chạm lần nữa",
+}
+`;
+
+exports[`snapshot UI tiếng Việt > renderBuilding: nhãn phòng và nhãn NPC 1`] = `
+[
+  {
+    "aria": "Phòng Kinh doanh",
+    "npc": [],
+    "rl": "💹Phòng Kinh doanh",
+    "title": "Phòng Kinh doanh: Doanh thu & nhạc số",
+  },
+  {
+    "aria": "Phòng Nhân sự",
+    "npc": [],
+    "rl": "🗂️Phòng Nhân sự",
+    "title": "Phòng Nhân sự: Hợp đồng, tiền bối, tuyển dụng",
+  },
+  {
+    "aria": "Phòng Đầu tư",
+    "npc": [],
+    "rl": "📈Phòng Đầu tư",
+    "title": "Phòng Đầu tư: Kinh doanh ngoài giải trí",
+  },
+  {
+    "aria": "Phòng Thị trường",
+    "npc": [],
+    "rl": "📊Phòng Thị trường",
+    "title": "Phòng Thị trường: Xu hướng & đối thủ",
+  },
+  {
+    "aria": "Văn phòng Quản lý",
+    "npc": [],
+    "rl": "📋Văn phòng Quản lý",
+    "title": "Văn phòng Quản lý: Tuyển & phân công quản lý",
+  },
+  {
+    "aria": "Sân thượng",
+    "npc": [],
+    "rl": "☕Sân thượng",
+    "title": "Sân thượng: Thư giãn, ngắm thành phố",
+  },
+  {
+    "aria": "Phòng Giám đốc",
+    "npc": [
+      "Bạn (GĐ)",
+    ],
+    "rl": "💼Phòng Giám đốc",
+    "title": "Phòng Giám đốc: Tài chính, lịch tập",
+  },
+  {
+    "aria": "Phòng Họp",
+    "npc": [
+      "🗒️ Thư ký",
+    ],
+    "rl": "📨Phòng Họp",
+    "title": "Phòng Họp: Lời mời & sự kiện",
+  },
+  {
+    "aria": "Phòng Thu âm",
+    "npc": [
+      "🎼 GĐ Âm nhạc",
+    ],
+    "rl": "🎙️Phòng Thu âm",
+    "title": "Phòng Thu âm: Single, concert, rap",
+  },
+  {
+    "aria": "Phòng Diễn xuất",
+    "npc": [],
+    "rl": "🎬Phòng Diễn xuất",
+    "title": "Phòng Diễn xuất: Luyện diễn, làm phim",
+  },
+  {
+    "aria": "Phòng Vocal",
+    "npc": [],
+    "rl": "🎤Phòng Vocal",
+    "title": "Phòng Vocal: Luyện thanh nhạc",
+  },
+  {
+    "aria": "Phòng Nhảy",
+    "npc": [],
+    "rl": "🪩Phòng Nhảy",
+    "title": "Phòng Nhảy: Vũ đạo, thể lực",
+  },
+  {
+    "aria": "Gym & Làm đẹp",
+    "npc": [],
+    "rl": "🏋️Gym & Làm đẹp",
+    "title": "Gym & Làm đẹp: Thể lực, visual",
+  },
+  {
+    "aria": "Phòng Truyền thông",
+    "npc": [],
+    "rl": "📰Phòng Truyền thông",
+    "title": "Phòng Truyền thông: Tạp kỹ, xử lý scandal",
+  },
+  {
+    "aria": "Sảnh Tuyển dụng",
+    "npc": [
+      "Lễ tân",
+    ],
+    "rl": "🌟Sảnh Tuyển dụng",
+    "title": "Sảnh Tuyển dụng: Tuyển TTS, debut",
+  },
+  {
+    "aria": "Ký túc xá",
+    "npc": [],
+    "rl": "🛏️Ký túc xá",
+    "title": "Ký túc xá: Nghỉ ngơi, quan hệ",
+  },
+]
+`;
+
+exports[`snapshot UI tiếng Việt > renderDock 1`] = `"<button class="on" onclick="openRoom('ceo')"><span class="di">💼</span><span>Giám đốc</span></button><button class="" onclick="openRoom('meet')"><span class="di">📨</span><span>Họp</span><span class="badge">5</span></button><button class="" onclick="openRoom('studio')"><span class="di">🎙️</span><span>Thu âm</span></button><button class="" onclick="openRoom('acting')"><span class="di">🎬</span><span>Diễn xuất</span></button><button class="" onclick="openRoom('vocal')"><span class="di">🎤</span><span>Vocal</span></button><button class="" onclick="openRoom('dance')"><span class="di">🪩</span><span>Nhảy</span></button><button class="" onclick="openRoom('gym')"><span class="di">🏋️</span><span>Gym &amp; Làm đẹp</span></button><button class="" onclick="openRoom('pr')"><span class="di">📰</span><span>Truyền thông</span><span class="badge" style="background:var(--violet)">1 📣</span></button><button class="" onclick="openRoom('lobby')"><span class="di">🌟</span><span>Sảnh Tuyển dụng</span><span class="badge" style="background:var(--violet)">2 TTS · 🏅2</span></button><button class="" onclick="openRoom('dorm')"><span class="di">🛏️</span><span>Ký túc xá</span></button><button class="" onclick="openRoom('mgr')"><span class="di">📋</span><span>Văn phòng Quản lý</span></button><button class="" onclick="openRoom('roof')"><span class="di">☕</span><span>Sân thượng</span></button><button class="" onclick="openRoom('invest')"><span class="di">📈</span><span>Đầu tư</span></button><button class="" onclick="openRoom('market')"><span class="di">📊</span><span>Thị trường</span></button><button class="" onclick="openRoom('sales')"><span class="di">💹</span><span>Kinh doanh</span></button><button class="" onclick="openRoom('hr')"><span class="di">🗂️</span><span>Nhân sự</span></button>"`;
+
+exports[`snapshot UI tiếng Việt > renderTop 1`] = `
+{
+  "artN": "2 nghệ sĩ",
+  "date": "<small>Tuần</small>1",
+  "fansP": "💗 0 fan",
+  "money": "600tr",
+  "nextBtn": "Kết thúc tuần 1",
+  "roofInfo": "0 nhóm · 0 solo · 0 diễn viên",
+  "yearL": "Năm 1",
+}
+`;
+
+exports[`snapshot UI tiếng Việt > tiêu đề sheet của từng phòng 1`] = `
+{
+  "acting": {
+    "h2": "<h2>🎬 Phòng Diễn xuất</h2>",
+    "x": "Đóng",
+  },
+  "ceo": {
+    "h2": "<h2>💼 Phòng Giám đốc</h2>",
+    "x": "Đóng",
+  },
+  "dance": {
+    "h2": "<h2>🪩 Phòng Nhảy</h2>",
+    "x": "Đóng",
+  },
+  "dorm": {
+    "h2": "<h2>🛏️ Ký túc xá</h2>",
+    "x": "Đóng",
+  },
+  "gym": {
+    "h2": "<h2>🏋️ Gym &amp; Làm đẹp</h2>",
+    "x": "Đóng",
+  },
+  "hr": {
+    "h2": "<h2>🗂️ Phòng Nhân sự</h2>",
+    "x": "Đóng",
+  },
+  "invest": {
+    "h2": "<h2>📈 Phòng Đầu tư</h2>",
+    "x": "Đóng",
+  },
+  "lobby": {
+    "h2": "<h2>🌟 Sảnh Tuyển dụng</h2>",
+    "x": "Đóng",
+  },
+  "market": {
+    "h2": "<h2>📊 Phòng Thị trường</h2>",
+    "x": "Đóng",
+  },
+  "meet": {
+    "h2": "<h2>📨 Phòng Họp</h2>",
+    "x": "Đóng",
+  },
+  "mgr": {
+    "h2": "<h2>📋 Văn phòng Quản lý</h2>",
+    "x": "Đóng",
+  },
+  "pr": {
+    "h2": "<h2>📰 Phòng Truyền thông</h2>",
+    "x": "Đóng",
+  },
+  "roof": {
+    "h2": "<h2>☕ Sân thượng</h2>",
+    "x": "Đóng",
+  },
+  "sales": {
+    "h2": "<h2>💹 Phòng Kinh doanh</h2>",
+    "x": "Đóng",
+  },
+  "studio": {
+    "h2": "<h2>🎙️ Phòng Thu âm</h2>",
+    "x": "Đóng",
+  },
+  "vocal": {
+    "h2": "<h2>🎤 Phòng Vocal</h2>",
+    "x": "Đóng",
+  },
+}
+`;
+
+exports[`snapshot UI tiếng Việt > tutorial từng bước 1`] = `
+[
+  "<h3>👋 Chào mừng Giám đốc!</h3><div class="small">Bạn vừa tiếp quản <b>Starlight Ent.</b> với 600 triệu và 2 thực tập sinh. Mục tiêu: đào tạo, debut và đưa nghệ sĩ lên đỉnh. Bạn đã biết chơi rồi thì có thể bỏ qua hướng dẫn.</div>
+  <div class="row" style="margin-top:10px"><button class="btn" onclick="tutEnd()">Bỏ qua, tôi đã biết chơi</button><span class="sp"></span><button class="btn pri" onclick="tutGo(1)">Xem hướng dẫn ➜</button></div>
+  ",
+  "<div class="small muted">Hướng dẫn · 1/11</div><h3>Thanh thông tin</h3><div class="small">Tuần &amp; năm, quỹ tiền, số nghệ sĩ và tổng fan. 🔑 lưu/tải bằng mã, 🔔 sự kiện cần xử lý, ❓ mở lại hướng dẫn này bất cứ lúc nào.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 2/11</div><h3>Tòa nhà công ty</h3><div class="small">Mỗi phòng là một chức năng. Nhân vật đi lại theo lịch tập. Chạm vào phòng để mở, chạm vào nhân vật để xem hồ sơ (chỉ số, quan hệ, tiền bối, trợ lý…).</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 3/11</div><h3>Thanh phòng ban</h3><div class="small">Mở nhanh từng phòng. Số đỏ trên phòng là việc đang chờ bạn.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 4/11</div><h3>🌟 Sảnh Tuyển dụng</h3><div class="small">Ký thực tập sinh (TTS), chia lứa, cho thi đấu và <b>debut</b> nhóm, solo hoặc diễn viên. TTS đủ điều kiện được ưu tiên hiện trên cùng.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 5/11</div><h3>💼 Lịch tập</h3><div class="small">Mỗi người có lịch 7 ngày. Ngày tập tăng chỉ số nhưng tốn năng lượng và tiền; ngày nghỉ hồi sức. Cuối mỗi tuần bạn sẽ được nhắc xếp lịch.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 6/11</div><h3>📨 Phòng Họp</h3><div class="small">Lời mời phim, tạp kỹ, show… để kiếm tiền, fan và kinh nghiệm. Có cả việc nhỏ cho TTS. Tiền bối có thể giới thiệu đàn em vào dự án.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 7/11</div><h3>📋 Văn phòng Quản lý</h3><div class="small">Tuyển quản lý để tự xếp lịch, tự nhận việc và xử lý tình huống. Quản lý giỏi có thể <b>kèm cặp quản lý khác</b>; tên quản lý cấp dưới hiện màu theo cấp.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 8/11</div><h3>🎙️ Phòng Thu âm</h3><div class="small">Phát hành single, concert. GĐ Âm nhạc chấm bài và thỉnh thoảng tự sáng tác rồi đề xuất nghệ sĩ hợp nhất.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 9/11</div><h3>🏋️ Gym &amp; Chuyên gia sức khỏe</h3><div class="small">Tuyển chuyên gia chăm sóc sức khỏe để phát hiện ai cần nghỉ nhiều hơn, rồi báo quản lý cân nhắc.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 10/11</div><h3>Kết thúc tuần</h3><div class="small">Mọi lịch được thực hiện, nhận báo cáo. <b>Đầu tuần mới</b>, TTS đủ điều kiện debut sẽ hiện để bạn quyết định debut hay tiếp tục làm TTS. Ai đủ điều kiện cả nhóm lẫn solo sẽ được hỏi ý kiến.</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Tiếp ➜</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i></div>",
+  "<div class="small muted">Hướng dẫn · 11/11</div><h3>Nhật ký &amp; tương tác</h3><div class="small">Mọi chuyện xảy ra đều ghi ở đây: nghệ sĩ giao lưu với idol công ty khác, quản lý đi cà phê hay tranh cãi, nghệ sĩ giới thiệu bạn bè làm TTS… Chúc bạn thành công! 🌟</div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="tutEnd()">Bỏ qua</button><span class="sp"></span><button class="btn sm" onclick="tutGo(-1)">← Trước</button><button class="btn sm pri" onclick="tutGo(1)">Hoàn thành ✓</button></div>
+  <div class="tutdots"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i></div>",
+]
+`;
