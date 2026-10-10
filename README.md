@@ -21,9 +21,19 @@ npm test                 # unit (Vitest + jsdom)
 npm run check:handlers   # mọi handler inline (onclick="…") phải có trên window
 npm run check:i18n       # locale đủ/đúng key và placeholder so với vi; key dùng trong code phải tồn tại
 npm run check:literals   # chuỗi tiếng Việt viết cứng trong src/ (allowlist + bộ đếm todo); thêm -- --report để xem tiến độ
-node scripts/rng-diff.mjs  # so chuỗi lời gọi RNG theo khai báo giữa HEAD và cây làm việc
+node scripts/rng-diff.mjs  # so chuỗi lời gọi RNG theo khai báo giữa HEAD và cây làm việc (REV mặc định HEAD)
 npm run test:e2e         # Playwright: golden master + smoke
 ```
+
+#### check:literals
+
+Quét AST `src/**/*.js` (literal, template, regex) và `content:` trong `src/styles/*.css`; mỗi literal tiếng Việt (kể cả không dấu: `TTS`, `QL`, `80 tr`, nhãn tuần `N<năm>·T<tuần>`) hoặc nằm trong
+allowlist `scripts/i18n-literals.json` hoặc tính vào `todo` (bộ đếm chỉ được giảm).
+- Phân loại tự động: `log` (trong `addLog`/`pushEv` hoặc biến cục bộ chảy vào chúng), `name` (`data/names.js`), `toast` và `css` luôn là todo.
+- `allow` (theo khai báo) là `{kind: state|name|event|log, why}`; **không** miễn toast, CSS hay literal so sánh. Wildcard `#*` chỉ cho `src/data/names.js`.
+- `allowText` (theo khai báo + chữ): `kind: cmp` chỉ miễn literal đang dùng để so sánh logic; `state|name|event|log` phải có `n` (số lần được miễn).
+- Tổng số literal được miễn khoá theo kind (`allowCount`), mục allow không còn khớp bị báo lỗi. Muốn tăng todo/allowCount phải `--update --force` kèm `I18N_LITERALS_FORCE=1` (chỉ khi thật sự cần, nêu lý do trong commit).
+- Khi review: `node scripts/rng-diff.mjs <base>` (ví dụ `origin/main`) để thấy lời gọi RNG đổi so với nhánh gốc; không đối số thì so với HEAD nên ngay sau commit luôn xanh.
 
 Trong môi trường đã có sẵn Chromium: `PW_CHROMIUM=/đường/dẫn/chrome npm run test:e2e`
 (đừng chạy `playwright install`). Chạy e2e với bản build: `BASE_URL=http://localhost:4173/vibe_code_game/ npx playwright test`.
