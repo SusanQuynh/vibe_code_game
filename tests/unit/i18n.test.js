@@ -2,6 +2,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { t, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
 import { diffLocales } from '../../src/i18n/check.js';
+import { seed, SHELL } from './helpers.js';
+import { newGame } from '../../src/state.js';
+import { renderTop } from '../../src/ui/building.js';
+import { applyStatic } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -71,5 +75,24 @@ describe('parity locale', () => {
     expect(d.missing).toEqual(['b']);
     expect(d.extra).toEqual(['e']);
     expect(d.badParams.sort()).toEqual(['a', 'c']);
+  });
+});
+
+describe('masthead & khung tĩnh', () => {
+  beforeEach(() => { document.body.innerHTML = SHELL; seed(42); newGame(); });
+  it('renderTop theo ngôn ngữ', () => {
+    setLang('en'); renderTop();
+    expect(document.getElementById('nextBtn').textContent).toBe('End week 1');
+    expect(document.getElementById('yearL').textContent).toBe('Year 1');
+    expect(document.getElementById('artN').textContent).toBe('2 artists');
+    setLang('vi'); renderTop();
+    expect(document.getElementById('nextBtn').textContent).toBe('Kết thúc tuần 1');
+  });
+  it('applyStatic đổi textContent và aria-label', () => {
+    const d = document.createElement('div');
+    d.innerHTML = '<small data-i18n="top.fund">x</small><button data-i18n-aria="top.help" aria-label="x"></button>';
+    setLang('en'); applyStatic(d);
+    expect(d.querySelector('small').textContent).toBe('Company funds');
+    expect(d.querySelector('button').getAttribute('aria-label')).toBe('Help');
   });
 });

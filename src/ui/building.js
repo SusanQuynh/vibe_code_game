@@ -1,5 +1,5 @@
 import { R } from '../core/rng.js';
-import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
+import { $, clamp, esc, fmtN } from '../core/util.js';
 import { OFFER } from '../data/offers.js';
 import { CONCEPTS, ROOMS, TRAIN } from '../data/rules.js';
 import { save } from '../save/storage.js';
@@ -9,6 +9,7 @@ import { mgrTargets, targetName } from '../systems/managers.js';
 import { campMem } from '../systems/promo.js';
 import { datingPartner } from '../systems/relations.js';
 import { prPlans } from '../systems/review.js';
+import { money, t } from '../i18n/index.js';
 import { curView } from './modal.js';
 
 export let pos={};
@@ -85,12 +86,12 @@ setInterval(()=>{
   });
 },2600);
 export function renderTop(){
-  $('#money').textContent=fmt(S.money).replace(' ','');$('#money').classList.toggle('neg',S.money<0);
-  $('#date').innerHTML=`<small>Tuần</small>${S.week}`;$('#yearL').textContent=`Năm ${S.year}`;$('#nextBtn').textContent=`Kết thúc tuần ${S.week}`;
+  $('#money').textContent=money(S.money).replace(' ','');$('#money').classList.toggle('neg',S.money<0);
+  $('#date').innerHTML=`<small>${t('top.week')}</small>${S.week}`;$('#yearL').textContent=t('top.year',{n:S.year});$('#nextBtn').textContent=t('top.next',{n:S.week});
   const tf=S.artists.reduce((s,a)=>s+a.fans,0);
-  $('#fansP').textContent=`💗 ${fmtN(tf)} fan`;$('#artN').textContent=`${S.artists.length} nghệ sĩ`;
+  $('#fansP').textContent=t('top.fans',{n:fmtN(tf)});$('#artN').textContent=t('top.artists',{n:S.artists.length});
   const n=S.events.length;$('#evn').hidden=!n;$('#evn').textContent=n;
-  $('#roofInfo').textContent=`${S.groups.length} nhóm · ${S.artists.filter(a=>a.solo).length} solo · ${S.artists.filter(a=>a.actor).length} diễn viên`;
+  $('#roofInfo').textContent=t('top.roof',{g:S.groups.length,s:S.artists.filter(a=>a.solo).length,a:S.artists.filter(a=>a.actor).length});
   const out=S.artists.filter(a=>a.busy),mo=S.managers.filter(m=>m.as&&!mgrRoom(m));
   $('#outside').innerHTML=out.length?`<span class="lbl">🚐 Đang làm việc bên ngoài</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>QL ${esc(m.name)} đi cùng ${esc(targetName(m))}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} (${a.busy.left}t)</button>`).join(''):'';
   $('#log').innerHTML=S.log.map(l=>`<div class="${l.c}"><span class="w">${l.w}</span>${esc(l.t)}</div>`).join('');
