@@ -23,6 +23,7 @@ import { acts, cbNow, cbSched, cbSchedRec, viewSec } from '../../src/systems/sec
 import { cfPick, propAll, viewProps } from '../../src/systems/proposals.js';
 import { doFM, doLive, doSingle, holdConcert, viewCamp } from '../../src/systems/releases.js';
 import { postAuto, postDo, preAuto, preDo } from '../../src/systems/promo.js';
+import { buyBiz, buybackBiz, raiseBiz, sellBiz, upBiz } from '../../src/systems/market.js';
 import { prDo, prGo } from '../../src/systems/review.js';
 import { mkSong, songAct, viewSong, viewSongs, writeSong } from '../../src/systems/ext2.js';
 
@@ -65,6 +66,11 @@ function run(lang, weeks = 40) {
     if (i === 13) { // hàng chờ debut: banner, màn quyết định (dWish ghi a.dw), debut nhóm theo mong muốn, giữ làm TTS, để tuần sau
       rich(); freeUp(3, a => a.status === 'trainee'); const ts = S.artists.filter(a => a.status === 'trainee' && !a.busy).slice(0, 3);
       if (ts.length === 3) { ts.forEach(a => { a.dReady = 1; a.dqSkip = 0; for (const k in a.st) a.st[k] = 90; }); document.getElementById('sheet').innerHTML = dqBanner(); view(viewDebutQ); T('dqDo', () => dqDo(ts[0].id, 'group')); T('dqKeep', () => dqKeep(ts[2].id)); dqLater(ts[1].id); did.dqLater = ts[1].dqSkip > abs() ? 1 : 0; dqDo(-1, 'solo'); closeM(); }
+    }
+    if (i === 14) { // Phòng Đầu tư: mở ngành, mở rộng, gọi vốn (bán cổ phần + chờ), mua lại, bán; mở phòng Đầu tư/Thị trường
+      rich(); openRoom('invest'); openRoom('market'); closeM();
+      T('buyBiz', () => buyBiz('cafe')); buyBiz('cafe'); T('buyBiz2', () => buyBiz('food')); T('upBiz', () => upBiz('cafe')); T('raiseBiz', () => raiseBiz('cafe', .2)); raiseBiz('cafe', .2); raiseBiz('food', .6);
+      T('buybackBiz', () => buybackBiz('cafe')); openRoom('invest'); closeM(); T('sellBiz', () => sellBiz('food', { dataset: { c: '1' }, textContent: '' }));
     }
     if (i === 15) { // Văn phòng Quản lý: phân công (danh sách tự chọn, nhóm), cấp trên/vòng lặp, chế độ tự động, tuyển ứng viên mới
       rich(); if (S.managers.length < 2 && S.mgrPool.length) T('hire2', () => hireMgr(S.mgrPool[0].id));
@@ -136,7 +142,7 @@ describe('S độc lập ngôn ngữ', () => {
     // mỗi hành động đã ghi log ít nhất một lần (không chỉ đi đường toast lỗi) và dấu vết đúng của nó có mặt
     const must = { comp: /lên đường dự thi «/, newBatch: /Mở Lứa \d+/, moveBatch: /Chuyển .+ sang Lứa/, batchLive: /livestream trò chuyện/, dqDo: /vui vì được debut|tiếc vì muốn debut/, dqKeep: /tiếp tục làm thực tập sinh/, offer: /nhận .+ «/, cast: /· \d+ người/, invest: /Góp vốn .+ vào phim «/, pre: /Ảnh teaser/, single: /Single «Bài thử»/, post: /lên radio/, pr: /Quảng cáo SNS cho/,
       write: /vào phòng thu sáng tác «/, write2: /vào phòng thu sáng tác «/, songOk: /GĐ Âm nhạc duyệt «/, songRedo: /Chỉnh sửa «/, songDrop: /Bỏ bài «/, live: /livestream trò chuyện/, fm: /Fan meeting của/, concert: /Concert của/,
-      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: /Quản lý .+ phụ trách|phụ trách/, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, paHire: /trợ lý cá nhân|Công ty chọn trợ lý/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, prGo: /Fan meeting|livestream|Quảng cáo SNS|lên tạp chí|phỏng vấn|Clip của|quảng bá hình ảnh/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
+      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: /Quản lý .+ phụ trách|phụ trách/, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, buyBiz: /Mở Cà phê/, buyBiz2: /Mở Chuỗi nhà hàng/, upBiz: /Mở rộng Cà phê thần tượng lên cấp 2/, raiseBiz: /kêu gọi vốn: bán 20% cổ phần/, buybackBiz: /Mua lại toàn bộ cổ phần Cà phê/, sellBiz: /Bán Chuỗi nhà hàng/, paHire: /trợ lý cá nhân|Công ty chọn trợ lý/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, prGo: /Fan meeting|livestream|Quảng cáo SNS|lên tạp chí|phỏng vấn|Clip của|quảng bá hình ảnh/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
     for (const [k, re] of Object.entries(must)) { expect(vi.did[k], `hành động ${k} phải có tác dụng`).toBeGreaterThan(0); expect(vi.tr, `dấu vết log của ${k}`).toMatch(re); }
     // đề xuất của quản lý: có mục lịch, dự án và xung đột treo chờ Giám đốc (cfHTML/itDesc/stTag được render và so sánh)
     expect(vi.did.prBtn).toBeGreaterThan(0); expect(vi.did.prHist).toBeGreaterThan(0); expect(vi.s).toMatch(/"prHist":\["T\d+: /); // S.prHist luôn là chữ vi dù render ở en

@@ -31,6 +31,7 @@ const VERBATIM = [
   /^props\.m\.\d+\.s\.\d+\.why$/, // lý do quản lý đề xuất lịch (shortWhy lưu vào S.props)
   /^props\.m\.\d+\.d\.\d+\.txt$/, // gợi ý debut (debutRec().short lưu vào S.props)
   /^props\.c\.\d+\.txt$/, // mô tả xung đột (routeProps lưu vào S.props)
+  /^rivals\.\d+\.last$/, // hành động gần nhất của đối thủ (rivalsTick lưu vào S.rivals[].last)
 ];
 function names(v, out = new Set(), key, path = '') {
   if (typeof v === 'string') {

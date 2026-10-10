@@ -197,6 +197,9 @@ const LABELS = [
   ['day', DAYS], ['dayn', DAYN], ['fin.i', FIN_I], ['fin.x', FIN_X], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
   ['pre', nOf(PRE)], ['post', nOf(POST)], ['prp', nOf(PRP)],
   ['comp.n', Object.fromEntries(COMP.map((c, i) => [i, c.n]))], // tên cuộc thi tra theo chỉ số trong COMP (compNameT)
+  // mô tả ngành (field d đã bỏ khỏi BIZ vì chỉ hiển thị): giữ chữ vi cũ làm chuẩn
+  ['biz', { 'cafe.d': 'Fan càng đông càng đắt khách.', 'food.d': 'Ổn định, ít phụ thuộc fan.', 'media.d': 'Mỗi cấp giúp nghệ sĩ đã ra mắt tăng fan nhanh hơn.', 'academy.d': 'Mỗi cấp tăng 6% hiệu quả luyện tập.',
+    'fashion.d': 'Bán chạy khi nghệ sĩ nổi tiếng.', 'beauty.d': 'Lãi cao, phụ thuộc danh tiếng.', 'game.d': 'Rủi ro cao: có tuần lãi lớn, có tuần lỗ.', 'estate.d': 'Rất ổn định, vốn lớn.' }],
 ];
 describe('nhãn dữ liệu lbl(ns, id)', () => {
   it.each(LABELS)('%s: đủ key ở mọi ngôn ngữ, vi bằng đúng giá trị trong bảng, en không còn chữ Việt', (ns, tbl) => {
@@ -209,6 +212,11 @@ describe('nhãn dữ liệu lbl(ns, id)', () => {
       setLang('en'); expect(lbl(ns, k)).not.toMatch(/[À-ỹĐđ]/);
     }
     setLang('vi');
+  });
+});
+describe('mô tả ngành biz.<k>.d', () => {
+  it('mọi ngành trong BIZ có mô tả ở mọi ngôn ngữ', () => {
+    for (const k of Object.keys(BIZ)) { expect(`biz.${k}.d` in viL.dict && `biz.${k}.d` in enL.dict, k).toBe(true); expect(BIZ[k].d, 'field d đã bỏ khỏi BIZ').toBeUndefined(); }
   });
 });
 describe('mô tả hoạt động teaser pre.d.*', () => {

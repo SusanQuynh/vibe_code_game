@@ -301,13 +301,9 @@
     "src/systems/ext3.js#hsRisk": 6,
     "src/systems/ext3.js#v3Resolve": 4,
     "src/systems/managers.js#targetName": 9,
-    "src/systems/market.js#BIZ": 15,
-    "src/systems/market.js#buybackBiz": 1,
-    "src/systems/market.js#buyBiz": 1,
-    "src/systems/market.js#raiseBiz": 3,
+    "src/systems/market.js#BIZ": 7,
     "src/systems/market.js#rivalsTick": 3,
     "src/systems/market.js#surprise": 1,
-    "src/systems/market.js#upBiz": 1,
     "src/systems/offers.js#investOffer": 1,
     "src/systems/promo.js#POST": 7,
     "src/systems/promo.js#PRE": 4,
@@ -325,9 +321,7 @@
     "src/systems/secretary.js#BUDN": 3,
     "src/systems/secretary.js#wkLabel": 1,
     "src/systems/week.js#completeBusy": 6,
-    "src/systems/week.js#releaseFilm": 1,
-    "src/ui/rooms.js#RV.invest": 29,
-    "src/ui/rooms.js#RV.market": 15
+    "src/systems/week.js#releaseFilm": 1
   },
   "allowCount": {
     "cmp": 24,
