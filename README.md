@@ -156,7 +156,7 @@ npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 Vietnamese (`vi`) is the default and the source of truth; English (`en`) is in beta. Players switch with the 🌐 button and the game re-renders in place without touching game state. The choice is stored in `localStorage['starlight_lang']`, separately from the save.
 
 > [!NOTE]
-> Phase 1 translates the fixed UI only: top bar, room names, dock, common buttons and the tutorial. Room contents, logs, events and offers are still Vietnamese. Later phases are outlined in [`docs/plans/2026-10-10-i18n-giai-doan-1.md`](docs/plans/2026-10-10-i18n-giai-doan-1.md).
+> Phase 1 translates the fixed UI only: top bar, room names, dock, common buttons and the tutorial. Room contents, logs, events and offers are still Vietnamese. Later phases are outlined in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md).
 
 **Adding a language**
 
