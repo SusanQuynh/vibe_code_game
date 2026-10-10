@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import fs from 'node:fs';
 import { t, lbl, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
 import { diffLocales } from '../../src/i18n/check.js';
 import { noToggle, seed, SHELL } from './helpers.js';
@@ -194,13 +195,21 @@ const nOf = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v.n]))
 const LABELS = [
   ['stat', STATS], ['train.n', nOf(TRAIN)], ['genre', nOf(GENRES)], ['concept', nOf(CONCEPTS)], ['offer', nOf(OFFER)],
   ['msk', MSK], ['mskd', MSKD], ['biz', Object.fromEntries(Object.entries(BIZ).map(([k, v]) => [k + '.n', v.n]))],
-  ['day', DAYS], ['dayn', DAYN], ['fin.i', FIN_I], ['fin.x', FIN_X], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
+  ['day', DAYS], ['dayn', DAYN], ['fin.i', Object.fromEntries(FIN_I.map(k => [k, viL.dict['fin.i.' + k]]))], ['fin.x', Object.fromEntries(FIN_X.map(k => [k, viL.dict['fin.x.' + k]]))], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
   ['pre', nOf(PRE)], ['post', nOf(POST)], ['prp', nOf(PRP)],
   ['comp.n', Object.fromEntries(COMP.map((c, i) => [i, c.n]))], // tên cuộc thi tra theo chỉ số trong COMP (compNameT)
   // mô tả ngành (field d đã bỏ khỏi BIZ vì chỉ hiển thị): giữ chữ vi cũ làm chuẩn
   ['biz', { 'cafe.d': 'Fan càng đông càng đắt khách.', 'food.d': 'Ổn định, ít phụ thuộc fan.', 'media.d': 'Mỗi cấp giúp nghệ sĩ đã ra mắt tăng fan nhanh hơn.', 'academy.d': 'Mỗi cấp tăng 6% hiệu quả luyện tập.',
     'fashion.d': 'Bán chạy khi nghệ sĩ nổi tiếng.', 'beauty.d': 'Lãi cao, phụ thuộc danh tiếng.', 'game.d': 'Rủi ro cao: có tuần lãi lớn, có tuần lỗ.', 'estate.d': 'Rất ổn định, vốn lớn.' }],
 ];
+describe('nhóm thu chi book(c, …)', () => {
+  it('mọi khoá c mà mã nguồn ghi sổ đều có nhãn fin.i/fin.x (catRows tra lbl)', () => {
+    const used = new Set();
+    const walk = d => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = d + '/' + e.name; if (e.isDirectory()) walk(q); else if (q.endsWith('.js')) for (const m of fs.readFileSync(q, 'utf8').matchAll(/\bbook\('(\w+)'/g)) used.add(m[1]); } };
+    walk('src');
+    for (const k of used) expect(FIN_I.includes(k) || FIN_X.includes(k), `book('${k}') không có nhãn`).toBe(true);
+  });
+});
 describe('nhãn dữ liệu lbl(ns, id)', () => {
   it.each(LABELS)('%s: đủ key ở mọi ngôn ngữ, vi bằng đúng giá trị trong bảng, en không còn chữ Việt', (ns, tbl) => {
     const keys = Object.keys(tbl);
