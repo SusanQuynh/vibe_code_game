@@ -58,6 +58,27 @@ test('mobile 375x812: không cuộn ngang', async ({ page }) => {
   expect(w).toBeLessThanOrEqual(375);
 });
 
+test('đổi ngôn ngữ tại chỗ, nhớ qua reload, không cuộn ngang ở 375px', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('./');
+  await page.evaluate(() => { for (let i = 0; i < 2; i++) window.__game.nextWeek(true, true); });
+  await page.evaluate(() => window.closeM());
+  await page.locator('.hbtns .r4').click();
+  await page.getByRole('button', { name: /English/ }).click();
+  await expect(page.locator('#nextBtn')).toHaveText('End week 3');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  expect(await page.evaluate(() => __game.state().week)).toBe(3);
+  await page.reload();
+  await expect(page.locator('#nextBtn')).toHaveText('End week 3');
+  await page.setViewportSize({ width: 375, height: 812 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+  await page.locator('.hbtns .r4').click();
+  await page.getByRole('button', { name: 'Tiếng Việt' }).click();
+  await expect(page.locator('#nextBtn')).toHaveText('Kết thúc tuần 3');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+  expect(errors).toEqual([]);
+});
+
 test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng tiến trình', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');

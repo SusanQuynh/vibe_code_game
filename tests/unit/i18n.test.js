@@ -10,7 +10,9 @@ import { modal } from '../../src/ui/modal.js';
 import { fire } from '../../src/systems/artists.js';
 import { TUT, tutStart, tutEnd } from '../../src/ui/tutorial.js';
 import { openRoom } from '../../src/ui/rooms.js';
-import { applyStatic } from '../../src/ui/lang.js';
+import { S } from '../../src/state.js';
+import { view } from '../../src/ui/modal.js';
+import { applyHtmlLang, applyStatic, chooseLang, viewLang } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -141,5 +143,28 @@ describe('tutorial', () => {
     expect(document.querySelector('#tut h3').textContent).toBe('Top bar');
     expect(document.querySelector('#tut .small:not(.muted)').innerHTML).toContain('🌐');
     tutEnd();
+  });
+});
+
+describe('chooseLang', () => {
+  beforeEach(() => { document.body.innerHTML = SHELL; seed(42); newGame(); renderTop(); });
+  it('đổi tại chỗ, không đụng S, lưu localStorage', () => {
+    const snap = JSON.stringify(S);
+    chooseLang('en');
+    expect(document.documentElement.lang).toBe('en');
+    expect(document.getElementById('nextBtn').textContent).toBe('End week 1');
+    expect(JSON.stringify(S)).toBe(snap);
+    expect(localStorage.getItem('starlight_lang')).toBe('en');
+    chooseLang('xx');
+    expect(getLang()).toBe('en');
+    chooseLang('vi'); applyHtmlLang();
+  });
+  it('sheet đang mở được render lại', () => {
+    view(viewLang);
+    expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
+    chooseLang('en');
+    expect(document.querySelector('#sheet h2').textContent).toContain('Language');
+    chooseLang('vi');
+    expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
   });
 });

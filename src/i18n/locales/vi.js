@@ -8,6 +8,7 @@ export default {
     'top.save': 'Lưu / chuyển game',
     'top.events': 'Sự kiện',
     'top.help': 'Hướng dẫn',
+    'top.lang': 'Ngôn ngữ',
     'top.week': 'Tuần',
     'top.year': 'Năm {n}',
     'top.next': 'Kết thúc tuần {n}',

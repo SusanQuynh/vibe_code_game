@@ -7,6 +7,7 @@ export default {
     'top.save': 'Save / transfer game',
     'top.events': 'Events',
     'top.help': 'Help',
+    'top.lang': 'Language',
     'top.week': 'Week',
     'top.year': 'Year {n}',
     'top.next': 'End week {n}',
