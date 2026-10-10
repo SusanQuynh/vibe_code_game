@@ -1,4 +1,5 @@
 import { R, pick } from '../core/rng.js';
+import { t } from '../i18n/index.js';
 import { clamp } from '../core/util.js';
 import { HAIR, OUT, SKIN } from '../data/looks.js';
 import { FN, FT1, FT2, MN } from '../data/names.js';
@@ -34,4 +35,4 @@ export function sign(id){const a=S.pool.find(x=>x.id===id);if(!a)return;if(S.mon
 export function recast(){if(S.money<10e6)return toast('Không đủ tiền');S.money-=10e6;book('hr',-10e6);genPool(poolSize());act()}
 export function setSched(id,v){const a=byId(id);if(a){a.days=a.days.some(k=>k!=='rest')?a.days.map(k=>k==='rest'?'rest':v):defaultDays(v);act()}}
 export function setAll(v){if(!v)return;S.artists.forEach(a=>a.days=defaultDays(v));act()}
-export function fire(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent='Chạm lần nữa để xác nhận';return}const a=byId(id);if(a){removeArtist(a,'đã chấm dứt hợp đồng');closeM();act()}}
+export function fire(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainConfirm');return}const a=byId(id);if(a){removeArtist(a,'đã chấm dứt hợp đồng');closeM();act()}}

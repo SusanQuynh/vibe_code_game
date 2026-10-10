@@ -69,6 +69,10 @@ export default {
     'npc.n2': '🗒️ Secretary',
     'npc.n3': 'Receptionist',
     'npc.n4': '🎼 Music Director',
+    'btn.close': 'Close',
+    'btn.tapAgain': 'Tap again',
+    'btn.tapAgainConfirm': 'Tap again to confirm',
+    'btn.tapAgainReset': 'Tap again: erase all data',
     'fmt.units': { b: 'B', m: 'M', k: 'K' },
   },
 };

@@ -70,6 +70,10 @@ export default {
     'npc.n2': '🗒️ Thư ký',
     'npc.n3': 'Lễ tân',
     'npc.n4': '🎼 GĐ Âm nhạc',
+    'btn.close': 'Đóng',
+    'btn.tapAgain': 'Chạm lần nữa',
+    'btn.tapAgainConfirm': 'Chạm lần nữa để xác nhận',
+    'btn.tapAgainReset': 'Chạm lần nữa: xoá toàn bộ dữ liệu',
     'fmt.units': { b: ' tỷ', m: ' tr', k: 'k' },
   },
 };

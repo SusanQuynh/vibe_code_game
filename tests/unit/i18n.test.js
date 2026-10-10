@@ -6,6 +6,8 @@ import { noToggle, seed, SHELL } from './helpers.js';
 import { newGame } from '../../src/state.js';
 import { ROOMS } from '../../src/data/rules.js';
 import { renderTop, renderDock, NPC } from '../../src/ui/building.js';
+import { modal } from '../../src/ui/modal.js';
+import { fire } from '../../src/systems/artists.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { applyStatic } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
@@ -113,5 +115,17 @@ describe('phòng, dock, NPC', () => {
     expect(document.querySelector('#sheet h2').textContent).toBe('💼 CEO Office');
     openRoom('sales');
     expect(document.querySelector('#sheet h2').textContent).toBe('💹 Sales Room');
+  });
+});
+
+describe('nút chung', () => {
+  beforeEach(() => { document.body.innerHTML = SHELL; });
+  it('en: đóng và chạm lần nữa', () => {
+    setLang('en');
+    modal('<h2>x</h2>');
+    expect(document.querySelector('#sheet .x').getAttribute('aria-label')).toBe('Close');
+    const b = document.createElement('button');
+    fire(-1, b);
+    expect(b.textContent).toBe('Tap again to confirm');
   });
 });

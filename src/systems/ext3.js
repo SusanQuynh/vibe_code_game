@@ -1,4 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
+import { t } from '../i18n/index.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
 import { OFFER } from '../data/offers.js';
@@ -70,7 +71,7 @@ export function paFire(aid){const a=byId(aid);if(!a||!a.pa)return;addLog(`👋 T
 /* ---- Chuyên gia chăm sóc sức khoẻ ---- */
 export function genHSC(){S.hsC=[0,1].map(()=>{const sk=R(1,5);return{id:uid(),name:'BS. '+pick(LNM)+' '+pick(FN.concat(MN)),sk,sal:(sk+1)*1e6,fee:sk*8e6,look:mkLook(Math.random()<.5?'F':'M','#e9e9f2')}})}
 export function hsHire(id){const c=(S.hsC||[]).find(x=>x.id===id);if(!c)return;if(S.money<c.fee)return toast('Không đủ tiền');S.money-=c.fee;book('hr',-c.fee);S.hs=c;S.hsC=null;addLog(`🩺 Tuyển chuyên gia chăm sóc sức khỏe ${c.name} (chuyên môn ${c.sk}/5).`,'good');act()}
-export function hsFire(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent='Chạm lần nữa';return}if(!S.hs)return;addLog(`👋 Chuyên gia ${S.hs.name} nghỉ việc.`);S.hs=null;act()}
+export function hsFire(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}if(!S.hs)return;addLog(`👋 Chuyên gia ${S.hs.name} nghỉ việc.`);S.hs=null;act()}
 export const restN=a=>a.days.filter(k=>k==='rest').length;
 export function hsRisk(a){const td=trainDays(a),r=[];ensureDays(a);if(a.energy<35)r.push(`năng lượng chỉ còn ${Math.round(a.energy)}`);if(a.mood<30)r.push(`tâm trạng xuống ${Math.round(a.mood)}`);if(td>=6&&a.energy<65)r.push(`tập ${td}/7 ngày khi thể lực chưa hồi`);if(a.status==='trainee'&&(a.ttsFail||0)>=2&&a.mood<55)r.push('áp lực vì trượt đánh giá liên tiếp');const pe=projEnergy(a);if(pe[6]<20&&td>=4)r.push('dự báo cạn sức cuối tuần');return r}
 export function applyRest(a,n){if(a.busy)return;ensureDays(a);const d=a.days.slice();let c=d.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<n;i--)if(d[i]!=='rest'){d[i]='rest';c++}a.days=d}

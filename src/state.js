@@ -1,4 +1,5 @@
 import { genArtist, genPool } from './systems/artists.js';
+import { t } from './i18n/index.js';
 import { genComp, initBatches } from './systems/batches.js';
 import { genMgrPool } from './systems/managers.js';
 import { initWorld } from './systems/market.js';
@@ -24,5 +25,5 @@ export function newGame(){
   addLog('🎉 Chào mừng giám đốc! Starlight Ent. bắt đầu với vốn 600 triệu và 2 thực tập sinh.','gold');
   addLog('Mẹo: chạm vào từng phòng để dùng chức năng, chạm vào nhân vật để xem chi tiết.');
 }
-export function resetGame(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent='Chạm lần nữa: xoá toàn bộ dữ liệu';return}newGame();closeM();act()}
+export function resetGame(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainReset');return}newGame();closeM();act()}
 export const setState=v=>{S=v};
