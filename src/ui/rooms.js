@@ -172,28 +172,28 @@ export const RV={
   },
   lobby(){
     const tr=S.artists.filter(a=>!a.busy);
-    modal(`<h2>🌟 ${roomName('lobby')}</h2><div class="sub">Tuyển thực tập sinh và cho ra mắt nhóm, solo hoặc diễn viên. Không giới hạn số nghệ sĩ.</div>${dqBanner()}
-    ${det('lb-cast',`🧑‍🎤 Ứng viên casting (${S.pool.length})`,`<div class="small muted" style="margin-bottom:6px">Ký hợp đồng 20 tr/người. Danh sách mới mỗi 4 tuần.</div>${repCard()}
-    ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} · năng khiếu ${STATS[a.spec]} · tố chất x${a.talent}</span></div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">Ký hợp đồng</button></div>${bars(a)}</div>`).join('')||'<div class="small muted">Hết ứng viên.</div>'}
-    <button class="btn" onclick="recast()">Tổ chức casting mới (10 tr)</button>`,true)}
-    ${det('lb-batches',`🌱 Các lứa thực tập sinh (${S.batches.length} lứa, ${S.artists.filter(a=>a.status==='trainee').length} TTS)`,batchHTML(),true)}
-    ${det('lb-comp',`🏅 Cuộc thi cho thực tập sinh (${S.comps.length} đang mở)`,compHTML(),true)}
-    ${(()=>{const ts=S.artists.filter(a=>a.status==='trainee'&&!a.busy).sort(eligSort);return ts.length?det('lb-rec',`🎯 Đề xuất hướng debut: tất cả thực tập sinh (${ts.length})`,`<div class="small muted" style="margin-bottom:4px">So sánh từng thực tập sinh khi ra solo, làm diễn viên hay vào nhóm. Chỉ đề xuất debut khi độ phù hợp trên ${DEBUT_MIN}%. Bấm "Áp dụng" để điền sẵn vào form bên dưới.</div><div class="card">${ts.map(recLine).join('')}</div>`,false):''})()}
-    <h3>🎊 Debut</h3><div class="card"><div class="row"><select id="dType"><option value="group">Nhóm nhạc</option><option value="solo">Solo</option><option value="actor">Diễn viên</option></select><input type="text" id="dName" placeholder="Tên nhóm" style="flex:1"></div>
-    <div id="dSug"></div><h3 style="margin-top:10px">Chọn nghệ sĩ</h3><div class="list" id="dList"></div><div class="card" id="dAna" style="margin-top:10px;background:var(--bg)"></div><div class="small muted" id="dCost" style="margin:6px 0"></div><button class="btn pink" onclick="debut()">Ra mắt</button></div>
-    <div class="small muted">Một nghệ sĩ có thể vừa ở nhóm, vừa solo, vừa làm diễn viên. Idol đã ra mắt nhận được mọi loại dự án.</div>`);
-    const up=()=>{const t=$('#dType').value;$('#dName').style.display=t==='group'?'':'none';
-      let list=tr.filter(a=>t==='group'?!groupsOf(a).length:t==='solo'?!a.solo:!a.actor);
-      const tbl=t==='actor'?GENRES:CONCEPTS,bf=a=>bestOf(a,tbl)[0];
-      if(t!=='group')list.sort((x,y)=>bf(y).f-bf(x).f);list.sort((x,y)=>(dElig(y,t)?1:0)-(dElig(x,t)?1:0));
+    modal(`<h2>🌟 ${roomName('lobby')}</h2><div class="sub">${t('lobby.sub')}</div>${dqBanner()}
+    ${det('lb-cast',t('lobby.castTitle',{n:S.pool.length}),`<div class="small muted" style="margin-bottom:6px">${t('lobby.castTip',{m:money(20e6)})}</div>${repCard()}
+    ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${t('lobby.cand',{g:a.g==='F'?t('lobby.f'):t('lobby.m'),a:a.age,s:lbl('stat',a.spec),x:a.talent})}</span></div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">${t('lobby.sign')}</button></div>${bars(a)}</div>`).join('')||`<div class="small muted">${t('lobby.noCand')}</div>`}
+    <button class="btn" onclick="recast()">${t('lobby.recast',{m:money(10e6)})}</button>`,true)}
+    ${det('lb-batches',t('lobby.batches',{b:S.batches.length,n:S.artists.filter(a=>a.status==='trainee').length}),batchHTML(),true)}
+    ${det('lb-comp',t('lobby.comps',{n:S.comps.length}),compHTML(),true)}
+    ${(()=>{const ts=S.artists.filter(a=>a.status==='trainee'&&!a.busy).sort(eligSort);return ts.length?det('lb-rec',t('lobby.recTitle',{n:ts.length}),`<div class="small muted" style="margin-bottom:4px">${t('lobby.recTip',{m:DEBUT_MIN})}</div><div class="card">${ts.map(recLine).join('')}</div>`,false):''})()}
+    <h3>🎊 Debut</h3><div class="card"><div class="row"><select id="dType"><option value="group">${t('lobby.type.group')}</option><option value="solo">${t('lobby.type.solo')}</option><option value="actor">${t('lobby.type.actor')}</option></select><input type="text" id="dName" placeholder="${t('lobby.groupName')}" style="flex:1"></div>
+    <div id="dSug"></div><h3 style="margin-top:10px">${t('lobby.pickArt')}</h3><div class="list" id="dList"></div><div class="card" id="dAna" style="margin-top:10px;background:var(--bg)"></div><div class="small muted" id="dCost" style="margin:6px 0"></div><button class="btn pink" onclick="debut()">${t('lobby.debut')}</button></div>
+    <div class="small muted">${t('lobby.foot')}</div>`);
+    const up=()=>{const ty=$('#dType').value;$('#dName').style.display=ty==='group'?'':'none';
+      let list=tr.filter(a=>ty==='group'?!groupsOf(a).length:ty==='solo'?!a.solo:!a.actor);
+      const tbl=ty==='actor'?GENRES:CONCEPTS,bf=a=>bestOf(a,tbl)[0];
+      if(ty!=='group')list.sort((x,y)=>bf(y).f-bf(x).f);list.sort((x,y)=>(dElig(y,ty)?1:0)-(dElig(x,ty)?1:0));
       let sug='';
-      if(t==='group'&&list.length>=2){
+      if(ty==='group'&&list.length>=2){
         const L=Object.keys(CONCEPTS).map(k=>({k,...bestLineup(list,CONCEPTS[k].w)})).sort((a,b)=>b.sc-a.sc);
-        sug=`<h3 style="margin-top:8px">💡 Đội hình gợi ý theo concept</h3>${L.map((x,i)=>`<div class="lineup"><div style="flex:1;min-width:0"><b>${i===0?'⭐ ':''}${CONCEPTS[x.k].n}</b> · hợp ${Math.round(x.f)}% · hòa hợp ${x.hm>=0?'+':''}${x.hm}<br><span class="muted">${x.ids.map(id=>esc(byId(id).name)).join(', ')}</span></div><button class="btn sm${i===0?' pri':''}" onclick="applyLineup([${x.ids}])">Chọn</button></div>`).join('')}`;
-      }else if(t!=='group'&&list.length)sug=`<div class="small muted" style="margin-top:8px">Danh sách đã xếp theo độ hợp ${t==='solo'?'concept solo':'thể loại phim'}. ⭐ là 3 người hợp nhất.</div>`;
+        sug=`<h3 style="margin-top:8px">${t('lobby.lineupTitle')}</h3>${L.map((x,i)=>`<div class="lineup"><div style="flex:1;min-width:0"><b>${i===0?'⭐ ':''}${lbl('concept',x.k)}</b> · ${t('lobby.lineFit',{f:Math.round(x.f),h:(x.hm>=0?'+':'')+x.hm})}<br><span class="muted">${x.ids.map(id=>esc(byId(id).name)).join(', ')}</span></div><button class="btn sm${i===0?' pri':''}" onclick="applyLineup([${x.ids}])">${t('lobby.pick')}</button></div>`).join('')}`;
+      }else if(ty!=='group'&&list.length)sug=`<div class="small muted" style="margin-top:8px">${t('lobby.sorted',{w:ty==='solo'?t('lobby.byConcept'):t('lobby.byGenre')})}</div>`;
       $('#dSug').innerHTML=sug;
-      $('#dList').innerHTML=list.map((a,i)=>{const b=bf(a);return`<label><input type="${t==='group'?'checkbox':'radio'}" name="dsel" class="dsel" value="${a.id}"> <span style="flex:1">${t!=='group'&&i<3?'⭐ ':''}${dElig(a,t)?'<span class="tag s">✅ Đủ ĐK</span> ':''}<b>${esc(a.name)}</b> <span class="small muted">${a.status==='trainee'?'TTS':'Đã ra mắt'} · V${Math.round(a.st.vocal)} N${Math.round(a.st.dance)} R${Math.round(a.st.rap)} D${Math.round(a.st.acting)} Vs${Math.round(a.st.visual)}<br>hợp nhất: ${tbl[b.k].n} ${Math.round(b.f)}%</span></span></label>`}).join('')||'<div class="small muted">Không có ai phù hợp đang rảnh.</div>';
-      const cnt=()=>{const n=document.querySelectorAll('.dsel:checked').length;$('#dCost').textContent=`Chi phí: ${fmt(DEBUT_COST[t](Math.max(n,t==='group'?2:1)))}${t==='group'?' (120 tr + 20 tr/thành viên)':''}`;$('#dAna').innerHTML=debutAnalysis()};
+      $('#dList').innerHTML=list.map((a,i)=>{const b=bf(a);return`<label><input type="${ty==='group'?'checkbox':'radio'}" name="dsel" class="dsel" value="${a.id}"> <span style="flex:1">${ty!=='group'&&i<3?'⭐ ':''}${dElig(a,ty)?`<span class="tag s">${t('lobby.elig')}</span> `:''}<b>${esc(a.name)}</b> <span class="small muted">${a.status==='trainee'?t('lobby.tts'):t('lobby.debuted')} · ${t('lobby.stats',{v:Math.round(a.st.vocal),n:Math.round(a.st.dance),r:Math.round(a.st.rap),d:Math.round(a.st.acting),s:Math.round(a.st.visual)})}<br>${t('lobby.bestFit',{l:lbl(ty==='actor'?'genre':'concept',b.k),f:Math.round(b.f)})}</span></span></label>`}).join('')||`<div class="small muted">${t('lobby.noneFit')}</div>`;
+      const cnt=()=>{const n=document.querySelectorAll('.dsel:checked').length;$('#dCost').textContent=`${t('lobby.cost',{m:money(DEBUT_COST[ty](Math.max(n,ty==='group'?2:1)))})}${ty==='group'?' '+t('lobby.costGrp',{a:money(120e6),b:money(20e6)}):''}`;$('#dAna').innerHTML=debutAnalysis()};
       document.querySelectorAll('.dsel').forEach(x=>x.onchange=cnt);cnt()};
     $('#dType').onchange=up;up();
   },

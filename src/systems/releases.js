@@ -90,7 +90,7 @@ export function holdConcert(k){
   if(tf<30000)return toast(t('rel.toast.con30k'));
   if(mem.some(a=>a.busy))return toast(t('rel.toast.memBusy'));
   if(gHiatus(A.k))return toast(t('rel.toast.hiatus'));
-  if(S.money<200e6)return toast(t('rel.toast.need',{m:money(200e6)}));
+  if(S.money<200e6)return toast(t('common.needMoney',{m:money(200e6)}));
   S.money-=200e6;book('prod',-200e6);
   const aud=Math.round(Math.min(tf*.04*rnd(.8,1.2),60000)),inc=aud*500000;S.money+=inc;book('con',inc,mem);
   for(const a of mem){a.fans=Math.round(a.fans*1.08);a.mood=clamp(a.mood+10,0,100);a.energy=clamp(a.energy-25,0,100);a.busy={kind:'concert',title:'Concert',left:1,total:1}}

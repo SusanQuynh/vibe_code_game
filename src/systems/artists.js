@@ -1,5 +1,5 @@
 import { R, pick } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { money, t } from '../i18n/index.js';
 import { clamp } from '../core/util.js';
 import { HAIR, OUT, SKIN } from '../data/looks.js';
 import { FN, FT1, FT2, MN } from '../data/names.js';
@@ -31,8 +31,8 @@ export function genArtist(){
     sched:'vocal',days:defaultDays('vocal'),busy:null,salary:1e6,co:{},rel:{},tag:{},pw:{},scandal:null,yr:newYr(),debutYear:0,lessons:[],hist:[],wantAct:0};
 }
 export function genPool(n){const r=[];for(let i=0;i<n;i++){const a=genArtist();S.pool.push(a);r.push(a)}S.pool=S.pool.filter(x=>r.includes(x));return r}
-export function sign(id){const a=S.pool.find(x=>x.id===id);if(!a)return;if(S.money<20e6)return toast('Không đủ 20 tr');S.money-=20e6;book('hr',-20e6);S.pool=S.pool.filter(x=>x!==a);a.batch=ensureCurBatch();S.artists.push(a);addLog(`✍️ Ký hợp đồng thực tập sinh ${a.name} vào ${(S.batches.find(b=>b.id===a.batch)||{n:'lứa mới'}).n}.`,'good');act()}
-export function recast(){if(S.money<10e6)return toast('Không đủ tiền');S.money-=10e6;book('hr',-10e6);genPool(poolSize());act()}
+export function sign(id){const a=S.pool.find(x=>x.id===id);if(!a)return;if(S.money<20e6)return toast(t('common.needMoney',{m:money(20e6)}));S.money-=20e6;book('hr',-20e6);S.pool=S.pool.filter(x=>x!==a);a.batch=ensureCurBatch();S.artists.push(a);addLog(`✍️ Ký hợp đồng thực tập sinh ${a.name} vào ${(S.batches.find(b=>b.id===a.batch)||{n:'lứa mới'}).n}.`,'good');act()}
+export function recast(){if(S.money<10e6)return toast(t('common.noMoney'));S.money-=10e6;book('hr',-10e6);genPool(poolSize());act()}
 export function setSched(id,v){const a=byId(id);if(a){a.days=a.days.some(k=>k!=='rest')?a.days.map(k=>k==='rest'?'rest':v):defaultDays(v);act()}}
 export function setAll(v){if(!v)return;S.artists.forEach(a=>a.days=defaultDays(v));act()}
 export function fire(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainConfirm');return}const a=byId(id);if(a){removeArtist(a,'đã chấm dứt hợp đồng');closeM();act()}}

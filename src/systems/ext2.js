@@ -51,7 +51,7 @@ export function compRep(){const tf=S.artists.reduce((t,a)=>t+a.fans,0),aw=(S.awa
   return clamp(Math.round(Math.min(55,Math.sqrt(tf/1500))+Math.min(20,aw*4)+Math.min(15,hit*3)+(lr===1?10:lr===2?6:lr===3?3:0)),0,100)}
 export const poolSize=()=>3+Math.floor(compRep()/15);
 export const repStars=r=>'★'.repeat(1+Math.floor(Math.min(r,99)/25))+'☆'.repeat(4-Math.floor(Math.min(r,99)/25));
-export function repCard(){const r=compRep();return`<div class="card small">🏢 <b>Danh tiếng công ty: ${r}/100</b> <span style="color:var(--sun)">${repStars(r)}</span><br>Mỗi đợt casting nhận <b>${poolSize()} hồ sơ</b> · mỗi tuần ~${Math.round(r/1.2)}% có TTS tự gửi đơn · chất lượng hồ sơ +${Math.floor(r/12)} chỉ số khởi điểm.<br><span class="muted">Tăng nhờ tổng fan, giải thưởng, single top 10 và hạng công ty cuối năm.</span></div>`}
+export function repCard(){const r=compRep();return`<div class="card small">${t('rep.title',{r})} <span style="color:var(--sun)">${repStars(r)}</span><br>${t('rep.body',{p:poolSize(),w:Math.round(r/1.2),q:Math.floor(r/12)})}<br><span class="muted">${t('rep.tip')}</span></div>`}
 /* ---- Lứa TTS tự xoá ---- */
 export function cleanBatches(){if(!Array.isArray(S.batches))return;for(const b of S.batches)if(bMem(b).length)b.had=1;
   const gone=S.batches.filter(b=>b.had&&!bMem(b).length);if(!gone.length)return;

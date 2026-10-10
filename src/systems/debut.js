@@ -7,7 +7,7 @@ import { fame, fit } from './artists.js';
 import { CT_WK, MOOD, book } from './ext2.js';
 import { givePM } from './managers.js';
 import { getRel, groupsOf, harmony, setRel } from './relations.js';
-import { lbl, t } from '../i18n/index.js';
+import { lbl, roomName, t } from '../i18n/index.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
@@ -28,23 +28,23 @@ export function roleTags(ms){const r={},add=(a,t)=>(r[a.id]=r[a.id]||[]).push(t)
   add(ms.reduce((m,x)=>(x.st.variety+x.mood/2)>(m.st.variety+m.mood/2)?x:m),'Leader');
   add(ms.reduce((m,x)=>(x.st.visual+x.st.dance+fame(x))>(m.st.visual+m.st.dance+fame(m))?x:m),'Center');return r}
 export const bestOf=(a,tbl)=>Object.keys(tbl).map(k=>({k,f:fit(a,tbl[k].w)})).sort((x,y)=>y.f-x.f);
-export function fitRows(rows,tbl){const mx=rows[0].f;return`<div class="cfit">${rows.map(r=>`<span class="${r.f===mx?'best':''}">${r.f===mx?'⭐ ':''}${tbl[r.k].n}</span><div class="bar"><i style="width:${r.f}%"></i></div><b>${Math.round(r.f)}%</b>`).join('')}</div>`}
+export function fitRows(rows,ns){const mx=rows[0].f;return`<div class="cfit">${rows.map(r=>`<span class="${r.f===mx?'best':''}">${r.f===mx?'⭐ ':''}${lbl(ns,r.k)}</span><div class="bar"><i style="width:${r.f}%"></i></div><b>${Math.round(r.f)}%</b>`).join('')}</div>`}
 export function debutAnalysis(){
-  const t=$('#dType').value,ids=[...document.querySelectorAll('.dsel:checked')].map(x=>+x.value),sel=ids.map(byId).filter(Boolean);
-  if(t==='group'){
-    if(sel.length<2)return'<div class="small muted">Chọn từ 2 người (hoặc bấm một đội hình gợi ý) để xem nhóm hợp concept nào.</div>';
+  const ty=$('#dType').value,ids=[...document.querySelectorAll('.dsel:checked')].map(x=>+x.value),sel=ids.map(byId).filter(Boolean);
+  if(ty==='group'){
+    if(sel.length<2)return`<div class="small muted">${t('debut.pick2')}</div>`;
     const rows=Object.keys(CONCEPTS).map(k=>({k,f:avgFit(sel,CONCEPTS[k].w)})).sort((a,b)=>b.f-a.f),hm=harmony(ids),roles=roleTags(sel);
     const enem=[];for(let i=0;i<sel.length;i++)for(let j=i+1;j<sel.length;j++)if(sel[i].tag[sel[j].id]==='enemy')enem.push(sel[i].name+' & '+sel[j].name);
-    return`<b>Đội hình đang chọn (${sel.length} người)</b> · hòa hợp <b class="${hm<0?'bad':'good'}">${hm>=0?'+':''}${hm}</b>${enem.length?` · <span class="bad">⚠️ mâu thuẫn: ${esc(enem.join(', '))}</span>`:''}
-    ${fitRows(rows,CONCEPTS)}<div class="small">👉 Hợp nhất với concept <b>${CONCEPTS[rows[0].k].n}</b>${rows[0].f-rows[1].f<3?`, gần bằng ${CONCEPTS[rows[1].k].n}`:''}.</div>
-    <div class="small" style="margin-top:6px"><b>Vị trí gợi ý:</b><br>${sel.map(a=>`${esc(a.name)}: ${(roles[a.id]||['Thành viên']).join(', ')}`).join('<br>')}</div>`;
+    return`<b>${t('debut.selTitle',{p:t('unit.people',{n:sel.length})})}</b> · ${t('debut.hm')} <b class="${hm<0?'bad':'good'}">${hm>=0?'+':''}${hm}</b>${enem.length?` · <span class="bad">${t('debut.enemy',{l:esc(enem.join(t('list.sep')))})}</span>`:''}
+    ${fitRows(rows,'concept')}<div class="small">${t('debut.bestC',{c:lbl('concept',rows[0].k),n:rows[0].f-rows[1].f<3?t('debut.near',{c:lbl('concept',rows[1].k)}):''})}</div>
+    <div class="small" style="margin-top:6px"><b>${t('debut.roles')}</b><br>${sel.map(a=>`${esc(a.name)}: ${(roles[a.id]||[t('debut.member')]).join(t('list.sep'))}`).join('<br>')}</div>`;
   }
-  if(!sel.length)return'<div class="small muted">Chọn một người để xem phân tích.</div>';
-  const a=sel[0],rc=debutRec(a),cmp=a.status==='trainee'?`<div class="small" style="margin-top:6px">🎯 Đề xuất chung: <b>${rc.t==='wait'?'chưa nên debut':DR[rc.t]}</b>${rc.t!==t&&rc.t!=='wait'?' <span class="bad">(khác lựa chọn hiện tại)</span>':''}</div>`:'';
-  if(t==='solo')return`<b>${esc(a.name)} khi ra solo</b>${fitRows(bestOf(a,CONCEPTS),CONCEPTS)}<div class="small">👉 Nên ra mắt với concept <b>${CONCEPTS[bestOf(a,CONCEPTS)[0].k].n}</b>.</div>`+cmp;
-  if(t==='actor')return`<b>${esc(a.name)} khi làm diễn viên</b> · Diễn xuất ${Math.round(a.st.acting)}${fitRows(bestOf(a,GENRES),GENRES)}<div class="small">👉 Hợp nhất thể loại <b>${GENRES[bestOf(a,GENRES)[0].k].n}</b>.</div>`+cmp;
-  if(t==='solo')return`<b>${esc(a.name)} khi ra solo</b>${fitRows(bestOf(a,CONCEPTS),CONCEPTS)}<div class="small">👉 Nên ra mắt với concept <b>${CONCEPTS[bestOf(a,CONCEPTS)[0].k].n}</b>.</div>`;
-  return`<b>${esc(a.name)} khi làm diễn viên</b> · Diễn xuất ${Math.round(a.st.acting)}${fitRows(bestOf(a,GENRES),GENRES)}<div class="small">👉 Hợp nhất thể loại <b>${GENRES[bestOf(a,GENRES)[0].k].n}</b>${a.st.acting<25?'. Diễn xuất còn yếu, nên tập thêm ở Phòng Diễn xuất trước khi debut':''}.</div>`;
+  if(!sel.length)return`<div class="small muted">${t('debut.pick1')}</div>`;
+  const a=sel[0],rc=debutRec(a),cmp=a.status==='trainee'?`<div class="small" style="margin-top:6px">${t('debut.recAll')} <b>${rc.t==='wait'?t('artist.noDebut'):lbl('dr',rc.t)}</b>${rc.t!==ty&&rc.t!=='wait'?` <span class="bad">${t('debut.differs')}</span>`:''}</div>`:'';
+  if(ty==='solo')return`${t('debut.asSolo',{n:esc(a.name)})}${fitRows(bestOf(a,CONCEPTS),'concept')}<div class="small">${t('debut.soloC',{c:lbl('concept',bestOf(a,CONCEPTS)[0].k)})}</div>`+cmp;
+  if(ty==='actor')return`${t('debut.asActor',{n:esc(a.name),a:Math.round(a.st.acting)})}${fitRows(bestOf(a,GENRES),'genre')}<div class="small">${t('debut.actG',{g:lbl('genre',bestOf(a,GENRES)[0].k)})}.</div>`+cmp;
+  if(ty==='solo')return`${t('debut.asSolo',{n:esc(a.name)})}${fitRows(bestOf(a,CONCEPTS),'concept')}<div class="small">${t('debut.soloC',{c:lbl('concept',bestOf(a,CONCEPTS)[0].k)})}</div>`;
+  return`${t('debut.asActor',{n:esc(a.name),a:Math.round(a.st.acting)})}${fitRows(bestOf(a,GENRES),'genre')}<div class="small">${t('debut.actG',{g:lbl('genre',bestOf(a,GENRES)[0].k)})}${a.st.acting<25?'. '+t('debut.actWeak',{r:roomName('acting')}):''}.</div>`;
 }
 export const DR={group:'👥 Nhóm nhạc',solo:'🎤 Solo',actor:'🎬 Diễn viên'};
 export const DRT={group:'nhóm nhạc',solo:'solo',actor:'diễn viên'};
@@ -83,7 +83,7 @@ export const debutRec=a=>debutCalc(a,{g:k=>GENRES[k].n,c:k=>CONCEPTS[k].n,st:k=>
 export const debutRecT=a=>debutCalc(a,{g:k=>lbl('genre',k),c:k=>lbl('concept',k),st:k=>lbl('stat',k),drt:k=>lbl('drt',k),
   grp:(m,lb,f,hm)=>t('debut.rec.grp',{m,l:lb,f,hm}),solo:(s,mu,lb,f)=>t('debut.rec.solo',{s,mu,l:lb,f}),actor:(ac,lb,f)=>t('debut.rec.actor',{a:ac,l:lb,f}),
   short:(d,lb,f)=>t('debut.rec.short',{d,l:lb,f}),wait:(f,s,d,lb)=>t('debut.rec.wait',{f,min:DEBUT_MIN,s,d,l:lb}),waitShort:f=>t('debut.rec.waitShort',{f,min:DEBUT_MIN})});
-export function recLine(a){const r=debutRec(a);const s=r.sc;return`<div class="prow"><b>${esc(a.name)}</b><span class="small">${r.t==='wait'?'⏳ Chưa nên debut':`<b>${DR[r.t]}</b>`}<br><span class="muted">${esc(r.why)}</span><br><span class="muted">Phù hợp ${Math.round(r.f)}% / cần trên ${DEBUT_MIN}% · Điểm: Solo ${s.solo} · Diễn viên ${s.actor}${s.group!=null?' · Nhóm '+s.group:''}</span></span><span class="sp"></span>${r.t==='wait'?'':`<button class="btn sm pri" onclick="applyRec(${a.id})">Áp dụng</button>`}</div>`}
+export function recLine(a){const r=debutRecT(a);const s=r.sc;return`<div class="prow"><b>${esc(a.name)}</b><span class="small">${r.t==='wait'?t('debut.notYet'):`<b>${lbl('dr',r.t)}</b>`}<br><span class="muted">${esc(r.why)}</span><br><span class="muted">${t('debut.scores',{f:Math.round(r.f),m:DEBUT_MIN,s:s.solo,a:s.actor})}${s.group!=null?' · '+t('debut.scoreGrp',{g:s.group}):''}</span></span><span class="sp"></span>${r.t==='wait'?'':`<button class="btn sm pri" onclick="applyRec(${a.id})">${t('common.apply')}</button>`}</div>`}
 export function applyRec(id){const a=byId(id);if(!a)return;const r=debutRec(a);if(r.t==='wait')return;$('#dType').value=r.t;$('#dType').onchange();
   if(r.t==='group')applyLineup(r.ids);else{const x=[...document.querySelectorAll('.dsel')].find(e=>+e.value===id);if(x){x.checked=true;x.onchange&&x.onchange()}}
   $('#dAna')?.scrollIntoView({behavior:'smooth',block:'center'})}
@@ -92,12 +92,12 @@ export const DEBUT_COST={group:n=>120e6+n*20e6,solo:()=>80e6,actor:()=>50e6};
 export function debut(){const type=$('#dType').value,ids=[...document.querySelectorAll('.dsel:checked')].map(x=>+x.value);debutIds(type,ids,type==='group'?($('#dName').value||''):'')}
 export function debutIds(type,ids,name){
   const cost=DEBUT_COST[type](ids.length);
-  if(type==='group'&&ids.length<2){toast('Nhóm cần ít nhất 2 người');return false}
-  if(type!=='group'&&ids.length!==1){toast('Chọn đúng 1 người');return false}
-  if(S.money<cost){toast('Không đủ tiền');return false}
-  const mem=ids.map(byId);if(mem.some(a=>!a||a.busy)){toast('Có người đang bận');return false}
+  if(type==='group'&&ids.length<2){toast(t('debut.toast.min2'));return false}
+  if(type!=='group'&&ids.length!==1){toast(t('debut.toast.one'));return false}
+  if(S.money<cost){toast(t('common.noMoney'));return false}
+  const mem=ids.map(byId);if(mem.some(a=>!a||a.busy)){toast(t('debut.toast.busy'));return false}
   name=type==='group'?String(name||'').trim().slice(0,24):'';
-  if(type==='group'&&!name){toast('Đặt tên nhóm');return false}
+  if(type==='group'&&!name){toast(t('debut.toast.name'));return false}
   S.money-=cost;book('prod',-cost);
   for(const a of mem){
     if(a.status==='trainee'){a.status='debuted';a.debutYear=S.year;a.salary=Math.max(a.salary,4e6);a.ce=abs()+CT_WK;a.cs0=abs();a.earnC=0;a.dReady=0}

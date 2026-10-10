@@ -14,8 +14,8 @@ import { viewCode } from '../../src/ui/saveView.js';
 import { setLang } from '../../src/i18n/index.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { hireMgr } from '../../src/systems/managers.js';
-import { setAll, setSched, sign } from '../../src/systems/artists.js';
-import { debutIds } from '../../src/systems/debut.js';
+import { recast, setAll, setSched, sign } from '../../src/systems/artists.js';
+import { debutAnalysis, debutIds } from '../../src/systems/debut.js';
 import { acceptCast, acceptOffer, bestCast, investOffer, slotsOf } from '../../src/systems/offers.js';
 import { acts, cbNow, cbSched, cbSchedRec, viewSec } from '../../src/systems/secretary.js';
 import { propAll, viewProps } from '../../src/systems/proposals.js';
@@ -56,6 +56,7 @@ function run(lang, weeks = 40) {
     if (i % 10 === 5) { for (const f of [viewReport, viewReportFull, viewEvents, viewSkipWarn]) view(f); for (const a of S.artists) if (a.scandal) view(() => viewInv(a.id)); closeM(); } // báo cáo, khung sự kiện, hồ sơ điều tra
     if (i % 10 === 4) { view(viewProps); view(viewSec); closeM(); if (i === 34) { propAll(); cbSchedRec(); } } // đề xuất của quản lý + Thư ký (propAll ghi lịch, cbSchedRec ghi cbPlan/log)
     if (i % 10 === 6) { for (const k of Object.keys(S.camp)) view(() => viewCamp(k)); closeM(); } // chiến dịch (đọc)
+    if (i === 25) { openRoom('lobby'); for (const ty of ['group', 'solo', 'actor']) { const el = document.getElementById('dType'); el.value = ty; el.onchange(); document.querySelectorAll('.dsel').forEach((b, j) => { b.checked = j < 2; }); debutAnalysis(); } closeM(); debutIds('group', [], ''); debutIds('solo', [], ''); recast(); } // Sảnh: form debut, phân tích, toast lỗi, casting lại (genPool dùng RNG)
     if (i === 27) { view(viewSongs); writeSong(); writeSong(); closeM(); } // sáng tác (mkSong dùng RNG, busy) + toast lỗi lần 2
     if (i === 29) { for (const sg of [...(S.songs || [])]) { view(() => viewSong(sg.id)); if (sg.st === 'review') songAct(sg.id, 'ok'); } songAct(S.songs?.[0]?.id, 'redo'); closeM(); } // xem/duyệt/chỉnh bài
     if (i === 31) { const a = S.artists.find(q => q.status === 'debuted' && !q.busy); if (a) doLive([a.id]); doLive([-1]); } // livestream + toast lỗi
