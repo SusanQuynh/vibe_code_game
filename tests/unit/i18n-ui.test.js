@@ -15,6 +15,7 @@ import { saveFileName } from '../../src/save/transfer.js';
 import { planWhy } from '../../src/systems/week.js';
 import { lbl } from '../../src/i18n/index.js';
 import { view } from '../../src/ui/modal.js';
+import { COMP, batchNameT, compNameT } from '../../src/systems/batches.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
 
@@ -157,5 +158,24 @@ describe('task 8: lịch tập, lưu/chuyển game', () => {
       expect(v).toMatch(VI); expect(e).not.toMatch(VI);
     }
     setLang('vi'); a.energy = 10; expect(planWhy(a)).toBe('năng lượng đang thấp nên cần nghỉ trước');
+  });
+});
+
+describe('task 15: tên lứa và tên cuộc thi hiển thị', () => {
+  it('batchNameT: vi bằng b.n, en "Batch N", tên lạ được escape', () => {
+    for (const n of [1, 2, 12]) { const b = { n: 'Lứa ' + n }; setLang('vi'); expect(batchNameT(b)).toBe(b.n); setLang('en'); expect(batchNameT(b)).toBe('Batch ' + n); }
+    expect(batchNameT({ n: '<i>x' })).toBe('&lt;i&gt;x');
+  });
+  it('compNameT: vi bằng c.n với mọi cuộc thi, en không rò; tên lạ được escape', () => {
+    for (const c of COMP) { setLang('vi'); expect(compNameT(c)).toBe(c.n); setLang('en'); expect(compNameT(c)).not.toMatch(VI); }
+    expect(compNameT({ n: '<b>x' })).toBe('&lt;b&gt;x');
+  });
+  it('số ít/số nhiều ở en: dq.banner, batch.nTts, comp.pickN, comp.toast.need', () => {
+    setLang('en');
+    expect(t('dq.banner', { n: 1, l: 'A' })).toBe('🎊 <b>1 trainee eligible to debut this week:</b> A');
+    expect(t('dq.banner', { n: 2, l: 'A, B' })).toContain('2 trainees eligible');
+    expect([1, 2].map(n => t('batch.nTts', { n }))).toEqual(['1 trainee', '2 trainees']);
+    expect([1, '2–5'].map(n => t('comp.pickN', { n }))).toEqual(['Select 1 trainee', 'Select 2–5 trainees']);
+    expect([1, '2–5'].map(n => t('comp.toast.need', { n }))).toEqual(['Need 1 trainee', 'Need 2–5 trainees']);
   });
 });

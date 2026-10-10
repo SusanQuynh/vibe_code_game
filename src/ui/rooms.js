@@ -3,7 +3,7 @@ import { OFFER } from '../data/offers.js';
 import { CONCEPTS, GENRES, MSK, MSKD, ROOMS, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, byId } from '../state.js';
 import { fame, fit } from '../systems/artists.js';
-import { bMem, batchHTML, compHTML } from '../systems/batches.js';
+import { bMem, batchHTML, batchNameT, compHTML } from '../systems/batches.js';
 import { DEBUT_COST, DEBUT_MIN, bestLineup, bestOf, debutAnalysis, recLine } from '../systems/debut.js';
 import { evInfo, invBlock } from '../systems/events.js';
 import { MAX_SA, asstOf, curSong, otherMgr, repCard, songCard, songOpts, songPrev } from '../systems/ext2.js';
@@ -25,7 +25,7 @@ import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './vie
 export function openRoom(id){if(lastRoom!==id){setLastRoom(id);renderDock()}setCurRC(`var(--r-${id})`);setCurView(()=>RV[id]());curView()}
 export function ttsSplit(arr,fn,key,empty,ttsBtn){const tt=arr.filter(a=>a.status==='trainee').sort(eligSort),ot=arr.filter(a=>a.status!=='trainee');
   const byB=(S.batches||[]).length>1?S.batches.map(b=>({b,l:tt.filter(a=>a.batch===b.id)})).filter(x=>x.l.length):null;
-  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,t('room.allTts',{n:tt.length}),(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${esc(x.b.n)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
+  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,t('room.allTts',{n:tt.length}),(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${batchNameT(x.b)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
 export function setSchedTTS(v){S.artists.filter(a=>a.status==='trainee'&&!a.busy).forEach(a=>{a.days=a.days.some(k=>k!=='rest')?a.days.map(k=>k==='rest'?'rest':v):defaultDays(v)});act()}
 export function trainRoom(r,key,extra=''){
   const here=S.artists.filter(a=>!a.busy&&a.days.includes(key)),others=S.artists.filter(a=>!a.busy&&!a.days.includes(key));

@@ -26,6 +26,7 @@ import { DR, DRT } from '../../src/systems/debut.js';
 import { CFT } from '../../src/systems/proposals.js';
 import { BUDN } from '../../src/systems/secretary.js';
 import { PRE, POST } from '../../src/systems/promo.js';
+import { COMP } from '../../src/systems/batches.js';
 import { PRP } from '../../src/systems/review.js';
 
 noToggle();
@@ -195,6 +196,7 @@ const LABELS = [
   ['msk', MSK], ['mskd', MSKD], ['biz', Object.fromEntries(Object.entries(BIZ).map(([k, v]) => [k + '.n', v.n]))],
   ['day', DAYS], ['dayn', DAYN], ['fin.i', FIN_I], ['fin.x', FIN_X], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
   ['pre', nOf(PRE)], ['post', nOf(POST)], ['prp', nOf(PRP)],
+  ['comp.n', Object.fromEntries(COMP.map((c, i) => [i, c.n]))], // tên cuộc thi tra theo chỉ số trong COMP (compNameT)
 ];
 describe('nhãn dữ liệu lbl(ns, id)', () => {
   it.each(LABELS)('%s: đủ key ở mọi ngôn ngữ, vi bằng đúng giá trị trong bảng, en không còn chữ Việt', (ns, tbl) => {
