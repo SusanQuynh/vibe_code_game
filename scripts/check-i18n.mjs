@@ -33,10 +33,16 @@ function* walk(d) {
     if (e.isDirectory()) yield* walk(p); else if (p.endsWith('.js')) yield p;
   }
 }
+const NS = new Set(Object.keys(base).map(k => k.split('.')[0]));
+const KEYS = Object.keys(base), isPrefix = p => KEYS.some(k => k.startsWith(p + '.')); // tiền tố cho lbl(ns,k)
 for (const f of [...walk('src'), 'index.html']) {
   const s = fs.readFileSync(f, 'utf8');
   const keys = [...s.matchAll(/\bt\(\s*'([\w.]+)'/g), ...s.matchAll(/data-i18n(?:-aria)?="([\w.]+)"/g)].map(m => m[1]);
   for (const k of new Set(keys)) if (!(k in base)) errs.push(`${f}: key '${k}' không có trong vi`);
+  // Key nằm trong biểu thức (ternary, biến…) không khớp mẫu t('…') ở trên: mọi literal 'ns.x…'
+  // có ns là namespace của từ điển (trừ tiền tố của key khác, dùng cho lbl/key ghép động) phải tồn tại.
+  for (const m of s.matchAll(/'([a-z][\w]*(?:\.[\w]+)+)'/g))
+    if (NS.has(m[1].split('.')[0]) && !(m[1] in base) && !isPrefix(m[1])) errs.push(`${f}: key '${m[1]}' không có trong vi`);
 }
 if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
 console.log(`OK: ${Object.keys(base).length} key × ${Object.keys(locs).length} ngôn ngữ`);

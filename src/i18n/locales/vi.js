@@ -253,7 +253,7 @@ export default {
     'mgr.tgt.batchGone': 'lứa đã giải tán',
     'mgr.tgt.allSolo': 'tất cả nghệ sĩ solo',
     'mgr.tgt.allActor': 'tất cả diễn viên',
-    'mgr.tgt.list': '{n} nghệ sĩ: {names}',
+    'mgr.tgt.list': p => `${p.n} nghệ sĩ: ${p.names}`,
     'mgr.tgt.empty': 'danh sách trống',
     'mgr.tgt.group': 'nhóm {g}',
     'tag.trainee': 'Thực tập sinh',

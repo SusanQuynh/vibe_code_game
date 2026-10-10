@@ -9,11 +9,13 @@ import { curView, modal, toast } from './modal.js';
 let preview = null;   // { d, y, w, money, n } — dữ liệu đã đọc, chờ xác nhận ghi đè
 let ioMsg = null;   // { ok } | { code } | { text }: lưu mã lỗi, dịch lúc render để đổi ngôn ngữ tại chỗ vẫn đúng
 
-const errMsg = (e) => (e && e.code ? { code: e.code } : { text: e && e.message });
+// Chỉ nhận mã lỗi của chính ta (chuỗi có key save.err.*); DOMException có code số → dùng message.
+const errMsg = (e) => (e && typeof e.code === 'string' && t(`save.err.${e.code}`) !== `save.err.${e.code}` ? { code: e.code } : { text: e && e.message });
 const refresh = () => { if (curView) curView(); };
 
 function setPreview(d) {
-  preview = { d, y: d.year, w: d.week, money: d.money, n: d.artists.length };
+  // Ép kiểu số: dữ liệu nhập từ ngoài, được chèn vào innerHTML khi xem trước.
+  preview = { d, y: +d.year || 0, w: +d.week || 0, money: +d.money || 0, n: d.artists.length };
   ioMsg = null;
 }
 

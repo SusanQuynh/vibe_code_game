@@ -9,7 +9,7 @@ import { targetName, targetNameT } from '../../src/systems/managers.js';
 import { wkLabel, wkLabelT } from '../../src/systems/secretary.js';
 import { debutRec, debutRecT } from '../../src/systems/debut.js';
 import { sv } from '../../src/i18n/index.js';
-import { saveImportText, viewCode } from '../../src/ui/saveView.js';
+import { saveImportFile, saveImportText, viewCode } from '../../src/ui/saveView.js';
 import { applyStatic } from '../../src/ui/lang.js';
 import { saveFileName } from '../../src/save/transfer.js';
 import { planWhy } from '../../src/systems/week.js';
@@ -115,6 +115,32 @@ describe('task 8: lịch tập, lưu/chuyển game', () => {
     expect(document.querySelector('#sheet .panel').textContent).toContain('❌ Invalid code');
     setLang('vi'); view(viewCode);
     expect(document.querySelector('#sheet .panel').textContent).toContain('❌ Mã không hợp lệ');
+  });
+  it('lỗi ngoài (DOMException có code số) hiện message, không hiện key save.err.N', async () => {
+    setState(rich()); view(viewCode);
+    await saveImportFile({ files: [{ text: async () => { throw new DOMException('gone', 'NotFoundError'); } }] });
+    const txt = document.querySelector('#sheet .panel').textContent;
+    expect(txt).not.toMatch(/save\.err\./);
+    expect(txt).toContain('❌ gone');
+  });
+  it('xem trước save lạ: year/week không được chèn HTML', async () => {
+    setState(rich()); view(viewCode);
+    document.querySelector('#codeIn').value = JSON.stringify({ artists: [], year: '<img id=pwn src=x>', week: '<b id=pwn2>', money: '<i>' });
+    await saveImportText();
+    expect(document.querySelector('#pwn')).toBeNull();
+    expect(document.querySelector('#pwn2')).toBeNull();
+  });
+  it('sv(): giá trị không có trong từ điển được escape; key prototype trả nguyên văn', () => {
+    expect(sv('<img src=x>')).toBe('&lt;img src=x&gt;');
+    expect(sv('constructor')).toBe('constructor');
+    expect(sv('Xuất sắc')).toBe('Xuất sắc');
+  });
+  it('mgr.tgt.list: số ít/số nhiều ở en', () => {
+    setLang('en');
+    expect(t('mgr.tgt.list', { n: 1, names: 'A' })).toBe('1 artist: A');
+    expect(t('mgr.tgt.list', { n: 2, names: 'A, B' })).toBe('2 artists: A, B');
+    setLang('vi');
+    expect(t('mgr.tgt.list', { n: 2, names: 'A, B' })).toBe('2 nghệ sĩ: A, B');
   });
   it('tên file lưu và nhãn CSS "Gợi ý" theo ngôn ngữ', () => {
     setState(rich());

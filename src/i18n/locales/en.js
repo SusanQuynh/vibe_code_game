@@ -259,7 +259,7 @@ export default {
     'mgr.tgt.batchGone': 'disbanded batch',
     'mgr.tgt.allSolo': 'all solo artists',
     'mgr.tgt.allActor': 'all actors',
-    'mgr.tgt.list': '{n} artists: {names}',
+    'mgr.tgt.list': p => `${p.n} artist${p.n === 1 ? '' : 's'}: ${p.names}`,
     'mgr.tgt.empty': 'empty list',
     'mgr.tgt.group': 'group {g}',
     'tag.trainee': 'Trainee',
