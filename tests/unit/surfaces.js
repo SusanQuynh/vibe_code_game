@@ -41,6 +41,8 @@ export const SURFACES = [
   V('plan.new', 'new', () => startPlan(false, true)),
   V('code', 'rich', () => view(viewCode)),
   V('props', 'rich', () => view(viewProps)),
+  // đề xuất có xung đột treo chờ Giám đốc (trùng người + tranh lời mời + quá sức): dựng từ fixture rich ngay trong open() nên không đổi fixture
+  V('props.conflict', 'rich', () => { const ids = S.artists.filter(a => a.status === 'debuted').slice(0, 3).map((a, j) => { a.busy = null; a.energy = j === 1 ? 40 : 80; a.appr = 0; return a.id; }); S.offers.slice(0, 2).forEach(o => { o.req = {}; o.fame = 0; o.target = null; }); S.managers.slice(0, 2).forEach((m, j) => { m.as = { t: 'l', ids: j ? ids.slice(0, 1) : ids }; m.ps = 2; m.auto = 'off'; m.boss = null; }); S.props = null; return view(viewProps); }),
   V('sec', 'rich', () => view(viewSec)),
   V('sec.new', 'new', () => view(viewSec)),
   V('camp', 'rich', () => { const k = Object.keys(S.camp || {})[0]; return k ? view(() => viewCamp(k)) : NA; }),
@@ -56,7 +58,7 @@ export const SURFACES = [
 ];
 
 // Bề mặt đã dịch xong (ui-en-leak kiểm không rò chữ Việt). Mỗi task trích chuỗi thêm id vào đây.
-export const DONE = new Set(['outside', 'trendBar', 'artist.trainee', 'artist.trainee.new', 'artist.solo', 'artist.group', 'artist.actor', 'report', 'reportFull', 'award', 'skipWarn', 'events.new', 'plan', 'plan.new', 'code', 'props', 'camp', 'sec', 'sec.new', 'songs', 'songs.new', 'song',
+export const DONE = new Set(['outside', 'trendBar', 'artist.trainee', 'artist.trainee.new', 'artist.solo', 'artist.group', 'artist.actor', 'report', 'reportFull', 'award', 'skipWarn', 'events.new', 'plan', 'plan.new', 'code', 'props', 'props.conflict', 'camp', 'sec', 'sec.new', 'songs', 'songs.new', 'song',
   ...['ceo', 'meet', 'studio', 'roof', 'dorm', 'vocal', 'dance', 'acting'].flatMap(r => [`room.${r}.new`, `room.${r}.rich`])]);
 // Bề mặt chứa nội dung sự kiện (giai đoạn 3), luôn được loại khỏi kiểm rò chữ Việt ở en.
 export const EXCLUDED = new Set(['events', 'inv']);
