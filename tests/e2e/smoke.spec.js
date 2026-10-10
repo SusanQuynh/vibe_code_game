@@ -9,7 +9,7 @@ function trackErrors(page) {
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => { localStorage.setItem('__golden', '1'); });
-  // font ngoài không cần cho test
+  // external fonts are not needed for tests
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
 });
 
@@ -34,14 +34,14 @@ test('vòng tuần: kết thúc tuần 10 lần, ngày thay đổi, autosave qua
   const d0 = await page.locator('#date').innerText();
   for (let i = 0; i < 10; i++) {
     await page.locator('#nextBtn').click();
-    // xử lý modal kế hoạch / báo cáo / sự kiện bằng nút chính cho đến khi đóng
+    // click through plan / report / event modals with the primary button until closed
     for (let k = 0; k < 8; k++) {
       const on = await page.locator('#sheet.on').count();
       if (!on) break;
       const pri = page.locator('#sheet .btn.pri:not([disabled]), #sheet .btn.pink:not([disabled])').last();
       if (await pri.count()) await pri.click(); else await page.locator('#sheet .x').first().click();
     }
-    // nếu còn modal (vd cảnh báo bỏ qua sự kiện) thì đóng cưỡng bức
+    // if a modal remains (e.g. skip-events warning), force close it
     await page.evaluate(() => window.closeM());
   }
   const d1 = await page.locator('#date').innerText();
@@ -90,7 +90,7 @@ test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng t
   await page.locator('.hbtns .r1').click();
   const code = await expect.poll(async () => page.locator('#codeShow').inputValue()).toMatch(/^SL1\./).then(() => page.locator('#codeShow').inputValue());
 
-  // máy khác: xoá sạch rồi nạp lại
+  // another device: wipe everything, then import
   await page.evaluate(() => { localStorage.clear(); localStorage.setItem('__golden', '1'); });
   await page.reload();
   expect(await page.evaluate(() => __game.state().week)).toBe(1);
@@ -103,7 +103,7 @@ test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng t
   const after = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money }));
   expect(after).toEqual(before);
 
-  // mã rác bị từ chối, game không đổi (cửa sổ vẫn mở sau khi nạp)
+  // a junk code is rejected and the game is unchanged (the sheet stays open after import)
   await page.locator('#codeIn').fill('SL1.rac-ruoi');
   await page.getByRole('button', { name: 'Xem trước' }).click();
   await expect(page.locator('#sheet')).toContainText('❌');

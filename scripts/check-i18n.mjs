@@ -1,4 +1,4 @@
-// Kiểm tra từ điển: mọi locale có đúng bộ key của vi, placeholder khớp, và mọi key dùng trong src/index.html đều tồn tại.
+// Dictionary check: every locale has exactly the vi key set with matching placeholders, and every key used in src/index.html exists.
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';

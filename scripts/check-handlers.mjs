@@ -1,4 +1,4 @@
-// Mọi định danh dùng trong handler inline (on*="...") phải được gán lên window ở một nơi duy nhất.
+// Every identifier used in an inline handler (on*="...") must be attached to window in a single place.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -22,8 +22,8 @@ for (const f of files) {
       if (!KW.has(id[1]) && !BUILTIN.has(id[1])) used.add(id[1]);
   }
 }
-// Biểu thức bên trong ${...} cũng có thể gọi hàm toàn cục (vd ${go?'propGo()':'closeM()'} -> literal đã bị cắt);
-// các tên nằm trong chuỗi literal được quét riêng:
+// Expressions inside ${...} can also call globals (e.g. ${go?'propGo()':'closeM()'} -> the literal was stripped);
+// names inside string literals are scanned separately:
 for (const f of files)
   for (const m of fs.readFileSync(f, 'utf8').matchAll(/\bon(?:click|change|input|toggle)="[^"]*\$\{[^}]*'([A-Za-z_$][\w$]*)\(\)'[^}]*\}/g)) used.add(m[1]);
 

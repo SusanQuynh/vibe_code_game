@@ -1,4 +1,4 @@
-// Mulberry32: PRNG 32-bit, đủ tốt và tái lập được.
+// Mulberry32: 32-bit PRNG, good enough and reproducible.
 export const seedScript = (seed) => `
   (() => {
     let a = ${seed} >>> 0;

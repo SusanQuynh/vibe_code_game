@@ -1,5 +1,5 @@
-// Deploy thủ công lên GitHub Pages (không dùng Actions): build với base /vibe_code_game/
-// rồi đẩy nội dung dist/ lên nhánh gh-pages. Chạy: npm run deploy
+// Manual deploy to GitHub Pages (no Actions): build with base /vibe_code_game/
+// then push the contents of dist/ to the gh-pages branch. Run: npm run deploy
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -11,7 +11,7 @@ const out = (cmd) => execSync(cmd, { encoding: 'utf8' }).trim();
 const remote = out('git remote get-url origin');
 const sha = out('git rev-parse --short HEAD');
 
-run('npm run build', { env: { ...process.env, GITHUB_ACTIONS: 'true' } });  // GITHUB_ACTIONS bật base '/vibe_code_game/'
+run('npm run build', { env: { ...process.env, GITHUB_ACTIONS: 'true' } });  // GITHUB_ACTIONS enables base '/vibe_code_game/'
 fs.writeFileSync('dist/.nojekyll', '');
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gh-pages-'));
