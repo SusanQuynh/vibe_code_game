@@ -209,6 +209,16 @@ describe('nhãn dữ liệu lbl(ns, id)', () => {
     setLang('vi');
   });
 });
+describe('mô tả hoạt động teaser pre.d.*', () => {
+  it('mọi hoạt động trước comeback có mô tả ở mọi ngôn ngữ, en không còn chữ Việt', () => {
+    for (const id of Object.keys(PRE)) {
+      expect(`pre.d.${id}` in viL.dict, `pre.d.${id} thiếu ở vi`).toBe(true);
+      expect(enL.dict[`pre.d.${id}`], `pre.d.${id} thiếu ở en`).toBeTruthy();
+      setLang('en'); expect(lbl('pre', `d.${id}`)).not.toMatch(/[À-ỹĐđ]/);
+    }
+    setLang('vi');
+  });
+});
 describe('từ vựng chung và số nhiều (unit.*)', () => {
   it('unit.weeks/days/people: vi giữ nguyên, en số ít/số nhiều', () => {
     setLang('vi');
