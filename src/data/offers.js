@@ -1,3 +1,4 @@
+// Field n chỉ cho log/S. UI tra từ điển: lbl('offer', k).
 export const OFFER={
   drama:{sl:[1,3],n:'Phim truyền hình',ic:'📺',film:1,wk:[8,12],pay:[80,240],fans:[8000,40000],fame:6,lesson:{acting:4,visual:1},lt:['Học cách giữ mạch cảm xúc qua nhiều tập','Phối hợp ăn ý hơn với bạn diễn','Quen với lịch quay dày đặc']},
   movie:{sl:[1,3],n:'Phim điện ảnh',ic:'🎞️',film:1,wk:[6,10],pay:[150,480],fans:[10000,60000],fame:15,lesson:{acting:6,stamina:1},lt:['Diễn tiết chế hơn trước ống kính lớn','Biểu cảm bằng ánh mắt tinh tế hơn','Rèn sức bền qua những cảnh quay khó']},

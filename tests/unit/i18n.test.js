@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { t, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
+import { t, lbl, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
 import { diffLocales } from '../../src/i18n/check.js';
 import { noToggle, seed, SHELL } from './helpers.js';
 import { newGame } from '../../src/state.js';
@@ -15,6 +15,16 @@ import { view } from '../../src/ui/modal.js';
 import { applyHtmlLang, applyStatic, chooseLang, viewLang } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
+import { STATS, TRAIN, GENRES, CONCEPTS, MSK, MSKD } from '../../src/data/rules.js';
+import { OFFER } from '../../src/data/offers.js';
+import { BIZ } from '../../src/systems/market.js';
+import { DAYS, DAYN } from '../../src/systems/week.js';
+import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
+import { DR, DRT } from '../../src/systems/debut.js';
+import { CFT } from '../../src/systems/proposals.js';
+import { BUDN } from '../../src/systems/secretary.js';
+import { PRE, POST } from '../../src/systems/promo.js';
+import { PRP } from '../../src/systems/review.js';
 
 noToggle();
 const REAL = { vi: viL, en: enL };
@@ -173,5 +183,44 @@ describe('chooseLang', () => {
     expect(document.querySelector('#sheet h2').textContent).toContain('Language');
     chooseLang('vi');
     expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
+  });
+});
+
+// Nhãn dữ liệu tra theo id: mỗi bảng nguồn <-> tiền tố key. Key động chỉ được dùng với các tiền tố này (check:i18n không quét được).
+const nOf = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v.n]));
+const LABELS = [
+  ['stat', STATS], ['train.n', nOf(TRAIN)], ['genre', nOf(GENRES)], ['concept', nOf(CONCEPTS)], ['offer', nOf(OFFER)],
+  ['msk', MSK], ['mskd', MSKD], ['biz', Object.fromEntries(Object.entries(BIZ).map(([k, v]) => [k + '.n', v.n]))],
+  ['day', DAYS], ['dayn', DAYN], ['fin.i', FIN_I], ['fin.x', FIN_X], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
+  ['pre', nOf(PRE)], ['post', nOf(POST)], ['prp', nOf(PRP)],
+];
+describe('nhãn dữ liệu lbl(ns, id)', () => {
+  it.each(LABELS)('%s: đủ key ở mọi ngôn ngữ, vi bằng đúng giá trị trong bảng, en không còn chữ Việt', (ns, tbl) => {
+    const keys = Object.keys(tbl);
+    expect(keys.length).toBeGreaterThan(0);
+    for (const k of keys) {
+      expect(`${ns}.${k}` in viL.dict, `${ns}.${k} thiếu ở vi`).toBe(true);
+      expect(`${ns}.${k}` in enL.dict, `${ns}.${k} thiếu ở en`).toBe(true);
+      setLang('vi'); expect(lbl(ns, k), `${ns}.${k}`).toBe(tbl[k]);
+      setLang('en'); expect(lbl(ns, k)).not.toMatch(/[À-ỹĐđ]/);
+    }
+    setLang('vi');
+  });
+});
+describe('từ vựng chung và số nhiều (unit.*)', () => {
+  it('unit.weeks/days/people: vi giữ nguyên, en số ít/số nhiều', () => {
+    setLang('vi');
+    expect([t('unit.weeks', { n: 1 }), t('unit.weeks', { n: 3 }), t('unit.days', { n: 2 }), t('unit.people', { n: 5 })]).toEqual(['1 tuần', '3 tuần', '2 ngày', '5 người']);
+    setLang('en');
+    expect([1, 2].map(n => t('unit.weeks', { n }))).toEqual(['1 week', '2 weeks']);
+    expect([1, 2].map(n => t('unit.days', { n }))).toEqual(['1 day', '2 days']);
+    expect([1, 2].map(n => t('unit.people', { n }))).toEqual(['1 person', '2 people']);
+    expect(t('unit.perWeek', { m: '5M' })).toBe('5M/week');
+    expect(t('list.sep') + t('list.and')).toBe(', ' + ' and ');
+    expect(t('common.refuse')).toBe('Decline');
+    setLang('vi');
+  });
+  it('mọi key common.*/unit.*/list.* ở en không chứa chữ Việt', () => {
+    for (const [k, v] of Object.entries(enL.dict)) if (/^(common|unit|list)\./.test(k)) expect(typeof v === 'function' ? v({ n: 2 }) : v).not.toMatch(/[À-ỹĐđ]/);
   });
 });

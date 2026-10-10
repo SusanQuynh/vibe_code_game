@@ -1,6 +1,7 @@
 import { R } from '../core/rng.js';
 import { esc, fmt, fmtN } from '../core/util.js';
 import { CONCEPTS, GENRES, MSK, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
+import { lbl } from '../i18n/index.js';
 import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
 import { fame } from '../systems/artists.js';
@@ -24,10 +25,10 @@ export function det(k,sum,body,def){S.ui=S.ui||{};const o=S.ui[k],op=o===undefin
 export function togD(k,v){S.ui=S.ui||{};if(S.ui[k]===v)return;S.ui[k]=v;save()}
 export function setAllD(pre,v){S.ui=S.ui||{};document.querySelectorAll('details.cl').forEach(d=>{const m=(d.getAttribute('ontoggle')||'').match(/togD\('([^']+)'/);if(m&&m[1].startsWith(pre)){S.ui[m[1]]=v;d.open=v}});save()}
 /* ================= VIEWS ================= */
-export function bars(a){return`<div class="bars">${Object.keys(STATS).map(k=>`<span>${STATS[k]}</span><div class="bar"><i style="width:${a.st[k]}%"></i></div><b>${Math.round(a.st[k])}</b>`).join('')}</div>`}
+export function bars(a){return`<div class="bars">${Object.keys(STATS).map(k=>`<span>${lbl('stat',k)}</span><div class="bar"><i style="width:${a.st[k]}%"></i></div><b>${Math.round(a.st[k])}</b>`).join('')}</div>`}
 export function aTags(a){let t=a.status==='trainee'?'<span class="tag">Thực tập sinh</span>':'';groupsOf(a).forEach(g=>t+=`<span class="tag v">👥 ${esc(g.name)}</span>`);if(a.solo)t+='<span class="tag p">Solo</span>';if(a.actor)t+='<span class="tag m">Diễn viên</span>';if(a.scandal)t+='<span class="tag r">Scandal</span>';if(dHold(a))t+='<span class="tag s">🎊 Chừa lịch debut</span>';if(a.mt&&byId(a.mt))t+=`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`;if(a.status==='debuted'&&a.ce&&a.ce-abs()<=8)t+=`<span class="tag r">📄 HĐ còn ${a.ce-abs()}t</span>`;{const h=cbHold(a);if(h)t+=`<span class="tag p">📅 Chừa lịch comeback ${wkLabel(h.w)}</span>`}if(a.pa)t+=`<span class="tag m">🧑‍💻 ${esc(a.pa.name)}</span>`;if(a.restRec>abs())t+='<span class="tag">🛌 Lịch nghỉ thêm</span>';else if(a.hsF&&a.hsF.w>=abs()-3&&a.hsF.st!=='ok')t+='<span class="tag r">🩺 Cần nghỉ</span>';return t}
-export function schedSel(a){const m=mgrSchedules(a);return`<span class="dmini" title="${a.days.map((k,i)=>DAYS[i]+': '+TRAIN[k].n).join(', ')}">${daysMini(a)}</span>`+(m?`<span class="tag v">📋 QL xếp</span>`:`<button class="btn sm" onclick="startPlanOne(${a.id})">Sửa</button>`)}
-export function wTable(obj){const ks=Object.keys(STATS);return`<div class="tbl"><table><tr><th></th>${ks.map(k=>`<th>${STATS[k]}</th>`).join('')}</tr>${Object.values(obj).map(c=>`<tr><td><b>${c.n}</b></td>${ks.map(k=>{const v=c.w[k]||0;return`<td>${v?`<span class="hm" style="padding:1px 5px;background:rgba(242,85,127,${v*.75})">${Math.round(v*100)}%</span>`:'·'}</td>`}).join('')}</tr>`).join('')}</table></div>`}
+export function schedSel(a){const m=mgrSchedules(a);return`<span class="dmini" title="${a.days.map((k,i)=>lbl('day',i)+': '+lbl('train.n',k)).join(', ')}">${daysMini(a)}</span>`+(m?`<span class="tag v">📋 QL xếp</span>`:`<button class="btn sm" onclick="startPlanOne(${a.id})">Sửa</button>`)}
+export function wTable(obj,ns){const ks=Object.keys(STATS);return`<div class="tbl"><table><tr><th></th>${ks.map(k=>`<th>${lbl('stat',k)}</th>`).join('')}</tr>${Object.keys(obj).map(i=>{const c=obj[i];return`<tr><td><b>${lbl(ns,i)}</b></td>${ks.map(k=>{const v=c.w[k]||0;return`<td>${v?`<span class="hm" style="padding:1px 5px;background:rgba(242,85,127,${v*.75})">${Math.round(v*100)}%</span>`:'·'}</td>`}).join('')}</tr>`}).join('')}</table></div>`}
 export function artistLine(a,right=''){return`<div class="card row"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.busy?'🚶 '+esc(a.busy.title):daysMini(a)+' · '+TRAIN[a.days[0]].n+' hôm nay'} · ⚡${Math.round(a.energy)} · 🙂${Math.round(a.mood)}</span><span class="sp"></span>${right}</div>`}
 export function viewArtist(id){
   const a=byId(id);if(!a)return closeM();
@@ -128,5 +129,5 @@ export function viewReportFull(){
   ${d===7&&R.ev.length?`<h3>Sự kiện trong tuần</h3><div class="card rep">${R.ev.map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
   <div class="row" style="margin-top:10px">${d>0?`<button class="btn" onclick="setRepDay(${d-1});viewReportFull()">◀ Hôm trước</button>`:''}<span class="sp"></span>${d<7?`<button class="btn pri" onclick="setRepDay(${d+1});viewReportFull()">${d===6?'Tổng kết tuần ▶':'Hôm sau ▶'}</button>`:'<button class="btn" onclick="view(viewReport)">◀ Bản gọn</button><button class="btn pri" onclick="closeM()">Đóng</button>'}</div>`);
 }
-export function mgrBars(m){return`<div class="bars">${Object.keys(MSK).map(k=>`<span>${MSK[k]}</span><div class="bar"><i style="width:${m.sk[k]*10}%"></i></div><b>${m.sk[k]}</b>`).join('')}</div>`}
+export function mgrBars(m){return`<div class="bars">${Object.keys(MSK).map(k=>`<span>${lbl('msk',k)}</span><div class="bar"><i style="width:${m.sk[k]*10}%"></i></div><b>${m.sk[k]}</b>`).join('')}</div>`}
 export const setRepDay=v=>{repDay=v};

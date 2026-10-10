@@ -7,6 +7,8 @@ import { S, setState } from '../../src/state.js';
 import { setPos } from '../../src/ui/building.js';
 import { setLang } from '../../src/i18n/index.js';
 import { SURFACES, DONE, EXCLUDED } from './surfaces.js';
+import { bars, mgrBars, schedSel, wTable } from '../../src/ui/views.js';
+import { CONCEPTS, GENRES } from '../../src/data/rules.js';
 
 noToggle();
 const FX = Object.fromEntries(['new', 'rich'].map(k => [k, JSON.parse(fs.readFileSync(`tests/fixtures/ui-${k}.json`, 'utf8'))]));
@@ -54,5 +56,30 @@ describe('ui-en-leak', () => {
     const known = words(S);
     expect(leaks(text, known)).toEqual([]);
     expect(text.match(VI_PLAIN)).toBeNull();
+  });
+});
+
+describe('helper hiển thị dùng chung (task 4) ở en', () => {
+  it('bars, mgrBars, wTable, tiêu đề lịch của schedSel không rò chữ Việt; vi giữ nguyên chữ cũ', () => {
+    setState(structuredClone(FX.rich));
+    const a = S.artists[0], m = S.managers[0];
+    const html = () => {
+      const d = document.createElement('div');
+      d.innerHTML = bars(a) + mgrBars(m) + wTable(CONCEPTS, 'concept') + wTable(GENRES, 'genre') + schedSel(a).split('</span>')[0] + '</span>';
+      return surfaceText(d);
+    };
+    setLang('vi');
+    const vi = html();
+    expect(vi).toContain('Diễn xuất');
+    expect(vi).toContain('Đàm phán');
+    expect(vi).toContain('Dễ thương');
+    expect(vi).toMatch(/T2: /);
+    setLang('en');
+    const en = html();
+    expect(leaks(en, new Set())).toEqual([]);
+    expect(en).toContain('Negotiation');
+    expect(en).toContain('Cute');
+    expect(en).toMatch(/Mo: /);
+    expect(en).not.toMatch(/\bT[2-7]\b|\bCN\b/);
   });
 });

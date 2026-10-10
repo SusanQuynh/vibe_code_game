@@ -18,5 +18,7 @@ export function t(k, p) {
 }
 export const __setDicts = d => { DICTS = d; }; // chỉ cho test
 export const roomName = id => t(`room.${id}.name`);
+// Nhãn dữ liệu tra theo id (UI). Bảng trong src/data/* giữ field n/chuỗi chỉ cho log/S. biz dùng lbl('biz', `${k}.n`)
+export const lbl = (ns, k) => t(`${ns}.${k}`);
 // Tiền hiển thị theo ngôn ngữ. fmt() mặc định (vi) vẫn dùng cho addLog để S không phụ thuộc ngôn ngữ.
 export const money = m => fmt(m, t('fmt.units'));
