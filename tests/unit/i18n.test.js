@@ -8,6 +8,7 @@ import { ROOMS } from '../../src/data/rules.js';
 import { renderTop, renderDock, NPC } from '../../src/ui/building.js';
 import { modal } from '../../src/ui/modal.js';
 import { fire } from '../../src/systems/artists.js';
+import { TUT, tutStart, tutEnd } from '../../src/ui/tutorial.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { applyStatic } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
@@ -127,5 +128,18 @@ describe('nút chung', () => {
     const b = document.createElement('button');
     fire(-1, b);
     expect(b.textContent).toBe('Tap again to confirm');
+  });
+});
+
+describe('tutorial', () => {
+  beforeEach(() => { document.body.innerHTML = SHELL; });
+  it('mọi bước có key .t/.d trong vi', () => {
+    for (const s of TUT) for (const k of ['t', 'd']) expect(viL.dict[`tut.${s.id}.${k}`], s.id).toBeTypeOf('string');
+  });
+  it('en: tiêu đề và nhắc nút 🌐', () => {
+    setLang('en'); tutStart(1);
+    expect(document.querySelector('#tut h3').textContent).toBe('Top bar');
+    expect(document.querySelector('#tut .small:not(.muted)').innerHTML).toContain('🌐');
+    tutEnd();
   });
 });
