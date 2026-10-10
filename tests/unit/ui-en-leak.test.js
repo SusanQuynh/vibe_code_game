@@ -17,10 +17,14 @@ const VI = /[À-ỹĐđ]/;
 // tiếng Việt không dấu: tiền "600 tr", TTS, QL, nhãn tuần "T5 N2"
 const VI_PLAIN = /\d tr\b|\bTTS\b|\bQL\b|\bT\d+( N\d+)?\b/;
 
-function words(v, out = new Set(), key) {
-  if (typeof v === 'string') { for (const w of v.split(/[^\p{L}\p{N}]+/u)) if (w) out.add(w); }
-  else if (Array.isArray(v)) v.forEach(x => words(x, out));
-  else if (v && typeof v === 'object') for (const k of Object.keys(v)) if (!SKIP.has(k)) words(v[k], out, k);
+// Chỉ gỡ NGUYÊN chuỗi giá trị của field kiểu tên/tiêu đề (không gỡ theo từ: "Không", "tuần", "Năm"… phải còn bị bắt). Thêm biến thể bỏ emoji/ký hiệu đầu (n của nhóm là "⭐ Tên").
+const NAME_KEYS = new Set(['name', 'names', 'title', 't', 'partner', 'costar', 'n']);
+function names(v, out = new Set(), key) {
+  if (typeof v === 'string') {
+    if (NAME_KEYS.has(key) && VI.test(v)) { out.add(v); out.add(v.replace(/^[^\p{L}\p{N}]+/u, '')); }
+  } else if (Array.isArray(v)) v.forEach(x => names(x, out, key));
+  else if (v && typeof v === 'object') for (const k of Object.keys(v)) if (!SKIP.has(k)) names(v[k], out, k);
+  out.delete('');
   return out;
 }
 function surfaceText(root) {
@@ -29,7 +33,8 @@ function surfaceText(root) {
   return parts.join('\n');
 }
 export function leaks(text, known) {
-  return text.split(/[^\p{L}\p{N}]+/u).filter(w => w && VI.test(w) && !known.has(w));
+  for (const v of [...known].sort((a, b) => b.length - a.length)) text = text.split(v).join(' ');
+  return text.split(/[^\p{L}\p{N}]+/u).filter(w => w && VI.test(w));
 }
 
 beforeEach(() => { document.body.innerHTML = SHELL; localStorage.clear(); seed(42); setPos({}); });
@@ -42,6 +47,11 @@ describe('ui-en-leak', () => {
   });
   it('bộ lọc bắt được chữ Việt', () => {
     expect(leaks('Phòng Họp Smith', new Set(['Smith']))).toEqual(['Phòng', 'Họp']);
+    // tên lấy từ S bị gỡ nguyên chuỗi, từ thông dụng trong tên thì không
+    const nm = new Set(['Ký Ức Không Tên']);
+    expect(leaks('Ký Ức Không Tên: Không đủ tiền', nm)).toEqual(['Không', 'đủ', 'tiền']);
+    expect(leaks('«Ký Ức Không Tên»', nm)).toEqual([]);
+    expect([...names({ artists: [{ name: 'Vũ Quốc Huy', why: 'Không đủ' }], groups: [{ n: '⭐ Sao Đêm' }], log: [{ t: 'Ký' }] })].sort()).toEqual(['Sao Đêm', 'Vũ Quốc Huy', '⭐ Sao Đêm']);
     expect(VI_PLAIN.test('Fee 600 tr')).toBe(true);
     expect(VI_PLAIN.test('Fee 600M')).toBe(false);
   });
@@ -53,7 +63,7 @@ describe('ui-en-leak', () => {
     const el = document.querySelector(s.sel);
     expect(el).toBeTruthy();
     const text = surfaceText(el);
-    const known = words(S);
+    const known = names(S);
     expect(leaks(text, known)).toEqual([]);
     expect(text.match(VI_PLAIN)).toBeNull();
   });

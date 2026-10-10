@@ -13,10 +13,14 @@ import { hireMgr } from '../../src/systems/managers.js';
 import { sign } from '../../src/systems/artists.js';
 import { debutIds } from '../../src/systems/debut.js';
 import { acceptOffer } from '../../src/systems/offers.js';
+import { acts } from '../../src/systems/secretary.js';
+import { doSingle } from '../../src/systems/releases.js';
+import { postAuto, postDo, preDo } from '../../src/systems/promo.js';
+import { prDo } from '../../src/systems/review.js';
 
 noToggle();
 
-// Kịch bản: hành động của golden 110 tuần, cộng mở mọi phòng mỗi 5 tuần (đường render có thể ensure*). Các task sau thêm hành động của khu vực mình.
+// Kịch bản: hành động của golden 110 tuần, cộng mở mọi phòng mỗi 5 tuần (đường render có thể ensure*), cộng quảng bá (preDo/doSingle/postDo/postAuto/prDo: chuỗi gán biến rồi addLog nên dịch nhầm sẽ làm S.log phụ thuộc ngôn ngữ). Các task sau thêm hành động của khu vực mình.
 function run(lang, weeks = 40) {
   document.body.innerHTML = SHELL;
   localStorage.clear();
@@ -31,6 +35,13 @@ function run(lang, weeks = 40) {
     if (i % 3 === 0 && S.artists.length < 5 && S.money > 150e6) for (const p of [...S.pool].slice(0, 1)) sign(p.id);
     for (const a of [...S.artists]) if (a.status === 'trainee' && a.dReady) debutIds('solo', [a.id], '');
     for (const o of [...S.offers].slice(0, 3)) { const a = S.artists.find(x => !x.busy && x.status === 'debuted'); if (a) acceptOffer(o.id, a.id, true); }
+    const x = acts().find(z => z.m.every(id => { const a = S.artists.find(q => q.id === id); return a && a.status === 'debuted' && !a.busy; }));
+    if (x) {
+      if (!S.camp[x.k] && i % 4 === 0) for (const id of ['photo', 'vpre', 'pre']) preDo(x.k, id, true);
+      if (i % 4 === 1) doSingle(x.k, 'ballad', 30e6, 'Bài thử', true);
+    }
+    for (const k of Object.keys(S.camp)) if (S.camp[k].ph === 'post') { if (i % 2) postAuto(k, true); else for (const id of ['s1', 'radio', 'variety', 'fansign', 'challenge', 'live']) postDo(k, id, true); }
+    if (x && i % 6 === 2) for (const t of ['sns', 'mag', 'clip', 'int']) prDo(t, x.k);
     if (i % 5 === 0) { for (const r of ROOMS) openRoom(r.id); closeM(); render(); }
     nextWeek(true, true);
   }
@@ -44,5 +55,6 @@ describe('S độc lập ngôn ngữ', () => {
     expect(en.n).toBe(vi.n);
     expect(en.s === vi.s).toBe(true);
     expect(vi.n).toBeGreaterThan(100);
+    expect(vi.s).toMatch(/"ph":"post"|Quảng bá «/); // kịch bản thật sự chạy quảng bá
   }, 60000);
 });
