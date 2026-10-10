@@ -1,0 +1,502 @@
+{
+  "allow": {
+    "src/data/names.js#*": {
+      "kind": "name",
+      "why": "dữ liệu tên riêng thuần (họ, tên, biệt danh), không dịch"
+    },
+    "src/systems/ext2.js#MXS": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext2.js#xInfo": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext2.js#xResolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#v3Info": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#v3Resolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#interTick": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#evInfo": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#resolveEv": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#LEADS": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#makeScandal": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#SXD": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#surprise": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#sxResolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/data/offers.js#PARTNERS": {
+      "kind": "name",
+      "why": "tên đối tác/công ty (tên riêng, lưu vào S.offers[].partner)"
+    },
+    "src/data/offers.js#TT": {
+      "kind": "state",
+      "why": "tiêu đề dự án lưu vào S.offers[].title (dữ liệu trong S, giai đoạn 3)"
+    },
+    "src/systems/ext2.js#SONGW": {
+      "kind": "name",
+      "why": "từ ghép đặt tên bài hát (tên riêng, lưu vào S.songs[].t)"
+    },
+    "src/systems/ext2.js#SCOUT_W": {
+      "kind": "state",
+      "why": "địa điểm lưu trong e.where của sự kiện tìm người mới (S.events), giai đoạn 3"
+    },
+    "src/systems/ext3.js#EXTN": {
+      "kind": "name",
+      "why": "tên nghệ sĩ ngoài công ty (tên riêng)"
+    }
+  },
+  "allowText": [
+    {
+      "at": "src/systems/ext2.js#renewEval",
+      "text": "Xuất sắc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/ext2.js#renewEval",
+      "text": "Không đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Xuất sắc",
+      "kind": "state",
+      "n": 2,
+      "why": "hạng g gán và lưu vào S (a.evG, R0)"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Xuất sắc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Tốt",
+      "kind": "state",
+      "n": 1,
+      "why": "hạng g gán và lưu vào S"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Đạt",
+      "kind": "state",
+      "n": 2,
+      "why": "hạng g gán và lưu vào S"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Không đạt",
+      "kind": "state",
+      "n": 2,
+      "why": "hạng g gán và lưu vào S"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Không đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalBrief",
+      "text": "Xuất sắc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalBrief",
+      "text": "Không đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalTable",
+      "text": "Xuất sắc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalTable",
+      "text": "Tốt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalTable",
+      "text": "Đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/review.js#evalTable",
+      "text": "Không đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/proposals.js#dropIt",
+      "text": "đã có dự án",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/proposals.js#fixConf",
+      "text": "đã giảm tải",
+      "kind": "state",
+      "n": 1,
+      "why": "lý do x.why lưu vào S.props"
+    },
+    {
+      "at": "src/systems/proposals.js#passAll",
+      "text": "tự duyệt",
+      "kind": "state",
+      "n": 1,
+      "why": "người duyệt by lưu vào S.props"
+    },
+    {
+      "at": "src/systems/proposals.js#passAll",
+      "text": "tự duyệt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/proposals.js#passAll",
+      "text": "Giám đốc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/proposals.js#viewProps",
+      "text": "Giám đốc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/week.js#nextWeek",
+      "text": "Đang quay",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
+    },
+    {
+      "at": "src/systems/week.js#qLabel",
+      "text": "Xuất sắc",
+      "kind": "state",
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
+    },
+    {
+      "at": "src/systems/week.js#qLabel",
+      "text": "Tốt",
+      "kind": "state",
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
+    },
+    {
+      "at": "src/systems/week.js#qLabel",
+      "text": "Ổn",
+      "kind": "state",
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
+    },
+    {
+      "at": "src/systems/week.js#qLabel",
+      "text": "Chưa tốt",
+      "kind": "state",
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
+    },
+    {
+      "at": "src/systems/review.js#prName",
+      "text": "tất cả thực tập sinh",
+      "kind": "state",
+      "n": 1,
+      "why": "tên đối tượng PR đi vào log (S)"
+    },
+    {
+      "at": "src/systems/ext3.js#hsApply",
+      "text": "Giám đốc",
+      "kind": "state",
+      "n": 1,
+      "why": "tên người quyết định truyền vào restDo → log (S)"
+    }
+  ],
+  "allowCount": {
+    "cmp": 24,
+    "event": 414,
+    "name": 59,
+    "state": 49
+  },
+  "sinks": [
+    {
+      "id": "removeArtist#1",
+      "kind": "call",
+      "fn": "removeArtist",
+      "arg": 1,
+      "why": "lý do rời công ty (đối số 2) được removeArtist ghép vào addLog; chữ tiếng Việt lưu trong S.log"
+    },
+    {
+      "id": "hist.unshift#0",
+      "kind": "call",
+      "fn": "hist.unshift",
+      "arg": 0,
+      "why": "dòng lịch sử nghệ sĩ a.hist (S.artists[].hist), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "lessons.unshift#0",
+      "kind": "call",
+      "fn": "lessons.unshift",
+      "arg": 0,
+      "why": "bài học rút ra a.lessons (S.artists[].lessons), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "give#0",
+      "kind": "call",
+      "fn": "give",
+      "arg": 0,
+      "in": [
+        "src/systems/awards.js#awards"
+      ],
+      "why": "tên hạng mục giải thưởng: give() đẩy vào S.awards[].res[].cat và a.hist"
+    },
+    {
+      "id": "give#4",
+      "kind": "call",
+      "fn": "give",
+      "arg": 4,
+      "in": [
+        "src/systems/awards.js#awards"
+      ],
+      "why": "ghi chú giải thưởng: give() đẩy vào S.awards[].res[].note"
+    },
+    {
+      "id": "approveIt#2",
+      "kind": "call",
+      "fn": "approveIt",
+      "arg": 2,
+      "in": [
+        "src/systems/proposals.js#cfPick"
+      ],
+      "why": "người duyệt \"Giám đốc\": approveIt lưu vào S.props x.by (UI hiển thị qua sv())"
+    },
+    {
+      "id": "busy.title",
+      "kind": "prop",
+      "key": "title",
+      "in": [
+        "src/systems/batches.js#enterComp",
+        "src/systems/ext2.js#writeSong",
+        "src/systems/releases.js#doSingle"
+      ],
+      "why": "tiêu đề việc đang bận a.busy.title (S.artists[].busy), UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "film.status",
+      "kind": "prop",
+      "key": "status",
+      "in": [
+        "src/systems/offers.js#investOffer",
+        "src/systems/releases.js#produceFilm",
+        "src/systems/week.js#completeBusy",
+        "src/systems/week.js#releaseFilm"
+      ],
+      "why": "trạng thái phim S.films[].status, đồng thời được so sánh bằng === ở week.js; UI hiển thị qua sv()"
+    },
+    {
+      "id": "scandal.t",
+      "kind": "prop",
+      "key": "t",
+      "in": [
+        "src/systems/releases.js#doLive"
+      ],
+      "why": "nội dung scandal a.scandal.t (S.artists[].scandal), thuộc nội dung sự kiện, dịch ở giai đoạn 3"
+    },
+    {
+      "id": "log.w",
+      "kind": "prop",
+      "key": "w",
+      "in": [
+        "src/state.js#addLog"
+      ],
+      "why": "nhãn tuần của dòng log, lưu trong S.log[].w"
+    },
+    {
+      "id": "batch.n",
+      "kind": "prop",
+      "key": "n",
+      "in": [
+        "src/systems/batches.js#initBatches"
+      ],
+      "why": "tên lứa S.batches[].n, đọc bằng regex /\\d+/ ở nhiều nơi; UI hiển thị qua batchNameT()"
+    },
+    {
+      "id": "mdReview.cm",
+      "kind": "prop",
+      "key": "cm",
+      "in": [
+        "src/systems/ext2.js#mdReview"
+      ],
+      "why": "nhận xét GĐ Âm nhạc r.cm: chỉ dùng dựng mô tả sự kiện md (v3Info, nội dung sự kiện dịch ở giai đoạn 3); UI bài hát dùng r.cmT"
+    },
+    {
+      "id": "props.by",
+      "kind": "prop",
+      "key": "by",
+      "in": [
+        "src/systems/proposals.js#cfPick",
+        "src/systems/proposals.js#propOk"
+      ],
+      "why": "người duyệt S.props x.by/c.by; UI hiển thị qua sv(), so sánh bằng === ở viewProps/passAll"
+    },
+    {
+      "id": "rival.last",
+      "kind": "prop",
+      "key": "last",
+      "in": [
+        "src/systems/market.js#rivalsTick"
+      ],
+      "why": "hành động gần nhất của đối thủ S.rivals[].last, UI hiển thị nguyên văn; giai đoạn 3 lưu key"
+    },
+    {
+      "id": "prHist.h",
+      "kind": "prop",
+      "key": "h",
+      "in": [
+        "src/systems/review.js#prPlans"
+      ],
+      "why": "chữ lưu vào S.prHist qua data-t/prGo (quy định thiết kế 3 của plan)"
+    },
+    {
+      "id": "data.fmt",
+      "kind": "data",
+      "in": [
+        "src/core/util.js#FMT_VI"
+      ],
+      "why": "đơn vị tiền mặc định (vi) của fmt() cho addLog; UI dùng money() với fmt.units của từ điển"
+    },
+    {
+      "id": "data.label.log",
+      "kind": "data",
+      "in": [
+        "src/data/offers.js#OFFER",
+        "src/data/rules.js#CONCEPTS",
+        "src/data/rules.js#GENRES",
+        "src/data/rules.js#MSK",
+        "src/data/rules.js#STATS",
+        "src/data/rules.js#TRAIN",
+        "src/systems/batches.js#COMP",
+        "src/systems/debut.js#DRT",
+        "src/systems/market.js#BIZ",
+        "src/systems/promo.js#POST",
+        "src/systems/promo.js#PRE",
+        "src/systems/proposals.js#CFT",
+        "src/systems/review.js#PRP"
+      ],
+      "why": "bảng dữ liệu có field n/chữ mà addLog, S.offers[].title, S.props why2, busy.title/lessons/hist đọc nguyên văn (quyết định thiết kế 1: giữ n, UI tra lbl); giai đoạn 3 bỏ field n"
+    },
+    {
+      "id": "data.label.dead",
+      "kind": "data",
+      "in": [
+        "src/data/rules.js#MSKD",
+        "src/systems/secretary.js#BUDN",
+        "src/systems/debut.js#DR"
+      ],
+      "why": "bảng nhãn gốc không còn code đọc (UI đã dùng lbl); chỉ test khoá vi==bảng. Xoá cùng field n ở giai đoạn 3"
+    },
+    {
+      "id": "data.ret.log",
+      "kind": "data",
+      "in": [
+        "src/systems/managers.js#targetName",
+        "src/systems/secretary.js#wkLabel",
+        "src/systems/debut.js#debutRec",
+        "src/systems/ext3.js#dWish",
+        "src/systems/ext3.js#hsRisk",
+        "src/systems/proposals.js#shortWhy",
+        "src/systems/proposals.js#routeProps"
+      ],
+      "why": "hàm sinh chuỗi mà caller ghi vào addLog/S (S.props why/txt/path, a.dw.why, a.hsF.why, S.prHist, log); bản UI có hậu tố T hoặc render qua sv()"
+    }
+  ],
+  "sinkCount": {
+    "approveIt#2": 1,
+    "batch.n": 1,
+    "busy.title": 3,
+    "data.fmt": 1,
+    "data.label.dead": 9,
+    "data.label.log": 95,
+    "data.ret.log": 57,
+    "film.status": 4,
+    "give#0": 8,
+    "give#4": 4,
+    "hist.unshift#0": 15,
+    "lessons.unshift#0": 5,
+    "log.w": 2,
+    "mdReview.cm": 5,
+    "prHist.h": 6,
+    "props.by": 3,
+    "removeArtist#1": 6,
+    "rival.last": 3,
+    "scandal.t": 1
+  },
+  "logCount": {
+    "src/save/storage.js": 1,
+    "src/state.js": 2,
+    "src/systems/artists.js": 3,
+    "src/systems/awards.js": 4,
+    "src/systems/batches.js": 12,
+    "src/systems/debut.js": 6,
+    "src/systems/events.js": 44,
+    "src/systems/ext2.js": 66,
+    "src/systems/ext3.js": 98,
+    "src/systems/managers.js": 12,
+    "src/systems/market.js": 50,
+    "src/systems/offers.js": 7,
+    "src/systems/promo.js": 18,
+    "src/systems/proposals.js": 2,
+    "src/systems/releases.js": 19,
+    "src/systems/review.js": 20,
+    "src/systems/secretary.js": 14,
+    "src/systems/week.js": 14,
+    "src/ui/saveView.js": 1
+  }
+}

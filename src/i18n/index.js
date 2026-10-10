@@ -1,4 +1,4 @@
-import { fmt } from '../core/util.js';
+import { esc, fmt } from '../core/util.js';
 // Lõi i18n: module lá (không import system/UI, không chạm DOM, không gọi RNG).
 const mods = import.meta.glob('./locales/*.js', { eager: true });
 let DICTS = Object.fromEntries(Object.values(mods).map(m => [m.default.meta.code, m.default]));
@@ -18,5 +18,10 @@ export function t(k, p) {
 }
 export const __setDicts = d => { DICTS = d; }; // chỉ cho test
 export const roomName = id => t(`room.${id}.name`);
+// Nhãn dữ liệu tra theo id (UI). Bảng trong src/data/* giữ field n/chuỗi chỉ cho log/S. biz dùng lbl('biz', `${k}.n`)
+export const lbl = (ns, k) => t(`${ns}.${k}`);
+// Dịch giá trị đã lưu trong S khi nó thuộc một tập hữu hạn đã biết (vd hạng 'Xuất sắc'): tra key `sv.<giá trị>`; không có thì giữ nguyên văn. Chỉ để HIỂN THỊ, không bao giờ ghi ngược vào S.
+// Giá trị không có trong từ điển (vd từ save lạ) được escape vì mọi chỗ gọi chèn vào innerHTML.
+export const sv = s => { const k = 'sv.' + s, v = t(k); return v === k ? esc(String(s)) : v };
 // Tiền hiển thị theo ngôn ngữ. fmt() mặc định (vi) vẫn dùng cho addLog để S không phụ thuộc ngôn ngữ.
 export const money = m => fmt(m, t('fmt.units'));

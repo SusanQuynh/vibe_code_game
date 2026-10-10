@@ -1,7 +1,8 @@
 import { rnd } from '../core/rng.js';
-import { clamp, esc, fmt } from '../core/util.js';
+import { clamp, esc } from '../core/util.js';
+import { lbl, money, sv, t } from '../i18n/index.js';
 import { OFFER } from '../data/offers.js';
-import { CONCEPTS, STATS, TRAIN } from '../data/rules.js';
+import { STATS, TRAIN } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fit } from './artists.js';
 import { debutRec } from './debut.js';
@@ -37,8 +38,8 @@ export const chainUp=m=>{const r=[];let b=mBoss(m);while(b&&!r.includes(b)){r.pu
 export const canSolve=(r,c)=>effSk(r,'plan')+r.lv>=c.sev*3;
 export function itemsOf(P){const L=[];for(const k in P.m){const mid=+k,it=P.m[k];it.s.forEach((x,i)=>L.push({mid,kind:'s',i,x,arts:[x.a]}));it.p.forEach((x,i)=>L.push({mid,kind:'p',i,x,arts:x.ids}))}return L}
 export const refIt=(P,r)=>{const x=P.m[r.mid]&&P.m[r.mid][r.k][r.i];return x?{mid:r.mid,kind:r.k,i:r.i,x,arts:r.k==='s'?[x.a]:x.ids}:null};
-export function itDesc(t){const m=mById(t.mid),who=m?m.name:'?';if(t.kind==='s'){const a=byId(t.x.a);return`${who}: lịch tập ${a?a.name:''} ${t.x.days.map(k=>TIC[k]).join('')}`}
-  const of=S.offers.find(o=>o.id===t.x.of);return`${who}: «${of?of.title:'?'}» cho ${t.x.ids.map(byId).filter(Boolean).map(a=>a.name).join(', ')}${of?' (+'+fmt(t.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0))+')':''}`}
+export function itDesc(it){const m=mById(it.mid),who=m?m.name:'?';if(it.kind==='s'){const a=byId(it.x.a);return t('props.descSched',{w:who,a:a?a.name:'',d:it.x.days.map(k=>TIC[k]).join('')})}
+  const of=S.offers.find(o=>o.id===it.x.of);return`${t('props.descProj',{w:who,t:of?of.title:'?',n:it.x.ids.map(byId).filter(Boolean).map(a=>a.name).join(t('list.sep'))})}${of?' (+'+money(it.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0))+')':''}`}
 export function itScore(t){if(t.kind==='p'){const of=S.offers.find(o=>o.id===t.x.of);return 1e13+(of?t.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0):0)}const a=byId(t.x.a),m=a&&mgrOf(a);return m&&m.id===t.mid?2:1}
 export function dropIt(t,c){t.x.ok=-2;t.x.why2=CFT[c.type];if(t.kind==='p'){const it=S.props&&S.props.m[t.mid];if(it)it.s.forEach(x=>{if(x.ok===-2&&x.why2==='đã có dự án'&&t.x.ids.includes(x.a)){x.ok=0;delete x.why2}})}}
 export function fixConf(P,c,keep){
@@ -96,40 +97,40 @@ export function cfPick(cid,keep){const P=S.props;if(!P)return;const c=P.c.find(x
   addLog(`⚖️ Giám đốc xử lý xung đột: ${c.txt}.`);act()}
 export const propCount=()=>{const P=buildProps();let n=P.c.filter(c=>c.pend).length;for(const k in P.m){const it=P.m[k];n+=it.s.filter(x=>!x.ok&&!(x.cf||[]).length&&byId(x.a)&&!byId(x.a).busy).length+it.p.filter(x=>!x.ok&&!(x.cf||[]).length&&S.offers.some(o=>o.id===x.of)).length}return n};
 export function propOk(mid,kind,i,quiet){const it=S.props&&S.props.m[mid];if(!it)return;const x=it[kind][i];if(!x||x.ok)return;
-  if((x.cf||[]).some(id=>{const c=S.props.c.find(z=>z.id===id);return c&&c.pend})){if(!quiet)toast('Cần xử lý xung đột trước');return}
+  if((x.cf||[]).some(id=>{const c=S.props.c.find(z=>z.id===id);return c&&c.pend})){if(!quiet)toast(t('props.toast.conflict'));return}
   if(kind==='s'){const a=byId(x.a);if(!a||a.busy)return;a.days=x.days.slice();a.appr=abs();x.ok=1;if(!x.by)x.by='Giám đốc'}
-  else if(kind==='p'){const of=S.offers.find(o=>o.id===x.of);if(!of){x.ok=-1;if(!quiet)toast('Lời mời đã hết hạn');return}
-    if(x.ids.some(id=>{const a=byId(id);return !a||canTake(of,a)})){x.ok=-1;if(!quiet)toast('Đội hình không còn phù hợp');return}
+  else if(kind==='p'){const of=S.offers.find(o=>o.id===x.of);if(!of){x.ok=-1;if(!quiet)toast(t('props.toast.expired'));return}
+    if(x.ids.some(id=>{const a=byId(id);return !a||canTake(of,a)})){x.ok=-1;if(!quiet)toast(t('props.toast.cast'));return}
     acceptCast(of.id,x.ids,true);x.ok=1;if(!x.by)x.by='Giám đốc';const mg=S.managers.find(m=>m.id===mid);if(mg)mgrExp(mg,.3)}
   if(!quiet)act()}
 export function propOkAll(mid){const it=S.props&&S.props.m[mid];if(!it)return;it.p.forEach((x,i)=>propOk(mid,'p',i,1));it.s.forEach((x,i)=>propOk(mid,'s',i,1));act()}
 export function propAll(){const P=buildProps();for(const k in P.m)propOkAll(+k)}
-export const stTag=x=>x.ok===1?`<span class="tag m">✓ ${esc(x.by||'đã duyệt')}</span>`:x.ok===-2?`<span class="tag">✖ bỏ · ${esc(x.why2||'')}</span>`:x.ok===-1?'<span class="tag">hết hạn</span>':(x.cf||[]).some(id=>S.props.c.find(c=>c.id===id&&c.pend))?'<span class="tag r">⚠️ xung đột</span>':'';
+export const stTag=x=>x.ok===1?`<span class="tag m">✓ ${x.by?sv(x.by):t('props.approved')}</span>`:x.ok===-2?`<span class="tag">✖ ${t('props.dropped')} · ${x.why2?sv(x.why2):''}</span>`:x.ok===-1?`<span class="tag">${t('props.expired')}</span>`:(x.cf||[]).some(id=>S.props.c.find(c=>c.id===id&&c.pend))?`<span class="tag r">${t('props.conflict')}</span>`:'';
 export function viewProps(){
   const P=buildProps(),ms=S.managers.filter(m=>P.m[m.id]);
   const pc=P.c.filter(c=>c.pend),dc=P.c.filter(c=>c.done&&c.by&&c.by!=='Giám đốc');
   const cfHTML=pc.map(c=>{const its=c.refs.map(r=>refIt(P,r)).filter(Boolean);const two=c.type==='overlap'||c.type==='offer';
-    return`<div class="card" style="border-color:var(--red)"><b>⚠️ ${CFT[c.type]}</b><div class="small">${esc(c.txt)}</div><div class="small muted">Đã chuyển qua: ${c.path.map(esc).join(' → ')}${c.path.length>1?' (cấp trên chưa đủ kỹ năng Kế hoạch để tự xử lý)':' (không có quản lý chung cấp trên)'}</div>
-    ${two?its.map((t,i)=>`<div class="prow"><span class="small">${esc(itDesc(t))}</span><span class="sp"></span><button class="btn sm" onclick="cfPick(${c.id},${c.refs.findIndex(r=>r.mid===t.mid&&r.k===t.kind&&r.i===t.i)})">Giữ cái này</button></div>`).join(''):`<div class="small" style="margin:4px 0">${its.map(t=>esc(itDesc(t))).join('<br>')}</div>`}
-    <div class="row" style="margin-top:6px"><button class="btn sm pri" onclick="cfPick(${c.id})">Theo gợi ý${c.type==='tired'?' (giảm tải)':c.type==='enemy'?' (đổi người)':c.type==='scandal'?' (hoãn dự án)':' (giữ phương án lợi nhất)'}</button>${two?'':`<button class="btn sm" onclick="cfPick(${c.id},'as')">Vẫn duyệt</button>`}</div></div>`}).join('');
+    return`<div class="card" style="border-color:var(--red)"><b>⚠️ ${lbl('cft',c.type)}</b><div class="small">${esc(c.txt)}</div><div class="small muted">${t('props.passed',{p:c.path.map(x=>sv(x)).join(' → ')})} ${c.path.length>1?t('props.noSkill'):t('props.noCommon')}</div>
+    ${two?its.map((u,i)=>`<div class="prow"><span class="small">${esc(itDesc(u))}</span><span class="sp"></span><button class="btn sm" onclick="cfPick(${c.id},${c.refs.findIndex(r=>r.mid===u.mid&&r.k===u.kind&&r.i===u.i)})">${t('props.keepThis')}</button></div>`).join(''):`<div class="small" style="margin:4px 0">${its.map(u=>esc(itDesc(u))).join('<br>')}</div>`}
+    <div class="row" style="margin-top:6px"><button class="btn sm pri" onclick="cfPick(${c.id})">${t('props.follow',{a:c.type==='tired'?t('props.act.tired'):c.type==='enemy'?t('props.act.enemy'):c.type==='scandal'?t('props.act.scandal'):t('props.act.keep')})}</button>${two?'':`<button class="btn sm" onclick="cfPick(${c.id},'as')">${t('props.stillOk')}</button>`}</div></div>`}).join('');
   const body=ms.map(m=>{const it=P.m[m.id];
-    const sl=it.s.map((x,i)=>{const a=byId(x.a);if(!a)return'';return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">🗓️ <b>${esc(a.name)}</b> <span class="dmini">${x.days.map(k=>TIC[k]).join('')}</span><span class="small muted">${esc(x.why)}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm" onclick="propOk(${m.id},'s',${i})">Duyệt</button>`:''}</div>`}).join('');
+    const sl=it.s.map((x,i)=>{const a=byId(x.a);if(!a)return'';return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">🗓️ <b>${esc(a.name)}</b> <span class="dmini">${x.days.map(k=>TIC[k]).join('')}</span><span class="small muted">${sv(x.why)}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm" onclick="propOk(${m.id},'s',${i})">${t('props.approve')}</button>`:''}</div>`}).join('');
     const pl=it.p.map((x,i)=>{const of=S.offers.find(o=>o.id===x.of);if(!of&&x.ok!==1&&x.ok!==-2)return'';const nm=x.ids.map(byId).filter(Boolean),O=OFFER[(of||{}).type]||{ic:'🎬'};
       const pay=of?nm.reduce((t,a)=>t+effPay(of,a),0):0;
-      return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">${O.ic} <b>«${esc(of?of.title:'dự án')}»</b><span class="small muted">${esc(nm.map(a=>a.name).join(', '))}${of?` · ${of.weeks}t · +${fmt(pay)}`:''}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm pri" onclick="propOk(${m.id},'p',${i})">Nhận</button>`:''}</div>`}).join('');
-    const dl=it.d.map(x=>{const a=byId(x.a);if(!a||a.status!=='trainee')return'';return`<div class="prow">🎯 <b>${esc(a.name)}</b><span class="small">${esc(x.txt)}</span><span class="sp"></span><button class="btn sm" onclick="openRoom('lobby')">Xem</button></div>`}).join('');
+      return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">${O.ic} <b>«${of?esc(of.title):t('props.project')}»</b><span class="small muted">${esc(nm.map(a=>a.name).join(', '))}${of?` · ${t('props.weeksPay',{w:of.weeks,m:money(pay)})}`:''}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm pri" onclick="propOk(${m.id},'p',${i})">${t('props.take')}</button>`:''}</div>`}).join('');
+    const dl=it.d.map(x=>{const a=byId(x.a);if(!a||a.status!=='trainee')return'';return`<div class="prow">🎯 <b>${esc(a.name)}</b><span class="small">${esc(x.txt)}</span><span class="sp"></span><button class="btn sm" onclick="openRoom('lobby')">${t('props.view')}</button></div>`}).join('');
     if(!sl&&!pl&&!dl)return'';
     const pend=it.s.filter(x=>!x.ok).length+it.p.filter(x=>!x.ok).length,b=mBoss(m);
-    return det('pr-'+m.id,`📋 ${esc(m.name)} <span class="small muted" style="font-weight:500">· báo cáo ${b?esc(b.name):'Giám đốc'} · ${pend?pend+' chưa duyệt':'xong'}</span>`,`${pend&&!b?`<div class="row"><span class="sp"></span><button class="btn sm" onclick="propOkAll(${m.id})">Duyệt hết</button></div>`:''}${pl}${sl}${dl}`,pend>0)}).join('');
+    return det('pr-'+m.id,t('props.mgrHead',{n:esc(m.name),b:b?esc(b.name):t('props.ceo'),s:pend?t('props.pending',{n:pend}):t('props.done')}),`${pend&&!b?`<div class="row"><span class="sp"></span><button class="btn sm" onclick="propOkAll(${m.id})">${t('props.approveAll')}</button></div>`:''}${pl}${sl}${dl}`,pend>0)}).join('');
   const nb=Object.entries(P.st.boss);
   const go=propNext;
-  modal(`<h2>📋 Đề xuất của quản lý</h2><div class="sub">Tuần ${S.week}. Quản lý báo cáo lên cấp trên: không xung đột thì được duyệt ngay, có xung đột thì chuyển lên người cao hơn, tới Giám đốc nếu không ai đủ thẩm quyền.</div>
-  <div class="card small">📨 ${nb.length?nb.map(([n,v])=>`${esc(n)} duyệt ${v}`).join(' · '):'Chưa có cấp trên nào duyệt'}${P.st.auto?` · ${P.st.auto} tự duyệt`:''}${dc.length?` · ⚖️ ${dc.length} xung đột đã được xử lý`:''}${pc.length?` · <b class="bad">${pc.length} chờ bạn</b>`:''}</div>
-  ${pc.length?`<h3>⚠️ Xung đột cần Giám đốc (${pc.length})</h3>${cfHTML}`:''}
-  ${(()=>{const L=secPlans(),r=L.filter(p=>!p.wait&&!p.plan);return r.length?`<div class="card small row">🗒️ <span style="flex:1"><b>Thư ký:</b> ${r.map(p=>esc(p.n.slice(2).trim())+' ('+CONCEPTS[p.ck].n+')').join(', ')} sẵn sàng comeback.</span><button class="btn sm" onclick="view(viewSec)">Xem</button></div>`:''})()}
-  ${dc.length?det('pr-solved',`⚖️ Xung đột cấp trên đã xử lý (${dc.length})`,dc.map(c=>`<div class="small">• <b>${esc(c.by)}</b>: ${esc(c.txt)} → ${c.type==='tired'?'giảm tải':c.type==='enemy'?'đổi người':c.type==='scandal'?'hoãn dự án':'giữ phương án lợi nhất'}</div>`).join(''),false):''}
-  ${body||'<div class="card small muted">Không có đề xuất mới. Giao quản lý phụ trách nghệ sĩ và bật "Đề xuất" để nhận đề xuất mỗi tuần.</div>'}
-  <label class="small row" style="margin-top:8px"><input type="checkbox" ${S.autoAppr!==false?'checked':''} onchange="S.autoAppr=this.checked;save()"> Tự duyệt đề xuất không xung đột của quản lý báo cáo trực tiếp cho bạn</label>
-  <div class="row" style="margin-top:8px">${propCount()-pc.length>0?'<button class="btn" onclick="propAll()">✓ Duyệt phần còn lại</button>':''}<span class="sp"></span><button class="btn pri" onclick="${go?'propGo()':'closeM()'}">${go?'Tiếp tục ▶':'Đóng'}</button></div>`);
+  modal(`<h2>${t('props.title')}</h2><div class="sub">${t('props.sub',{w:S.week})}</div>
+  <div class="card small">📨 ${nb.length?nb.map(([n,v])=>t('props.sumBy',{n:esc(n),v})).join(' · '):t('props.sumNone')}${P.st.auto?` · ${t('props.sumAuto',{n:P.st.auto})}`:''}${dc.length?` · ${t('props.sumSolved',{n:dc.length})}`:''}${pc.length?` · ${t('props.sumWait',{n:pc.length})}`:''}</div>
+  ${pc.length?`<h3>${t('props.cfTitle',{n:pc.length})}</h3>${cfHTML}`:''}
+  ${(()=>{const L=secPlans(),r=L.filter(p=>!p.wait&&!p.plan);return r.length?`<div class="card small row">🗒️ <span style="flex:1">${t('props.secReady',{n:r.map(p=>esc(p.n.slice(2).trim())+' ('+lbl('concept',p.ck)+')').join(t('list.sep'))})}</span><button class="btn sm" onclick="view(viewSec)">${t('props.view')}</button></div>`:''})()}
+  ${dc.length?det('pr-solved',t('props.solvedTitle',{n:dc.length}),dc.map(c=>`<div class="small">• <b>${esc(c.by)}</b>: ${esc(c.txt)} → ${c.type==='tired'?t('props.act.tired'):c.type==='enemy'?t('props.act.enemy'):c.type==='scandal'?t('props.act.scandal'):t('props.act.keep')}</div>`).join(''),false):''}
+  ${body||`<div class="card small muted">${t('props.empty')}</div>`}
+  <label class="small row" style="margin-top:8px"><input type="checkbox" ${S.autoAppr!==false?'checked':''} onchange="S.autoAppr=this.checked;save()"> ${t('props.autoAppr')}</label>
+  <div class="row" style="margin-top:8px">${propCount()-pc.length>0?`<button class="btn" onclick="propAll()">${t('props.approveRest')}</button>`:''}<span class="sp"></span><button class="btn pri" onclick="${go?'propGo()':'closeM()'}">${go?t('common.continue')+' ▶':t('common.close')}</button></div>`);
 }
 export function propGo(){const f=propNext;setPropNext(null);f&&f()}

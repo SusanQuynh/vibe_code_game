@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { t, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
+import fs from 'node:fs';
+import { t, lbl, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
 import { diffLocales } from '../../src/i18n/check.js';
 import { noToggle, seed, SHELL } from './helpers.js';
 import { newGame } from '../../src/state.js';
@@ -15,6 +16,19 @@ import { view } from '../../src/ui/modal.js';
 import { applyHtmlLang, applyStatic, chooseLang, viewLang } from '../../src/ui/lang.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
+import { STATS, TRAIN, GENRES, CONCEPTS, MSK, MSKD } from '../../src/data/rules.js';
+import { OFFER } from '../../src/data/offers.js';
+import { BIZ } from '../../src/systems/market.js';
+import { DAYS } from '../../src/systems/week.js';
+// DAYN đã bỏ khỏi src (chỉ UI dùng, qua lbl): nguồn chuẩn của tên ngày tiếng Việt nằm ở đây
+const DAYN = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
+import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
+import { DR, DRT } from '../../src/systems/debut.js';
+import { CFT } from '../../src/systems/proposals.js';
+import { BUDN } from '../../src/systems/secretary.js';
+import { PRE, POST } from '../../src/systems/promo.js';
+import { COMP } from '../../src/systems/batches.js';
+import { PRP } from '../../src/systems/review.js';
 
 noToggle();
 const REAL = { vi: viL, en: enL };
@@ -173,5 +187,71 @@ describe('chooseLang', () => {
     expect(document.querySelector('#sheet h2').textContent).toContain('Language');
     chooseLang('vi');
     expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
+  });
+});
+
+// Nhãn dữ liệu tra theo id: mỗi bảng nguồn <-> tiền tố key. Key động chỉ được dùng với các tiền tố này (check:i18n không quét được).
+const nOf = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v.n]));
+const LABELS = [
+  ['stat', STATS], ['train.n', nOf(TRAIN)], ['genre', nOf(GENRES)], ['concept', nOf(CONCEPTS)], ['offer', nOf(OFFER)],
+  ['msk', MSK], ['mskd', MSKD], ['biz', Object.fromEntries(Object.entries(BIZ).map(([k, v]) => [k + '.n', v.n]))],
+  ['day', DAYS], ['dayn', DAYN], ['fin.i', Object.fromEntries(FIN_I.map(k => [k, viL.dict['fin.i.' + k]]))], ['fin.x', Object.fromEntries(FIN_X.map(k => [k, viL.dict['fin.x.' + k]]))], ['dr', DR], ['drt', DRT], ['cft', CFT], ['bud', BUDN],
+  ['pre', nOf(PRE)], ['post', nOf(POST)], ['prp', nOf(PRP)],
+  ['comp.n', Object.fromEntries(COMP.map((c, i) => [i, c.n]))], // tên cuộc thi tra theo chỉ số trong COMP (compNameT)
+  // mô tả ngành (field d đã bỏ khỏi BIZ vì chỉ hiển thị): giữ chữ vi cũ làm chuẩn
+  ['biz', { 'cafe.d': 'Fan càng đông càng đắt khách.', 'food.d': 'Ổn định, ít phụ thuộc fan.', 'media.d': 'Mỗi cấp giúp nghệ sĩ đã ra mắt tăng fan nhanh hơn.', 'academy.d': 'Mỗi cấp tăng 6% hiệu quả luyện tập.',
+    'fashion.d': 'Bán chạy khi nghệ sĩ nổi tiếng.', 'beauty.d': 'Lãi cao, phụ thuộc danh tiếng.', 'game.d': 'Rủi ro cao: có tuần lãi lớn, có tuần lỗ.', 'estate.d': 'Rất ổn định, vốn lớn.' }],
+];
+describe('nhóm thu chi book(c, …)', () => {
+  it('mọi khoá c mà mã nguồn ghi sổ đều có nhãn fin.i/fin.x (catRows tra lbl)', () => {
+    const used = new Set();
+    const walk = d => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = d + '/' + e.name; if (e.isDirectory()) walk(q); else if (q.endsWith('.js')) for (const m of fs.readFileSync(q, 'utf8').matchAll(/\bbook\('(\w+)'/g)) used.add(m[1]); } };
+    walk('src');
+    for (const k of used) expect(FIN_I.includes(k) || FIN_X.includes(k), `book('${k}') không có nhãn`).toBe(true);
+  });
+});
+describe('nhãn dữ liệu lbl(ns, id)', () => {
+  it.each(LABELS)('%s: đủ key ở mọi ngôn ngữ, vi bằng đúng giá trị trong bảng, en không còn chữ Việt', (ns, tbl) => {
+    const keys = Object.keys(tbl);
+    expect(keys.length).toBeGreaterThan(0);
+    for (const k of keys) {
+      expect(`${ns}.${k}` in viL.dict, `${ns}.${k} thiếu ở vi`).toBe(true);
+      expect(`${ns}.${k}` in enL.dict, `${ns}.${k} thiếu ở en`).toBe(true);
+      setLang('vi'); expect(lbl(ns, k), `${ns}.${k}`).toBe(tbl[k]);
+      setLang('en'); expect(lbl(ns, k)).not.toMatch(/[À-ỹĐđ]/);
+    }
+    setLang('vi');
+  });
+});
+describe('mô tả ngành biz.<k>.d', () => {
+  it('mọi ngành trong BIZ có mô tả ở mọi ngôn ngữ', () => {
+    for (const k of Object.keys(BIZ)) { expect(`biz.${k}.d` in viL.dict && `biz.${k}.d` in enL.dict, k).toBe(true); expect(BIZ[k].d, 'field d đã bỏ khỏi BIZ').toBeUndefined(); }
+  });
+});
+describe('mô tả hoạt động teaser pre.d.*', () => {
+  it('mọi hoạt động trước comeback có mô tả ở mọi ngôn ngữ, en không còn chữ Việt', () => {
+    for (const id of Object.keys(PRE)) {
+      expect(`pre.d.${id}` in viL.dict, `pre.d.${id} thiếu ở vi`).toBe(true);
+      expect(enL.dict[`pre.d.${id}`], `pre.d.${id} thiếu ở en`).toBeTruthy();
+      setLang('en'); expect(lbl('pre', `d.${id}`)).not.toMatch(/[À-ỹĐđ]/);
+    }
+    setLang('vi');
+  });
+});
+describe('từ vựng chung và số nhiều (unit.*)', () => {
+  it('unit.weeks/days/people: vi giữ nguyên, en số ít/số nhiều', () => {
+    setLang('vi');
+    expect([t('unit.weeks', { n: 1 }), t('unit.weeks', { n: 3 }), t('unit.days', { n: 2 }), t('unit.people', { n: 5 })]).toEqual(['1 tuần', '3 tuần', '2 ngày', '5 người']);
+    setLang('en');
+    expect([1, 2].map(n => t('unit.weeks', { n }))).toEqual(['1 week', '2 weeks']);
+    expect([1, 2].map(n => t('unit.days', { n }))).toEqual(['1 day', '2 days']);
+    expect([1, 2].map(n => t('unit.people', { n }))).toEqual(['1 person', '2 people']);
+    expect(t('unit.perWeek', { m: '5M' })).toBe('5M/week');
+    expect(t('list.sep') + t('list.and')).toBe(', ' + ' and ');
+    expect(t('common.refuse')).toBe('Decline');
+    setLang('vi');
+  });
+  it('mọi key common.*/unit.*/list.* ở en không chứa chữ Việt', () => {
+    for (const [k, v] of Object.entries(enL.dict)) if (/^(common|unit|list)\./.test(k)) expect(typeof v === 'function' ? v({ n: 2 }) : v).not.toMatch(/[À-ỹĐđ]/);
   });
 });

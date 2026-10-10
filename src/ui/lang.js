@@ -9,6 +9,9 @@ import { tutI, tutShow } from './tutorial.js';
 export function applyStatic(root = document) {
   root.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
   root.querySelectorAll('[data-i18n-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.i18nAria)));
+  // Chữ trong CSS content (::after) lấy từ biến trên :root, không nhét vào DOM của sheet
+  const q = s => '"' + s.replace(/["\\]/g, '\\$&') + '"';
+  document.documentElement.style.setProperty('--t-rec', q(t('plan.rec')));
 }
 export const applyHtmlLang = () => { document.documentElement.lang = getMeta().htmlLang; };
 

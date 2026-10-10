@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function trackErrors(page) {
   const errors = [];
@@ -110,3 +112,92 @@ test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng t
   expect(await page.evaluate(() => __game.state().week)).toBe(4);
   expect(errors).toEqual([]);
 });
+
+// Masthead và nhãn phòng ở màn hẹp: số lớn (12 nghệ sĩ, ~1,2M fan) không được cắt chữ, nhãn phòng không bị kẹp/giao huy hiệu
+for (const lang of ['vi', 'en']) for (const [w, h] of [[390, 844], [375, 812]]) {
+  test(`${w}px: masthead và nhãn phòng không bị cắt [${lang}]`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await page.addInitScript(l => localStorage.setItem('starlight_lang', l), lang);
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto('./');
+    await page.evaluate(() => {
+      const S = __game.state(), b = S.artists[0];
+      while (S.artists.length < 12) S.artists.push({ ...structuredClone(b), id: 9000 + S.artists.length, name: 'Test ' + S.artists.length, fans: 100000 });
+      window.act();
+    });
+    await page.evaluate(() => window.closeM());
+    const r = await page.evaluate(() => {
+      const box = e => e.getBoundingClientRect(), cash = box(document.querySelector('.cash'));
+      const meta = document.querySelector('.meta');
+      const rooms = [...document.querySelectorAll('.room')].map(room => {
+        const rn = room.querySelector('.rn'), rl = room.querySelector('.rl'), bd = room.querySelector('.badge');
+        const a = box(rl), c = bd && box(bd);
+        return {
+          id: room.getAttribute('onclick'), hasRn: !!rn,
+          clipW: rn ? rn.scrollWidth > rn.clientWidth : null, clipH: rn ? rn.scrollHeight > rn.clientHeight + 1 : null,
+          hit: c ? !(a.right <= c.left || c.right <= a.left || a.bottom <= c.top || c.bottom <= a.top) : false,
+        };
+      });
+      return {
+        metaClip: meta.scrollWidth > meta.clientWidth,
+        artRight: box(document.getElementById('artN')).right, fansRight: box(document.getElementById('fansP')).right, cashRight: cash.right,
+        topH: box(document.querySelector('.top')).height, scrollW: document.documentElement.scrollWidth, rooms,
+      };
+    });
+    expect(r.metaClip, 'dòng meta bị cắt').toBe(false);
+    expect(r.artRight).toBeLessThanOrEqual(r.cashRight + 0.5);
+    expect(r.fansRight).toBeLessThanOrEqual(r.cashRight + 0.5);
+    expect(r.topH).toBeLessThanOrEqual(80);
+    expect(r.scrollW).toBeLessThanOrEqual(w);
+    expect(r.rooms.length).toBeGreaterThan(0);
+    for (const x of r.rooms) {
+      expect(x.hasRn, `${x.id} thiếu .rn`).toBe(true);
+      expect(x.clipW, `${x.id} nhãn bị cắt ngang`).toBe(false);
+      expect(x.clipH, `${x.id} nhãn bị kẹp dòng`).toBe(false);
+      expect(x.hit, `${x.id} nhãn giao huy hiệu`).toBe(false);
+    }
+    expect(errors).toEqual([]);
+  });
+}
+
+// Nhãn "Gợi ý" của ô lịch nằm trong CSS content nhưng lấy chữ từ biến --t-rec (từ điển), đổi theo ngôn ngữ
+for (const [lang, want] of [['vi', 'Gợi ý'], ['en', 'Suggested']]) {
+  test(`nhãn gợi ý trên ô lịch tập [${lang}]`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await page.addInitScript(l => localStorage.setItem('starlight_lang', l), lang);
+    await page.goto('./');
+    await page.evaluate(() => window.startPlanOne(__game.state().artists[0].id));
+    const got = await page.evaluate(() => { const e = document.querySelector('.tile.rec'); return e ? getComputedStyle(e, '::after').content : null; });
+    expect(got).toBe(`"${want}"`);
+    expect(errors).toEqual([]);
+  });
+}
+
+// Mở lần lượt mọi phòng trong dock với save giàu (fixture ui-rich) ở màn hẹp: không lỗi trang, không cuộn ngang (trang lẫn khung phòng), ô tick không tách dòng khỏi nhãn
+const RICH = fs.readFileSync(path.join(process.cwd(), 'tests/fixtures/ui-rich.json'), 'utf8');
+for (const lang of ['en', 'vi']) {
+  test(`390x844: mở mọi phòng với save giàu, không cuộn ngang, ô tick cùng dòng nhãn [${lang}]`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await page.addInitScript(([l, d]) => { localStorage.setItem('starlight_lang', l); localStorage.setItem('starlight_idol_save_v1', d); }, [lang, RICH]);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('./');
+    await page.evaluate(() => window.closeM());
+    const n = await page.locator('#dock button').count();
+    expect(n).toBeGreaterThanOrEqual(10);
+    for (let i = 0; i < n; i++) {
+      await page.locator('#dock button').nth(i).click();
+      await expect(page.locator('#sheet')).toHaveClass(/on/);
+      const r = await page.evaluate(() => {
+        const sh = document.querySelector('#sheet .panel') || document.querySelector('#sheet');
+        const bad = [...document.querySelectorAll('#sheet label.row')].filter(l => { const c = l.querySelector('input[type=checkbox]'); if (!c) return false; const tn = [...l.childNodes].filter(x => x.nodeType === 3 && x.textContent.trim()).pop(); if (!tn) return false; const rg = document.createRange(); rg.selectNodeContents(tn); const a = rg.getClientRects()[0], b = c.getBoundingClientRect(); return !a || a.top > b.bottom; }).map(l => l.textContent.trim().slice(0, 40));
+        return { page: document.documentElement.scrollWidth, sheet: sh.scrollWidth - sh.clientWidth, bad, title: (document.querySelector('#sheet h2') || {}).textContent };
+      });
+      expect(r.page, `trang cuộn ngang ở phòng #${i} (${r.title})`).toBeLessThanOrEqual(390);
+      expect(r.sheet, `khung phòng #${i} (${r.title}) tràn ngang`).toBeLessThanOrEqual(1);
+      expect(r.bad, `ô tick tách dòng khỏi nhãn ở phòng #${i}`).toEqual([]);
+      await page.locator('#sheet .x').first().click();
+      await expect(page.locator('#sheet')).not.toHaveClass(/on/);
+    }
+    expect(errors).toEqual([]);
+  });
+}

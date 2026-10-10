@@ -45,3 +45,20 @@ describe('parseSaveText', () => {
 it('tên file theo năm/tuần', () => {
   expect(saveFileName(sample)).toBe('starlight-N2-T7.json');
 });
+
+describe('lỗi có mã (e.code), message giữ nguyên chữ vi', () => {
+  const code = async (p) => p.then(() => null, (e) => e.code);
+  it('mỗi nhánh lỗi có code riêng', async () => {
+    expect(await code(importCode('xyz'))).toBe('badCode');
+    expect(await code(importCode('SL1.' + 'x'.repeat(5)))).toBe('truncated');
+    expect(await code(importCode(await exportCode({ foo: 1 })))).toBe('notSave');
+    expect(await code(parseSaveText('{bad'))).toBe('badJson');
+    expect(await code(parseSaveText('abc'))).toBe('badCode');
+    expect(await code(parseSaveText('{"a":1}'))).toBe('notSave');
+  });
+  it('message vi đúng chữ cũ', async () => {
+    await expect(importCode('xyz')).rejects.toThrow('Mã không hợp lệ');
+    await expect(parseSaveText('{bad')).rejects.toThrow('File không phải JSON hợp lệ');
+    await expect(parseSaveText('{"a":1}')).rejects.toThrow('Dữ liệu không phải save Starlight');
+  });
+});

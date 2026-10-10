@@ -2,6 +2,7 @@ import { R, pick } from '../core/rng.js';
 import { $, clamp, fmt } from '../core/util.js';
 import { COSTARS } from '../data/names.js';
 import { OFFER, PARTNERS } from '../data/offers.js';
+import { lbl, money, t } from '../i18n/index.js';
 import { GENRES, STATS } from '../data/rules.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit, genTitle } from './artists.js';
@@ -11,7 +12,7 @@ import { msk } from './managers.js';
 import { modV } from './market.js';
 import { sameGroup } from './relations.js';
 import { actByKey } from './releases.js';
-import { wkLabel } from './secretary.js';
+import { wkLabelT } from './secretary.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
@@ -43,21 +44,21 @@ export const effReq=(of,a)=>{const d=disc(of,a),r={};for(const k in of.req)r[k]=
 export const effPay=(of,a)=>Math.round(modV('pay')*of.pay*(1+(S.partners[of.partner]||0)/200)*(1+fame(a)/250)*(1+msk(a,'nego')*.04)/1e6)*1e6;
 export function canTake(of,a){
   const O=OFFER[of.type];
-  if(a.busy)return'Đang bận';
-  if(dHold(a))return'Chừa lịch debut';
-  if(a.status!=='debuted'&&!O.trainee)return'Chưa ra mắt';
-  if(of.target&&of.target!==a.id&&slotsOf(of)<2)return'Mời người khác';
-  if(a.scandal&&a.scandal.sev>=2)return'Đang dính scandal';
-  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return`Chừa lịch comeback ${wkLabel(h.w)}`}
-  const d=disc(of,a);if(fame(a)<Math.round(of.fame*(1-d)))return'Chưa đủ danh tiếng';
-  const r=effReq(of,a);for(const k in r)if(a.st[k]<r[k])return'Thiếu '+STATS[k];
+  if(a.busy)return t('meet.cant.busy');
+  if(dHold(a))return t('meet.cant.debut');
+  if(a.status!=='debuted'&&!O.trainee)return t('meet.cant.notDebuted');
+  if(of.target&&of.target!==a.id&&slotsOf(of)<2)return t('meet.cant.other');
+  if(a.scandal&&a.scandal.sev>=2)return t('meet.cant.scandal');
+  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return t('tag.cbHold',{w:wkLabelT(h.w)})}
+  const d=disc(of,a);if(fame(a)<Math.round(of.fame*(1-d)))return t('meet.cant.fame');
+  const r=effReq(of,a);for(const k in r)if(a.st[k]<r[k])return t('meet.cant.lack',{s:lbl('stat',k)});
   return'';
 }
 export const slotsOf=of=>of.slots||1;
 export const offerOrder=list=>list.slice().reverse().sort((x,y)=>(byId(x.target)?0:1)-(byId(y.target)?0:1));
 export function cbHold(a){let best=null;for(const p of (S.cbPlan||[])){const x=actByKey(p.k);if(x&&x.m.includes(a.id)&&(!best||p.w<best.w))best=p}return best}
 export function chem(ids){let c=0;const ms=ids.map(byId).filter(Boolean);for(let i=0;i<ms.length;i++)for(let j=i+1;j<ms.length;j++){const t=ms[i].tag[ms[j].id];c+=t==='friend'?.08:t==='enemy'?-.12:(t==='dating'||t==='public')?.04:0;if(sameGroup(ms[i],ms[j]))c+=.05}return clamp(+c.toFixed(2),-.3,.3)}
-export const chemTxt=c=>c>0?`ăn ý +${Math.round(c*100)}%`:c<0?`<span class="bad">lục đục ${Math.round(c*100)}%</span>`:'';
+export const chemTxt=c=>c>0?t('meet.chemPos',{p:Math.round(c*100)}):c<0?t('meet.chemNeg',{p:Math.round(c*100)}):'';
 export function bestCast(of,pool){
   const el=pool.filter(a=>!canTake(of,a));if(!el.length)return null;
   let first;if(of.target){first=el.find(a=>a.id===of.target);if(!first)return null}
@@ -69,9 +70,9 @@ export function acceptOffer(ofId,aId,silent){return acceptCast(ofId,[aId],silent
 export function acceptCast(ofId,ids,silent){
   const of=S.offers.find(o=>o.id===ofId);if(!of)return;
   ids=[...new Set(ids)].filter(i=>byId(i));
-  if(!ids.length)return toast('Chọn ít nhất 1 nghệ sĩ');
-  if(ids.length>slotsOf(of))return toast(`Dự án chỉ nhận tối đa ${slotsOf(of)} người`);
-  if(of.target&&!ids.includes(of.target))return toast('Phải có người được mời đích danh');
+  if(!ids.length)return toast(t('meet.toast.pickOne'));
+  if(ids.length>slotsOf(of))return toast(t('meet.toast.max',{n:t('unit.people',{n:slotsOf(of)})}));
+  if(of.target&&!ids.includes(of.target))return toast(t('meet.toast.mustTarget'));
   for(const i of ids){const why=canTake(of,byId(i));if(why)return toast(byId(i).name+': '+why)}
   const O=OFFER[of.type],c=ids.length>1?chem(ids):0,ms=ids.map(byId);
   for(const a of ms)a.busy={kind:'offer',type:of.type,title:of.title,partner:of.partner,costar:of.costar,left:of.weeks,total:of.weeks,pay:effPay(of,a),genre:of.genre,w:of.w,L:of.L,offerId:of.id,mates:ids,chem:c};
@@ -82,14 +83,14 @@ export function acceptCast(ofId,ids,silent){
 }
 export function acceptSel(ofId){const ids=[...document.querySelectorAll('.oc'+ofId+':checked')].map(x=>+x.value);acceptCast(ofId,ids)}
 export function ocPrev(ofId,el){const of=S.offers.find(o=>o.id===ofId);if(!of)return;const bx=[...document.querySelectorAll('.oc'+ofId+':checked')];
-  if(el&&bx.length>slotsOf(of)){el.checked=false;toast(`Tối đa ${slotsOf(of)} người`);return ocPrev(ofId)}
+  if(el&&bx.length>slotsOf(of)){el.checked=false;toast(t('meet.toast.upTo',{n:t('unit.people',{n:slotsOf(of)})}));return ocPrev(ofId)}
   const ids=bx.map(x=>+x.value),pay=ids.reduce((t,i)=>t+effPay(of,byId(i)),0),c=ids.length>1?chem(ids):0,o=$('#ocp'+ofId);
-  if(o)o.innerHTML=ids.length?`${ids.length}/${slotsOf(of)} người · tổng ${fmt(pay)}${c?' · '+chemTxt(c):''}`:`Chọn tối đa ${slotsOf(of)} người`}
+  if(o)o.innerHTML=ids.length?`${t('meet.sel',{a:ids.length,b:t('unit.people',{n:slotsOf(of)}),m:money(pay)})}${c?' · '+chemTxt(c):''}`:t('meet.pickMax',{n:t('unit.people',{n:slotsOf(of)})})}
 export function ocPick(ofId){const of=S.offers.find(o=>o.id===ofId);if(!of)return;const c=bestCast(of,S.artists.filter(a=>!a.busy))||[];document.querySelectorAll('.oc'+ofId).forEach(x=>x.checked=c.includes(+x.value));ocPrev(ofId)}
 export function investOffer(ofId){
   const of=S.offers.find(o=>o.id===ofId);if(!of||!of.invest||of.invested)return;
   const cost=Math.round(of.invest.budget*of.invest.share);
-  if(S.money<cost)return toast('Không đủ tiền góp vốn');
+  if(S.money<cost)return toast(t('meet.toast.noMoney'));
   S.money-=cost;of.invested=true;
   S.films.push({id:uid(),title:of.title,genre:of.genre,own:false,budget:of.invest.budget,share:of.invest.share,cost,cast:[],offerId:of.id,status:'Sắp chiếu',releaseAt:abs()+of.weeks+R(1,3),done:false,y:S.year});
   addLog(`💰 Góp vốn ${fmt(cost)} (${of.invest.share*100}%) vào phim «${of.title}».`);act();

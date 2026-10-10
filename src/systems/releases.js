@@ -10,61 +10,62 @@ import { mgrExp, mgrOf } from './managers.js';
 import { rivalPress, trendB } from './market.js';
 import { POST, PRE, PROMO_WK, campMem, postRec, preRec } from './promo.js';
 import { harmony } from './relations.js';
-import { actFree, acts, wkLabel } from './secretary.js';
+import { actFree, acts, wkLabelT } from './secretary.js';
+import { lbl, money, t } from '../i18n/index.js';
 import { act } from '../ui/building.js';
 import { closeM, modal, toast } from '../ui/modal.js';
 
 /* ---- Giao lưu fan: livestream & fan meeting ---- */
 export function liveInc(a){return Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)*rnd(.7,1.3)/1e5)*1e5}
 export function liveEst(ms){return ms.reduce((t,a)=>t+Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)/1e5)*1e5,0)}
-export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast('Tuần này đã livestream');if(S.money<1e6)return quiet||toast('Không đủ tiền');
+export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast(t('rel.toast.liveDone'));if(S.money<1e6)return quiet||toast(t('common.noMoney'));
   S.money-=1e6;let inc=0;for(const a of ms){inc+=liveInc(a);const g=Math.round(a.fans*.01+R(200,800)*(1+fame(a)/60));a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+8,0,100);a.energy=clamp(a.energy-4,0,100);a.lastLive=abs();a.lastFan=abs()}
-  S.money+=inc;book('live',inc,ms);addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'');if(!quiet)toast(`Livestream thu ${fmt(inc)}`);
+  S.money+=inc;book('live',inc,ms);addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'');if(!quiet)toast(t('rel.toast.liveGot',{m:money(inc)}));
   if(Math.random()<.03){const a=pick(ms);if(!a.scandal&&a.status==='debuted'){a.scandal={t:'Lỡ lời khi livestream',sev:1,left:2,truth:true,dating:false,other:0};pushEv({kind:'scandal',a:a.id},true);addLog(`😬 ${a.name} lỡ lời khi livestream, dân mạng bàn tán.`,'bad')}}
   if(!quiet)act()}
 export const fmCost=x=>40e6+x.m.length*10e6;
-export function doFM(k){const x=actByKey(k);if(!x)return;if(!actFree(x))return toast('Đang bận');const ms=campMem(k),tf=ms.reduce((t,a)=>t+a.fans,0);if(tf<10000)return toast('Cần tổng 10K fan');const c=fmCost(x);if(S.money<c)return toast('Không đủ tiền');
+export function doFM(k){const x=actByKey(k);if(!x)return;if(!actFree(x))return toast(t('rel.toast.busy'));const ms=campMem(k),tf=ms.reduce((t,a)=>t+a.fans,0);if(tf<10000)return toast(t('rel.toast.fm10k'));const c=fmCost(x);if(S.money<c)return toast(t('common.noMoney'));
   S.money-=c;book('prod',-c);const seats=Math.round(Math.min(tf*.03,8000)*rnd(.8,1.1)),inc=seats*150000;S.money+=inc;book('con',inc,ms);
   for(const a of ms){a.fans=Math.round(a.fans*1.03);a.mood=clamp(a.mood+12,0,100);a.energy=clamp(a.energy-10,0,100);a.lastFan=abs();a.wc=(a.wc||0)+1;a.busy={kind:'concert',title:'Fan meeting',left:1,total:1}}
   S.fmLast=S.fmLast||{};S.fmLast[k]=abs();if(S.fmHint)delete S.fmHint[k];
   addLog(`💝 Fan meeting của ${x.n.slice(2).trim()}: ${fmtN(seats)} fan tham dự, thu ${fmt(inc)} (chi ${fmt(c)}).`,'gold');act()}
 export function fanSugs(){const now=abs(),L=[];
   for(const x of acts()){if(!actFree(x))continue;const ms=campMem(x.k),tf=ms.reduce((t,a)=>t+a.fans,0),last=(S.fmLast||{})[x.k],gap=last?now-last:99;
-    if(tf<10000||gap<16)continue;const why=(S.fmHint||{})[x.k]&&now-S.fmHint[x.k]<=4?'vừa kết thúc quảng bá, cảm ơn fan đúng lúc':ms.some(a=>a.mood<45)?'thành viên đang buồn, gặp fan sẽ vui lên':gap>=99?'chưa từng tổ chức fan meeting':`${gap} tuần chưa gặp fan`;
+    if(tf<10000||gap<16)continue;const why=(S.fmHint||{})[x.k]&&now-S.fmHint[x.k]<=4?t('fan.why.promoEnd'):ms.some(a=>a.mood<45)?t('fan.why.sad'):gap>=99?t('fan.why.neverFm'):t('fan.why.sinceFm',{w:t('unit.weeks',{n:gap})});
     L.push({t:'fm',k:x.k,n:x.n,why,est:Math.round(Math.min(tf*.03,8000)),cost:fmCost(x),pri:(S.fmHint||{})[x.k]?3:2})}
   for(const a of S.artists){if(a.status!=='debuted'||a.lastLive===now)continue;const gap=a.lastFan?now-a.lastFan:99;let why='';
-    if(a.mood<45)why='tâm trạng thấp, fan động viên sẽ đỡ hơn';else if(a.scandal)why='đang có tin đồn, livestream để giữ fan';else if(gap>=6)why=gap>=99?'chưa từng livestream':`${gap} tuần chưa giao lưu fan`;
+    if(a.mood<45)why=t('fan.why.lowMood');else if(a.scandal)why=t('fan.why.rumor');else if(gap>=6)why=gap>=99?t('fan.why.neverLive'):t('fan.why.sinceFan',{w:t('unit.weeks',{n:gap})});
     if(why)L.push({t:'live',id:a.id,n:a.name,why,pri:a.mood<45?2.5:1})}
   return L.sort((a,b)=>b.pri-a.pri).slice(0,8)}
-export function fanHTML(){const L=fanSugs();if(!L.length)return'<div class="small muted">Fan đang được chăm sóc tốt, chưa cần thêm hoạt động.</div>';
-  return L.map(f=>f.t==='fm'?`<div class="prow">💝 <b>${esc(f.n)}</b><span class="small">Fan meeting · ~${fmtN(f.est)} chỗ, lãi ~${fmt(f.est*150000-f.cost)}<br><span class="muted">${esc(f.why)}</span></span><span class="sp"></span><button class="btn sm pri" onclick="doFM('${f.k}')">Tổ chức (${fmt(f.cost)})</button></div>`
-    :`<div class="prow">📱 <b>${esc(f.n)}</b><span class="small muted">${esc(f.why)}</span><span class="sp"></span><button class="btn sm" onclick="doLive([${f.id}])">Livestream (thu ~${fmt(liveEst([byId(f.id)]))})</button></div>`).join('')}
+export function fanHTML(){const L=fanSugs();if(!L.length)return`<div class="small muted">${t('fan.none')}</div>`;
+  return L.map(f=>f.t==='fm'?`<div class="prow">💝 <b>${esc(f.n)}</b><span class="small">${t('fan.fm',{n:fmtN(f.est),m:money(f.est*150000-f.cost)})}<br><span class="muted">${esc(f.why)}</span></span><span class="sp"></span><button class="btn sm pri" onclick="doFM('${f.k}')">${t('fan.hold',{m:money(f.cost)})}</button></div>`
+    :`<div class="prow">📱 <b>${esc(f.n)}</b><span class="small muted">${esc(f.why)}</span><span class="sp"></span><button class="btn sm" onclick="doLive([${f.id}])">${t('fan.live',{m:money(liveEst([byId(f.id)]))})}</button></div>`).join('')}
 export function viewCamp(k){const x=actByKey(k);if(!x)return closeM();const c=S.camp[k],ms=campMem(k),nm=esc(x.n),free=actFree(x),pl=(S.cbPlan||[]).find(p=>p.k===k);
-  const eRow=`<div class="small">⚡ Năng lượng: ${ms.map(a=>`${esc(a.name)} <b class="${a.energy<35?'bad':''}">${Math.round(a.energy)}</b>`).join(' · ')}</div>`;
+  const eRow=`<div class="small">${t('camp.energy',{l:ms.map(a=>`${esc(a.name)} <b class="${a.energy<35?'bad':''}">${Math.round(a.energy)}</b>`).join(' · ')})}</div>`;
   let body='';
   if(c&&c.ph==='post'){const u=c.used.wk===abs()?c.used.l:[],rec=postRec(k);
-    body=`<div class="grid2"><div class="card small">📈 Hạng hiện tại <b>#${c.rank}</b><br><span class="muted">cao nhất #${c.best}</span></div><div class="card small">🏆 <b>${c.wins}</b> cúp · 🎤 ${c.stages} sân khấu<br><span class="muted">Tuần ${c.wn+1}/${PROMO_WK} · thu ${fmt(c.inc)}</span></div></div>${eRow}
-    <h3>Hoạt động tuần này</h3><div class="card">${Object.keys(POST).map(id=>{const P=POST[id],dn=u.includes(id);return`<div class="prow" style="${dn?'opacity:.55':''}">${P.ic} <b>${P.n}</b><span class="small muted">−${P.e}⚡${P.stage?' · cơ hội giành cúp':id==='fansign'?' · bán album':id==='challenge'?' · có thể viral':''}</span><span class="sp"></span>${dn?'<span class="tag m">✓</span>':`<button class="btn sm${rec.includes(id)?' pri':''}" onclick="postDo('${k}','${id}')">Làm</button>`}</div>`}).join('')}</div>
-    <div class="card small">🗒️ <b>Thư ký gợi ý:</b> ${rec.length?rec.map(id=>POST[id].n).join(', ')+' (giữ năng lượng trên 30).':'thành viên đã mệt, để họ nghỉ.'} ${rec.length?`<button class="btn sm pri" onclick="postAuto('${k}')">Làm theo gợi ý</button>`:''}</div>
-    <label class="small row"><input type="checkbox" ${S.autoPromo!==false?'checked':''} onchange="S.autoPromo=this.checked;save()"> Tuần nào bạn chưa xếp, thư ký tự làm theo gợi ý</label>`}
+    body=`<div class="grid2"><div class="card small">${t('camp.rank',{r:c.rank,b:c.best})}</div><div class="card small">${t('camp.stats',{w:c.wins,s:c.stages,n:c.wn+1,m:PROMO_WK,i:money(c.inc)})}</div></div>${eRow}
+    <h3>${t('camp.thisWeek')}</h3><div class="card">${Object.keys(POST).map(id=>{const P=POST[id],dn=u.includes(id);return`<div class="prow" style="${dn?'opacity:.55':''}">${P.ic} <b>${lbl('post',id)}</b><span class="small muted">−${P.e}⚡${P.stage?' · '+t('camp.chance'):id==='fansign'?' · '+t('camp.album'):id==='challenge'?' · '+t('camp.viral'):''}</span><span class="sp"></span>${dn?'<span class="tag m">✓</span>':`<button class="btn sm${rec.includes(id)?' pri':''}" onclick="postDo('${k}','${id}')">${t('camp.do')}</button>`}</div>`}).join('')}</div>
+    <div class="card small">🗒️ <b>${t('camp.secRec')}</b> ${rec.length?rec.map(id=>lbl('post',id)).join(t('list.sep'))+' '+t('camp.keepE'):t('camp.restThem')} ${rec.length?`<button class="btn sm pri" onclick="postAuto('${k}')">${t('camp.followRec')}</button>`:''}</div>
+    <label class="small row"><input type="checkbox" ${S.autoPromo!==false?'checked':''} onchange="S.autoPromo=this.checked;save()"> ${t('camp.auto')}</label>`}
   else{const rec=free?preRec(k):[],h=c?c.hype:0;
-    body=`<div class="card small">🔥 Hype hiện tại <b>${h}</b>/80 — mỗi 4 hype ≈ +1 điểm xếp hạng và thêm fan khi phát hành. Hype giảm dần nếu lâu không comeback.${pl?`<br>📅 Đã hẹn comeback ${wkLabel(pl.w)}.`:''}</div>
+    body=`<div class="card small">${t('camp.hype',{h})}${pl?`<br>${t('camp.booked',{w:wkLabelT(pl.w)})}`:''}</div>
     <div class="bar" style="margin:6px 0"><i style="width:${h/.8}%;background:var(--pink)"></i></div>${eRow}
-    <h3>Hoạt động trước comeback</h3>${free?`<div class="card">${Object.keys(PRE).map(id=>{const P=PRE[id],dn=c&&c.done[id];return`<div class="prow" style="${dn?'opacity:.55':''}">${P.ic} <b>${P.n}</b><span class="small muted">${P.d} · +${P.h} hype · ${P.c?fmt(P.c):'miễn phí'}${P.e?' · −'+P.e+'⚡':''}</span><span class="sp"></span>${dn?'<span class="tag m">✓</span>':`<button class="btn sm${rec.includes(id)?' pri':''}" onclick="preDo('${k}','${id}')">Làm</button>`}</div>`}).join('')}</div>
-    <div class="card small">🗒️ <b>Thư ký gợi ý:</b> ${rec.length?rec.map(id=>PRE[id].n).join(', '):'chưa nên làm thêm (mệt hoặc quỹ thấp)'}. ${rec.length?`<button class="btn sm pri" onclick="preAuto('${k}')">Làm theo gợi ý</button>`:''}</div>
-    <div class="row"><button class="btn" onclick="view(viewSec)">🗒️ Kế hoạch comeback</button><span class="sp"></span>${pl?'':`<button class="btn pink" onclick="cbNow('${k}')">Comeback ngay</button>`}</div>`:'<div class="card small muted">Thành viên đang bận. Khi rảnh có thể làm teaser trước comeback.</div>'}`}
-  modal(`<h2>📣 Quảng bá: ${nm}</h2><div class="sub">${c&&c.ph==='post'?`Đang quảng bá «${esc(c.t)}». Mỗi tuần chọn sân khấu và hoạt động; ${PROMO_WK} tuần sau khi phát hành.`:'Giai đoạn trước comeback: teaser để tạo hype.'}</div>${body}
-  <h3>💬 Giao lưu fan</h3><div class="card">${fanHTML()}</div>`)}
+    <h3>${t('camp.preTitle')}</h3>${free?`<div class="card">${Object.keys(PRE).map(id=>{const P=PRE[id],dn=c&&c.done[id];return`<div class="prow" style="${dn?'opacity:.55':''}">${P.ic} <b>${lbl('pre',id)}</b><span class="small muted">${lbl('pre','d.'+id)} · +${P.h} hype · ${P.c?money(P.c):t('common.free')}${P.e?' · −'+P.e+'⚡':''}</span><span class="sp"></span>${dn?'<span class="tag m">✓</span>':`<button class="btn sm${rec.includes(id)?' pri':''}" onclick="preDo('${k}','${id}')">${t('camp.do')}</button>`}</div>`}).join('')}</div>
+    <div class="card small">🗒️ <b>${t('camp.secRec')}</b> ${rec.length?rec.map(id=>lbl('pre',id)).join(t('list.sep')):t('camp.noMore')}. ${rec.length?`<button class="btn sm pri" onclick="preAuto('${k}')">${t('camp.followRec')}</button>`:''}</div>
+    <div class="row"><button class="btn" onclick="view(viewSec)">${t('sec.title')}</button><span class="sp"></span>${pl?'':`<button class="btn pink" onclick="cbNow('${k}')">${t('sec.comebackNow')}</button>`}</div>`:`<div class="card small muted">${t('camp.busy')}</div>`}`}
+  modal(`<h2>${t('camp.title',{n:nm})}</h2><div class="sub">${c&&c.ph==='post'?t('camp.subPost',{t:esc(c.t),w:t('unit.weeks',{n:PROMO_WK})}):t('camp.subPre')}</div>${body}
+  <h3>${t('camp.fanTitle')}</h3><div class="card">${fanHTML()}</div>`)}
 export function actByKey(k){return acts().find(x=>x.k===k)}
 export function releaseSingle(){doSingle($('#sAct').value,$('#sCon').value,+$('#sBud').value,$('#sTitle').value,false,+($('#sSong')?.value||0))}
 export function doSingle(ak,ck,bud,title,silent,sid){
   title=(title||pick(SONGS)).trim().slice(0,40);
-  const A=actByKey(ak);if(!A){if(!silent)toast('Chọn nghệ sĩ');return false}
-  if(gHiatus(ak)){if(!silent)toast('Nhóm đang tạm ngừng hoạt động');return false}
+  const A=actByKey(ak);if(!A){if(!silent)toast(t('rel.toast.pickAct'));return false}
+  if(gHiatus(ak)){if(!silent)toast(t('rel.toast.hiatus'));return false}
   const sg=sid?(S.songs||[]).find(x=>x.id===sid&&x.st==='ok'):null;if(sg){ck=sg.ck;title=sg.t}
   const mem=A.m.map(byId).filter(Boolean);
-  if(mem.some(a=>a.busy)){if(!silent)toast('Có thành viên đang bận');return false}
-  if(S.money<bud){if(!silent)toast('Không đủ tiền');return false}
+  if(mem.some(a=>a.busy)){if(!silent)toast(t('rel.toast.memBusy'));return false}
+  if(S.money<bud){if(!silent)toast(t('common.noMoney'));return false}
   S.cbPlan=(S.cbPlan||[]).filter(p=>p.k!==ak);
   S.money-=bud;book('prod',-bud);
   const w=CONCEPTS[ck].w,ft=mem.reduce((s,a)=>s+fit(a,w),0)/mem.length,fm=mem.reduce((s,a)=>s+fame(a),0)/mem.length;
@@ -84,12 +85,12 @@ export function doSingle(ak,ck,bud,title,silent,sid){
   if(!silent)act();return true;
 }
 export function holdConcert(k){
-  const A=actByKey(k||$('#cAct').value);if(!A)return toast('Chọn nghệ sĩ');
+  const A=actByKey(k||$('#cAct').value);if(!A)return toast(t('rel.toast.pickAct'));
   const mem=A.m.map(byId).filter(Boolean),tf=mem.reduce((s,a)=>s+a.fans,0);
-  if(tf<30000)return toast('Cần tổng 30K fan');
-  if(mem.some(a=>a.busy))return toast('Có thành viên đang bận');
-  if(gHiatus(A.k))return toast('Nhóm đang tạm ngừng hoạt động');
-  if(S.money<200e6)return toast('Không đủ 200 tr');
+  if(tf<30000)return toast(t('rel.toast.con30k'));
+  if(mem.some(a=>a.busy))return toast(t('rel.toast.memBusy'));
+  if(gHiatus(A.k))return toast(t('rel.toast.hiatus'));
+  if(S.money<200e6)return toast(t('common.needMoney',{m:money(200e6)}));
   S.money-=200e6;book('prod',-200e6);
   const aud=Math.round(Math.min(tf*.04*rnd(.8,1.2),60000)),inc=aud*500000;S.money+=inc;book('con',inc,mem);
   for(const a of mem){a.fans=Math.round(a.fans*1.08);a.mood=clamp(a.mood+10,0,100);a.energy=clamp(a.energy-25,0,100);a.busy={kind:'concert',title:'Concert',left:1,total:1}}
@@ -99,9 +100,9 @@ export function holdConcert(k){
 export function produceFilm(){
   const genre=$('#fGen').value,bud=+$('#fBud').value,title=($('#fTitle').value||pick(FT1)+' '+pick(FT2)).trim().slice(0,40);
   const cast=[...document.querySelectorAll('.fcast:checked')].map(x=>+x.value);
-  if(!cast.length)return toast('Chọn ít nhất 1 diễn viên');
-  if(cast.length>3)return toast('Tối đa 3 vai chính');
-  if(S.money<bud)return toast('Không đủ tiền');
+  if(!cast.length)return toast(t('rel.toast.pickCast'));
+  if(cast.length>3)return toast(t('rel.toast.max3'));
+  if(S.money<bud)return toast(t('common.noMoney'));
   S.money-=bud;book('prod',-bud);
   const f={id:uid(),title,genre,own:true,budget:bud,share:1,cost:bud,cast,status:'Đang quay',releaseAt:0,done:false,y:S.year};
   S.films.push(f);

@@ -11,6 +11,8 @@
 .cash b.neg,#money.neg{color:var(--bad)}
 .meta{font:400 11.5px var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta .obadge{color:var(--ink)}
+@media (max-width:420px){.meta{display:flex;flex-wrap:wrap;column-gap:1ch;white-space:nowrap}.meta .sep{display:none}}
+@media (max-width:400px){.hbtns{gap:4px}.top{padding-block:8px}}
 .hbtns{display:flex;gap:6px}
 .rb{position:relative;flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:16px;background:var(--card);border:1px solid var(--line2);padding:0;transition:border-color .2s,background .2s}
 .rb:hover{border-color:var(--muted);background:var(--card2)}

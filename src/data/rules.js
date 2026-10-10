@@ -1,5 +1,7 @@
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('stat', k).
 export const STATS={vocal:'Vocal',dance:'Nhảy',rap:'Rap',acting:'Diễn xuất',variety:'Tạp kỹ',visual:'Visual',stamina:'Thể lực'};
 export const TRAIN_COST=3e6;
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('train.n', k).
 export const TRAIN={
   vocal:{n:'Vocal',room:'vocal',g:{vocal:3},e:-12},
   dance:{n:'Nhảy',room:'dance',g:{dance:3,stamina:.5},e:-15},
@@ -27,8 +29,11 @@ export const ROOMS=[
   {id:'sales',ic:'💹',f:8},
   {id:'hr',ic:'🗂️',f:8}
 ];
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('msk', k).
 export const MSK={nego:'Đàm phán',care:'Chăm sóc',pr:'Truyền thông',plan:'Kế hoạch'};
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('mskd', k).
 export const MSKD={nego:'+4% thù lao và giảm 1,5% yêu cầu mỗi điểm',care:'Tăng tâm trạng, giảm hao năng lượng, giảm nguy cơ đòi rời đi',pr:'Giảm nguy cơ scandal, xử lý scandal hiệu quả hơn',plan:'+4% hiệu quả luyện tập mỗi điểm'};
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('genre', k).
 export const GENRES={
   romance:{n:'Tình cảm',w:{acting:.5,visual:.4,vocal:.1}},
   action:{n:'Hành động',w:{acting:.4,stamina:.4,dance:.2}},
@@ -38,6 +43,7 @@ export const GENRES={
   drama:{n:'Tâm lý',w:{acting:.9,visual:.1}},
   musical:{n:'Âm nhạc',w:{acting:.4,vocal:.3,dance:.3}}
 };
+// Chuỗi tiếng Việt trong bảng này chỉ cho log/S. UI tra từ điển: lbl('concept', k).
 export const CONCEPTS={
   cute:{n:'Dễ thương',w:{vocal:.3,dance:.3,visual:.4}},
   crush:{n:'Mạnh mẽ (Crush)',w:{dance:.4,rap:.3,visual:.3}},

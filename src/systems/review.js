@@ -1,5 +1,6 @@
 import { R } from '../core/rng.js';
 import { clamp, esc, fmt, fmtN } from '../core/util.js';
+import { lbl, money, sv, t } from '../i18n/index.js';
 import { CONCEPTS, GENRES } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fame } from './artists.js';
@@ -9,7 +10,7 @@ import { pct } from './ext2.js';
 import { effSk } from './managers.js';
 import { POST, PRE, campMem, postRec, preRec } from './promo.js';
 import { actByKey, fanSugs, liveEst } from './releases.js';
-import { actFree, acts, lastSingleW, secPlan, wkLabel } from './secretary.js';
+import { actFree, acts, lastSingleW, secPlan, wkLabel, wkLabelT } from './secretary.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
@@ -50,10 +51,10 @@ export function evalAll(){const R0={w:abs(),y:S.year,wk:S.week,t:[],a:[]};
   addLog(`📋 Đánh giá định kỳ: TTS ${R0.t.length-tf.length}/${R0.t.length} đạt · Nghệ sĩ ${ex.length} xuất sắc${ex.length?` (thưởng ${fmt(-ex.reduce((t,x)=>t+x.money,0))})`:''}, ${fa.length} không đạt${fa.length?` (trừ ${fmt(fa.reduce((t,x)=>t+x.money,0))})`:''}.`,fa.length||tf.length?'':'good');
 }
 export function evalBrief(E){if(!E)return'';const tf=E.t.filter(x=>x.g==='Không đạt'),ex=E.a.filter(x=>x.g==='Xuất sắc'),fa=E.a.filter(x=>x.g==='Không đạt');
-  return`<div class="card rep">📋 <b>Đánh giá định kỳ</b> (T${E.wk} N${E.y})<br>🌱 TTS: ${E.t.length-tf.length}/${E.t.length} đạt${tf.length?` · <span class="w">${tf.map(x=>esc(x.n)+(x.out?' bị loại':` ${x.f}/${EV_TTS}`)).join(', ')}</span>`:''}<br>⭐ Nghệ sĩ: ${ex.length?`🏅 ${ex.map(x=>esc(x.n)).join(', ')} (+thưởng)`:'không ai xuất sắc'}${fa.length?` · <span class="w">${fa.map(x=>esc(x.n)+(x.out?' bị chấm dứt HĐ':` ${x.f}/${EV_ART}`)).join(', ')}</span>`:''}</div>`}
-export function evalTable(E){if(!E)return'<div class="small muted">Chưa có kỳ đánh giá nào.</div>';const gc=g=>g==='Xuất sắc'?'tag s':g==='Tốt'||g==='Đạt'?'tag m':'tag r';
-  return`${E.t.length?`<div class="small"><b>🌱 Thực tập sinh</b> (tổng chỉ số phải tăng trên ${EV_PCT}% so với 4 tuần trước; bản thân đã đủ điểm debut trên ${DEBUT_MIN}% cũng tính đạt)</div>${E.t.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.p>=0?'+':''}${x.p}%${x.g==='Không đạt'?` · ${x.out?'đã bị loại':`trượt ${x.f}/${EV_TTS} liên tiếp`}`:''}</span></div>`).join('')}`:''}
-  ${E.a.length?`<div class="small" style="margin-top:6px"><b>⭐ Nghệ sĩ</b> (điểm = % fan tăng + 6/hoạt động − scandal; ≥20 xuất sắc, ≥5 đạt)</div>${E.a.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.pts} điểm${x.money<0?` · thưởng ${fmt(-x.money)}`:x.money>0?` · trừ ${fmt(x.money)}`:''}${x.g==='Không đạt'?` · ${x.out?'đã chấm dứt HĐ':`trượt ${x.f}/${EV_ART} liên tiếp`}`:''}</span></div>`).join('')}`:''}`}
+  return`<div class="card rep">📋 <b>${t('eval.title')}</b> (${t('week.labelY',{w:E.wk,y:E.y})})<br>🌱 ${t('eval.ttsPass',{n:E.t.length-tf.length,m:E.t.length})}${tf.length?` · <span class="w">${tf.map(x=>esc(x.n)+(x.out?' '+t('eval.out'):` ${x.f}/${EV_TTS}`)).join(t('list.sep'))}</span>`:''}<br>⭐ ${t('eval.artists')} ${ex.length?`🏅 ${ex.map(x=>esc(x.n)).join(t('list.sep'))} ${t('eval.bonus')}`:t('eval.noStar')}${fa.length?` · <span class="w">${fa.map(x=>esc(x.n)+(x.out?' '+t('eval.terminated'):` ${x.f}/${EV_ART}`)).join(t('list.sep'))}</span>`:''}</div>`}
+export function evalTable(E){if(!E)return`<div class="small muted">${t('eval.none')}</div>`;const gc=g=>g==='Xuất sắc'?'tag s':g==='Tốt'||g==='Đạt'?'tag m':'tag r';
+  return`${E.t.length?`<div class="small">${t('eval.ttsRule',{p:EV_PCT,d:DEBUT_MIN})}</div>${E.t.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${sv(x.g)}</span><span class="small muted">${x.p>=0?'+':''}${x.p}%${x.g==='Không đạt'?` · ${x.out?t('eval.tOut'):t('eval.failRow',{f:x.f,m:EV_TTS})}`:''}</span></div>`).join('')}`:''}
+  ${E.a.length?`<div class="small" style="margin-top:6px">${t('eval.artRule')}</div>${E.a.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${sv(x.g)}</span><span class="small muted">${t('eval.pts',{n:x.pts})}${x.money<0?` · ${t('eval.bonusM',{m:money(-x.money)})}`:x.money>0?` · ${t('eval.deduct',{m:money(x.money)})}`:''}${x.g==='Không đạt'?` · ${x.out?t('eval.aOut'):t('eval.failRow',{f:x.f,m:EV_ART})}`:''}</span></div>`).join('')}`:''}`}
 /* ---- Phòng Truyền thông: đề xuất kế hoạch quảng bá ---- */
 export const PRP={
   sns:{n:'Chạy quảng cáo SNS',ic:'📱',c:15e6},
@@ -69,34 +70,34 @@ export function prMem(k){return k==='tts'?S.artists.filter(a=>a.status==='traine
 export function prName(k){if(k==='tts')return'tất cả thực tập sinh';if(k[0]==='a'){const a=byId(+k.slice(1));return a?a.name:'?'}const x=actByKey(k);return x?x.n.slice(2).trim():'?'}
 export function prPlans(){const L=[],now=abs();
   for(const x of acts()){const k=x.k,c=S.camp[k],nm=esc(x.n.slice(2).trim()),ms=campMem(k);if(!ms.length)continue;
-    if(c&&c.ph==='post'){const r=postRec(k);if(r.length&&!(c.used.wk===now&&c.used.l.length))L.push({hot:1,pri:9,ic:'🎤',t:`Lịch quảng bá tuần này cho ${nm}`,why:`Đang quảng bá «${esc(c.t)}», hạng #${c.rank}. Đề xuất: ${r.map(id=>POST[id].n).join(', ')}.`,cost:0,go:`postAuto('${k}')`});continue}
+    if(c&&c.ph==='post'){const r=postRec(k);if(r.length&&!(c.used.wk===now&&c.used.l.length))L.push({hot:1,pri:9,ic:'🎤',t:t('pr.postT',{n:nm}),h:`Lịch quảng bá tuần này cho ${nm}`,why:t('pr.postWhy',{t:esc(c.t),r:c.rank,l:r.map(id=>lbl('post',id)).join(t('list.sep'))}),cost:0,go:`postAuto('${k}')`});continue}
     if(!actFree(x))continue;
     const pl=(S.cbPlan||[]).find(p=>p.k===k),sp=secPlan(x),soon=pl||(c&&c.ph==='pre')||(sp&&!sp.wait);
-    if(soon){const r=preRec(k);if(r.length)L.push({hot:1,pri:8,ic:'📣',t:`Gói teaser trước comeback cho ${nm}`,why:`${pl?`Đã hẹn comeback ${wkLabel(pl.w)}.`:'Sắp đến thời điểm comeback.'} Hype hiện tại ${c?c.hype:0}/80. Đề xuất: ${r.map(id=>PRE[id].n).join(', ')}.`,cost:r.reduce((t,id)=>t+PRE[id].c,0),go:`preAuto('${k}')`})}
+    if(soon){const r=preRec(k);if(r.length)L.push({hot:1,pri:8,ic:'📣',t:t('pr.teaserT',{n:nm}),h:`Gói teaser trước comeback cho ${nm}`,why:t('pr.teaserWhy',{a:pl?t('pr.booked',{w:wkLabelT(pl.w)}):t('pr.soon'),h:c?c.hype:0,l:r.map(id=>lbl('pre',id)).join(t('list.sep'))}),cost:r.reduce((t,id)=>t+PRE[id].c,0),go:`preAuto('${k}')`})}
     const lw=lastSingleW(x),gap=lw?now-lw:99;
-    if(!soon&&gap>=8&&!prCool('sns',k))L.push({pri:5,ic:PRP.sns.ic,t:`${PRP.sns.n} cho ${nm}`,why:gap>=99?'Chưa có hoạt động nổi bật nào, cần tăng độ nhận diện.':`${gap} tuần chưa có bài mới, fan đang nguội dần.`,cost:PRP.sns.c,go:`prDo('sns','${k}')`});
-    if(soon&&!prCool('sns',k))L.push({pri:6,ic:PRP.sns.ic,t:`${PRP.sns.n} trước comeback cho ${nm}`,why:'Quảng cáo trước ngày phát hành cộng thêm hype.',cost:PRP.sns.c,go:`prDo('sns','${k}')`});
-    if(ms.some(a=>a.scandal)&&!prCool('press',k))L.push({hot:1,pri:7,ic:PRP.press.ic,t:`${PRP.press.n} cho ${nm}`,why:'Đang có tin đồn, cần bài phỏng vấn tích cực để kéo dư luận.',cost:PRP.press.c,go:`prDo('press','${k}')`});
-    else if(!prCool('mag',k)&&!prCool('press',k)&&gap>=5&&gap<99&&Math.min(...ms.map(a=>a.st.visual))>=45)L.push({pri:3,ic:PRP.mag.ic,t:`${PRP.mag.n} cùng ${nm}`,why:'Giữ hình ảnh giữa hai lần comeback, tăng Visual.',cost:PRP.mag.c,go:`prDo('mag','${k}')`});
+    if(!soon&&gap>=8&&!prCool('sns',k))L.push({pri:5,ic:PRP.sns.ic,t:t('pr.for',{p:lbl('prp','sns'),n:nm}),h:`${PRP.sns.n} cho ${nm}`,why:gap>=99?t('pr.why.none'):t('pr.why.gap',{w:t('unit.weeks',{n:gap})}),cost:PRP.sns.c,go:`prDo('sns','${k}')`});
+    if(soon&&!prCool('sns',k))L.push({pri:6,ic:PRP.sns.ic,t:t('pr.beforeCb',{p:lbl('prp','sns'),n:nm}),h:`${PRP.sns.n} trước comeback cho ${nm}`,why:t('pr.why.pre'),cost:PRP.sns.c,go:`prDo('sns','${k}')`});
+    if(ms.some(a=>a.scandal)&&!prCool('press',k))L.push({hot:1,pri:7,ic:PRP.press.ic,t:t('pr.for',{p:lbl('prp','press'),n:nm}),h:`${PRP.press.n} cho ${nm}`,why:t('pr.why.rumor'),cost:PRP.press.c,go:`prDo('press','${k}')`});
+    else if(!prCool('mag',k)&&!prCool('press',k)&&gap>=5&&gap<99&&Math.min(...ms.map(a=>a.st.visual))>=45)L.push({pri:3,ic:PRP.mag.ic,t:t('pr.with',{p:lbl('prp','mag'),n:nm}),h:`${PRP.mag.n} cùng ${nm}`,why:t('pr.why.keep'),cost:PRP.mag.c,go:`prDo('mag','${k}')`});
   }
   for(const a of S.artists.filter(a=>a.actor&&!a.busy)){const k='a'+a.id;if(prCool('actor',k))continue;const gap=a.lastFan?now-a.lastFan:99;
-    if(gap>=4||a.wantAct)L.push({pri:4,ic:PRP.actor.ic,t:`${PRP.actor.n}: ${esc(a.name)}`,why:a.wantAct?'Đang muốn đóng phim, cần được đạo diễn chú ý.':'Lâu chưa xuất hiện trên truyền thông.',cost:PRP.actor.c,go:`prDo('actor','${k}')`})}
+    if(gap>=4||a.wantAct)L.push({pri:4,ic:PRP.actor.ic,t:t('pr.colon',{p:lbl('prp','actor'),n:esc(a.name)}),h:`${PRP.actor.n}: ${esc(a.name)}`,why:a.wantAct?t('pr.why.wantAct'):t('pr.why.absent'),cost:PRP.actor.c,go:`prDo('actor','${k}')`})}
   const tts=S.artists.filter(a=>a.status==='trainee');
-  if(tts.length>=2&&!prCool('tts','tts'))L.push({pri:4,ic:PRP.tts.ic,t:`${PRP.tts.n} (tất cả ${tts.length} thực tập sinh)`,why:'Xây fan cho cả lứa trước khi debut, các bạn cũng vui hơn.',cost:PRP.tts.c,go:`prDo('tts','tts')`});
-  for(const f of fanSugs().slice(0,3))L.push(f.t==='fm'?{pri:6,ic:'💝',t:`Fan meeting: ${esc(f.n.slice(2).trim())}`,why:`${esc(f.why)}. Ước tính ~${fmtN(f.est)} chỗ.`,cost:f.cost,go:`doFM('${f.k}')`}:{pri:2,ic:'📱',t:`Livestream: ${esc(f.n)}`,why:`${esc(f.why)}. Dự kiến thu ~${fmt(liveEst([byId(f.id)]))}.`,cost:1e6,go:`doLive([${f.id}])`});
+  if(tts.length>=2&&!prCool('tts','tts'))L.push({pri:4,ic:PRP.tts.ic,t:t('pr.ttsAll',{p:lbl('prp','tts'),n:tts.length}),h:`${PRP.tts.n} (tất cả ${tts.length} thực tập sinh)`,why:t('pr.why.tts'),cost:PRP.tts.c,go:`prDo('tts','tts')`});
+  for(const f of fanSugs().slice(0,3))L.push(f.t==='fm'?{pri:6,ic:'💝',t:t('pr.fm',{n:esc(f.n.slice(2).trim())}),h:`Fan meeting: ${esc(f.n.slice(2).trim())}`,why:t('pr.fmWhy',{w:esc(f.why),n:fmtN(f.est)}),cost:f.cost,go:`doFM('${f.k}')`}:{pri:2,ic:'📱',t:t('pr.live',{n:esc(f.n)}),h:`Livestream: ${esc(f.n)}`,why:t('pr.liveWhy',{w:esc(f.why),m:money(liveEst([byId(f.id)]))}),cost:1e6,go:`doLive([${f.id}])`});
   return L.sort((a,b)=>b.pri-a.pri)}
 export function prHTML(L){const sk=prSk();
-  return`<div class="small muted" style="margin-bottom:6px">Phòng Truyền thông đề xuất dựa trên lịch comeback, tin đồn và mức độ chú ý của từng nhóm, solo, diễn viên. Kỹ năng Truyền thông cao nhất trong đội quản lý: <b>${sk}</b> (+${Math.round(sk*4)}% hiệu quả).</div>`+
-  (L.map(p=>`<div class="card prp ${p.hot?'hot':''}"><div class="row"><b>${p.ic} ${p.t}</b><span class="sp"></span><span class="small muted">${p.cost?fmt(p.cost):'miễn phí'}</span></div><div class="small muted">${p.why}</div><div class="row" style="margin-top:6px"><span class="sp"></span><button class="btn sm pri" onclick="prGo(this)" data-t="${p.t}" data-go="${p.go}">Duyệt</button></div></div>`).join('')||'<div class="small muted">Chưa có kế hoạch mới. Các nhóm đang được quảng bá đúng nhịp.</div>')}
+  return`<div class="small muted" style="margin-bottom:6px">${t('pr.tip',{s:sk,p:Math.round(sk*4)})}</div>`+
+  (L.map(p=>`<div class="card prp ${p.hot?'hot':''}"><div class="row"><b>${p.ic} ${p.t}</b><span class="sp"></span><span class="small muted">${p.cost?money(p.cost):t('common.free')}</span></div><div class="small muted">${p.why}</div><div class="row" style="margin-top:6px"><span class="sp"></span><button class="btn sm pri" onclick="prGo(this)" data-t="${p.h}" data-go="${p.go}">${t('pr.approve')}</button></div></div>`).join('')||`<div class="small muted">${t('pr.empty')}</div>`)}
 export function prGo(btn){const f=btn.dataset.go,t=btn.dataset.t||'';S.prHist=S.prHist||[];S.prHist.unshift(`${wkLabel(abs())}: ${t.replace(/<[^>]+>/g,'')}`);if(S.prHist.length>40)S.prHist.length=40;new Function(f)()}
-export function prDo(t,k){const P=PRP[t];if(!P)return;if(S.money<P.c)return toast('Không đủ tiền');const ms=prMem(k);if(!ms.length)return;
-  S.money-=P.c;S.prUsed=S.prUsed||{};S.prUsed[t+':'+k]=abs();const mu=1+prSk()*.04,nm=prName(k);let tf=0;
+export function prDo(ty,k){const P=PRP[ty];if(!P)return;if(S.money<P.c)return toast(t('common.noMoney'));const ms=prMem(k);if(!ms.length)return;
+  S.money-=P.c;S.prUsed=S.prUsed||{};S.prUsed[ty+':'+k]=abs();const mu=1+prSk()*.04,nm=prName(k);let tf=0;
   const gF=n=>ms.forEach(a=>{const g=Math.round(R(n[0],n[1])*mu*(1+fame(a)/100));a.fans+=g;if(a.yr)a.yr.fans+=g;tf+=g});
   let msg='';
-  if(t==='sns'){gF([600,2000]);const c=S.camp[k];let h='';if(c&&c.ph==='pre'){const d=Math.round(6*mu);c.hype=Math.min(80,c.hype+d);h=`, +${d} hype`}msg=`${P.ic} Quảng cáo SNS cho ${nm}: +${fmtN(tf)} fan${h}.`}
-  else if(t==='press'){gF([200,700]);ms.forEach(a=>{if(a.scandal&&a.scandal.left>1)a.scandal.left--;a.mood=clamp(a.mood+3,0,100)});msg=`${P.ic} ${nm} trả lời phỏng vấn, dư luận dịu lại (+${fmtN(tf)} fan).`}
-  else if(t==='mag'){gF([300,900]);ms.forEach(a=>a.st.visual=clamp(+(a.st.visual+1).toFixed(1),0,100));msg=`${P.ic} ${nm} lên tạp chí: +${fmtN(tf)} fan, Visual +1.`}
-  else if(t==='tts'){gF([80,300]);ms.forEach(a=>a.mood=clamp(a.mood+5,0,100));msg=`${P.ic} Clip của ${ms.length} thực tập sinh lan truyền: +${fmtN(tf)} fan, cả lứa vui hơn.`}
-  else if(t==='actor'){gF([300,1000]);ms.forEach(a=>{a.st.acting=clamp(+(a.st.acting+.5).toFixed(1),0,100);a.lastFan=abs()});msg=`${P.ic} ${nm} quảng bá hình ảnh: +${fmtN(tf)} fan, Diễn xuất +0.5.`}
-  if(t!=='tts')ms.forEach(a=>a.wc=(a.wc||0)+1);
+  if(ty==='sns'){gF([600,2000]);const c=S.camp[k];let h='';if(c&&c.ph==='pre'){const d=Math.round(6*mu);c.hype=Math.min(80,c.hype+d);h=`, +${d} hype`}msg=`${P.ic} Quảng cáo SNS cho ${nm}: +${fmtN(tf)} fan${h}.`}
+  else if(ty==='press'){gF([200,700]);ms.forEach(a=>{if(a.scandal&&a.scandal.left>1)a.scandal.left--;a.mood=clamp(a.mood+3,0,100)});msg=`${P.ic} ${nm} trả lời phỏng vấn, dư luận dịu lại (+${fmtN(tf)} fan).`}
+  else if(ty==='mag'){gF([300,900]);ms.forEach(a=>a.st.visual=clamp(+(a.st.visual+1).toFixed(1),0,100));msg=`${P.ic} ${nm} lên tạp chí: +${fmtN(tf)} fan, Visual +1.`}
+  else if(ty==='tts'){gF([80,300]);ms.forEach(a=>a.mood=clamp(a.mood+5,0,100));msg=`${P.ic} Clip của ${ms.length} thực tập sinh lan truyền: +${fmtN(tf)} fan, cả lứa vui hơn.`}
+  else if(ty==='actor'){gF([300,1000]);ms.forEach(a=>{a.st.acting=clamp(+(a.st.acting+.5).toFixed(1),0,100);a.lastFan=abs()});msg=`${P.ic} ${nm} quảng bá hình ảnh: +${fmtN(tf)} fan, Diễn xuất +0.5.`}
+  if(ty!=='tts')ms.forEach(a=>a.wc=(a.wc||0)+1);
   addLog(msg,'good');act()}

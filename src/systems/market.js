@@ -66,7 +66,7 @@ export function surprise(){
   else if(k==='investor')pushEv({kind:'sx',sx:k,p:pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng']),v:Math.round(R(200,500)*(1+S.year*.2))*1e6},true);
   else if(k==='festival'){const x=pick(free);pushEv({kind:'sx',sx:k,act:x.k,n:x.n.slice(2)},true)}
   else pushEv({kind:'sx',sx:k},true);
-  toast('⚡ Có sự kiện bất ngờ!');
+  toast(t('market.toast.surprise'));
 }
 export function sxResolve(e,k){
   const D=SXD[e.sx];
@@ -87,14 +87,14 @@ export function sxResolve(e,k){
 }
 /* ---- đầu tư kinh doanh ---- */
 export const BIZ={
-  cafe:{n:'Cà phê thần tượng',ic:'☕',cost:150e6,base:5e6,syn:.8,vol:.3,d:'Fan càng đông càng đắt khách.'},
-  food:{n:'Chuỗi nhà hàng',ic:'🍜',cost:350e6,base:11e6,syn:.2,vol:.25,d:'Ổn định, ít phụ thuộc fan.'},
-  media:{n:'Studio nội dung số',ic:'📹',cost:250e6,base:5e6,syn:.6,vol:.4,d:'Mỗi cấp giúp nghệ sĩ đã ra mắt tăng fan nhanh hơn.'},
-  academy:{n:'Học viện đào tạo',ic:'🏫',cost:500e6,base:8e6,syn:.1,vol:.2,d:'Mỗi cấp tăng 6% hiệu quả luyện tập.'},
-  fashion:{n:'Thương hiệu thời trang',ic:'👗',cost:450e6,base:13e6,syn:1,vol:.45,d:'Bán chạy khi nghệ sĩ nổi tiếng.'},
-  beauty:{n:'Dòng mỹ phẩm',ic:'💄',cost:700e6,base:19e6,syn:1,vol:.5,d:'Lãi cao, phụ thuộc danh tiếng.'},
-  game:{n:'Studio game',ic:'🎮',cost:900e6,base:26e6,syn:.5,vol:1.1,d:'Rủi ro cao: có tuần lãi lớn, có tuần lỗ.'},
-  estate:{n:'Bất động sản',ic:'🏢',cost:1200e6,base:22e6,syn:0,vol:.1,d:'Rất ổn định, vốn lớn.'}
+  cafe:{n:'Cà phê thần tượng',ic:'☕',cost:150e6,base:5e6,syn:.8,vol:.3},
+  food:{n:'Chuỗi nhà hàng',ic:'🍜',cost:350e6,base:11e6,syn:.2,vol:.25},
+  media:{n:'Studio nội dung số',ic:'📹',cost:250e6,base:5e6,syn:.6,vol:.4},
+  academy:{n:'Học viện đào tạo',ic:'🏫',cost:500e6,base:8e6,syn:.1,vol:.2},
+  fashion:{n:'Thương hiệu thời trang',ic:'👗',cost:450e6,base:13e6,syn:1,vol:.45},
+  beauty:{n:'Dòng mỹ phẩm',ic:'💄',cost:700e6,base:19e6,syn:1,vol:.5},
+  game:{n:'Studio game',ic:'🎮',cost:900e6,base:26e6,syn:.5,vol:1.1},
+  estate:{n:'Bất động sản',ic:'🏢',cost:1200e6,base:22e6,syn:0,vol:.1}
 };
 export const bizLv=k=>{const b=(S.biz||[]).find(x=>x.k===k);return b?b.lv:0};
 export const upCost=b=>Math.round(BIZ[b.k].cost*.7*b.lv);
@@ -102,14 +102,14 @@ export function bizTick(){const fF=clamp(totalFans()/300000,0,2);let t=0;
   for(const b of S.biz){const B=BIZ[b.k];const p=Math.round(B.base*b.lv*(1+B.syn*fF)*rnd(1-B.vol,1+B.vol)*modV('econ')/1e5)*1e5;const q=Math.round(p*bizOwn(b));b.last=p;b.tot+=q;t+=q}
   S.money+=t;book('biz',t);if(S.loan){S.money-=S.loan.pay;S.loan.left--;if(S.loan.left<=0){addLog(`💼 Đã trả xong khoản vốn của ${S.loan.n}.`,'good');S.loan=null}}
   return t}
-export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast('Không đủ tiền');S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
-export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
+export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast(t('common.noMoney'));S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
+export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast(t('common.noMoney'));S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
 export function sellBiz(k,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}const b=S.biz.find(x=>x.k===k);if(!b)return;const v=Math.round(b.inv*.6*bizOwn(b));S.money+=v;S.biz=S.biz.filter(x=>x!==b);addLog(`${BIZ[k].ic} Bán ${BIZ[k].n}, thu về ${fmt(v)}.`);act()}
 export const bizOwn=b=>b.own??1;
 export const bizVal=b=>{const B=BIZ[b.k],fF=clamp(totalFans()/300000,0,2),exp=B.base*b.lv*(1+B.syn*fF);return Math.round((b.inv+exp*26)/1e6)*1e6};
 export const bizWait=b=>Math.max(0,8-(abs()-(b.rw??-99)));
-export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast('Phải giữ tối thiểu 51% cổ phần');if(bizWait(b))return toast(`Chờ ${bizWait(b)} tuần nữa mới gọi vốn tiếp`);const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
-export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
+export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast(t('invest.toast.min'));if(bizWait(b))return toast(t('invest.toast.wait',{w:t('unit.weeks',{n:bizWait(b)})}));const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
+export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast(t('common.noMoney'));S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
 export function weekWorld(){
   if(!S.trend||abs()>=S.trend.until)newTrend();
   rivalsTick();surprise();
