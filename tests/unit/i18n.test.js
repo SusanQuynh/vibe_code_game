@@ -49,8 +49,11 @@ describe('i18n lõi', () => {
     expect(initLang()).toBe('vi');
     localStorage.setItem(LANG_KEY, 'en');
     expect(initLang()).toBe('en');
-    localStorage.setItem(LANG_KEY, 'rác');
-    expect(initLang()).toBe('vi');
+    for (const bad of ['rác', '__proto__', 'constructor', 'toString']) {
+      localStorage.setItem(LANG_KEY, bad);
+      expect(initLang()).toBe('vi');
+      expect(setLang(bad)).toBe(false);
+    }
   });
   it('không gọi Math.random', () => {
     const sp = vi.spyOn(Math, 'random');
@@ -77,6 +80,10 @@ describe('parity locale', () => {
       const d = diffLocales(viL.dict, L.dict);
       expect(d).toEqual({ missing: [], extra: [], badParams: [] });
     }
+  });
+  it('diffLocales bắt object thiếu key con (vd fmt.units)', () => {
+    const d = diffLocales({ u: { b: 'B', m: 'M', k: 'K' } }, { u: { b: 'B', m: 'M' } });
+    expect(d.badParams).toEqual(['u']);
   });
   it('diffLocales bắt thiếu, thừa, lệch placeholder, lệch kiểu', () => {
     const d = diffLocales({ a: '{x}', b: 'b', c: p => p, d: 'd' }, { a: '{y}', c: 'c', e: 'e', d: 'd' });

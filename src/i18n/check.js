@@ -7,7 +7,8 @@ export function diffLocales(base, other) {
     if (!(k in other)) return false;
     const a = base[k], b = other[k];
     if (typeof a !== typeof b) return true;
-    // hàm / object (vd fmt.units): chỉ so kiểu, không so placeholder
+    // object (vd fmt.units): so bộ key con; hàm: chỉ so kiểu
+    if (a && typeof a === 'object') return Object.keys(a).sort().join() !== Object.keys(b ?? {}).sort().join();
     return typeof a === 'string' && params(a) !== params(b);
   });
   return { missing, extra, badParams };
