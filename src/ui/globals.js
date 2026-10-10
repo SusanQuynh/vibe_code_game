@@ -18,6 +18,7 @@ import { prGo } from '../systems/review.js';
 import { cbCancel, cbNow, cbSched, cbSchedRec, studioPick, viewSec } from '../systems/secretary.js';
 import { nextWeek, setPs } from '../systems/week.js';
 import { act, campKeyOf } from '../ui/building.js';
+import { chooseLang, viewLang } from '../ui/lang.js';
 import { closeM, view } from '../ui/modal.js';
 import { planBack, planFill, planGo, planMgr, planNext, planRec, planSel, planSet, planSkip, setPropNext, startPlanOne } from '../ui/planning.js';
 import { RV, openRoom, setSchedTTS } from '../ui/rooms.js';
@@ -45,6 +46,7 @@ Object.assign(window, {
   cbSched,
   cbSchedRec,
   cfPick,
+  chooseLang,
   closeM,
   compPick,
   compPrev,
@@ -138,6 +140,7 @@ Object.assign(window, {
   viewCode,
   viewDebutQ,
   viewEvents,
+  viewLang,
   viewProps,
   viewRenew,
   viewReport,

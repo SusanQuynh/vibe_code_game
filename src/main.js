@@ -11,8 +11,12 @@ import { sign } from './systems/artists.js';
 import { acceptOffer } from './systems/offers.js';
 import { render } from './ui/building.js';
 import { tutStart } from './ui/tutorial.js';
+import { initLang, t } from './i18n/index.js';
+import { applyHtmlLang, applyStatic } from './ui/lang.js';
 
-setSavedHook((ok) => { const el = $('#saved'); if (el) el.textContent = ok ? '💾 Đã lưu tự động' : '⚠️ Không lưu được'; });
+setSavedHook((ok) => { const el = $('#saved'); if (el) { el.dataset.i18n = ok ? 'saved.ok' : 'saved.fail'; el.textContent = t(el.dataset.i18n); } });
+// ngôn ngữ chỉ chạm DOM tĩnh, không render thêm (giữ nguyên chuỗi RNG của golden)
+initLang(); applyHtmlLang(); applyStatic();
 if (!load()) newGame();
 migrateV3();
 render();

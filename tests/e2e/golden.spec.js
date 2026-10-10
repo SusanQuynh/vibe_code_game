@@ -6,10 +6,13 @@ const TARGET = process.env.GOLDEN_TARGET ?? './';
 const GOLDEN = 'tests/golden/week30.json';
 const GOLDEN2 = 'tests/golden/actions110.json';
 
-test('30 tuần mô phỏng khớp golden master', async ({ page }) => {
+// S phải độc lập với ngôn ngữ: cả vi lẫn en so với CÙNG file golden
+for (const lang of ['vi', 'en']) {
+test(`30 tuần mô phỏng khớp golden master [${lang}]`, async ({ page }) => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(seedScript(42));
+  if (lang !== 'vi') await page.addInitScript(l => localStorage.setItem('starlight_lang', l), lang);
   await page.goto(TARGET);
   const snap = await page.evaluate(() => {
     const g = window.__game ?? { nextWeek: window.nextWeek, state: () => S };
@@ -17,16 +20,17 @@ test('30 tuần mô phỏng khớp golden master', async ({ page }) => {
     return JSON.stringify(g.state());
   });
   expect(errors).toEqual([]);
-  if (process.env.UPDATE_GOLDEN) fs.writeFileSync(GOLDEN, snap);
+  if (process.env.UPDATE_GOLDEN && lang === 'vi') fs.writeFileSync(GOLDEN, snap);
   expect(snap).toBe(fs.readFileSync(GOLDEN, 'utf8'));
 });
 
 // Kịch bản 2: có hành động (tuyển quản lý, ký TTS, debut solo, nhận lời mời) trong 110 tuần
 // → đi qua giải thưởng, hợp đồng, phim, đối thủ, v.v.
-test('110 tuần có hành động khớp golden master', async ({ page }) => {
+test(`110 tuần có hành động khớp golden master [${lang}]`, async ({ page }) => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(seedScript(7));
+  if (lang !== 'vi') await page.addInitScript(l => localStorage.setItem('starlight_lang', l), lang);
   await page.goto(TARGET);
   const snap = await page.evaluate(() => {
     const g = window.__game ?? { nextWeek: window.nextWeek, state: () => S };
@@ -48,6 +52,7 @@ test('110 tuần có hành động khớp golden master', async ({ page }) => {
     return JSON.stringify({ state: g.state(), errs: log });
   });
   expect(errors).toEqual([]);
-  if (process.env.UPDATE_GOLDEN) fs.writeFileSync(GOLDEN2, snap);
+  if (process.env.UPDATE_GOLDEN && lang === 'vi') fs.writeFileSync(GOLDEN2, snap);
   expect(snap).toBe(fs.readFileSync(GOLDEN2, 'utf8'));
 });
+}

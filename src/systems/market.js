@@ -1,4 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
+import { t } from '../i18n/index.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
 import { SONGS } from '../data/names.js';
 import { OFFER, PARTNERS, RIVALS } from '../data/offers.js';
@@ -103,7 +104,7 @@ export function bizTick(){const fF=clamp(totalFans()/300000,0,2);let t=0;
   return t}
 export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast('Không đủ tiền');S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
 export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
-export function sellBiz(k,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent='Chạm lần nữa';return}const b=S.biz.find(x=>x.k===k);if(!b)return;const v=Math.round(b.inv*.6*bizOwn(b));S.money+=v;S.biz=S.biz.filter(x=>x!==b);addLog(`${BIZ[k].ic} Bán ${BIZ[k].n}, thu về ${fmt(v)}.`);act()}
+export function sellBiz(k,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}const b=S.biz.find(x=>x.k===k);if(!b)return;const v=Math.round(b.inv*.6*bizOwn(b));S.money+=v;S.biz=S.biz.filter(x=>x!==b);addLog(`${BIZ[k].ic} Bán ${BIZ[k].n}, thu về ${fmt(v)}.`);act()}
 export const bizOwn=b=>b.own??1;
 export const bizVal=b=>{const B=BIZ[b.k],fF=clamp(totalFans()/300000,0,2),exp=B.base*b.lv*(1+B.syn*fF);return Math.round((b.inv+exp*26)/1e6)*1e6};
 export const bizWait=b=>Math.max(0,8-(abs()-(b.rw??-99)));

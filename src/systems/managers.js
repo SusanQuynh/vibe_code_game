@@ -1,4 +1,5 @@
 import { R, pick } from '../core/rng.js';
+import { t } from '../i18n/index.js';
 import { clamp } from '../core/util.js';
 import { LNM, MGN } from '../data/names.js';
 import { MSK } from '../data/rules.js';
@@ -44,5 +45,5 @@ export function toggleMA(mid,aid,on){const m=S.managers.find(x=>x.id===mid);if(!
     const o=S.managers.find(x=>x!==m&&x.as&&x.as.t==='l'&&x.as.ids.includes(aid));if(o){toast(`Đã thuộc danh sách của ${o.name}`);return act()}L.push(aid)}
   else m.as.ids=L.filter(i=>i!==aid);act()}
 export function setAuto(id,v){const m=S.managers.find(x=>x.id===id);if(m){S.props=null;m.auto=v;act()}}
-export function fireMgr(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent='Chạm lần nữa để xác nhận';return}const m=S.managers.find(x=>x.id===id);if(m){mKids(m).forEach(k=>k.boss=m.boss||null);S.managers=S.managers.filter(x=>x!==m);S.assts=(S.assts||[]).filter(x=>x.mid!==m.id);S.events=S.events.filter(e=>e.m!==m.id);addLog(`👋 Cho nghỉ việc quản lý ${m.name}.`);act()}}
+export function fireMgr(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainConfirm');return}const m=S.managers.find(x=>x.id===id);if(m){mKids(m).forEach(k=>k.boss=m.boss||null);S.managers=S.managers.filter(x=>x!==m);S.assts=(S.assts||[]).filter(x=>x.mid!==m.id);S.events=S.events.filter(e=>e.m!==m.id);addLog(`👋 Cho nghỉ việc quản lý ${m.name}.`);act()}}
 export function rehuntMgr(){if(S.money<15e6)return toast('Không đủ tiền');S.money-=15e6;genMgrPool();act()}

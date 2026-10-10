@@ -10,22 +10,22 @@ export const TRAIN={
   rest:{n:'Nghỉ ngơi',room:'dorm',g:{},e:35}
 };
 export const ROOMS=[
-  {id:'ceo',n:'Phòng Giám đốc',ic:'💼',f:5,s:'Tài chính, lịch tập'},
-  {id:'meet',n:'Phòng Họp',ic:'📨',f:5,s:'Lời mời & sự kiện'},
-  {id:'studio',n:'Phòng Thu âm',ic:'🎙️',f:4,s:'Single, concert, rap'},
-  {id:'acting',n:'Phòng Diễn xuất',ic:'🎬',f:4,s:'Luyện diễn, làm phim'},
-  {id:'vocal',n:'Phòng Vocal',ic:'🎤',f:3,s:'Luyện thanh nhạc'},
-  {id:'dance',n:'Phòng Nhảy',ic:'🪩',f:3,s:'Vũ đạo, thể lực'},
-  {id:'gym',n:'Gym & Làm đẹp',ic:'🏋️',f:2,s:'Thể lực, visual'},
-  {id:'pr',n:'Phòng Truyền thông',ic:'📰',f:2,s:'Tạp kỹ, xử lý scandal'},
-  {id:'lobby',n:'Sảnh Tuyển dụng',ic:'🌟',f:1,s:'Tuyển TTS, debut'},
-  {id:'dorm',n:'Ký túc xá',ic:'🛏️',f:1,s:'Nghỉ ngơi, quan hệ'},
-  {id:'mgr',n:'Văn phòng Quản lý',ic:'📋',f:6,s:'Tuyển & phân công quản lý'},
-  {id:'roof',n:'Sân thượng',ic:'☕',f:6,s:'Thư giãn, ngắm thành phố'},
-  {id:'invest',n:'Phòng Đầu tư',ic:'📈',f:7,s:'Kinh doanh ngoài giải trí'},
-  {id:'market',n:'Phòng Thị trường',ic:'📊',f:7,s:'Xu hướng & đối thủ'},
-  {id:'sales',n:'Phòng Kinh doanh',ic:'💹',f:8,s:'Doanh thu & nhạc số'},
-  {id:'hr',n:'Phòng Nhân sự',ic:'🗂️',f:8,s:'Hợp đồng, tiền bối, tuyển dụng'}
+  {id:'ceo',ic:'💼',f:5},
+  {id:'meet',ic:'📨',f:5},
+  {id:'studio',ic:'🎙️',f:4},
+  {id:'acting',ic:'🎬',f:4},
+  {id:'vocal',ic:'🎤',f:3},
+  {id:'dance',ic:'🪩',f:3},
+  {id:'gym',ic:'🏋️',f:2},
+  {id:'pr',ic:'📰',f:2},
+  {id:'lobby',ic:'🌟',f:1},
+  {id:'dorm',ic:'🛏️',f:1},
+  {id:'mgr',ic:'📋',f:6},
+  {id:'roof',ic:'☕',f:6},
+  {id:'invest',ic:'📈',f:7},
+  {id:'market',ic:'📊',f:7},
+  {id:'sales',ic:'💹',f:8},
+  {id:'hr',ic:'🗂️',f:8}
 ];
 export const MSK={nego:'Đàm phán',care:'Chăm sóc',pr:'Truyền thông',plan:'Kế hoạch'};
 export const MSKD={nego:'+4% thù lao và giảm 1,5% yêu cầu mỗi điểm',care:'Tăng tâm trạng, giảm hao năng lượng, giảm nguy cơ đòi rời đi',pr:'Giảm nguy cơ scandal, xử lý scandal hiệu quả hơn',plan:'+4% hiệu quả luyện tập mỗi điểm'};

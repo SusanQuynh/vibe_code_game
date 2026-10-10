@@ -13,3 +13,9 @@ export const SHELL = `<div class="wrap"><b id="date"></b><small id="yearL"></sma
 <span id="artN"></span><span id="fansP"></span><b id="evn"></b><small id="roofInfo"></small>
 <div id="facade"></div><nav id="dock"></nav><div id="outside"></div><button id="trendBar"></button>
 <div id="saved"></div><div id="log"></div><button id="nextBtn"></button></div><div class="sheet" id="sheet"></div>`;
+
+// <details ontoggle="togD(..)"> bắn bất đồng bộ trong jsdom mà togD không có trên window: gỡ handler ngay khi chèn
+export function noToggle() {
+  new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.querySelectorAll) n.querySelectorAll('[ontoggle]').forEach(e => e.removeAttribute('ontoggle')); })
+    .observe(document, { childList: true, subtree: true });
+}

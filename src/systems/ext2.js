@@ -15,6 +15,7 @@ import { getRel, harmony, setRel, setTag } from './relations.js';
 import { actByKey } from './releases.js';
 import { actFree, acts } from './secretary.js';
 import { focusKeys } from './week.js';
+import { roomName } from '../i18n/index.js';
 import { NPC, act, chibiHTML } from '../ui/building.js';
 import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
 import { RV, openRoom } from '../ui/rooms.js';
@@ -304,7 +305,7 @@ RV.sales=function(){
   const dg=S.singles.filter(s=>s.dig),act=dg.filter(s=>!s.end).sort((a,b)=>(b.dl||0)-(a.dl||0)),nx=act.reduce((t,s)=>t+digNext(s),0),dgT=dg.reduce((t,s)=>t+(s.dt||0),0),roy=dg.filter(s=>s.roy).reduce((t,s)=>t+Math.round((s.dt||0)/(1-s.roy)*s.roy),0);
   const top=S.artists.filter(a=>a.earn).sort((a,b)=>b.earn-a.earn).slice(0,8),mxE=top.length?top[0].earn:1;
   const net=last?fsum(last.i)-fsum(last.x):0;
-  modal(`<h2>💹 Phòng Kinh doanh</h2><div class="sub">Theo dõi thu nhập, chi phí và doanh thu nhạc số của công ty.</div>
+  modal(`<h2>💹 ${roomName('sales')}</h2><div class="sub">Theo dõi thu nhập, chi phí và doanh thu nhạc số của công ty.</div>
   <div class="grid2"><div class="card">📥 Thu tuần trước<br><b class="good">${fmt(last?fsum(last.i):0)}</b></div><div class="card">📤 Chi tuần trước<br><b class="bad">${fmt(last?fsum(last.x):0)}</b></div><div class="card">📊 Lãi ròng tuần trước<br><b class="${net<0?'bad':'good'}">${net>=0?'+':''}${fmt(net)}</b></div><div class="card">🗓️ Năm ${S.year} đến nay<br><b class="${yi-yx<0?'bad':'good'}">${yi-yx>=0?'+':''}${fmt(yi-yx)}</b><br><span class="small muted">thu ${fmt(yi)} · chi ${fmt(yx)}</span></div></div>
   ${det('sl-chart','📈 Thu chi 12 tuần gần nhất',finChart(L),true)}
   ${det('sl-cat','🧾 Cơ cấu 4 tuần gần nhất',`<h3 style="margin-top:0">Nguồn thu (${fmt(fsum(ai))})</h3>${catRows(ai,FIN_I,'var(--mint)')}<h3>Khoản chi (${fmt(fsum(ax))})</h3>${catRows(ax,FIN_X,'var(--red)')}`,true)}
@@ -317,7 +318,7 @@ RV.sales=function(){
 };
 RV.hr=function(){
   const deb=S.artists.filter(a=>a.status==='debuted').sort((a,b)=>(a.ce||1e9)-(b.ce||1e9)),tts=S.artists.filter(a=>a.status==='trainee'),mentors=S.artists.filter(a=>menteesOf(a).length);
-  modal(`<h2>🗂️ Phòng Nhân sự</h2><div class="sub">Hợp đồng nghệ sĩ, tiền bối dẫn dắt thực tập sinh, trợ lý và danh tiếng tuyển dụng.</div>
+  modal(`<h2>🗂️ ${roomName('hr')}</h2><div class="sub">Hợp đồng nghệ sĩ, tiền bối dẫn dắt thực tập sinh, trợ lý và danh tiếng tuyển dụng.</div>
   ${repCard()}
   ${det('hr-ct',`📄 Hợp đồng nghệ sĩ (${deb.length})`,`<div class="small muted" style="margin-bottom:6px">Hợp đồng debut 1 năm. Còn 8 tuần sẽ có đánh giá tái ký: doanh thu mang về so với lương, tăng trưởng fan, danh tiếng, kết quả đánh giá, tâm trạng.</div>`+deb.map(a=>{const E=renewEval(a),l=a.ce-abs();return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">còn <b class="${l<=8?'bad':''}">${l}</b> tuần · ${fmt(a.salary)}/t</span><span class="tag ${E.rec[1]}">${a.ceNo?'Không tái ký':E.rec[0]}</span><span class="sp"></span><button class="btn sm ${l<=8?'pri':''}" onclick="view(()=>viewRenew(${a.id}))">Đánh giá</button></div>`}).join('')||'<div class="small muted">Chưa có nghệ sĩ đã ra mắt.</div>',true)}
   ${det('hr-mt',`👩‍🏫 Tiền bối dẫn dắt TTS (${tts.filter(a=>a.mt).length}/${tts.length})`,`<div class="small muted" style="margin-bottom:6px">Mỗi nghệ sĩ dẫn dắt tối đa 2 TTS. TTS tập nhanh hơn ở kỹ năng tiền bối giỏi hơn mình (tối đa +40%), vui hơn và thân với tiền bối. Tiền bối tốn ít năng lượng mỗi tuần, được cộng fan khi đàn em debut. 💡 là người hợp nhất.</div>`+(tts.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${esc((batchOf(a)||{n:''}).n)}</span><span class="sp"></span>${mentorSel(a)}</div>`).join('')||'<div class="small muted">Không có thực tập sinh.</div>')+(mentors.length?`<div class="small" style="margin-top:6px"><b>Đang dẫn dắt:</b> ${mentors.map(m=>`${esc(m.name)} → ${menteesOf(m).map(x=>esc(x.name)).join(', ')}`).join(' · ')}</div>`:''),true)}

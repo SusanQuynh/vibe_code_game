@@ -17,6 +17,7 @@ import { actByKey, fanSugs } from '../systems/releases.js';
 import { EV_ART, EV_PCT, EV_TTS, evNext, evalTable, prHTML, prPlans } from '../systems/review.js';
 import { actFree, acts, conceptRec, secPlans, secSchedRec } from '../systems/secretary.js';
 import { defaultDays, weekCost } from '../systems/week.js';
+import { roomName } from '../i18n/index.js';
 import { NPC, act, chibiHTML, lastRoom, renderDock, setLastRoom } from './building.js';
 import { curView, modal, setCurRC, setCurView } from './modal.js';
 import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './views.js';
@@ -29,7 +30,7 @@ export function setSchedTTS(v){S.artists.filter(a=>a.status==='trainee'&&!a.busy
 export function trainRoom(r,key,extra=''){
   const here=S.artists.filter(a=>!a.busy&&a.days.includes(key)),others=S.artists.filter(a=>!a.busy&&!a.days.includes(key));
   const t=TRAIN[key];
-  return`<h2>${r.ic} ${r.n}</h2><div class="sub">${key==='rest'?'Mỗi ngày nghỉ hồi +12 năng lượng và tâm trạng, miễn phí.':`Mỗi ngày tập tăng ${Object.keys(t.g).map(k=>STATS[k]).join(', ')}, tốn khoảng ${Math.abs(Math.round(t.e*.3))} năng lượng và ${fmt(TRAIN_COST/5)}. Năng lượng dưới 25 thì tập kém hiệu quả.`}</div>${extra}
+  return`<h2>${r.ic} ${roomName(r.id)}</h2><div class="sub">${key==='rest'?'Mỗi ngày nghỉ hồi +12 năng lượng và tâm trạng, miễn phí.':`Mỗi ngày tập tăng ${Object.keys(t.g).map(k=>STATS[k]).join(', ')}, tốn khoảng ${Math.abs(Math.round(t.e*.3))} năng lượng và ${fmt(TRAIN_COST/5)}. Năng lượng dưới 25 thì tập kém hiệu quả.`}</div>${extra}
   ${det('rm-'+key+'-in',`Đang ở đây (${here.length})`,ttsSplit(here,a=>artistLine(a,`<span class="small">${a.days.filter(k=>k===key).length} ngày · ${Object.keys(t.g).map(k=>STATS[k]+' '+Math.round(a.st[k])).join(' · ')}</span>`),'rm-'+key+'-in-t','Trống.',''),true)}
   ${det('rm-'+key+'-out',`Chuyển nghệ sĩ vào phòng (${others.length})`,ttsSplit(others,a=>artistLine(a,`<button class="btn sm pri" onclick="setSched(${a.id},'${key}')">Chuyển vào</button>`),'rm-'+key+'-out-t','Không còn ai rảnh.',`<button class="btn sm pri" onclick="setSchedTTS('${key}')">Chuyển cả lứa thực tập sinh vào</button>`),false)}`;
 }
@@ -54,7 +55,7 @@ export const RV={
       <div class="row" style="margin-top:6px"><span class="small">Lịch tập & nghỉ:</span><select onchange="setPs(${m.id},this.value)"><option value="0" ${m.ps===0?'selected':''}>Tắt</option><option value="2" ${m.ps===2?'selected':''}>Đề xuất để bạn duyệt</option><option value="1" ${m.ps===1?'selected':''}>Tự xếp luôn</option></select></div>
       <div class="row" style="margin-top:6px"><span class="small">Tự nhận lời mời:</span><select onchange="setAuto(${m.id},this.value)"><option value="off" ${m.auto==='off'?'selected':''}>Tắt</option><option value="short" ${m.auto==='short'?'selected':''}>Chỉ việc ngắn (≤ 2 tuần)</option><option value="all" ${m.auto==='all'?'selected':''}>Mọi lời mời</option></select><span class="sp"></span><button class="btn sm warn" onclick="fireMgr(${m.id},this)">Cho nghỉ</button></div>`;
       return det('mg-'+m.id,sum,body,false)};
-    modal(`<h2>📋 Văn phòng Quản lý</h2><div class="sub">Chạm vào từng mục để mở hoặc thu gọn.</div>
+    modal(`<h2>📋 ${roomName('mgr')}</h2><div class="sub">Chạm vào từng mục để mở hoặc thu gọn.</div>
     <div class="row" style="margin-bottom:4px"><button class="btn pri" onclick="view(viewReport)" ${S.lastRep?'':'disabled'}>📑 Báo cáo tuần trước</button><button class="btn" onclick="setPropNext(null);view(viewProps)">📋 Đề xuất tuần này</button></div>
     <label class="small row"><input type="checkbox" ${S.repOn!==false?'checked':''} onchange="S.repOn=this.checked;save()"> Tự hiện báo cáo sau mỗi tuần</label>
     <label class="small row"><input type="checkbox" ${S.autoAppr!==false?'checked':''} onchange="S.autoAppr=this.checked;save()"> Tự duyệt đề xuất không xung đột của quản lý báo cáo trực tiếp cho bạn</label>
@@ -70,7 +71,7 @@ export const RV={
   },
   invest(){
     const own=S.biz,tot=own.reduce((t,b)=>t+Math.round(b.last*bizOwn(b)),0),fF=clamp(totalFans()/300000,0,2);
-    modal(`<h2>📈 Phòng Đầu tư</h2><div class="sub">Mở thêm ngành kinh doanh để có thu nhập đều mỗi tuần. Lãi phụ thuộc tổng fan của công ty (hiện hệ số ×${(1+fF).toFixed(2)} cho ngành ăn theo fan). Doanh nghiệp có thể bán bớt cổ phần để kêu gọi vốn (giữ tối thiểu 51%), đổi lại chỉ hưởng lãi theo tỷ lệ còn giữ.</div>
+    modal(`<h2>📈 ${roomName('invest')}</h2><div class="sub">Mở thêm ngành kinh doanh để có thu nhập đều mỗi tuần. Lãi phụ thuộc tổng fan của công ty (hiện hệ số ×${(1+fF).toFixed(2)} cho ngành ăn theo fan). Doanh nghiệp có thể bán bớt cổ phần để kêu gọi vốn (giữ tối thiểu 51%), đổi lại chỉ hưởng lãi theo tỷ lệ còn giữ.</div>
     <div class="grid2"><div class="card">💼 Đang sở hữu<br><b>${own.length}</b> ngành</div><div class="card">💵 Lãi tuần trước<br><b class="${tot<0?'bad':'good'}">${fmt(tot)}</b></div></div>
     ${modV('econ')<1?'<div class="card small bad">📉 Đang suy thoái: lợi nhuận kinh doanh giảm.</div>':''}
     ${S.loan?`<div class="card small">💼 Đang trả vốn ${esc(S.loan.n)}: ${fmt(S.loan.pay)}/tuần, còn ${S.loan.left} tuần.</div>`:''}
@@ -81,7 +82,7 @@ export const RV={
     const me={n:'⭐ Starlight Ent. (bạn)',fans:totalFans(),me:1},list=S.rivals.concat([me]).sort((a,b)=>b.fans-a.fans),mx=list[0].fans||1;
     const ms=Object.values(S.mods||{}).filter(m=>m.until>abs());
     const free=acts().filter(actFree).map(x=>({x,r:conceptRec(x).find(c=>S.trend.hot.includes(c.k))})).sort((a,b)=>b.r.f-a.r.f).slice(0,4);
-    modal(`<h2>📊 Phòng Thị trường</h2><div class="sub">Xu hướng âm nhạc, biến động thị trường và các công ty đối thủ.</div>
+    modal(`<h2>📊 ${roomName('market')}</h2><div class="sub">Xu hướng âm nhạc, biến động thị trường và các công ty đối thủ.</div>
     <h3>🔥 Concept đang thịnh hành</h3><div class="card"><div class="cfit">${Object.keys(CONCEPTS).map(k=>({k,v:S.trend.hot.includes(k)?95:S.trend.cold===k?15:50})).sort((a,b)=>b.v-a.v).map(r=>`<span class="${r.v>90?'best':''}">${CONCEPTS[r.k].n}${trendTag(r.k)}</span><div class="bar"><i style="width:${r.v}%"></i></div><b>${r.v>90?'Hot':r.v<20?'Nguội':'·'}</b>`).join('')}</div>
     <div class="small muted">Còn khoảng ${S.trend.until-abs()} tuần trước khi xu hướng đổi. Single concept hot +12 điểm, concept nguội −8.</div>
     ${free.length?`<div class="small" style="margin-top:6px"><b>Ai hợp xu hướng:</b><br>${free.map(o=>`${esc(o.x.n)}: ${CONCEPTS[o.r.k].n} ${Math.round(o.r.f)}%`).join('<br>')}</div>`:''}</div>
@@ -93,7 +94,7 @@ export const RV={
   ceo(){
     const wk=weekCost();
     const last=S.awards[S.awards.length-1];
-    modal(`<h2>💼 Phòng Giám đốc</h2><div class="sub">Quản lý tài chính, lịch tập hằng tuần và thành tích.</div>
+    modal(`<h2>💼 ${roomName('ceo')}</h2><div class="sub">Quản lý tài chính, lịch tập hằng tuần và thành tích.</div>
     <div class="grid2"><div class="card">💰 Quỹ<br><b>${fmt(S.money)}</b></div><div class="card">📉 Chi phí tuần<br><b>${fmt(wk)}</b></div><div class="card">🏆 Giải đã thắng<br><b>${S.awards.reduce((s,e)=>s+e.res.filter(r=>r.ok).length,0)}</b></div><div class="card">📊 Hạng năm trước<br><b>${last?'#'+last.rank:'—'}</b></div></div>
     ${det('ceo-sched',`📅 Lịch tập tuần (${S.artists.filter(a=>!a.busy).length} ở công ty, ${S.artists.filter(a=>a.busy).length} bên ngoài)`,`<div class="row" style="margin-bottom:8px"><span class="small">Áp dụng cho tất cả (5 ngày tập + 2 ngày nghỉ):</span><select onchange="setAll(this.value)"><option value="">Chọn…</option>${Object.keys(TRAIN).map(k=>`<option value="${k}">${TRAIN[k].n}</option>`).join('')}</select></div>
     ${S.artists.length?ttsSplit(S.artists,a=>artistLine(a,a.busy?'<span class="tag">Bên ngoài</span>':schedSel(a)),'ceo-tts','',''):'<div class="muted small">Chưa có nghệ sĩ. Xuống Sảnh Tuyển dụng nhé.</div>'}`,true)}
@@ -106,7 +107,7 @@ export const RV={
   meet(){
     const now=abs();
     const avail=S.artists.filter(a=>!a.busy);
-    modal(`<h2>📨 Phòng Họp</h2><div class="sub">Lời mời hợp tác. Quan hệ tốt với đối tác/bạn diễn giúp giảm yêu cầu và tăng thù lao.</div>
+    modal(`<h2>📨 ${roomName('meet')}</h2><div class="sub">Lời mời hợp tác. Quan hệ tốt với đối tác/bạn diễn giúp giảm yêu cầu và tăng thù lao.</div>
     ${S.events.length?`<button class="btn pink" onclick="view(viewEvents)">🔔 ${S.events.length} sự kiện cần xử lý</button>`:''}
     ${(()=>{const L=secPlans();if(!L.length)return'';const r=L.filter(p=>!p.wait&&!p.plan),pl=L.filter(p=>p.plan),sr=secSchedRec();return`<div class="card row"><div class="chibi mini">${chibiHTML(NPC[1])}</div><div class="small" style="flex:1"><b>🗒️ Thư ký:</b> ${r.length?`${r.map(p=>esc(p.n.slice(2).trim())).join(', ')} nên comeback ngay (concept ${CONCEPTS[r[0].ck].n}${trendTag(r[0].ck)}).`:'chưa có ai nên comeback tuần này.'}${sr.length?` Nên hẹn: ${sr.map(p=>esc(p.n.slice(2).trim())).join(', ')}.`:''}${pl.length?` ${pl.length} lịch đã hẹn.`:''}${Object.values(S.camp).some(c=>c.ph==='post')?` 📣 ${Object.values(S.camp).filter(c=>c.ph==='post').length} đang quảng bá.`:''}${fanSugs().length?` 💬 ${fanSugs().length} gợi ý giao lưu fan.`:''}</div>${sr.length?`<button class="btn sm" onclick="cbSchedRec()">Hẹn theo khuyến nghị</button>`:''}<button class="btn sm pri" onclick="view(viewSec)">Kế hoạch</button></div>`})()}
     ${(()=>{const offCard=of=>{const O=OFFER[of.type],tg=of.target?byId(of.target):null;
@@ -171,7 +172,7 @@ export const RV={
   },
   lobby(){
     const tr=S.artists.filter(a=>!a.busy);
-    modal(`<h2>🌟 Sảnh Tuyển dụng</h2><div class="sub">Tuyển thực tập sinh và cho ra mắt nhóm, solo hoặc diễn viên. Không giới hạn số nghệ sĩ.</div>${dqBanner()}
+    modal(`<h2>🌟 ${roomName('lobby')}</h2><div class="sub">Tuyển thực tập sinh và cho ra mắt nhóm, solo hoặc diễn viên. Không giới hạn số nghệ sĩ.</div>${dqBanner()}
     ${det('lb-cast',`🧑‍🎤 Ứng viên casting (${S.pool.length})`,`<div class="small muted" style="margin-bottom:6px">Ký hợp đồng 20 tr/người. Danh sách mới mỗi 4 tuần.</div>${repCard()}
     ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} · năng khiếu ${STATS[a.spec]} · tố chất x${a.talent}</span></div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">Ký hợp đồng</button></div>${bars(a)}</div>`).join('')||'<div class="small muted">Hết ứng viên.</div>'}
     <button class="btn" onclick="recast()">Tổ chức casting mới (10 tr)</button>`,true)}
