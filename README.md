@@ -19,6 +19,7 @@ npm run build    # ra thư mục dist/
 ```bash
 npm test                 # unit (Vitest + jsdom)
 npm run check:handlers   # mọi handler inline (onclick="…") phải có trên window
+npm run check:i18n       # locale đủ/đúng key và placeholder so với vi; key dùng trong code phải tồn tại
 npm run test:e2e         # Playwright: golden master + smoke
 ```
 
@@ -39,6 +40,7 @@ UPDATE_GOLDEN=1 npx playwright test golden
 
 ```
 src/core/      rng, util (hàm thuần)
+src/i18n/      t(), setLang, registry locale (src/i18n/locales/*.js)
 src/data/      hằng số & dữ liệu (rules, names, looks, offers)
 src/state.js   state toàn cục S (live binding) + setState
 src/systems/   logic game theo từng mảng (artists, managers, week, market, events, releases, awards, ext2, ext3 …)
@@ -50,6 +52,25 @@ src/styles/    CSS tách theo khu vực
 Handler inline trong HTML sinh động được nối vào `window` ở một nơi duy nhất: `src/ui/globals.js`.
 Biến `let` dùng chung giữa module có setter (`setState`, `setCurView`, …).
 
+## Đa ngôn ngữ
+
+Mặc định tiếng Việt (`vi`, nguồn chuẩn); có thêm tiếng Anh (`en`, beta). Người chơi đổi bằng nút 🌐 trên thanh trên
+cùng, game render lại tại chỗ. Lựa chọn lưu ở `localStorage['starlight_lang']`, tách khỏi save và mã `SL1.`.
+Giai đoạn 1 mới dịch giao diện cố định (thanh trên cùng, tên phòng, dock, nút chung, tutorial).
+
+**Thêm ngôn ngữ:** chép `src/i18n/locales/en.js` thành `xx.js`, sửa `meta` (`code`, `name`, `htmlLang`), dịch `dict`, rồi
+chạy `npm run check:i18n`. Registry tự nhận file mới.
+
+**Key:** phẳng, có dấu chấm, `vi.js` là chuẩn: `top.*`, `room.<id>.{name,dock,desc}`, `npc.<id>`, `btn.*`,
+`tut.<id>.{t,d}`, `lang.*`, `saved.*`, `fmt.units`. Giá trị là chuỗi có `{x}` hoặc hàm `(p) => string` (số nhiều).
+
+**Quy tắc:**
+- Không gọi `t()` ở top-level module (ngôn ngữ chưa khởi tạo); tra lúc render.
+- Từ điển là HTML tin cậy: tham số truyền vào `t()` phải `esc()` nếu là dữ liệu người dùng.
+- Không đưa chuỗi đã dịch vào `S` (`addLog`, `title`…); `fmt()` giữ đơn vị tiếng Việt cho log, chỉ dùng `money()` để hiển thị.
+- `src/i18n/` là module lá: không import system/UI, không chạm DOM, không gọi RNG.
+- Khung tĩnh trong `index.html` dùng `data-i18n` / `data-i18n-aria`.
+
 ## Lưu game
 
 Tự lưu vào `localStorage` (khoá `starlight_idol_save_v1`). Nút 🔑 trên thanh trên cùng: xuất mã `SL1.…`
@@ -59,7 +80,7 @@ hoặc file `.json`, và nhập lại ở trình duyệt khác.
 
 Không dùng GitHub Actions. Chạy `npm run deploy`: build với base `/vibe_code_game/` rồi đẩy `dist/` lên nhánh `gh-pages`.
 Việc thủ công một lần: Settings → Pages → Source = **Deploy from a branch** → nhánh `gh-pages`, thư mục `/ (root)`.
-Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run test:e2e`.
+Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e`.
 
 ## Subagent cho Claude Code
 
