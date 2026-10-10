@@ -1,5 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { lbl, money, t } from '../i18n/index.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
 import { OFFER } from '../data/offers.js';
@@ -215,10 +215,10 @@ export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):
   }}
 /* ---- Hồ sơ nghệ sĩ & phòng ---- */
 export function v3ArtistHTML(a){let h='';
-  if(paOK(a))h+=`<div class="card small">🧑‍💻 <b>Trợ lý cá nhân:</b> ${a.pa?`${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v} · ${fmt(a.pa.sal)}/tuần`:'<span class="muted">chưa có</span>'} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?'Đổi trợ lý':'Để '+esc(a.name)+' tự chọn'}</button><br><span class="muted">Nghệ sĩ được quản lý theo nhóm có thể tự chọn trợ lý riêng.</span></div>`;
-  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">🩺 <b>Chuyên gia sức khỏe:</b> ${esc(a.hsF.why.join(', '))}. Đề xuất ${a.hsF.n} ngày nghỉ/tuần. ${a.restRec>abs()?'<span class="good">Đang áp dụng.</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`;
-  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">💬 <b>Mong muốn debut:</b> ${DRT[w.t]} — "${esc(w.why)}" <button class="btn sm pri" onclick="view(viewDebutQ)">Quyết định</button></div>`}}
-  if(a.status==='debuted'&&menteesOf(a).length<2){const t=S.artists.filter(x=>x.status==='trainee'&&!x.mt&&x.tag[a.id]!=='enemy').sort((x,y)=>mentorScore(a,y)-mentorScore(a,x))[0];if(t&&mentorScore(a,t)>3)h+=`<div class="card small">🙋 <b>${esc(a.name)} đề xuất dẫn dắt:</b> ${esc(t.name)} (+${Math.round(mentorScore(a,t))}) <button class="btn sm" onclick="setMentor(${t.id},${a.id})">Đồng ý</button></div>`}
+  if(paOK(a))h+=`<div class="card small">🧑‍💻 <b>${t('artist.pa.title')}</b> ${a.pa?`${esc(a.pa.name)} · ${lbl('msk',a.pa.k)} +${a.pa.v} · ${t('unit.perWeek',{m:money(a.pa.sal)})}`:`<span class="muted">${t('common.none')}</span>`} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?t('artist.pa.change'):t('artist.pa.self',{n:esc(a.name)})}</button><br><span class="muted">${t('artist.pa.tip')}</span></div>`;
+  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">🩺 <b>${t('artist.hs.title')}</b> ${esc(a.hsF.why.join(', '))}. ${t('artist.hs.rec',{n:a.hsF.n})} ${a.restRec>abs()?`<span class="good">${t('artist.hs.on')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('common.apply')}</button>`}</div>`;
+  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">💬 <b>${t('artist.wish')}</b> ${lbl('drt',w.t)} — "${esc(w.why)}" <button class="btn sm pri" onclick="view(viewDebutQ)">${t('artist.decide')}</button></div>`}}
+  if(a.status==='debuted'&&menteesOf(a).length<2){const tt=S.artists.filter(x=>x.status==='trainee'&&!x.mt&&x.tag[a.id]!=='enemy').sort((x,y)=>mentorScore(a,y)-mentorScore(a,x))[0];if(tt&&mentorScore(a,tt)>3)h+=`<div class="card small">🙋 <b>${t('artist.mentorSug',{n:esc(a.name)})}</b> ${esc(tt.name)} (+${Math.round(mentorScore(a,tt))}) <button class="btn sm" onclick="setMentor(${tt.id},${a.id})">${t('common.agree')}</button></div>`}
   const xs=Object.keys(a.xr||{}).map(id=>({x:extById(+id),v:a.xr[id]})).filter(z=>z.x).sort((p,q)=>q.v-p.v).slice(0,5);
-  if(xs.length)h+=`<div class="card small">🌐 <b>Quan hệ ngoài công ty:</b> ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;
+  if(xs.length)h+=`<div class="card small">🌐 <b>${t('artist.ext')}</b> ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;
   return h}

@@ -6,7 +6,8 @@ import { S, newGame } from '../../src/state.js';
 import { ROOMS } from '../../src/data/rules.js';
 import { render, setPos } from '../../src/ui/building.js';
 import { openRoom } from '../../src/ui/rooms.js';
-import { closeM } from '../../src/ui/modal.js';
+import { closeM, view } from '../../src/ui/modal.js';
+import { viewArtist } from '../../src/ui/views.js';
 import { setLang } from '../../src/i18n/index.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { hireMgr } from '../../src/systems/managers.js';
@@ -43,6 +44,7 @@ function run(lang, weeks = 40) {
     for (const k of Object.keys(S.camp)) if (S.camp[k].ph === 'post') { if (i % 2) postAuto(k, true); else for (const id of ['s1', 'radio', 'variety', 'fansign', 'challenge', 'live']) postDo(k, id, true); }
     if (x && i % 6 === 2) for (const t of ['sns', 'mag', 'clip', 'int']) prDo(t, x.k);
     if (i % 5 === 0) { for (const r of ROOMS) openRoom(r.id); closeM(); render(); }
+    if (i % 10 === 0) { for (const a of [...S.artists]) view(() => viewArtist(a.id)); closeM(); } // hồ sơ nghệ sĩ (dWish ghi a.dw lúc render)
     nextWeek(true, true);
   }
   return { s: JSON.stringify(S), n };

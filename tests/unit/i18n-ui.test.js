@@ -7,6 +7,8 @@ import { S, setState } from '../../src/state.js';
 import { setLang, t } from '../../src/i18n/index.js';
 import { targetName, targetNameT } from '../../src/systems/managers.js';
 import { wkLabel, wkLabelT } from '../../src/systems/secretary.js';
+import { debutRec, debutRecT } from '../../src/systems/debut.js';
+import { sv } from '../../src/i18n/index.js';
 
 noToggle();
 const rich = () => structuredClone(JSON.parse(fs.readFileSync('tests/fixtures/ui-rich.json', 'utf8')));
@@ -43,5 +45,29 @@ describe('task 5: targetNameT, wkLabelT', () => {
     expect([1, 2].map(n => t('trend.cb', { n }))).toEqual(['1 rival comeback', '2 rival comebacks']);
     expect(t('org.team', { n: 1, k: 1 })).toBe('1 person · 1 sub-manager');
     expect(t('org.ceoSub', { m: 2, a: 1 })).toBe('2 managers · 1 artist reporting directly');
+  });
+});
+
+describe('task 6: debutRecT, sv', () => {
+  const fixtures = () => ['new', 'rich'].map(k => JSON.parse(fs.readFileSync(`tests/fixtures/ui-${k}.json`, 'utf8')));
+  it('vi: debutRecT bằng debutRec (cả why và short) với mọi nghệ sĩ, cả khi ép nhánh wait/actor/solo/group', () => {
+    let n = 0;
+    for (const fx of fixtures()) {
+      setState(fx);
+      for (const a of S.artists) for (const mut of [() => {}, () => { for (const k in a.st) a.st[k] = 5; }, () => { a.st.acting = 95; a.st.vocal = 20; a.st.dance = 20; a.st.rap = 20; }, () => { for (const k in a.st) a.st[k] = 90; }]) {
+        mut(); const o = debutRec(a), u = debutRecT(a);
+        expect(u.why).toBe(o.why); expect(u.short).toBe(o.short); expect(u.t).toBe(o.t); expect(u.f).toBe(o.f); n++;
+      }
+    }
+    expect(n).toBeGreaterThan(20);
+  });
+  it('en: debutRecT không rò chữ Việt (tên người là dữ liệu)', () => {
+    setState(fixtures()[1]); setLang('en');
+    const names = new Set(S.artists.map(a => a.name));
+    for (const a of S.artists) { const r = debutRecT(a); let w = r.why + ' ' + r.short; for (const nm of names) w = w.split(nm).join(''); expect(w, a.name).not.toMatch(VI); }
+  });
+  it('sv: giá trị biết trước được dịch, lạ thì giữ nguyên văn', () => {
+    expect(sv('Xuất sắc')).toBe('Xuất sắc'); expect(sv('Điều lạ')).toBe('Điều lạ');
+    setLang('en'); expect(sv('Xuất sắc')).toBe('Excellent'); expect(sv('Không đạt')).toBe('Fail'); expect(sv('Điều lạ')).toBe('Điều lạ');
   });
 });

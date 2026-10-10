@@ -19,11 +19,18 @@ const VI_PLAIN = /\d tr\b|\bTTS\b|\bQL\b|\bT\d+( N\d+)?\b/;
 
 // Chỉ gỡ NGUYÊN chuỗi giá trị của field kiểu tên/tiêu đề (không gỡ theo từ: "Không", "tuần", "Năm"… phải còn bị bắt). Thêm biến thể bỏ emoji/ký hiệu đầu (n của nhóm là "⭐ Tên").
 const NAME_KEYS = new Set(['name', 'names', 'title', 't', 'partner', 'costar', 'n']);
-function names(v, out = new Set(), key) {
+// Văn bản lưu trong S mà UI hiển thị nguyên văn (giai đoạn 3 mới chuyển sang key). Khớp theo đường dẫn, gỡ NGUYÊN chuỗi. Thêm mục ở đây phải kèm lý do.
+const VERBATIM = [
+  /^artists\.\d+\.hist\.\d+$/, // lịch sử nghệ sĩ (viewArtist)
+  /^artists\.\d+\.lessons\.\d+\.[ls]$/, // bài học rút ra
+  /^artists\.\d+\.dw\.why$/, // lời mong muốn debut (dWish lưu vào S)
+  /^artists\.\d+\.hsF\.why\.\d+$/, // lý do của chuyên gia sức khỏe
+];
+function names(v, out = new Set(), key, path = '') {
   if (typeof v === 'string') {
-    if (NAME_KEYS.has(key) && VI.test(v)) { out.add(v); out.add(v.replace(/^[^\p{L}\p{N}]+/u, '')); }
-  } else if (Array.isArray(v)) v.forEach(x => names(x, out, key));
-  else if (v && typeof v === 'object') for (const k of Object.keys(v)) if (!SKIP.has(k)) names(v[k], out, k);
+    if ((NAME_KEYS.has(key) || VERBATIM.some(r => r.test(path))) && VI.test(v)) { out.add(v); out.add(v.replace(/^[^\p{L}\p{N}]+/u, '')); }
+  } else if (Array.isArray(v)) v.forEach((x, i) => names(x, out, key, path ? `${path}.${i}` : String(i)));
+  else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (!SKIP.has(k) || VERBATIM.some(r => r.test(`${path}.${k}.0`))) names(v[k], out, k, path ? `${path}.${k}` : k); }
   out.delete('');
   return out;
 }

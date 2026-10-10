@@ -7,6 +7,7 @@ import { fame, fit } from './artists.js';
 import { CT_WK, MOOD, book } from './ext2.js';
 import { givePM } from './managers.js';
 import { getRel, groupsOf, harmony, setRel } from './relations.js';
+import { lbl, t } from '../i18n/index.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 
@@ -51,7 +52,8 @@ export function lineupWith(a,pool,w){const others=pool.filter(x=>x!==a);if(!othe
   for(let n=2;n<=Math.min(5,others.length+1);n++){const pk=[a];while(pk.length<n){let bc=null,bs=-1e9;for(const c of others){if(pk.includes(c))continue;const sc=fit(c,w)+pk.reduce((t,p)=>t+tagScore(p,c),0)*3;if(sc>bs){bs=sc;bc=c}}pk.push(bc)}
     const ids=pk.map(x=>x.id),f=avgFit(pk,w),hm=harmony(ids),sc=f+hm*1.5+n*2;if(!best||sc>best.sc)best={ids,f,hm,sc}}return best}
 export const DEBUT_MIN=50;
-export function debutRec(a){
+// Tính khuyến nghị debut. L = bộ chữ: debutRec (vi, literal; r.short đi vào S.props) và debutRecT (UI qua từ điển) dùng chung phần tính.
+function debutCalc(a,L){
   const so=bestOf(a,CONCEPTS)[0],ac=bestOf(a,GENRES)[0],music=Math.max(a.st.vocal,a.st.dance,a.st.rap);
   const soloS=so.f*.85+music*.25+(a.st.visual>=50?3:0)-(a.mood<30?5:0);
   const actS=ac.f*.9+(a.st.acting-(a.st.vocal+a.st.dance)/2)*.3;
@@ -61,15 +63,26 @@ export function debutRec(a){
   const sc={solo:Math.round(soloS),actor:Math.round(actS),group:grp?Math.round(grpS):null};
   let t='solo';if(actS>soloS)t='actor';if(grpS>Math.max(soloS,actS))t='group';
   const r={t,sc,k:t==='group'?gk:t==='solo'?so.k:ac.k,ids:grp?grp.ids:[a.id],f:t==='group'?grp.f:t==='solo'?so.f:ac.f};
-  const lbl=t==='actor'?GENRES[r.k].n:CONCEPTS[r.k].n;
-  if(t==='group'){const mates=grp.ids.filter(i=>i!==a.id).map(i=>byId(i).name);r.why=`Hợp nhất khi debut cùng ${mates.join(', ')}, concept ${lbl} ${Math.round(grp.f)}%${grp.hm>0?', nhóm hòa hợp':''}. Kỹ năng bổ trợ nhau tốt hơn đứng một mình.`}
-  else if(t==='solo')r.why=`${STATS[['vocal','dance','rap'].reduce((m,k)=>a.st[k]>a.st[m]?k:m,'vocal')]} ${Math.round(music)} đủ nổi bật để đứng sân khấu một mình, hợp concept ${lbl} ${Math.round(so.f)}%.`;
-  else r.why=`Diễn xuất ${Math.round(a.st.acting)} mạnh hơn kỹ năng âm nhạc, hợp phim ${lbl} ${Math.round(ac.f)}%.`;
-  r.short=`nên debut ${DRT[t]} · ${lbl} ${Math.round(r.f)}%`;
+  const lb=t==='actor'?L.g(r.k):L.c(r.k);
+  if(t==='group'){const mates=grp.ids.filter(i=>i!==a.id).map(i=>byId(i).name);r.why=L.grp(mates.join(', '),lb,Math.round(grp.f),grp.hm>0)}
+  else if(t==='solo')r.why=L.solo(L.st(['vocal','dance','rap'].reduce((m,k)=>a.st[k]>a.st[m]?k:m,'vocal')),Math.round(music),lb,Math.round(so.f));
+  else r.why=L.actor(Math.round(a.st.acting),lb,Math.round(ac.f));
+  r.short=L.short(L.drt(t),lb,Math.round(r.f));
   if(a.status==='trainee'&&r.f<=DEBUT_MIN){const W=t==='actor'?GENRES[r.k].w:CONCEPTS[r.k].w,k=Object.keys(W).reduce((m,x)=>W[x]*(100-a.st[x])>W[m]*(100-a.st[m])?x:m);
-    r.best=t;r.t='wait';r.why=`Độ phù hợp mới ${Math.round(r.f)}% (cần trên ${DEBUT_MIN}%). Tập thêm ${STATS[k]} rồi debut ${DRT[t]} (${lbl}).`;r.short=`chưa đủ điểm (${Math.round(r.f)}/${DEBUT_MIN})`}
+    r.best=t;r.t='wait';r.why=L.wait(Math.round(r.f),L.st(k),L.drt(t),lb);r.short=L.waitShort(Math.round(r.f))}
   return r;
 }
+export const debutRec=a=>debutCalc(a,{g:k=>GENRES[k].n,c:k=>CONCEPTS[k].n,st:k=>STATS[k],drt:k=>DRT[k],
+  grp:(m,lb,f,hm)=>`Hợp nhất khi debut cùng ${m}, concept ${lb} ${f}%${hm?', nhóm hòa hợp':''}. Kỹ năng bổ trợ nhau tốt hơn đứng một mình.`,
+  solo:(s,mu,lb,f)=>`${s} ${mu} đủ nổi bật để đứng sân khấu một mình, hợp concept ${lb} ${f}%.`,
+  actor:(ac,lb,f)=>`Diễn xuất ${ac} mạnh hơn kỹ năng âm nhạc, hợp phim ${lb} ${f}%.`,
+  short:(d,lb,f)=>`nên debut ${d} · ${lb} ${f}%`,
+  wait:(f,s,d,lb)=>`Độ phù hợp mới ${f}% (cần trên ${DEBUT_MIN}%). Tập thêm ${s} rồi debut ${d} (${lb}).`,
+  waitShort:f=>`chưa đủ điểm (${f}/${DEBUT_MIN})`});
+// Bản UI (không đi vào S/log): r.why/r.short bằng từ điển, trả chuỗi thường (caller esc)
+export const debutRecT=a=>debutCalc(a,{g:k=>lbl('genre',k),c:k=>lbl('concept',k),st:k=>lbl('stat',k),drt:k=>lbl('drt',k),
+  grp:(m,lb,f,hm)=>t('debut.rec.grp',{m,l:lb,f,hm}),solo:(s,mu,lb,f)=>t('debut.rec.solo',{s,mu,l:lb,f}),actor:(ac,lb,f)=>t('debut.rec.actor',{a:ac,l:lb,f}),
+  short:(d,lb,f)=>t('debut.rec.short',{d,l:lb,f}),wait:(f,s,d,lb)=>t('debut.rec.wait',{f,min:DEBUT_MIN,s,d,l:lb}),waitShort:f=>t('debut.rec.waitShort',{f,min:DEBUT_MIN})});
 export function recLine(a){const r=debutRec(a);const s=r.sc;return`<div class="prow"><b>${esc(a.name)}</b><span class="small">${r.t==='wait'?'⏳ Chưa nên debut':`<b>${DR[r.t]}</b>`}<br><span class="muted">${esc(r.why)}</span><br><span class="muted">Phù hợp ${Math.round(r.f)}% / cần trên ${DEBUT_MIN}% · Điểm: Solo ${s.solo} · Diễn viên ${s.actor}${s.group!=null?' · Nhóm '+s.group:''}</span></span><span class="sp"></span>${r.t==='wait'?'':`<button class="btn sm pri" onclick="applyRec(${a.id})">Áp dụng</button>`}</div>`}
 export function applyRec(id){const a=byId(id);if(!a)return;const r=debutRec(a);if(r.t==='wait')return;$('#dType').value=r.t;$('#dType').onchange();
   if(r.t==='group')applyLineup(r.ids);else{const x=[...document.querySelectorAll('.dsel')].find(e=>+e.value===id);if(x){x.checked=true;x.onchange&&x.onchange()}}
