@@ -5,7 +5,7 @@ import { LNM, MGN } from '../data/names.js';
 import { MSK } from '../data/rules.js';
 import { S, addLog, byId, uid } from '../state.js';
 import { mkLook } from './artists.js';
-import { batchNameT } from './batches.js';
+import { batchNameRaw } from './batches.js';
 import { MAX_SA, asstB } from './ext2.js';
 import { acceptCast, bestCast } from './offers.js';
 import { act } from '../ui/building.js';
@@ -31,7 +31,7 @@ export function setBoss(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return
   else{const b=S.managers.find(x=>x.id===+v);if(!b||b===m||inSub(m,b))return toast(t('mgr.toast.loop'));if(mKids(b).length>=mCap(b))return toast(t('mgr.toast.capBoss',{n:b.name,c:t('unit.people',{n:mCap(b)})}));m.boss=b.id;addLog(`📋 ${m.name} giờ báo cáo cho ${b.name}.`)}
   act()}
 // Bản UI của targetName (trả chuỗi thường, caller esc). targetName giữ literal tiếng Việt vì đi vào addLog.
-export function targetNameT(m){if(!m.as)return t('mgr.tgt.none');if(m.as.t==='t')return t('mgr.tgt.allTrainee');if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?t('mgr.tgt.batch',{b:batchNameT(b)}):t('mgr.tgt.batchGone')}if(m.as.t==='s')return t('mgr.tgt.allSolo');if(m.as.t==='d')return t('mgr.tgt.allActor');if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?t('mgr.tgt.list',{n:ts.length,names:ts.slice(0,2).map(a=>a.name).join(t('list.sep'))+(ts.length>2?'…':'')}):t('mgr.tgt.empty')}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?t('mgr.tgt.group',{g:g.name}):'—'}const a=byId(m.as.id);return a?a.name:'—'}
+export function targetNameT(m){if(!m.as)return t('mgr.tgt.none');if(m.as.t==='t')return t('mgr.tgt.allTrainee');if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?t('mgr.tgt.batch',{b:batchNameRaw(b)}):t('mgr.tgt.batchGone')}if(m.as.t==='s')return t('mgr.tgt.allSolo');if(m.as.t==='d')return t('mgr.tgt.allActor');if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?t('mgr.tgt.list',{n:ts.length,names:ts.slice(0,2).map(a=>a.name).join(t('list.sep'))+(ts.length>2?'…':'')}):t('mgr.tgt.empty')}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?t('mgr.tgt.group',{g:g.name}):'—'}const a=byId(m.as.id);return a?a.name:'—'}
 export function targetName(m){if(!m.as)return'Chưa phân công';if(m.as.t==='t')return'tất cả thực tập sinh';if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?'thực tập sinh '+b.n.toLowerCase():'lứa đã giải tán'}if(m.as.t==='s')return'tất cả nghệ sĩ solo';if(m.as.t==='d')return'tất cả diễn viên';if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?`${ts.length} nghệ sĩ: ${ts.slice(0,2).map(a=>a.name).join(', ')}${ts.length>2?'…':''}`:'danh sách trống'}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?'nhóm '+g.name:'—'}const a=byId(m.as.id);return a?a.name:'—'}
 export function mgrExp(m,n=1){const b=mBoss(m);if(b&&n>=.25)mgrExp(b,n*.5);m.exp=+(m.exp+n).toFixed(2);while(m.exp>=m.lv*4){m.exp-=m.lv*4;m.lv++;const ks=Object.keys(MSK).filter(k=>m.sk[k]<10),k=ks.length?pick(ks):null;if(k)m.sk[k]++;m.salary+=1e6;addLog(`📈 Quản lý ${m.name} lên cấp ${m.lv}${k?' ('+MSK[k]+' +1)':''}.`,'good')}}
 export function mgrAuto(){for(const m of S.managers){if(m.auto==='off'||!m.as)continue;

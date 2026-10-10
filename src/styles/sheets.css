@@ -12,6 +12,8 @@
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px}
 .card.tg{border-color:rgba(239,181,77,.55);background:linear-gradient(rgba(239,181,77,.07),rgba(239,181,77,.07)),var(--card)}
 .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+label.row:has(>input[type=checkbox]){flex-wrap:nowrap;align-items:flex-start}
+label.row>input[type=checkbox]{flex:none;margin:2px 0 0}
 .sp{flex:1}
 .btn{background:var(--card2);border:1px solid var(--line2);border-radius:9px;padding:7px 13px;font:600 13.5px/1.35 var(--f-body);color:var(--ink);transition:border-color .2s,background .2s,transform .15s}
 .btn:hover:not(:disabled){border-color:var(--muted)}

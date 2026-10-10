@@ -66,7 +66,7 @@ export function surprise(){
   else if(k==='investor')pushEv({kind:'sx',sx:k,p:pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng']),v:Math.round(R(200,500)*(1+S.year*.2))*1e6},true);
   else if(k==='festival'){const x=pick(free);pushEv({kind:'sx',sx:k,act:x.k,n:x.n.slice(2)},true)}
   else pushEv({kind:'sx',sx:k},true);
-  toast('⚡ Có sự kiện bất ngờ!');
+  toast(t('market.toast.surprise'));
 }
 export function sxResolve(e,k){
   const D=SXD[e.sx];

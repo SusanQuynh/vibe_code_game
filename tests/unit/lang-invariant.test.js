@@ -24,7 +24,7 @@ import { cfPick, propAll, viewProps } from '../../src/systems/proposals.js';
 import { doFM, doLive, doSingle, holdConcert, viewCamp } from '../../src/systems/releases.js';
 import { postAuto, postDo, preAuto, preDo } from '../../src/systems/promo.js';
 import { buyBiz, buybackBiz, raiseBiz, sellBiz, upBiz } from '../../src/systems/market.js';
-import { prDo, prGo } from '../../src/systems/review.js';
+import { PRP, prDo, prGo } from '../../src/systems/review.js';
 import { mkSong, songAct, viewSong, viewSongs, writeSong } from '../../src/systems/ext2.js';
 
 noToggle();
@@ -43,8 +43,8 @@ function run(lang, weeks = 40) {
   localStorage.clear();
   setLang(lang);
   seed(7);
-  const did = {}, tr = [];
-  const T = (tag, fn) => { const h = S.log[0]; fn(); let k = 0; for (const e of S.log) { if (e === h) break; k++; tr.push(e.t); } if (k) did[tag] = (did[tag] || 0) + 1; return k; };
+  const did = {}, tr = [], by = {}; // by[tag] = các dòng log của riêng hành động đó
+  const T = (tag, fn) => { const h = S.log[0]; fn(); let k = 0; for (const e of S.log) { if (e === h) break; k++; tr.push(e.t); (by[tag] ||= []).push(e.t); } if (k) did[tag] = (did[tag] || 0) + 1; return k; };
   const base = Math.random; let n = 0;
   Math.random = () => { n++; return base(); };
   setPos({});
@@ -104,7 +104,7 @@ function run(lang, weeks = 40) {
       if (i % 4 === 1) T('single', () => doSingle(x.k, 'ballad', 30e6, 'Bài thử', true));
     }
     for (const k of Object.keys(S.camp)) if (S.camp[k].ph === 'post') { T('post', () => { if (i % 2) postAuto(k, true); else for (const id of ['s1', 'radio', 'variety', 'fansign', 'challenge', 'live']) postDo(k, id, true); }); }
-    if (x && i % 6 === 2) T('pr', () => { for (const t of ['sns', 'mag', 'clip', 'int']) prDo(t, x.k); });
+    if (x && i % 6 === 2) T('pr', () => { for (const t of Object.keys(PRP)) prDo(t, x.k); });
     if (i % 5 === 0) { for (const r of ROOMS) openRoom(r.id); closeM(); render(); }
     if (i % 10 === 0) { for (const a of [...S.artists]) view(() => viewArtist(a.id)); closeM(); } // hồ sơ nghệ sĩ (dWish ghi a.dw lúc render)
     if (i % 10 === 5) { for (const f of [viewReport, viewReportFull, viewEvents, viewSkipWarn]) view(f); for (const a of S.artists) if (a.scandal) view(() => viewInv(a.id)); closeM(); } // báo cáo, khung sự kiện, hồ sơ điều tra
@@ -127,7 +127,7 @@ function run(lang, weeks = 40) {
     nextWeek(true, true);
   }
   did.hsF = S.artists.filter(q => q.hsF && q.hsF.why.length).length; // hsTick (chuỗi hsRisk vào S.hsF.why) đã chạy hằng tuần
-  return { s: JSON.stringify(S), n, did, tr: tr.join('\n') };
+  return { s: JSON.stringify(S), n, did, tr: tr.join('\n'), by: Object.fromEntries(Object.entries(by).map(([k, v]) => [k, v.join('\n')])) };
 }
 
 describe('S độc lập ngôn ngữ', () => {
@@ -137,13 +137,14 @@ describe('S độc lập ngôn ngữ', () => {
     expect(en.n).toBe(vi.n);
     expect(en.did).toEqual(vi.did);
     expect(en.tr === vi.tr).toBe(true);
+    expect(JSON.stringify(en.by) === JSON.stringify(vi.by)).toBe(true);
     expect(en.s === vi.s).toBe(true);
     expect(vi.n).toBeGreaterThan(100);
     // mỗi hành động đã ghi log ít nhất một lần (không chỉ đi đường toast lỗi) và dấu vết đúng của nó có mặt
-    const must = { comp: /lên đường dự thi «/, newBatch: /Mở Lứa \d+/, moveBatch: /Chuyển .+ sang Lứa/, batchLive: /livestream trò chuyện/, dqDo: /vui vì được debut|tiếc vì muốn debut/, dqKeep: /tiếp tục làm thực tập sinh/, offer: /nhận .+ «/, cast: /· \d+ người/, invest: /Góp vốn .+ vào phim «/, pre: /Ảnh teaser/, single: /Single «Bài thử»/, post: /lên radio/, pr: /Quảng cáo SNS cho/,
+    const must = { comp: /lên đường dự thi «/, newBatch: /Mở Lứa \d+/, moveBatch: /Chuyển .+ sang Lứa/, batchLive: /livestream trò chuyện/, dqDo: /vui vì được debut|tiếc vì muốn debut/, dqKeep: /tiếp tục làm thực tập sinh/, offer: /nhận .+ «/, cast: /· \d+ người/, invest: /Góp vốn .+ vào phim «/, pre: /Ảnh teaser/, single: /Single «Bài thử»/, post: /lên radio/, pr: [/Quảng cáo SNS cho/, /trả lời phỏng vấn/, /lên tạp chí/, /Clip của/, /quảng bá hình ảnh/],
       write: /vào phòng thu sáng tác «/, write2: /vào phòng thu sáng tác «/, songOk: /GĐ Âm nhạc duyệt «/, songRedo: /Chỉnh sửa «/, songDrop: /Bỏ bài «/, live: /livestream trò chuyện/, fm: /Fan meeting của/, concert: /Concert của/,
-      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: /Quản lý .+ phụ trách|phụ trách/, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, buyBiz: /Mở Cà phê/, buyBiz2: /Mở Chuỗi nhà hàng/, upBiz: /Mở rộng Cà phê thần tượng lên cấp 2/, raiseBiz: /kêu gọi vốn: bán 20% cổ phần/, buybackBiz: /Mua lại toàn bộ cổ phần Cà phê/, sellBiz: /Bán Chuỗi nhà hàng/, paHire: /trợ lý cá nhân|Công ty chọn trợ lý/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, prGo: /Fan meeting|livestream|Quảng cáo SNS|lên tạp chí|phỏng vấn|Clip của|quảng bá hình ảnh/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
-    for (const [k, re] of Object.entries(must)) { expect(vi.did[k], `hành động ${k} phải có tác dụng`).toBeGreaterThan(0); expect(vi.tr, `dấu vết log của ${k}`).toMatch(re); }
+      cbSched: /Hẹn comeback cho/, cbNow: /Thư ký triển khai comeback/, hire2: /Tuyển quản lý/, mAssign: / phụ trách /, mBoss: /giờ báo cáo cho/, mUnboss: /báo cáo trực tiếp Giám đốc/, mGroup: /phụ trách nhóm/, mFire: /Cho nghỉ việc quản lý/, buyBiz: /Mở Cà phê/, buyBiz2: /Mở Chuỗi nhà hàng/, upBiz: /Mở rộng Cà phê thần tượng lên cấp 2/, raiseBiz: /kêu gọi vốn: bán 20% cổ phần/, buybackBiz: /Mua lại toàn bộ cổ phần Cà phê/, sellBiz: /Bán Chuỗi nhà hàng/, paHire: /tự chọn trợ lý cá nhân|Công ty chọn trợ lý .+ thay vì/, paFire: /Trợ lý cá nhân .+ nghỉ việc/, hsHire: /Tuyển chuyên gia chăm sóc sức khỏe/, hsApply: /theo khuyến nghị sức khỏe/, hsFire: /Chuyên gia .+ nghỉ việc/, prGo: /Fan meeting|livestream|Quảng cáo SNS|lên tạp chí|phỏng vấn|Clip của|quảng bá hình ảnh/, cfPick: /Giám đốc xử lý xung đột/, cbRec: /Thư ký hẹn comeback theo khuyến nghị/ };
+    for (const [k, re] of Object.entries(must)) { expect(vi.did[k], `hành động ${k} phải có tác dụng`).toBeGreaterThan(0); for (const r of [].concat(re)) expect(vi.by[k], `dấu vết log của ${k}`).toMatch(r); }
     // đề xuất của quản lý: có mục lịch, dự án và xung đột treo chờ Giám đốc (cfHTML/itDesc/stTag được render và so sánh)
     expect(vi.did.prBtn).toBeGreaterThan(0); expect(vi.did.prHist).toBeGreaterThan(0); expect(vi.s).toMatch(/"prHist":\["T\d+: /); // S.prHist luôn là chữ vi dù render ở en
     for (const k of ['paC', 'paRe', 'paHas', 'hsF']) expect(vi.did[k], `PA/HS ${k}`).toBeGreaterThan(0);

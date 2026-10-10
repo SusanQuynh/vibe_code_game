@@ -19,7 +19,9 @@ import { det } from '../ui/views.js';
 /* ---- Lứa thực tập sinh ---- */
 export function initBatches(){S.bno=1;S.batches=[{id:uid(),n:'Lứa 1',w:abs()}];S.curBatch=S.batches[0].id;S.artists.filter(a=>a.status==='trainee').forEach(a=>a.batch=S.curBatch)}
 // Tên lứa hiển thị: S.batches[].n lưu 'Lứa N' (nguyên văn, dùng cho log); UI lấy số rồi dựng qua từ điển.
-export const batchNameT=b=>{const n=(b.n.match(/\d+/)||[])[0];return n?t('batch.name',{n}):esc(b.n)};
+// batchNameRaw: chuỗi thường (chưa esc) cho UI; batchNameT: HTML đã esc (dùng trong template). targetNameT dùng bản Raw rồi caller esc.
+export const batchNameRaw=b=>{const n=(b.n.match(/\d+/)||[])[0];return n?t('batch.name',{n}):b.n};
+export const batchNameT=b=>esc(batchNameRaw(b));
 export const batchOf=a=>(S.batches||[]).find(b=>b.id===a.batch)||null;
 export const bMem=b=>S.artists.filter(a=>a.status==='trainee'&&a.batch===b.id);
 export function fixBatch(a){if(a.status==='trainee'&&!S.batches.some(b=>b.id===a.batch))a.batch=S.curBatch}

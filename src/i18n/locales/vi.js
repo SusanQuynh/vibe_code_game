@@ -1266,6 +1266,7 @@ export default {
     'market.stole': p => ` · đã giành ${p.n} lời mời`,
     'market.cb': ' · <b class="bad">đang comeback</b>',
     'market.note': 'Đối thủ có thể comeback cùng lúc với bạn (làm single khó lên hạng), giành lời mời béo bở và chiêu mộ nghệ sĩ tâm trạng kém. Xếp hạng cuối năm dựa trên tổng fan.',
+    'market.toast.surprise': '⚡ Có sự kiện bất ngờ!',
     'fmt.units': { b: ' tỷ', m: ' tr', k: 'k' },
   },
 };

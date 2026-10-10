@@ -1272,6 +1272,7 @@ export default {
     'market.stole': p => ` · won ${p.n} offer${p.n == 1 ? '' : 's'}`,
     'market.cb': ' · <b class="bad">comeback in progress</b>',
     'market.note': 'Rivals may comeback at the same time as you (making singles harder to chart), win lucrative offers and poach artists in a bad mood. The year-end ranking is based on total fans.',
+    'market.toast.surprise': '⚡ A surprise event!',
     'fmt.units': { b: 'B', m: 'M', k: 'K' },
   },
 };
