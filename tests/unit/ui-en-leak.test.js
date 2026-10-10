@@ -33,7 +33,8 @@ function names(v, out = new Set(), key, path = '') {
   if (typeof v === 'string') {
     if ((NAME_KEYS.has(key) || VERBATIM.some(r => r.test(path))) && VI.test(v)) { out.add(v); out.add(v.replace(/^[^\p{L}\p{N}]+/u, '')); }
   } else if (Array.isArray(v)) v.forEach((x, i) => names(x, out, key, path ? `${path}.${i}` : String(i)));
-  else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (!SKIP.has(k) || VERBATIM.some(r => r.test(`${path}.${k}.0`))) names(v[k], out, k, path ? `${path}.${k}` : k); }
+  else if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (key === 'partners' && VI.test(k)) out.add(k); // S.partners: khoá là tên đối tác
+    if (!SKIP.has(k) || VERBATIM.some(r => r.test(`${path}.${k}.0`))) names(v[k], out, k, path ? `${path}.${k}` : k); }
   out.delete('');
   return out;
 }

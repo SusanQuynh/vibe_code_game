@@ -384,19 +384,13 @@
     "src/systems/secretary.js#wkLabel": 1,
     "src/systems/week.js#completeBusy": 6,
     "src/systems/week.js#releaseFilm": 1,
-    "src/ui/rooms.js#RV.acting": 15,
-    "src/ui/rooms.js#RV.ceo": 29,
-    "src/ui/rooms.js#RV.dorm": 11,
     "src/ui/rooms.js#RV.invest": 29,
     "src/ui/rooms.js#RV.lobby": 33,
     "src/ui/rooms.js#RV.market": 15,
     "src/ui/rooms.js#RV.meet": 47,
     "src/ui/rooms.js#RV.mgr": 71,
     "src/ui/rooms.js#RV.pr": 11,
-    "src/ui/rooms.js#RV.roof": 1,
-    "src/ui/rooms.js#RV.studio": 38,
-    "src/ui/rooms.js#trainRoom": 12,
-    "src/ui/rooms.js#ttsSplit": 1
+    "src/ui/rooms.js#RV.studio": 38
   },
   "allowCount": {
     "cmp": 24,

@@ -17,7 +17,7 @@ import { actByKey, fanSugs } from '../systems/releases.js';
 import { EV_ART, EV_PCT, EV_TTS, evNext, evalTable, prHTML, prPlans } from '../systems/review.js';
 import { actFree, acts, conceptRec, secPlans, secSchedRec } from '../systems/secretary.js';
 import { defaultDays, weekCost } from '../systems/week.js';
-import { roomName } from '../i18n/index.js';
+import { lbl, money, roomName, sv, t } from '../i18n/index.js';
 import { NPC, act, chibiHTML, lastRoom, renderDock, setLastRoom } from './building.js';
 import { curView, modal, setCurRC, setCurView } from './modal.js';
 import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './views.js';
@@ -25,14 +25,14 @@ import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './vie
 export function openRoom(id){if(lastRoom!==id){setLastRoom(id);renderDock()}setCurRC(`var(--r-${id})`);setCurView(()=>RV[id]());curView()}
 export function ttsSplit(arr,fn,key,empty,ttsBtn){const tt=arr.filter(a=>a.status==='trainee').sort(eligSort),ot=arr.filter(a=>a.status!=='trainee');
   const byB=(S.batches||[]).length>1?S.batches.map(b=>({b,l:tt.filter(a=>a.batch===b.id)})).filter(x=>x.l.length):null;
-  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,`🌱 Tất cả thực tập sinh (${tt.length})`,(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${esc(x.b.n)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
+  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,t('room.allTts',{n:tt.length}),(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${esc(x.b.n)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
 export function setSchedTTS(v){S.artists.filter(a=>a.status==='trainee'&&!a.busy).forEach(a=>{a.days=a.days.some(k=>k!=='rest')?a.days.map(k=>k==='rest'?'rest':v):defaultDays(v)});act()}
 export function trainRoom(r,key,extra=''){
   const here=S.artists.filter(a=>!a.busy&&a.days.includes(key)),others=S.artists.filter(a=>!a.busy&&!a.days.includes(key));
-  const t=TRAIN[key];
-  return`<h2>${r.ic} ${roomName(r.id)}</h2><div class="sub">${key==='rest'?'Mỗi ngày nghỉ hồi +12 năng lượng và tâm trạng, miễn phí.':`Mỗi ngày tập tăng ${Object.keys(t.g).map(k=>STATS[k]).join(', ')}, tốn khoảng ${Math.abs(Math.round(t.e*.3))} năng lượng và ${fmt(TRAIN_COST/5)}. Năng lượng dưới 25 thì tập kém hiệu quả.`}</div>${extra}
-  ${det('rm-'+key+'-in',`Đang ở đây (${here.length})`,ttsSplit(here,a=>artistLine(a,`<span class="small">${a.days.filter(k=>k===key).length} ngày · ${Object.keys(t.g).map(k=>STATS[k]+' '+Math.round(a.st[k])).join(' · ')}</span>`),'rm-'+key+'-in-t','Trống.',''),true)}
-  ${det('rm-'+key+'-out',`Chuyển nghệ sĩ vào phòng (${others.length})`,ttsSplit(others,a=>artistLine(a,`<button class="btn sm pri" onclick="setSched(${a.id},'${key}')">Chuyển vào</button>`),'rm-'+key+'-out-t','Không còn ai rảnh.',`<button class="btn sm pri" onclick="setSchedTTS('${key}')">Chuyển cả lứa thực tập sinh vào</button>`),false)}`;
+  const tr=TRAIN[key];
+  return`<h2>${r.ic} ${roomName(r.id)}</h2><div class="sub">${key==='rest'?t('train.subRest'):t('train.sub',{s:Object.keys(tr.g).map(k=>lbl('stat',k)).join(t('list.sep')),e:Math.abs(Math.round(tr.e*.3)),m:money(TRAIN_COST/5)})}</div>${extra}
+  ${det('rm-'+key+'-in',t('train.here',{n:here.length}),ttsSplit(here,a=>artistLine(a,`<span class="small">${t('unit.days',{n:a.days.filter(k=>k===key).length})} · ${Object.keys(tr.g).map(k=>lbl('stat',k)+' '+Math.round(a.st[k])).join(' · ')}</span>`),'rm-'+key+'-in-t',t('train.empty'),''),true)}
+  ${det('rm-'+key+'-out',t('train.moveIn',{n:others.length}),ttsSplit(others,a=>artistLine(a,`<button class="btn sm pri" onclick="setSched(${a.id},'${key}')">${t('train.move')}</button>`),'rm-'+key+'-out-t',t('train.noneFree'),`<button class="btn sm pri" onclick="setSchedTTS('${key}')">${t('train.moveAll')}</button>`),false)}`;
 }
 export const RV={
   mgr(){
@@ -90,19 +90,19 @@ export const RV={
     ${det('mk-rank','⚔️ Bảng xếp hạng công ty',list.map((r,i)=>`<div class="card" style="${r.me?'border-color:var(--pink)':''}"><div class="row"><b>#${i+1} ${esc(r.n)}</b><span class="sp"></span><b>${fmtN(r.fans)}</b> fan</div><div class="bar" style="margin:4px 0"><i style="width:${r.fans/mx*100}%;${r.me?'background:var(--pink)':''}"></i></div>${r.me?'':`<div class="small muted">Năm nay ${r.fans>=r.f0?'+':''}${fmtN(r.fans-r.f0)} fan${r.stole?` · đã giành ${r.stole} lời mời`:''}${r.last?' · '+esc(r.last):''}${r.cb&&r.cb.w>=abs()-1?' · <b class="bad">đang comeback</b>':''}</div>`}</div>`).join(''),true)}
     <div class="small muted">Đối thủ có thể comeback cùng lúc với bạn (làm single khó lên hạng), giành lời mời béo bở và chiêu mộ nghệ sĩ tâm trạng kém. Xếp hạng cuối năm dựa trên tổng fan.</div>`);
   },
-  roof(){modal(trainRoom(ROOMS.find(r=>r.id==='roof'),'rest','<div class="small muted">Nghệ sĩ nghỉ ngơi sẽ tản ra Ký túc xá, Sảnh và Sân thượng.</div>'))},
+  roof(){modal(trainRoom(ROOMS.find(r=>r.id==='roof'),'rest',`<div class="small muted">${t('roof.tip')}</div>`))},
   ceo(){
     const wk=weekCost();
     const last=S.awards[S.awards.length-1];
-    modal(`<h2>💼 ${roomName('ceo')}</h2><div class="sub">Quản lý tài chính, lịch tập hằng tuần và thành tích.</div>
-    <div class="grid2"><div class="card">💰 Quỹ<br><b>${fmt(S.money)}</b></div><div class="card">📉 Chi phí tuần<br><b>${fmt(wk)}</b></div><div class="card">🏆 Giải đã thắng<br><b>${S.awards.reduce((s,e)=>s+e.res.filter(r=>r.ok).length,0)}</b></div><div class="card">📊 Hạng năm trước<br><b>${last?'#'+last.rank:'—'}</b></div></div>
-    ${det('ceo-sched',`📅 Lịch tập tuần (${S.artists.filter(a=>!a.busy).length} ở công ty, ${S.artists.filter(a=>a.busy).length} bên ngoài)`,`<div class="row" style="margin-bottom:8px"><span class="small">Áp dụng cho tất cả (5 ngày tập + 2 ngày nghỉ):</span><select onchange="setAll(this.value)"><option value="">Chọn…</option>${Object.keys(TRAIN).map(k=>`<option value="${k}">${TRAIN[k].n}</option>`).join('')}</select></div>
-    ${S.artists.length?ttsSplit(S.artists,a=>artistLine(a,a.busy?'<span class="tag">Bên ngoài</span>':schedSel(a)),'ceo-tts','',''):'<div class="muted small">Chưa có nghệ sĩ. Xuống Sảnh Tuyển dụng nhé.</div>'}`,true)}
-    ${det('ceo-grp',`👥 Nhóm nhạc (${S.groups.length})`,S.groups.map(g=>`<div class="card"><b>👥 ${esc(g.name)}</b> <span class="small muted">debut năm ${g.y} · hòa hợp ${harmony(g.members)>=0?'+':''}${harmony(g.members)} · 📋 ${esc((S.managers.find(m=>m.as&&m.as.t==='g'&&m.as.id===g.id)||{name:'chưa có quản lý'}).name)}</span><div class="small">${g.members.map(i=>byId(i)).filter(Boolean).map(a=>esc(a.name)).join(', ')} · ${fmtN(g.members.reduce((s,i)=>s+(byId(i)?.fans||0),0))} fan</div></div>`).join('')||'<div class="small muted">Chưa có nhóm.</div>',false)}
-    ${det('ceo-par',`🤝 Quan hệ đối tác (${Object.keys(S.partners).length})`,`<div class="small">${Object.keys(S.partners).sort((x,y)=>S.partners[y]-S.partners[x]).map(p=>`${esc(p)}: <b>${S.partners[p]}</b>`).join(' · ')||'<span class="muted">Hoàn thành dự án để xây dựng quan hệ. Quan hệ cao giúp giảm yêu cầu, tăng thù lao và nhận lời mời đích danh.</span>'}</div>`,false)}
-    ${det('ceo-eval',`📋 Đánh giá định kỳ · kỳ tới sau ${evNext()} tuần`,`<div class="small muted" style="margin-bottom:6px">Mỗi 4 tuần. TTS phải tăng tổng chỉ số trên ${EV_PCT}% so với kỳ trước; không đạt ${EV_TTS} lần liên tiếp bị loại. TTS lười tập hoặc buồn có thể bị sa sút chỉ số. Nghệ sĩ xuất sắc được thưởng 2 tuần lương, không đạt bị trừ 1 tuần lương; ${EV_ART} lần liên tiếp không đạt sẽ bị chấm dứt hợp đồng.</div>${evalTable(S.lastEval)}`,true)}
-    ${det('ceo-aw',`🏆 Lịch sử lễ trao giải (${S.awards.length})`,S.awards.slice().reverse().map(e=>`<div class="card small"><b>Năm ${e.y}</b> · hạng #${e.rank} · ${e.res.filter(r=>r.ok).map(r=>r.cat).join(', ')||'chưa có giải'}</div>`).join('')||'<div class="small muted">Lễ trao giải diễn ra sau tuần 52 mỗi năm.</div>',false)}
-    <h3>Dữ liệu</h3><div class="small muted" style="margin-bottom:6px">Game tự lưu trên trình duyệt này sau mỗi thao tác. Muốn chơi ở thiết bị khác, hãy xuất mã hoặc file lưu.</div><button class="btn pri" onclick="view(viewCode)">🔑 Lưu / chuyển game</button> <button class="btn warn" onclick="resetGame(this)">Chơi lại từ đầu</button>`);
+    modal(`<h2>💼 ${roomName('ceo')}</h2><div class="sub">${t('ceo.sub')}</div>
+    <div class="grid2"><div class="card">💰 ${t('ceo.fund')}<br><b>${money(S.money)}</b></div><div class="card">📉 ${t('ceo.wcost')}<br><b>${money(wk)}</b></div><div class="card">🏆 ${t('ceo.wins')}<br><b>${S.awards.reduce((s,e)=>s+e.res.filter(r=>r.ok).length,0)}</b></div><div class="card">📊 ${t('ceo.lastRank')}<br><b>${last?'#'+last.rank:'—'}</b></div></div>
+    ${det('ceo-sched',`📅 ${t('ceo.sched',{a:S.artists.filter(a=>!a.busy).length,b:S.artists.filter(a=>a.busy).length})}`,`<div class="row" style="margin-bottom:8px"><span class="small">${t('ceo.applyAll')}</span><select onchange="setAll(this.value)"><option value="">${t('common.choose')}</option>${Object.keys(TRAIN).map(k=>`<option value="${k}">${lbl('train.n',k)}</option>`).join('')}</select></div>
+    ${S.artists.length?ttsSplit(S.artists,a=>artistLine(a,a.busy?`<span class="tag">${t('common.outside')}</span>`:schedSel(a)),'ceo-tts','',''):`<div class="muted small">${t('ceo.noArtists',{r:roomName('lobby')})}</div>`}`,true)}
+    ${det('ceo-grp',`👥 ${t('ceo.groups',{n:S.groups.length})}`,S.groups.map(g=>`<div class="card"><b>👥 ${esc(g.name)}</b> <span class="small muted">${t('ceo.grpInfo',{y:g.y,h:(harmony(g.members)>=0?'+':'')+harmony(g.members),m:esc((S.managers.find(m=>m.as&&m.as.t==='g'&&m.as.id===g.id)||{name:t('ceo.noMgr')}).name)})}</span><div class="small">${g.members.map(i=>byId(i)).filter(Boolean).map(a=>esc(a.name)).join(t('list.sep'))} · ${t('common.fans',{n:fmtN(g.members.reduce((s,i)=>s+(byId(i)?.fans||0),0))})}</div></div>`).join('')||`<div class="small muted">${t('ceo.noGroups')}</div>`,false)}
+    ${det('ceo-par',`🤝 ${t('ceo.partners',{n:Object.keys(S.partners).length})}`,`<div class="small">${Object.keys(S.partners).sort((x,y)=>S.partners[y]-S.partners[x]).map(p=>`${esc(p)}: <b>${S.partners[p]}</b>`).join(' · ')||`<span class="muted">${t('ceo.parNone')}</span>`}</div>`,false)}
+    ${det('ceo-eval',`📋 ${t('ceo.evalTitle',{w:t('unit.weeks',{n:evNext()})})}`,`<div class="small muted" style="margin-bottom:6px">${t('ceo.evalRule',{p:EV_PCT,t:EV_TTS,a:EV_ART})}</div>${evalTable(S.lastEval)}`,true)}
+    ${det('ceo-aw',`🏆 ${t('ceo.awards',{n:S.awards.length})}`,S.awards.slice().reverse().map(e=>`<div class="card small"><b>${t('ceo.awYear',{y:e.y})}</b> · ${t('ceo.awRank',{r:e.rank})} · ${e.res.filter(r=>r.ok).map(r=>r.cat).join(t('list.sep'))||t('ceo.noAward')}</div>`).join('')||`<div class="small muted">${t('ceo.awNone')}</div>`,false)}
+    <h3>${t('ceo.data')}</h3><div class="small muted" style="margin-bottom:6px">${t('ceo.dataTip')}</div><button class="btn pri" onclick="view(viewCode)">🔑 ${t('top.save')}</button> <button class="btn warn" onclick="resetGame(this)">${t('ceo.reset')}</button>`);
   },
   meet(){
     const now=abs();
@@ -150,15 +150,15 @@ export const RV={
   acting(){
     const cands=S.artists.filter(a=>a.status==='debuted'&&!a.busy);
     modal(trainRoom(ROOMS[3],'acting',`
-    <h3>🎬 Tự sản xuất phim</h3><div class="card"><div class="row"><select id="fGen">${Object.keys(GENRES).map(k=>`<option value="${k}">${GENRES[k].n}</option>`).join('')}</select><select id="fBud"><option value="300000000">Kinh phí thấp – 300 tr</option><option value="800000000">Trung bình – 800 tr</option><option value="2000000000">Bom tấn – 2 tỷ</option></select></div>
-    <input type="text" id="fTitle" placeholder="Tên phim (tuỳ chọn)" style="width:100%;margin-top:6px">
-    <div class="small" style="margin-top:6px">Chọn 1–3 vai chính (quay 8 tuần, ra rạp sau 2 tuần hậu kỳ):</div>
-    <div class="list" id="fList">${cands.map(a=>`<label><input type="checkbox" class="fcast" value="${a.id}"> ${esc(a.name)} <span class="small muted" data-f="${a.id}"></span></label>`).join('')||'<div class="small muted">Không có nghệ sĩ đã ra mắt nào rảnh.</div>'}</div>
-    <button class="btn pink" style="margin-top:6px" onclick="produceFilm()">Bấm máy</button></div>
-    <div class="small muted">Góp vốn vào phim được mời tại Phòng Họp (phim truyền hình & điện ảnh).</div>
-    ${det('fl-tbl','📋 Bảng chỉ số theo thể loại phim',wTable(GENRES,'genre'),false)}
-    ${det('fl-list',`🎞️ Phim của công ty (${S.films.length})`,S.films.slice().reverse().map(f=>`<div class="card small"><b>«${esc(f.title)}»</b> ${GENRES[f.genre].n} · ${f.own?'Tự sản xuất':'Góp vốn '+Math.round(f.share*100)+'%'} · Vốn ${fmt(f.cost)}<br>${f.done?`Doanh thu ${fmt(f.rev)} (x${f.mult}) · Nhận ${fmt(f.inc)}`:f.status+(f.releaseAt?` · chiếu sau ${f.releaseAt-abs()} tuần`:'')}${f.cast.length?' · Cast: '+f.cast.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', '):''}</div>`).join('')||'<div class="small muted">Chưa có phim.</div>',true)}`));
-    const up=()=>{const w=GENRES[$('#fGen').value].w;document.querySelectorAll('[data-f]').forEach(el=>{const a=byId(+el.dataset.f);el.textContent=`phù hợp ${Math.round(fit(a,w))}% · danh tiếng ${fame(a)}`})};
+    <h3>🎬 ${t('acting.makeTitle')}</h3><div class="card"><div class="row"><select id="fGen">${Object.keys(GENRES).map(k=>`<option value="${k}">${lbl('genre',k)}</option>`).join('')}</select><select id="fBud"><option value="300000000">${t('acting.bud.low')} – ${money(300e6)}</option><option value="800000000">${t('acting.bud.mid')} – ${money(800e6)}</option><option value="2000000000">${t('acting.bud.big')} – ${money(2e9)}</option></select></div>
+    <input type="text" id="fTitle" placeholder="${t('acting.titlePh')}" style="width:100%;margin-top:6px">
+    <div class="small" style="margin-top:6px">${t('acting.pickCast')}</div>
+    <div class="list" id="fList">${cands.map(a=>`<label><input type="checkbox" class="fcast" value="${a.id}"> ${esc(a.name)} <span class="small muted" data-f="${a.id}"></span></label>`).join('')||`<div class="small muted">${t('acting.noFree')}</div>`}</div>
+    <button class="btn pink" style="margin-top:6px" onclick="produceFilm()">${t('acting.shoot')}</button></div>
+    <div class="small muted">${t('acting.coFundTip',{r:roomName('meet')})}</div>
+    ${det('fl-tbl',`📋 ${t('acting.tblTitle')}`,wTable(GENRES,'genre'),false)}
+    ${det('fl-list',`🎞️ ${t('acting.films',{n:S.films.length})}`,S.films.slice().reverse().map(f=>`<div class="card small"><b>«${esc(f.title)}»</b> ${lbl('genre',f.genre)} · ${f.own?t('acting.own'):t('acting.share',{p:Math.round(f.share*100)})} · ${t('acting.cost',{m:money(f.cost)})}<br>${f.done?`${t('acting.rev',{m:money(f.rev),x:f.mult})} · ${t('acting.income',{m:money(f.inc)})}`:sv(f.status)+(f.releaseAt?` · ${t('acting.releaseIn',{w:t('unit.weeks',{n:f.releaseAt-abs()})})}`:'')}${f.cast.length?' · '+t('acting.cast',{c:f.cast.map(byId).filter(Boolean).map(a=>esc(a.name)).join(t('list.sep'))}):''}</div>`).join('')||`<div class="small muted">${t('acting.noFilms')}</div>`,true)}`));
+    const up=()=>{const w=GENRES[$('#fGen').value].w;document.querySelectorAll('[data-f]').forEach(el=>{const a=byId(+el.dataset.f);el.textContent=t('acting.fit',{f:Math.round(fit(a,w)),n:fame(a)})})};
     $('#fGen').onchange=up;up();
   },
   vocal(){modal(trainRoom(ROOMS[4],'vocal'))},
@@ -200,12 +200,11 @@ export const RV={
   dorm(){
     const pairs=[];const seen=new Set();
     for(const a of S.artists)for(const id in a.tag){const k=[a.id,+id].sort().join('-');if(seen.has(k))continue;seen.add(k);const b=byId(+id);if(b)pairs.push({a,b,t:a.tag[id],v:getRel(a,b)})}
-    const TN={friend:'🤝 Bạn thân',enemy:'⚡ Mâu thuẫn',dating:'💞 Hẹn hò bí mật',public:'💌 Hẹn hò công khai'};
-    modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',`💞 Quan hệ nội bộ (${pairs.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ cùng nhóm hoặc cùng phòng tập dễ thân nhau hơn. Quan hệ tạo ra sự kiện bạn bè, mâu thuẫn, hẹn hò.</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${TN[p.t]} <span class="muted">(${p.v})</span></div>`).join('')||'<div class="card small muted">Chưa có mối quan hệ đặc biệt nào.</div>'}`,true)}`));
+    modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',`💞 ${t('dorm.rel',{n:pairs.length})}`,`<div class="small muted" style="margin-bottom:6px">${t('dorm.relTip')}</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${lbl('dormtag',p.t)} <span class="muted">(${p.v})</span></div>`).join('')||`<div class="card small muted">${t('dorm.relNone')}</div>`}`,true)}`));
     /* v3: giao lưu ngoài công ty + trợ lý cá nhân */
     const p=$('#sheet .panel');if(!p)return;
   const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
   const ml=S.artists.filter(a=>a.pa);
-  p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 Giao lưu ngoài công ty (${L.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ gặp idol công ty khác ở show âm nhạc, hậu trường, livestream. Quan hệ tốt mở ra lời mời hợp tác; thân quá dễ thành tin đồn.</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||'<div class="small muted">Chưa có giao lưu nào.</div>'}`,false)+(ml.length?det('dm-pa',`🧑‍💻 Trợ lý cá nhân (${ml.length})`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v}</div>`).join(''),false):''));
+  p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 ${t('dorm.ext',{n:L.length})}`,`<div class="small muted" style="margin-bottom:6px">${t('dorm.extTip')}</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||`<div class="small muted">${t('dorm.extNone')}</div>`}`,false)+(ml.length?det('dm-pa',`🧑‍💻 ${t('dorm.pa',{n:ml.length})}`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${lbl('msk',a.pa.k)} +${a.pa.v}</div>`).join(''),false):''));
   }
 };

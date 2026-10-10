@@ -5,7 +5,7 @@ import { noToggle, seed, SHELL } from './helpers.js';
 import { S, newGame } from '../../src/state.js';
 import { ROOMS } from '../../src/data/rules.js';
 import { render, setPos } from '../../src/ui/building.js';
-import { openRoom } from '../../src/ui/rooms.js';
+import { openRoom, setSchedTTS } from '../../src/ui/rooms.js';
 import { closeM, view } from '../../src/ui/modal.js';
 import { viewArtist, viewEvents, viewReport, viewReportFull, viewSkipWarn } from '../../src/ui/views.js';
 import { viewInv } from '../../src/systems/events.js';
@@ -14,7 +14,7 @@ import { viewCode } from '../../src/ui/saveView.js';
 import { setLang } from '../../src/i18n/index.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { hireMgr } from '../../src/systems/managers.js';
-import { sign } from '../../src/systems/artists.js';
+import { setAll, setSched, sign } from '../../src/systems/artists.js';
 import { debutIds } from '../../src/systems/debut.js';
 import { acceptOffer } from '../../src/systems/offers.js';
 import { acts } from '../../src/systems/secretary.js';
@@ -50,6 +50,7 @@ function run(lang, weeks = 40) {
     if (i % 10 === 0) { for (const a of [...S.artists]) view(() => viewArtist(a.id)); closeM(); } // hồ sơ nghệ sĩ (dWish ghi a.dw lúc render)
     if (i % 10 === 5) { for (const f of [viewReport, viewReportFull, viewEvents, viewSkipWarn]) view(f); for (const a of S.artists) if (a.scandal) view(() => viewInv(a.id)); closeM(); } // báo cáo, khung sự kiện, hồ sơ điều tra
     if (i % 10 === 3) { for (const a of S.artists.slice(0, 2)) { startPlanOne(a.id); planSel(2); planRec(); planFill(); planNext(); } view(viewCode); closeM(); } // xếp lịch lẻ (ghi a.days) + màn lưu
+    if (i % 10 === 7) { setSchedTTS('vocal'); if (S.artists[0]) setSched(S.artists[0].id, 'dance'); if (i % 20 === 7) setAll('gym'); } // chuyển phòng tập (ghi a.days)
     nextWeek(true, true);
   }
   return { s: JSON.stringify(S), n };
