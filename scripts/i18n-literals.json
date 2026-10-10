@@ -1,170 +1,262 @@
 {
   "allow": {
-    "src/data/names.js#*": "name",
-    "src/systems/ext2.js#MXS": "event",
-    "src/systems/ext2.js#xInfo": "event",
-    "src/systems/ext2.js#xResolve": "event",
-    "src/systems/ext3.js#v3Info": "event",
-    "src/systems/ext3.js#v3Resolve": "event",
-    "src/systems/ext3.js#interTick": "event",
-    "src/systems/events.js#evInfo": "event",
-    "src/systems/events.js#resolveEv": "event",
-    "src/systems/events.js#LEADS": "event",
-    "src/systems/events.js#makeScandal": "event",
-    "src/systems/market.js#SXD": "event",
-    "src/systems/market.js#surprise": "event",
-    "src/systems/market.js#sxResolve": "event",
-    "src/data/offers.js#PARTNERS": "name",
-    "src/data/offers.js#TT": "state",
-    "src/data/offers.js#RIVALS": "name",
-    "src/systems/ext2.js#SONGW": "name",
-    "src/systems/ext2.js#SCOUT_W": "state",
-    "src/systems/ext3.js#EXTN": "name"
+    "src/data/names.js#*": {
+      "kind": "name",
+      "why": "dữ liệu tên riêng thuần (họ, tên, biệt danh), không dịch"
+    },
+    "src/systems/ext2.js#MXS": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext2.js#xInfo": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext2.js#xResolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#v3Info": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#v3Resolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/ext3.js#interTick": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#evInfo": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#resolveEv": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#LEADS": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/events.js#makeScandal": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#SXD": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#surprise": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/systems/market.js#sxResolve": {
+      "kind": "event",
+      "why": "nội dung sự kiện (tiêu đề/mô tả/lựa chọn/kết quả): dịch ở giai đoạn 3 (plan, Câu hỏi mở 1); toast và literal so sánh trong khai báo vẫn tính riêng"
+    },
+    "src/data/offers.js#PARTNERS": {
+      "kind": "name",
+      "why": "tên đối tác/công ty (tên riêng, lưu vào S.offers[].partner)"
+    },
+    "src/data/offers.js#TT": {
+      "kind": "state",
+      "why": "tiêu đề dự án lưu vào S.offers[].title (dữ liệu trong S, giai đoạn 3)"
+    },
+    "src/systems/ext2.js#SONGW": {
+      "kind": "name",
+      "why": "từ ghép đặt tên bài hát (tên riêng, lưu vào S.songs[].t)"
+    },
+    "src/systems/ext2.js#SCOUT_W": {
+      "kind": "state",
+      "why": "địa điểm lưu trong e.where của sự kiện tìm người mới (S.events), giai đoạn 3"
+    },
+    "src/systems/ext3.js#EXTN": {
+      "kind": "name",
+      "why": "tên nghệ sĩ ngoài công ty (tên riêng)"
+    }
   },
   "allowText": [
     {
       "at": "src/systems/ext2.js#renewEval",
       "text": "Xuất sắc",
-      "kind": "state",
-      "why": "hạng đánh giá lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/ext2.js#renewEval",
       "text": "Không đạt",
-      "kind": "state",
-      "why": "hạng đánh giá lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalAll",
       "text": "Xuất sắc",
       "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "n": 2,
+      "why": "hạng g gán và lưu vào S (a.evG, R0)"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Xuất sắc",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalAll",
       "text": "Tốt",
       "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "n": 1,
+      "why": "hạng g gán và lưu vào S"
     },
     {
       "at": "src/systems/review.js#evalAll",
       "text": "Đạt",
       "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "n": 2,
+      "why": "hạng g gán và lưu vào S"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalAll",
       "text": "Không đạt",
       "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "n": 2,
+      "why": "hạng g gán và lưu vào S"
+    },
+    {
+      "at": "src/systems/review.js#evalAll",
+      "text": "Không đạt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalBrief",
       "text": "Xuất sắc",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalBrief",
       "text": "Không đạt",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalTable",
       "text": "Xuất sắc",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalTable",
       "text": "Tốt",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalTable",
       "text": "Đạt",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/review.js#evalTable",
       "text": "Không đạt",
-      "kind": "state",
-      "why": "hạng đánh giá (x.g) lưu trong S và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/proposals.js#dropIt",
       "text": "đã có dự án",
-      "kind": "state",
-      "why": "x.why2 lưu trong S, được so sánh trong logic duyệt đề xuất"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/proposals.js#fixConf",
       "text": "đã giảm tải",
       "kind": "state",
-      "why": "ghi vào t.x.why trong S"
+      "n": 1,
+      "why": "lý do x.why lưu vào S.props"
     },
     {
       "at": "src/systems/proposals.js#passAll",
       "text": "tự duyệt",
       "kind": "state",
-      "why": "by lưu trong S.props.st và so sánh trong logic"
+      "n": 1,
+      "why": "người duyệt by lưu vào S.props"
+    },
+    {
+      "at": "src/systems/proposals.js#passAll",
+      "text": "tự duyệt",
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/proposals.js#passAll",
       "text": "Giám đốc",
-      "kind": "state",
-      "why": "by lưu trong S.props.st và so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/proposals.js#viewProps",
       "text": "Giám đốc",
-      "kind": "state",
-      "why": "so sánh với giá trị by lưu trong S"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/week.js#nextWeek",
       "text": "Đang quay",
-      "kind": "state",
-      "why": "trạng thái phim lưu trong S, so sánh trong logic"
+      "kind": "cmp",
+      "why": "so sánh với giá trị lưu trong S (x.g/x.why2/c.by…), không dịch"
     },
     {
       "at": "src/systems/week.js#qLabel",
       "text": "Xuất sắc",
       "kind": "state",
-      "why": "nhãn ghi vào a.hist và log (bản UI sẽ là qLabelT)"
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
     },
     {
       "at": "src/systems/week.js#qLabel",
       "text": "Tốt",
       "kind": "state",
-      "why": "nhãn ghi vào a.hist và log (bản UI sẽ là qLabelT)"
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
     },
     {
       "at": "src/systems/week.js#qLabel",
       "text": "Ổn",
       "kind": "state",
-      "why": "nhãn ghi vào a.hist và log (bản UI sẽ là qLabelT)"
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
     },
     {
       "at": "src/systems/week.js#qLabel",
       "text": "Chưa tốt",
       "kind": "state",
-      "why": "nhãn ghi vào a.hist và log (bản UI sẽ là qLabelT)"
+      "n": 1,
+      "why": "nhãn chất lượng đi vào a.hist và log (S)"
     },
     {
       "at": "src/systems/review.js#prName",
       "text": "tất cả thực tập sinh",
       "kind": "state",
-      "why": "tên mục tiêu dùng cho log và S.prHist"
+      "n": 1,
+      "why": "tên đối tượng PR đi vào log (S)"
     },
     {
       "at": "src/systems/ext3.js#hsApply",
       "text": "Giám đốc",
       "kind": "state",
-      "why": "truyền vào restDo (log/S)"
+      "n": 1,
+      "why": "tên người quyết định truyền vào restDo → log (S)"
     }
   ],
   "todo": {
@@ -179,20 +271,22 @@
     "src/save/transfer.js#checkSave": 1,
     "src/save/transfer.js#importCode": 3,
     "src/save/transfer.js#parseSaveText": 2,
+    "src/save/transfer.js#saveFileName": 2,
+    "src/state.js#addLog": 2,
+    "src/styles/sheets.css#.tile.rec::after": 1,
     "src/systems/artists.js#fire": 1,
     "src/systems/artists.js#recast": 1,
     "src/systems/artists.js#sign": 1,
     "src/systems/awards.js#awards": 13,
-    "src/systems/batches.js#batchHTML": 16,
+    "src/systems/batches.js#batchHTML": 17,
     "src/systems/batches.js#batchLive": 1,
     "src/systems/batches.js#batchSched": 1,
     "src/systems/batches.js#COMP": 6,
-    "src/systems/batches.js#compDone": 5,
+    "src/systems/batches.js#compDone": 6,
     "src/systems/batches.js#compHTML": 22,
     "src/systems/batches.js#compPrev": 4,
     "src/systems/batches.js#enterComp": 6,
     "src/systems/batches.js#initBatches": 1,
-    "src/systems/batches.js#newBatch": 1,
     "src/systems/debut.js#debutAnalysis": 19,
     "src/systems/debut.js#debutIds": 5,
     "src/systems/debut.js#debutRec": 12,
@@ -209,12 +303,10 @@
     "src/systems/ext2.js#candBlock": 3,
     "src/systems/ext2.js#catRows": 1,
     "src/systems/ext2.js#contractTick": 1,
-    "src/systems/ext2.js#disbandGroup": 2,
-    "src/systems/ext2.js#disbandTick": 4,
-    "src/systems/ext2.js#ensureCurBatch": 1,
+    "src/systems/ext2.js#disbandGroup": 3,
     "src/systems/ext2.js#FIN_I": 6,
     "src/systems/ext2.js#FIN_X": 6,
-    "src/systems/ext2.js#finChart": 2,
+    "src/systems/ext2.js#finChart": 3,
     "src/systems/ext2.js#hireAsst": 2,
     "src/systems/ext2.js#mdReview": 8,
     "src/systems/ext2.js#mentorSel": 2,
@@ -224,7 +316,7 @@
     "src/systems/ext2.js#renewOpts": 4,
     "src/systems/ext2.js#repCard": 5,
     "src/systems/ext2.js#RV.hr": 17,
-    "src/systems/ext2.js#RV.sales": 27,
+    "src/systems/ext2.js#RV.sales": 29,
     "src/systems/ext2.js#setMentor": 1,
     "src/systems/ext2.js#songAct": 2,
     "src/systems/ext2.js#songCard": 7,
@@ -236,19 +328,20 @@
     "src/systems/ext2.js#viewSongs": 22,
     "src/systems/ext2.js#wPrev": 3,
     "src/systems/ext2.js#writeSong": 5,
+    "src/systems/ext2.js#xResolve": 1,
     "src/systems/ext3.js#dqBanner": 2,
     "src/systems/ext3.js#dqDo": 2,
     "src/systems/ext3.js#dWish": 8,
     "src/systems/ext3.js#hsHire": 1,
-    "src/systems/ext3.js#hsHTML": 15,
+    "src/systems/ext3.js#hsHTML": 17,
     "src/systems/ext3.js#hsRisk": 6,
-    "src/systems/ext3.js#mgrBossHTML": 25,
+    "src/systems/ext3.js#mgrBossHTML": 26,
     "src/systems/ext3.js#PA_WHY": 4,
     "src/systems/ext3.js#paHire": 1,
     "src/systems/ext3.js#paOpen": 1,
     "src/systems/ext3.js#paRe": 1,
     "src/systems/ext3.js#v3ArtistHTML": 17,
-    "src/systems/ext3.js#v3Tick": 6,
+    "src/systems/ext3.js#v3Resolve": 4,
     "src/systems/ext3.js#viewDebutQ": 20,
     "src/systems/ext3.js#viewPA": 17,
     "src/systems/managers.js#assignMgr": 1,
@@ -262,6 +355,7 @@
     "src/systems/market.js#buyBiz": 1,
     "src/systems/market.js#raiseBiz": 3,
     "src/systems/market.js#rivalsTick": 3,
+    "src/systems/market.js#surprise": 1,
     "src/systems/market.js#upBiz": 1,
     "src/systems/offers.js#acceptCast": 4,
     "src/systems/offers.js#canTake": 8,
@@ -270,7 +364,7 @@
     "src/systems/offers.js#ocPrev": 5,
     "src/systems/promo.js#POST": 7,
     "src/systems/promo.js#postAuto": 1,
-    "src/systems/promo.js#postDo": 12,
+    "src/systems/promo.js#postDo": 2,
     "src/systems/promo.js#PRE": 11,
     "src/systems/promo.js#preAuto": 1,
     "src/systems/promo.js#preDo": 5,
@@ -281,19 +375,19 @@
     "src/systems/proposals.js#routeProps": 17,
     "src/systems/proposals.js#shortWhy": 4,
     "src/systems/proposals.js#stTag": 4,
-    "src/systems/proposals.js#viewProps": 36,
+    "src/systems/proposals.js#viewProps": 37,
     "src/systems/releases.js#doFM": 3,
     "src/systems/releases.js#doLive": 3,
-    "src/systems/releases.js#doSingle": 8,
+    "src/systems/releases.js#doSingle": 10,
     "src/systems/releases.js#fanHTML": 3,
     "src/systems/releases.js#fanSugs": 8,
     "src/systems/releases.js#holdConcert": 5,
     "src/systems/releases.js#produceFilm": 4,
     "src/systems/releases.js#viewCamp": 32,
     "src/systems/review.js#evalAll": 4,
-    "src/systems/review.js#evalBrief": 7,
+    "src/systems/review.js#evalBrief": 9,
     "src/systems/review.js#evalTable": 14,
-    "src/systems/review.js#prDo": 9,
+    "src/systems/review.js#prDo": 1,
     "src/systems/review.js#prHTML": 5,
     "src/systems/review.js#PRP": 5,
     "src/systems/review.js#prPlans": 24,
@@ -303,25 +397,26 @@
     "src/systems/secretary.js#secPlan": 13,
     "src/systems/secretary.js#secSchedRec": 2,
     "src/systems/secretary.js#viewSec": 17,
-    "src/systems/week.js#completeBusy": 4,
+    "src/systems/secretary.js#wkLabel": 1,
+    "src/systems/week.js#completeBusy": 6,
     "src/systems/week.js#DAYN": 7,
     "src/systems/week.js#planWhy": 6,
     "src/systems/week.js#releaseFilm": 1,
-    "src/ui/building.js#renderTop": 2,
+    "src/ui/building.js#renderTop": 3,
     "src/ui/building.js#renderTrend": 4,
-    "src/ui/building.js#roomBadge": 1,
-    "src/ui/planning.js#viewPlan": 28,
+    "src/ui/building.js#roomBadge": 2,
+    "src/ui/planning.js#viewPlan": 29,
     "src/ui/rooms.js#RV.acting": 15,
     "src/ui/rooms.js#RV.ceo": 29,
     "src/ui/rooms.js#RV.dorm": 11,
     "src/ui/rooms.js#RV.invest": 29,
-    "src/ui/rooms.js#RV.lobby": 30,
+    "src/ui/rooms.js#RV.lobby": 33,
     "src/ui/rooms.js#RV.market": 15,
     "src/ui/rooms.js#RV.meet": 47,
-    "src/ui/rooms.js#RV.mgr": 69,
+    "src/ui/rooms.js#RV.mgr": 71,
     "src/ui/rooms.js#RV.pr": 11,
     "src/ui/rooms.js#RV.roof": 1,
-    "src/ui/rooms.js#RV.studio": 37,
+    "src/ui/rooms.js#RV.studio": 38,
     "src/ui/rooms.js#trainRoom": 12,
     "src/ui/rooms.js#ttsSplit": 1,
     "src/ui/saveView.js#saveCopyCode": 3,
@@ -336,11 +431,17 @@
     "src/ui/views.js#orgTree": 6,
     "src/ui/views.js#schedSel": 2,
     "src/ui/views.js#tnode": 6,
-    "src/ui/views.js#viewArtist": 74,
+    "src/ui/views.js#viewArtist": 76,
     "src/ui/views.js#viewAward": 7,
     "src/ui/views.js#viewEvents": 2,
     "src/ui/views.js#viewReport": 16,
     "src/ui/views.js#viewReportFull": 24,
     "src/ui/views.js#viewSkipWarn": 2
+  },
+  "allowCount": {
+    "cmp": 24,
+    "event": 414,
+    "name": 59,
+    "state": 49
   }
 }
