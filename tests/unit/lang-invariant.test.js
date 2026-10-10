@@ -22,6 +22,7 @@ import { propAll, viewProps } from '../../src/systems/proposals.js';
 import { doFM, doLive, doSingle, holdConcert, viewCamp } from '../../src/systems/releases.js';
 import { postAuto, postDo, preDo } from '../../src/systems/promo.js';
 import { prDo } from '../../src/systems/review.js';
+import { songAct, viewSong, viewSongs, writeSong } from '../../src/systems/ext2.js';
 
 noToggle();
 
@@ -55,6 +56,8 @@ function run(lang, weeks = 40) {
     if (i % 10 === 5) { for (const f of [viewReport, viewReportFull, viewEvents, viewSkipWarn]) view(f); for (const a of S.artists) if (a.scandal) view(() => viewInv(a.id)); closeM(); } // báo cáo, khung sự kiện, hồ sơ điều tra
     if (i % 10 === 4) { view(viewProps); view(viewSec); closeM(); if (i === 34) { propAll(); cbSchedRec(); } } // đề xuất của quản lý + Thư ký (propAll ghi lịch, cbSchedRec ghi cbPlan/log)
     if (i % 10 === 6) { for (const k of Object.keys(S.camp)) view(() => viewCamp(k)); closeM(); } // chiến dịch (đọc)
+    if (i === 27) { view(viewSongs); writeSong(); writeSong(); closeM(); } // sáng tác (mkSong dùng RNG, busy) + toast lỗi lần 2
+    if (i === 29) { for (const sg of [...(S.songs || [])]) { view(() => viewSong(sg.id)); if (sg.st === 'review') songAct(sg.id, 'ok'); } songAct(S.songs?.[0]?.id, 'redo'); closeM(); } // xem/duyệt/chỉnh bài
     if (i === 31) { const a = S.artists.find(q => q.status === 'debuted' && !q.busy); if (a) doLive([a.id]); doLive([-1]); } // livestream + toast lỗi
     if (x && i === 33) { doFM(x.k); doFM('zzz'); holdConcert('zzz'); }
     if (x && i === 35) holdConcert(x.k);

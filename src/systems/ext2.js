@@ -15,7 +15,7 @@ import { getRel, harmony, setRel, setTag } from './relations.js';
 import { actByKey } from './releases.js';
 import { actFree, acts } from './secretary.js';
 import { focusKeys } from './week.js';
-import { roomName, t } from '../i18n/index.js';
+import { lbl, money, roomName, t } from '../i18n/index.js';
 import { NPC, act, chibiHTML } from '../ui/building.js';
 import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
 import { RV, openRoom } from '../ui/rooms.js';
@@ -206,56 +206,57 @@ export function songTick(){for(const s of (S.songs||[]))if(s.st==='writing'&&s.d
 export function mdReview(s){const tb=trendB(s.ck),rp=rivalPress(),mk=clamp(Math.round(s.q+tb*1.2-rp*.4),1,99);
   const g=mk>=82?'S':mk>=68?'A':mk>=54?'B':mk>=40?'C':'D';
   const cm={S:'Bản hit tiềm năng! Giai điệu bắt tai, đủ sức cạnh tranh top 10.',A:'Chất lượng cao, vượt mặt bằng chung thị trường.',B:'Ngang mặt bằng thị trường. Cần nghệ sĩ hợp concept để tỏa sáng.',C:'Dưới mặt bằng, điệp khúc chưa đủ ấn tượng. Có thể làm bài B-side.',D:'Chưa đạt chuẩn phát hành, nên viết lại.'}[g];
-  const tr=tb>0?`Concept ${CONCEPTS[s.ck].n} đang hot 🔥 (+${tb}).`:tb<0?`Concept ${CONCEPTS[s.ck].n} đang nguội ❄️ (${tb}).`:`Concept ${CONCEPTS[s.ck].n} ở mức bình thường.`;
+  const cmT={S:t('song.cm.S'),A:t('song.cm.A'),B:t('song.cm.B'),C:t('song.cm.C'),D:t('song.cm.D')}[g];
+  const tr=tb>0?t('song.trHot',{c:lbl('concept',s.ck),n:tb}):tb<0?t('song.trCold',{c:lbl('concept',s.ck),n:tb}):t('song.trNorm',{c:lbl('concept',s.ck)});
   const sug=acts().map(x=>{const ms=x.m.map(byId).filter(Boolean);if(!ms.length)return null;const own=s.by.some(i=>x.m.includes(i));return{k:x.k,n:x.n,f:Math.round(avgFit(ms,CONCEPTS[s.ck].w)+(own?6:0)),own,free:actFree(x)}}).filter(Boolean).sort((a,b)=>b.f-a.f).slice(0,3);
-  return{mk,g,better:clamp(Math.round(mk*1.05-8),1,99),cm,tr,rp,sug}}
+  return{mk,g,better:clamp(Math.round(mk*1.05-8),1,99),cm,cmT,tr,rp,sug}}
 export const GC={S:'s',A:'m',B:'v',C:'',D:'r'};
 export const curSong=()=>(S.songs||[]).find(x=>x.id===+($('#sSong')?.value||0)&&x.st==='ok');
 export const sgBonus=(s,m)=>s?(s.q-50)*.35+(s.by.some(i=>m.includes(i))?4:0):0;
-export function songPrev(x){const s=curSong();if(!s)return' · 🎵 Bài mua ngoài (trả 15% bản quyền nhạc số)';const own=s.by.some(i=>x.m.includes(i)),b=Math.round(sgBonus(s,x.m));return` · ✍️ Bài nội bộ hạng ${s.rv?s.rv.g:'?'} (${b>=0?'+':''}${b} điểm${own?', có tự sáng tác':''}, giữ 100% nhạc số)`}
-export function songOpts(){const L=(S.songs||[]).filter(s=>s.st==='ok');return`<option value="0">🎵 Mua bài nhạc sĩ ngoài</option>${L.map(s=>`<option value="${s.id}">${s.md?'🎼':'✍️'} «${esc(s.t)}»${s.for&&actByKey(s.for)?' · dành cho '+esc(actByKey(s.for).n.slice(2).trim()):''} · hạng ${s.rv?s.rv.g:'?'} · ${CONCEPTS[s.ck].n}</option>`).join('')}`}
+export function songPrev(x){const s=curSong();if(!s)return' · '+t('song.prevBuy');const own=s.by.some(i=>x.m.includes(i)),b=Math.round(sgBonus(s,x.m));return' · '+t('song.prevOwn',{g:s.rv?s.rv.g:'?',b:(b>=0?'+':'')+b,o:own?t('song.prevSelf'):''})}
+export function songOpts(){const L=(S.songs||[]).filter(s=>s.st==='ok');return`<option value="0">${t('song.buyOut')}</option>${L.map(s=>`<option value="${s.id}">${s.md?'🎼':'✍️'} «${esc(s.t)}»${s.for&&actByKey(s.for)?' · '+t('song.forAct',{n:esc(actByKey(s.for).n.slice(2).trim())}):''} · ${t('song.grade',{g:s.rv?s.rv.g:'?'})} · ${lbl('concept',s.ck)}</option>`).join('')}`}
 export function songCard(){const n=(S.songs||[]).filter(s=>s.st==='review').length,ok=(S.songs||[]).filter(s=>s.st==='ok').length,wr=(S.songs||[]).filter(s=>s.st==='writing').length;
-  return`<div class="card row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div class="small" style="flex:1"><b>🎼 GĐ Âm nhạc:</b> ${n?`có <b>${n} demo</b> chờ tôi duyệt.`:'chưa có demo mới.'} ${ok?`${ok} bài đã duyệt sẵn sàng phát hành.`:''}${wr?` ${wr} bài đang sáng tác.`:''}</div><button class="btn sm pri" onclick="view(viewSongs)">Sáng tác</button></div>`}
-export function writeSong(){const main=+$('#wMain').value,co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main),ck=$('#wCon').value,t=($('#wTitle').value||'').trim().slice(0,40);
-  if(!main)return toast('Chọn nhạc sĩ chính');if(co.length>2)return toast('Tối đa 2 người hợp tác');
-  const ids=[main,...co],ws=ids.map(byId);if(ws.some(a=>!a||a.busy))return toast('Có người đang bận');
-  if(S.money<5e6)return toast('Không đủ tiền');S.money-=5e6;book('prod',-5e6);
-  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:'Sáng tác «'+s.t+'»',left:1,total:1});
+  return`<div class="card row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div class="small" style="flex:1"><b>${t('song.cardLbl')}</b> ${n?t('song.cardReview',{n}):t('song.cardNone')} ${ok?t('song.cardOk',{n:ok}):''}${wr?t('song.cardWr',{n:wr}):''}</div><button class="btn sm pri" onclick="view(viewSongs)">${t('song.cardBtn')}</button></div>`}
+export function writeSong(){const main=+$('#wMain').value,co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main),ck=$('#wCon').value,ti=($('#wTitle').value||'').trim().slice(0,40);
+  if(!main)return toast(t('song.toast.main'));if(co.length>2)return toast(t('song.maxCo'));
+  const ids=[main,...co],ws=ids.map(byId);if(ws.some(a=>!a||a.busy))return toast(t('song.toast.busy'));
+  if(S.money<5e6)return toast(t('common.noMoney'));S.money-=5e6;book('prod',-5e6);
+  const s=mkSong(ids,ck,ti,true);ws.forEach(a=>a.busy={kind:'write',title:'Sáng tác «'+s.t+'»',left:1,total:1});
   addLog(`✍️ ${ws.map(a=>a.name).join(', ')} vào phòng thu sáng tác «${s.t}» (${CONCEPTS[ck].n}). Demo xong sau 1 tuần.`);act()}
 export function wPrev(){const el=$('#wPrev');if(!el)return;const main=byId(+$('#wMain').value);if(!main){el.textContent='';return}
-  const co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main.id);if(co.length>2){el.innerHTML='<span class="bad">Tối đa 2 người hợp tác</span>';return}
+  const co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main.id);if(co.length>2){el.innerHTML=`<span class="bad">${t('song.maxCo')}</span>`;return}
   const ids=[main.id,...co],c=co.length?chem(ids):0,ck=$('#wCon').value,base=wp(main)*.75+(co.length?co.reduce((t,i)=>t+wp(byId(i)),0)/co.length*.25+co.length*3+c*30:wp(main)*.2)+(fit(main,CONCEPTS[ck].w)-40)*.15;
-  el.innerHTML=`Chất lượng dự kiến <b>${Math.round(clamp(base-8,5,98))}–${Math.round(clamp(base+12,5,98))}</b>/100${co.length?` · ${co.length} người hợp tác${c?' · '+chemTxt(c):''}`:''}${trendTag(ck)?` · concept${trendTag(ck)}`:''}`}
+  el.innerHTML=`${t('song.est',{a:Math.round(clamp(base-8,5,98)),b:Math.round(clamp(base+12,5,98))})}${co.length?` · ${t('song.coN',{n:co.length})}${c?' · '+chemTxt(c):''}`:''}${trendTag(ck)?` · ${t('song.conceptWord')}${trendTag(ck)}`:''}`}
 export function songAct(id,k){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return;
   if(k==='ok'){const r=mdReview(s);s.rv={g:r.g,mk:r.mk};s.st='ok';s.by.map(byId).filter(Boolean).forEach(a=>MOOD(a,8));addLog(`✅ GĐ Âm nhạc duyệt «${s.t}» (hạng ${r.g}, điểm thị trường ${r.mk}).`,'good')}
-  else if(k==='redo'){if(S.money<3e6)return toast('Không đủ tiền');if((s.rw||0)>=2)return toast('Đã chỉnh sửa tối đa 2 lần');S.money-=3e6;s.rw=(s.rw||0)+1;const d=R(2,9);s.q=clamp(s.q+d,5,98);addLog(`🔁 Chỉnh sửa «${s.t}» theo góp ý của GĐ Âm nhạc: chất lượng +${d}.`)}
+  else if(k==='redo'){if(S.money<3e6)return toast(t('common.noMoney'));if((s.rw||0)>=2)return toast(t('song.toast.maxRedo'));S.money-=3e6;s.rw=(s.rw||0)+1;const d=R(2,9);s.q=clamp(s.q+d,5,98);addLog(`🔁 Chỉnh sửa «${s.t}» theo góp ý của GĐ Âm nhạc: chất lượng +${d}.`)}
   else if(k==='drop'){S.songs=S.songs.filter(x=>x!==s);s.by.map(byId).filter(Boolean).forEach(a=>MOOD(a,-5));addLog(`🗑️ Bỏ bài «${s.t}».`)}
   act()}
-export function songRelease(id,k){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return;if(s.st==='review')songAct(id,'ok');const x=actByKey(k);if(!x||!actFree(x))return toast('Nghệ sĩ này đang bận');
+export function songRelease(id,k){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return;if(s.st==='review')songAct(id,'ok');const x=actByKey(k);if(!x||!actFree(x))return toast(t('song.toast.actBusy'));
   openRoom('studio');setTimeout(()=>{if(!$('#sSong'))return;$('#sAct').value=k;$('#sSong').value=id;$('#sSong').onchange&&$('#sSong').onchange();$('#sSong').scrollIntoView({behavior:'smooth',block:'center'})},30)}
 export function viewSong(id){const s=(S.songs||[]).find(x=>x.id===id);if(!s)return view(viewSongs);setCurRC('var(--r-studio)');const r=mdReview(s),by=s.by.map(byId).filter(Boolean);
-  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">«${esc(s.t)}»</h2><div class="small muted">${CONCEPTS[s.ck].n}${trendTag(s.ck)} · sáng tác: ${by.map(a=>esc(a.name)).join(', ')||(s.md?'🎼 GĐ Âm nhạc':'—')} · ${s.st==='ok'?'đã duyệt':s.st==='used'?'đã phát hành':'chờ duyệt'}</div></div></div>
-  <div class="card" style="margin-top:10px"><div class="row"><b>🎼 Đánh giá của GĐ Âm nhạc</b><span class="sp"></span><span class="tag ${GC[r.g]}" style="font-size:14px">Hạng ${r.g}</span></div>
-  <div class="small">Chất lượng bài: <b>${s.q}</b>/100 · Điểm so với thị trường: <b>${r.mk}</b>/100</div><div class="bar" style="margin:4px 0"><i style="width:${r.mk}%"></i></div>
-  <div class="small">📈 Tốt hơn khoảng <b>${r.better}%</b> bài đang phát hành trên thị trường. ${r.tr}${r.rp?` Đối thủ đang comeback (−${Math.round(r.rp*.4)}).`:''}</div>
-  <div class="small" style="margin-top:6px">💬 "${r.cm}"</div></div>
-  ${s.st!=='used'?`<h3>🎯 Nghệ sĩ hợp với bài</h3>${r.sug.length?r.sug.map((x,i)=>`<div class="prow"><b>${i===0?'⭐ ':''}${esc(x.n)}</b><span class="small muted">hợp ${x.f}%${x.own?' · tự sáng tác':''}${x.free?'':' · đang bận'}</span><span class="sp"></span>${x.free&&r.g!=='D'?`<button class="btn sm ${i===0?'pri':''}" onclick="songRelease(${s.id},'${x.k}')">Giao bài</button>`:''}</div>`).join(''):'<div class="small muted">Chưa có nhóm hay solo nào. Debut trước rồi giao bài sau.</div>'}`:`<div class="card small">Đã phát hành, hạng ${s.rank||'?'} (${esc(s.act||'')}).</div>`}
-  <div class="row" style="margin-top:10px">${s.st==='review'?`<button class="btn pri" onclick="songAct(${s.id},'ok');view(viewSongs)">✅ Duyệt vào kho</button>`:''}${s.st!=='used'?`<button class="btn" onclick="songAct(${s.id},'redo')" ${(s.rw||0)>=2?'disabled':''}>🔁 Chỉnh sửa theo góp ý (3 tr, còn ${2-(s.rw||0)} lần)</button><button class="btn warn" onclick="songAct(${s.id},'drop');view(viewSongs)">Bỏ bài</button>`:''}</div>
-  <button class="btn" style="margin-top:10px" onclick="view(viewSongs)">← Danh sách bài</button>`)}
+  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">«${esc(s.t)}»</h2><div class="small muted">${lbl('concept',s.ck)}${trendTag(s.ck)} · ${t('song.by',{n:by.map(a=>esc(a.name)).join(t('list.sep'))||(s.md?t('song.md'):'—')})} · ${s.st==='ok'?t('song.st.ok'):s.st==='used'?t('song.st.used'):t('song.st.review')}</div></div></div>
+  <div class="card" style="margin-top:10px"><div class="row"><b>${t('song.evalTitle')}</b><span class="sp"></span><span class="tag ${GC[r.g]}" style="font-size:14px">${t('song.gradeTag',{g:r.g})}</span></div>
+  <div class="small">${t('song.quality',{q:s.q,m:r.mk})}</div><div class="bar" style="margin:4px 0"><i style="width:${r.mk}%"></i></div>
+  <div class="small">${t('song.better',{n:r.better})} ${r.tr}${r.rp?` ${t('song.rival',{n:Math.round(r.rp*.4)})}`:''}</div>
+  <div class="small" style="margin-top:6px">💬 "${r.cmT}"</div></div>
+  ${s.st!=='used'?`<h3>${t('song.fitTitle')}</h3>${r.sug.length?r.sug.map((x,i)=>`<div class="prow"><b>${i===0?'⭐ ':''}${esc(x.n)}</b><span class="small muted">${t('song.fit',{f:x.f})}${x.own?' · '+t('song.own'):''}${x.free?'':' · '+t('song.busy')}</span><span class="sp"></span>${x.free&&r.g!=='D'?`<button class="btn sm ${i===0?'pri':''}" onclick="songRelease(${s.id},'${x.k}')">${t('song.give')}</button>`:''}</div>`).join(''):`<div class="small muted">${t('song.noActs')}</div>`}`:`<div class="card small">${t('song.released',{r:s.rank||'?',a:esc(s.act||'')})}</div>`}
+  <div class="row" style="margin-top:10px">${s.st==='review'?`<button class="btn pri" onclick="songAct(${s.id},'ok');view(viewSongs)">${t('song.approve')}</button>`:''}${s.st!=='used'?`<button class="btn" onclick="songAct(${s.id},'redo')" ${(s.rw||0)>=2?'disabled':''}>${t('song.redo',{m:money(3e6),n:2-(s.rw||0)})}</button><button class="btn warn" onclick="songAct(${s.id},'drop');view(viewSongs)">${t('song.drop')}</button>`:''}</div>
+  <button class="btn" style="margin-top:10px" onclick="view(viewSongs)">${t('song.back')}</button>`)}
 export function viewSongs(){setCurRC('var(--r-studio)');const L=S.songs||[],rv=L.filter(s=>s.st==='review'),ok=L.filter(s=>s.st==='ok'),wr=L.filter(s=>s.st==='writing'),us=L.filter(s=>s.st==='used');
   const free=S.artists.filter(a=>!a.busy).sort((x,y)=>wp(y)-wp(x));
-  const row=s=>{const r=mdReview(s);return`<div class="prow"><b>«${esc(s.t)}»</b><span class="small muted">${CONCEPTS[s.ck].n}${trendTag(s.ck)} · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', ')||(s.md?'🎼 GĐ Âm nhạc':'')}${s.for&&actByKey(s.for)?' · dành cho '+esc(actByKey(s.for).n.slice(2).trim()):''}</span><span class="tag ${GC[s.rv?s.rv.g:r.g]}">${s.rv?s.rv.g:r.g}</span><span class="sp"></span><button class="btn sm ${s.st==='review'?'pri':''}" onclick="view(()=>viewSong(${s.id}))">${s.st==='review'?'Duyệt':'Xem'}</button></div>`};
-  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">🎼 Sáng tác & GĐ Âm nhạc</h2><div class="sub" style="margin:0">Nghệ sĩ tự sáng tác hoặc hợp tác. GĐ Âm nhạc chấm bài so với thị trường và gợi ý người hát hợp nhất.</div></div></div>
-  <div class="card small" style="margin-top:8px">Bài nội bộ: không mất 15% bản quyền nhạc số, cộng điểm xếp hạng theo chất lượng, người sáng tác được thêm fan. Nghệ sĩ càng sáng tác nhiều càng viết hay hơn.</div>
-  ${det('sg-rv',`📥 Chờ duyệt (${rv.length})`,rv.map(row).join('')||'<div class="small muted">Không có demo nào chờ duyệt.</div>',true)}
-  ${det('sg-ok',`✅ Kho bài đã duyệt (${ok.length})`,ok.map(row).join('')||'<div class="small muted">Chưa có. Bài đã duyệt sẽ hiện trong mục Phát hành single.</div>',true)}
-  ${wr.length?det('sg-wr',`✍️ Đang sáng tác (${wr.length})`,wr.map(s=>`<div class="small">«${esc(s.t)}» · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', ')} · xong vào tuần tới</div>`).join(''),true):''}
-  ${det('sg-new','✍️ Sáng tác bài mới (5 tr, 1 tuần)',free.length?`<div class="row"><span class="small">Nhạc sĩ chính:</span><select id="wMain" style="flex:1">${free.map(a=>`<option value="${a.id}">${esc(a.name)} · bút lực ${Math.round(wp(a))}${a.cs?` · ${a.cs} bài`:''}</option>`).join('')}</select></div>
-    <div class="row" style="margin-top:6px"><span class="small">Concept:</span><select id="wCon">${Object.keys(CONCEPTS).map(k=>`<option value="${k}">${CONCEPTS[k].n}${trendTag(k)}</option>`).join('')}</select><input type="text" id="wTitle" placeholder="Tên bài (tuỳ chọn)" style="flex:1"></div>
-    <div class="small" style="margin-top:6px">Hợp tác cùng (tối đa 2 nghệ sĩ trong công ty):</div><div class="list">${free.map(a=>`<label><input type="checkbox" class="wco" value="${a.id}" onchange="wPrev()"> <span style="flex:1"><b>${esc(a.name)}</b> <span class="small muted">bút lực ${Math.round(wp(a))} · V${Math.round(a.st.vocal)} R${Math.round(a.st.rap)}</span></span></label>`).join('')}</div>
-    <div class="small muted" id="wPrev" style="margin:6px 0"></div><button class="btn pink" onclick="writeSong()">Bắt đầu sáng tác</button>`:'<div class="small muted">Không có nghệ sĩ nào rảnh.</div>',!rv.length)}
-  ${us.length?det('sg-us',`💿 Đã phát hành (${us.length})`,us.map(s=>`<div class="small">«${esc(s.t)}» · ${esc((s.act||'').slice(2))} · hạng ${s.rank} · GĐ chấm ${s.rv?s.rv.g:'?'}</div>`).join(''),false):''}
-  <button class="btn" style="margin-top:8px" onclick="openRoom('studio')">← Phòng Thu âm</button>`);
+  const row=s=>{const r=mdReview(s);return`<div class="prow"><b>«${esc(s.t)}»</b><span class="small muted">${lbl('concept',s.ck)}${trendTag(s.ck)} · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(t('list.sep'))||(s.md?t('song.md'):'')}${s.for&&actByKey(s.for)?' · '+t('song.forAct',{n:esc(actByKey(s.for).n.slice(2).trim())}):''}</span><span class="tag ${GC[s.rv?s.rv.g:r.g]}">${s.rv?s.rv.g:r.g}</span><span class="sp"></span><button class="btn sm ${s.st==='review'?'pri':''}" onclick="view(()=>viewSong(${s.id}))">${s.st==='review'?t('props.approve'):t('props.view')}</button></div>`};
+  modal(`<div class="row"><div class="chibi mini">${chibiHTML(NPC[3])}</div><div><h2 style="margin:0">${t('song.title')}</h2><div class="sub" style="margin:0">${t('song.sub')}</div></div></div>
+  <div class="card small" style="margin-top:8px">${t('song.tip')}</div>
+  ${det('sg-rv',t('song.rvTitle',{n:rv.length}),rv.map(row).join('')||`<div class="small muted">${t('song.rvNone')}</div>`,true)}
+  ${det('sg-ok',t('song.okTitle',{n:ok.length}),ok.map(row).join('')||`<div class="small muted">${t('song.okNone')}</div>`,true)}
+  ${wr.length?det('sg-wr',t('song.wrTitle',{n:wr.length}),wr.map(s=>`<div class="small">«${esc(s.t)}» · ${s.by.map(byId).filter(Boolean).map(a=>esc(a.name)).join(t('list.sep'))} · ${t('song.nextWeek')}</div>`).join(''),true):''}
+  ${det('sg-new',t('song.newTitle',{m:money(5e6)}),free.length?`<div class="row"><span class="small">${t('song.mainLbl')}</span><select id="wMain" style="flex:1">${free.map(a=>`<option value="${a.id}">${esc(a.name)} · ${t('song.pen',{n:Math.round(wp(a))})}${a.cs?` · ${t('song.nSongs',{n:a.cs})}`:''}</option>`).join('')}</select></div>
+    <div class="row" style="margin-top:6px"><span class="small">${t('song.conceptLbl')}</span><select id="wCon">${Object.keys(CONCEPTS).map(k=>`<option value="${k}">${lbl('concept',k)}${trendTag(k)}</option>`).join('')}</select><input type="text" id="wTitle" placeholder="${t('song.titlePh')}" style="flex:1"></div>
+    <div class="small" style="margin-top:6px">${t('song.coLbl')}</div><div class="list">${free.map(a=>`<label><input type="checkbox" class="wco" value="${a.id}" onchange="wPrev()"> <span style="flex:1"><b>${esc(a.name)}</b> <span class="small muted">${t('song.penVr',{n:Math.round(wp(a)),v:Math.round(a.st.vocal),r:Math.round(a.st.rap)})}</span></span></label>`).join('')}</div>
+    <div class="small muted" id="wPrev" style="margin:6px 0"></div><button class="btn pink" onclick="writeSong()">${t('song.start')}</button>`:`<div class="small muted">${t('song.noneFree')}</div>`,!rv.length)}
+  ${us.length?det('sg-us',t('song.usTitle',{n:us.length}),us.map(s=>`<div class="small">${t('song.usRow',{t:esc(s.t),a:esc((s.act||'').slice(2)),r:s.rank,g:s.rv?s.rv.g:'?'})}</div>`).join(''),false):''}
+  <button class="btn" style="margin-top:8px" onclick="openRoom('studio')">${t('song.backRoom',{r:roomName('studio')})}</button>`);
   if($('#wMain')){$('#wMain').onchange=wPrev;$('#wCon').onchange=wPrev;wPrev()}}
 /* ---- Thông tin & xử lý sự kiện mới ---- */
 export const XK=['mx','mp','disband','renew'];
