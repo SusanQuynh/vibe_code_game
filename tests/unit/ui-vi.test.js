@@ -2,7 +2,7 @@
 // Snapshot giao diện tiếng Việt cho các bề mặt được i18n ở giai đoạn 1 (khoá hiển thị).
 import { describe, it, expect, beforeEach } from 'vitest';
 import fs from 'node:fs';
-import { seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL } from './helpers.js';
 import { S, newGame, resetGame } from '../../src/state.js';
 import { ROOMS } from '../../src/data/rules.js';
 import { renderTop, renderDock, renderBuilding, setPos } from '../../src/ui/building.js';
@@ -14,9 +14,7 @@ import { sellBiz } from '../../src/systems/market.js';
 import { hsFire } from '../../src/systems/ext3.js';
 import { closeM } from '../../src/ui/modal.js';
 
-// <details ontoggle="togD(..)"> bắn bất đồng bộ trong jsdom mà togD không có trên window: gỡ handler ngay khi chèn
-new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.querySelectorAll) n.querySelectorAll('[ontoggle]').forEach(e => e.removeAttribute('ontoggle')); })
-  .observe(document, { childList: true, subtree: true });
+noToggle();
 
 beforeEach(() => {
   document.body.innerHTML = SHELL;

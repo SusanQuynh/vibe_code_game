@@ -16,5 +16,6 @@ export function t(k, p) {
   return typeof v === 'function' ? v(p || {}) : p ? v.replace(/\{(\w+)\}/g, (m, n) => (n in p ? p[n] : m)) : v;
 }
 export const __setDicts = d => { DICTS = d; }; // chỉ cho test
+export const roomName = id => t(`room.${id}.name`);
 // Tiền hiển thị theo ngôn ngữ. fmt() mặc định (vi) vẫn dùng cho addLog để S không phụ thuộc ngôn ngữ.
 export const money = m => fmt(m, t('fmt.units'));
