@@ -1,5 +1,5 @@
-// Extract identifiers used in inline handlers (on*="...") that are top-level declarations of the game.
-// Used once to generate the window list; check-handlers.mjs verifies it afterwards.
+// Trích tên định danh dùng trong handler inline (on*="...") mà là khai báo top-level của game.
+// Dùng một lần để sinh danh sách window; check-handlers.mjs kiểm tra lại về sau.
 import fs from 'node:fs';
 const src = process.argv[2], extra = process.argv.slice(3);
 const code = fs.readFileSync(src, 'utf8');

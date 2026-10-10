@@ -9,11 +9,11 @@ function trackErrors(page) {
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => { localStorage.setItem('__golden', '1'); });
-  // external fonts are not needed for tests
+  // font ngoài không cần cho test
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
 });
 
-test('page loads without errors and every dock room opens/closes', async ({ page }) => {
+test('trang tải không lỗi và mọi phòng trong dock mở/đóng được', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');
   await expect(page.locator('#date')).not.toBeEmpty();
@@ -28,20 +28,20 @@ test('page loads without errors and every dock room opens/closes', async ({ page
   expect(errors).toEqual([]);
 });
 
-test('week loop: end the week 10 times, date changes, autosave survives reload', async ({ page }) => {
+test('vòng tuần: kết thúc tuần 10 lần, ngày thay đổi, autosave qua reload', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');
   const d0 = await page.locator('#date').innerText();
   for (let i = 0; i < 10; i++) {
     await page.locator('#nextBtn').click();
-    // click through plan / report / event modals with the primary button until closed
+    // xử lý modal kế hoạch / báo cáo / sự kiện bằng nút chính cho đến khi đóng
     for (let k = 0; k < 8; k++) {
       const on = await page.locator('#sheet.on').count();
       if (!on) break;
       const pri = page.locator('#sheet .btn.pri:not([disabled]), #sheet .btn.pink:not([disabled])').last();
       if (await pri.count()) await pri.click(); else await page.locator('#sheet .x').first().click();
     }
-    // if a modal remains (e.g. skip-events warning), force close it
+    // nếu còn modal (vd cảnh báo bỏ qua sự kiện) thì đóng cưỡng bức
     await page.evaluate(() => window.closeM());
   }
   const d1 = await page.locator('#date').innerText();
@@ -51,14 +51,14 @@ test('week loop: end the week 10 times, date changes, autosave survives reload',
   expect(errors).toEqual([]);
 });
 
-test('mobile 375x812: no horizontal scroll', async ({ page }) => {
+test('mobile 375x812: không cuộn ngang', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('./');
   const w = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(w).toBeLessThanOrEqual(375);
 });
 
-test('switches language in place, remembers it across reload, no horizontal scroll at 375px', async ({ page }) => {
+test('đổi ngôn ngữ tại chỗ, nhớ qua reload, không cuộn ngang ở 375px', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');
   await page.evaluate(() => { for (let i = 0; i < 2; i++) window.__game.nextWeek(true, true); });
@@ -79,7 +79,7 @@ test('switches language in place, remembers it across reload, no horizontal scro
   expect(errors).toEqual([]);
 });
 
-test('export code → wipe data → import restores progress', async ({ page }) => {
+test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng tiến trình', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');
   await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
@@ -90,7 +90,7 @@ test('export code → wipe data → import restores progress', async ({ page }) 
   await page.locator('.hbtns .r1').click();
   const code = await expect.poll(async () => page.locator('#codeShow').inputValue()).toMatch(/^SL1\./).then(() => page.locator('#codeShow').inputValue());
 
-  // another device: wipe everything, then import
+  // máy khác: xoá sạch rồi nạp lại
   await page.evaluate(() => { localStorage.clear(); localStorage.setItem('__golden', '1'); });
   await page.reload();
   expect(await page.evaluate(() => __game.state().week)).toBe(1);
@@ -103,7 +103,7 @@ test('export code → wipe data → import restores progress', async ({ page }) 
   const after = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money }));
   expect(after).toEqual(before);
 
-  // a junk code is rejected and the game is unchanged (the sheet stays open after import)
+  // mã rác bị từ chối, game không đổi (cửa sổ vẫn mở sau khi nạp)
   await page.locator('#codeIn').fill('SL1.rac-ruoi');
   await page.getByRole('button', { name: 'Xem trước' }).click();
   await expect(page.locator('#sheet')).toContainText('❌');

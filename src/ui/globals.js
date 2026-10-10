@@ -1,4 +1,4 @@
-/* Bridge: inline HTML handlers (onclick="...") call global functions → attach them to window in exactly one place. */
+/* Cầu nối: handler inline trong HTML (onclick="...") gọi hàm toàn cục → gán lên window ở đúng một nơi. */
 import { $ } from '../core/util.js';
 import { save } from '../save/storage.js';
 import { S, byId, resetGame } from '../state.js';
@@ -151,5 +151,5 @@ Object.assign(window, {
   wPrev,
   writeSong
 });
-// inline handlers read/write S.xxx → always point at the current state
+// handler inline đọc/ghi S.xxx → luôn trỏ tới state hiện tại
 Object.defineProperty(window, 'S', { get: () => S, configurable: true });

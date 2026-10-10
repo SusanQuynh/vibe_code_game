@@ -15,7 +15,7 @@ import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 import { det } from '../ui/views.js';
 
-/* ---- Trainee batches ---- */
+/* ---- Lứa thực tập sinh ---- */
 export function initBatches(){S.bno=1;S.batches=[{id:uid(),n:'Lứa 1',w:abs()}];S.curBatch=S.batches[0].id;S.artists.filter(a=>a.status==='trainee').forEach(a=>a.batch=S.curBatch)}
 export const batchOf=a=>(S.batches||[]).find(b=>b.id===a.batch)||null;
 export const bMem=b=>S.artists.filter(a=>a.status==='trainee'&&a.batch===b.id);
@@ -35,7 +35,7 @@ export function batchHTML(){const cur=S.curBatch;
     ${ms.length?`<div class="row" style="margin:6px 0"><select onchange="batchSched(${b.id},this.value)"><option value="">📅 Lịch tập cả lứa…</option>${Object.keys(TRAIN).map(k=>`<option value="${k}">${TRAIN[k].n}</option>`).join('')}</select><button class="btn sm" onclick="batchLive(${b.id})" ${free.length?'':'disabled'}>📱 Livestream cả lứa (chi 1 tr, thu ~${fmt(liveEst(free))})</button></div>`:''}
     ${ms.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button>${dHold(a)?'<span class="tag s">🎊 sẵn sàng debut</span>':''}${a.mt&&byId(a.mt)?`<span class="tag v">👩‍🏫 ${esc(byId(a.mt).name)}</span>`:''}<span class="small muted">${a.busy?'🚶 '+esc(a.busy.title):'tổng '+Math.round(stSum(a))}${a.ev?' · '+((stSum(a)-a.ev.st)/Math.max(a.ev.st,1)*100).toFixed(1)+'%':''} · trượt ${a.ttsFail||0}/${EV_TTS} · 💗${fmtN(a.fans)}</span><span class="sp"></span>${S.batches.length>1?`<select onchange="moveBatch(${a.id},this.value)" aria-label="Chuyển lứa">${S.batches.map(x=>`<option value="${x.id}" ${x.id===b.id?'selected':''}>${esc(x.n)}</option>`).join('')}</select>`:''}</div>`).join('')||'<div class="small muted">Lứa này không còn thực tập sinh.</div>'}`;
     return det('lb-b'+b.id,`${esc(b.n)} (${ms.length} TTS)${b.id===cur?' <span class="tag v">đang tuyển</span>':''}`,body,ms.length>0)}).join('')}
-/* ---- Trainee competitions ---- */
+/* ---- Cuộc thi cho thực tập sinh ---- */
 export const COMP=[
   {n:'Giọng hát Tân binh',ic:'🎙️',w:{vocal:1},t:[1,1]},
   {n:'Đấu trường Rap Trẻ',ic:'🎤',w:{rap:1,variety:.3},t:[1,1]},

@@ -1,4 +1,4 @@
-// Reference locale: every other locale must have exactly this key set.
+// Locale chuẩn: mọi locale khác phải có đúng bộ key này.
 export default {
   meta: { code: 'vi', name: 'Tiếng Việt', htmlLang: 'vi' },
   dict: {

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Vietnamese UI snapshots for the surfaces translated in i18n phase 1 (locks the display).
+// Snapshot giao diện tiếng Việt cho các bề mặt được i18n ở giai đoạn 1 (khoá hiển thị).
 import { describe, it, expect, beforeEach } from 'vitest';
 import fs from 'node:fs';
 import { noToggle, seed, SHELL } from './helpers.js';
@@ -24,7 +24,7 @@ beforeEach(() => {
   newGame();
 });
 
-describe('Vietnamese UI snapshots', () => {
+describe('snapshot UI tiếng Việt', () => {
   it('renderTop', () => {
     renderTop();
     const o = {};
@@ -35,7 +35,7 @@ describe('Vietnamese UI snapshots', () => {
     renderDock();
     expect(document.getElementById('dock').innerHTML).toMatchSnapshot();
   });
-  it('renderBuilding: room and NPC labels', () => {
+  it('renderBuilding: nhãn phòng và nhãn NPC', () => {
     renderBuilding();
     const rooms = [...document.querySelectorAll('.room')].map(r => ({
       aria: r.getAttribute('aria-label'), title: r.getAttribute('title'), rl: r.querySelector('.rl').textContent,
@@ -43,7 +43,7 @@ describe('Vietnamese UI snapshots', () => {
     }));
     expect(rooms).toMatchSnapshot();
   });
-  it('sheet title for each room', () => {
+  it('tiêu đề sheet của từng phòng', () => {
     const o = {};
     for (const r of ROOMS) {
       openRoom(r.id);
@@ -52,13 +52,13 @@ describe('Vietnamese UI snapshots', () => {
     }
     expect(o).toMatchSnapshot();
   });
-  it('tutorial step by step', () => {
+  it('tutorial từng bước', () => {
     const o = [];
     for (let i = 0; i < TUT.length; i++) { tutStart(i); o.push(document.querySelector('#tut .tutc').innerHTML); }
     tutEnd();
     expect(o).toMatchSnapshot();
   });
-  it('index.html static shell', () => {
+  it('khung tĩnh index.html', () => {
     const d = new DOMParser().parseFromString(fs.readFileSync('index.html', 'utf8'), 'text/html');
     expect({
       fund: d.querySelector('.cash>small').textContent,
@@ -67,7 +67,7 @@ describe('Vietnamese UI snapshots', () => {
       dock: d.querySelector('#dock').getAttribute('aria-label'),
     }).toMatchSnapshot();
   });
-  it('tap-again buttons', () => {
+  it('nút chạm lần nữa', () => {
     const t = fn => { const b = document.createElement('button'); fn(b); return b.textContent; };
     expect({
       reset: t(b => resetGame(b)),

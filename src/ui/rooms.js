@@ -202,7 +202,7 @@ export const RV={
     for(const a of S.artists)for(const id in a.tag){const k=[a.id,+id].sort().join('-');if(seen.has(k))continue;seen.add(k);const b=byId(+id);if(b)pairs.push({a,b,t:a.tag[id],v:getRel(a,b)})}
     const TN={friend:'🤝 Bạn thân',enemy:'⚡ Mâu thuẫn',dating:'💞 Hẹn hò bí mật',public:'💌 Hẹn hò công khai'};
     modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',`💞 Quan hệ nội bộ (${pairs.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ cùng nhóm hoặc cùng phòng tập dễ thân nhau hơn. Quan hệ tạo ra sự kiện bạn bè, mâu thuẫn, hẹn hò.</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${TN[p.t]} <span class="muted">(${p.v})</span></div>`).join('')||'<div class="card small muted">Chưa có mối quan hệ đặc biệt nào.</div>'}`,true)}`));
-    /* v3: outside-company contacts + personal assistants */
+    /* v3: giao lưu ngoài công ty + trợ lý cá nhân */
     const p=$('#sheet .panel');if(!p)return;
   const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
   const ml=S.artists.filter(a=>a.pa);

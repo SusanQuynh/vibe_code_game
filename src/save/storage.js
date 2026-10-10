@@ -9,11 +9,11 @@ import { ensureDays } from '../systems/week.js';
 
 /* ================= DATA ================= */
 export const KEY='starlight_idol_save_v1';
-// Report save status to the UI (registered by main.js) so storage never touches the DOM.
+// Báo trạng thái lưu cho UI (main.js đăng ký) để storage không phải chạm DOM.
 let onSaved=()=>{};
 export const setSavedHook=fn=>{onSaved=fn};
 export function save(){let ok=true;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){ok=false}onSaved(ok);return ok}
-// Overwrite the save with d, then reload through load() (so migrations run). Returns false if d is invalid.
+// Ghi đè save bằng d rồi nạp lại qua đúng đường load() (để chạy migration). Trả false nếu d không hợp lệ.
 export function replaceSave(d){localStorage.setItem(KEY,JSON.stringify(d));return load()}
 export function load(){try{const t=localStorage.getItem(KEY);if(!t)return false;const d=JSON.parse(t);if(!d||!d.artists)return false;setState(d);
   for(const k of ['groups','offers','films','events','log','singles','concerts','awards','pool'])if(!Array.isArray(S[k]))S[k]=[];

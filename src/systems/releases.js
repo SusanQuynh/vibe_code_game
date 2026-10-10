@@ -14,7 +14,7 @@ import { actFree, acts, wkLabel } from './secretary.js';
 import { act } from '../ui/building.js';
 import { closeM, modal, toast } from '../ui/modal.js';
 
-/* ---- Fan engagement: livestreams & fan meetings ---- */
+/* ---- Giao lưu fan: livestream & fan meeting ---- */
 export function liveInc(a){return Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)*rnd(.7,1.3)/1e5)*1e5}
 export function liveEst(ms){return ms.reduce((t,a)=>t+Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)/1e5)*1e5,0)}
 export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast('Tuần này đã livestream');if(S.money<1e6)return quiet||toast('Không đủ tiền');

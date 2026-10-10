@@ -1,4 +1,4 @@
-// Every identifier used in an inline handler (on*="...") must be attached to window in a single place.
+// Mọi định danh dùng trong handler inline (on*="...") phải được gán lên window ở một nơi duy nhất.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -22,12 +22,12 @@ for (const f of files) {
       if (!KW.has(id[1]) && !BUILTIN.has(id[1])) used.add(id[1]);
   }
 }
-// Expressions inside ${...} can also call globals (e.g. ${go?'propGo()':'closeM()'} -> the literal was stripped);
-// names inside string literals are scanned separately:
+// Biểu thức bên trong ${...} cũng có thể gọi hàm toàn cục (vd ${go?'propGo()':'closeM()'} -> literal đã bị cắt);
+// các tên nằm trong chuỗi literal được quét riêng:
 for (const f of files)
   for (const m of fs.readFileSync(f, 'utf8').matchAll(/\bon(?:click|change|input|toggle)="[^"]*\$\{[^}]*'([A-Za-z_$][\w$]*)\(\)'[^}]*\}/g)) used.add(m[1]);
 
 const g = fs.readFileSync(GLOBALS_FILE, 'utf8');
 const missing = [...used].filter(n => !new RegExp(`(?<![\\w$])${n.replace(/\$/g, '\\$')}(?![\\w$])`).test(g.slice(g.lastIndexOf('Object.assign(window'))));
-if (missing.length) { console.error('Handlers missing on window:', missing.join(', ')); process.exit(1); }
-console.log(`OK: all ${used.size} handler identifiers are on window`);
+if (missing.length) { console.error('Thiếu handler trên window:', missing.join(', ')); process.exit(1); }
+console.log(`OK: ${used.size} định danh handler đều có trên window`);

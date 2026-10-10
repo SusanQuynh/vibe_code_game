@@ -6,9 +6,9 @@ const TARGET = process.env.GOLDEN_TARGET ?? './';
 const GOLDEN = 'tests/golden/week30.json';
 const GOLDEN2 = 'tests/golden/actions110.json';
 
-// S must be language-independent: both vi and en compare against the SAME golden file
+// S phải độc lập với ngôn ngữ: cả vi lẫn en so với CÙNG file golden
 for (const lang of ['vi', 'en']) {
-test(`30 simulated weeks match the golden master [${lang}]`, async ({ page }) => {
+test(`30 tuần mô phỏng khớp golden master [${lang}]`, async ({ page }) => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(seedScript(42));
@@ -24,9 +24,9 @@ test(`30 simulated weeks match the golden master [${lang}]`, async ({ page }) =>
   expect(snap).toBe(fs.readFileSync(GOLDEN, 'utf8'));
 });
 
-// Scenario 2: with actions (hire a manager, sign trainees, solo debuts, accept offers) over 110 weeks
-// → exercises awards, contracts, films, rivals, etc.
-test(`110 weeks with actions match the golden master [${lang}]`, async ({ page }) => {
+// Kịch bản 2: có hành động (tuyển quản lý, ký TTS, debut solo, nhận lời mời) trong 110 tuần
+// → đi qua giải thưởng, hợp đồng, phim, đối thủ, v.v.
+test(`110 tuần có hành động khớp golden master [${lang}]`, async ({ page }) => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(seedScript(7));
