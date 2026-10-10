@@ -1,93 +1,151 @@
-# Starlight Ent.
+<div align="center">
 
-Game quản lý công ty giải trí (web game, Vite + JS thuần, không framework).
-Chơi tại: https://susanquynh.github.io/vibe_code_game/
+# 🌟 Starlight Ent.
 
-Nguồn gốc: artifact Claude “Starlight Ent.” (1 file HTML) được chuyển thành dự án module hoá,
-**gameplay và giao diện giữ nguyên**. Kế hoạch: `docs/plans/2026-10-09-starlight-web-game.md`.
+**A browser-based entertainment agency management game.**<br>
+Recruit trainees, plan their training, debut groups, soloists and actors, and take your company to the top.
 
-## Chạy
+[![Play now](https://img.shields.io/badge/Play-GitHub%20Pages-ff69b4?style=flat-square)](https://susanquynh.github.io/vibe_code_game/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
+![Vanilla JS](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Languages](https://img.shields.io/badge/languages-vi%20%7C%20en%20(beta)-blue?style=flat-square)
+
+[Overview](#overview) • [Getting started](#getting-started) • [Testing](#testing) • [Project structure](#project-structure) • [Internationalization](#internationalization) • [Deployment](#deployment)
+
+</div>
+
+## Overview
+
+You take over **Starlight Ent.** with 600M in funds and two trainees. Each week you schedule training, take on jobs, release music and manage your people, then press **End week** to see what happens.
+
+- **A living company building**: 16 rooms across 8 floors (Recording Studio, Dance Room, PR Room, Management Office, Investment Room, Market Room…), with characters moving between them according to their schedules.
+- **Training and debuts**: 7-day schedules that trade energy and money for stats, and debut decisions as trainees qualify for group, solo or acting careers.
+- **Jobs and releases**: film, variety and performance offers, singles, concerts, and music charts.
+- **Staff and relationships**: hire managers who plan and act on their own, mentor juniors, and handle scandals. Artists form friendships and seniority bonds.
+- **Economy and market**: trends, rival companies, sales, and investments outside entertainment.
+- **Save anywhere**: autosave in the browser, plus export/import as an `SL1.` code or a `.json` file to move a game to another device.
+
+> [!NOTE]
+> The game started as a single-file HTML artifact made with Claude. This repository refactors it into a modular Vite project **without changing gameplay or UI**. The original is kept in [`legacy/starlight-original.html`](legacy/starlight-original.html) and is the reference for the golden master tests.
+
+## Getting started
+
+**Play online:** <https://susanquynh.github.io/vibe_code_game/>
+
+**Run locally** (requires [Node.js](https://nodejs.org) 18+):
 
 ```bash
-npm i
-npm run dev      # http://localhost:5173
-npm run build    # ra thư mục dist/
+git clone https://github.com/SusanQuynh/vibe_code_game.git
+cd vibe_code_game
+npm install
+npm run dev        # http://localhost:5173
 ```
 
-## Test
+| Script | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Build to `dist/` |
+| `npm run preview` | Serve the build on port 4173 |
+| `npm test` | Unit tests (Vitest + jsdom) |
+| `npm run check:handlers` | Ensure every inline handler (`onclick="…"`) exists on `window` |
+| `npm run check:i18n` | Validate locale keys and placeholders against `vi` |
+| `npm run test:e2e` | Playwright golden master and smoke tests |
+| `npm run deploy` | Build and push to the `gh-pages` branch |
+
+## Testing
+
+Run the full suite before merging or deploying:
 
 ```bash
-npm test                 # unit (Vitest + jsdom)
-npm run check:handlers   # mọi handler inline (onclick="…") phải có trên window
-npm run check:i18n       # locale đủ/đúng key và placeholder so với vi; key dùng trong code phải tồn tại
-npm run test:e2e         # Playwright: golden master + smoke
+npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 ```
 
-Trong môi trường đã có sẵn Chromium: `PW_CHROMIUM=/đường/dẫn/chrome npm run test:e2e`
-(đừng chạy `playwright install`). Chạy e2e với bản build: `BASE_URL=http://localhost:4173/vibe_code_game/ npx playwright test`.
+> [!TIP]
+> If Chromium is already installed, point Playwright to it instead of running `playwright install`:
+> ```bash
+> PW_CHROMIUM=/path/to/chrome npm run test:e2e
+> ```
+> To test the production build, run `npm run preview` and then `BASE_URL=http://localhost:4173/vibe_code_game/ npx playwright test`.
 
 ### Golden master
 
-`tests/golden/*.json` là snapshot state sau khi mô phỏng 30 / 110 tuần với RNG có seed, **được ghi từ bản
-artifact gốc** (`legacy/starlight-original.html`, không bao giờ sửa file này). Test chứng minh refactor không đổi
-hành vi. Chỉ cập nhật khi **cố ý** đổi gameplay:
+`tests/golden/*.json` are state snapshots after simulating 30 and 110 weeks with a seeded RNG, **recorded from the original artifact**. They prove that refactoring hasn't changed behavior, in both Vietnamese and English.
+
+> [!IMPORTANT]
+> Never edit `legacy/starlight-original.html`. Only regenerate the snapshots when you are **intentionally** changing gameplay:
+> ```bash
+> UPDATE_GOLDEN=1 npx playwright test golden
+> ```
+
+## Project structure
+
+```
+src/
+├── core/       Pure helpers: seeded RNG, utilities
+├── data/       Constants and content: rules, rooms, names, looks, offers
+├── i18n/       t(), setLang and the locale registry (locales/*.js)
+├── state.js    Global state S (live binding) + setState
+├── systems/    Game logic by domain: artists, managers, week, market, events, releases, awards…
+├── save/       localStorage storage with migrations, SL1 code / .json transfer
+├── ui/         Rendering: building, rooms, views, planning, tutorial, save view
+└── styles/     CSS split by area
+legacy/         Original single-file artifact (read-only reference)
+tests/          unit/, e2e/, golden/ snapshots, fixtures/
+scripts/        Handler and i18n checks, deploy script
+docs/plans/     Implementation plans
+```
+
+Key conventions:
+
+- Inline handlers in dynamically generated HTML are wired to `window` in one place: [`src/ui/globals.js`](src/ui/globals.js).
+- Shared `let` variables across modules are changed only through setters (`setState`, `setCurView`, …).
+
+## Internationalization
+
+Vietnamese (`vi`) is the default and source of truth; English (`en`) is in beta. Players switch languages with the 🌐 button and the game re-renders in place without losing state. The choice is stored in `localStorage['starlight_lang']`, separately from save data.
+
+> [!NOTE]
+> Phase 1 covers the fixed UI only: top bar, room names, dock, common buttons and the tutorial. Game content such as logs and events is still in Vietnamese.
+
+**Adding a language**
+
+1. Copy `src/i18n/locales/en.js` to `xx.js`.
+2. Update `meta` (`code`, `name`, `htmlLang`) and translate `dict`.
+3. Run `npm run check:i18n`. The registry picks up the new file automatically.
+
+Keys are flat and dot-separated (`top.*`, `room.<id>.{name,dock,desc}`, `npc.<id>`, `btn.*`, `tut.<id>.{t,d}`, `lang.*`, `saved.*`, `fmt.units`). Values are strings with `{x}` placeholders or `(p) => string` functions for plurals.
+
+**Rules**
+
+- Don't call `t()` at module top level; look up strings at render time.
+- Dictionaries are trusted HTML: escape user data with `esc()` before passing it to `t()`.
+- Never store translated strings in `S` (`addLog`, `title`…). `fmt()` keeps Vietnamese units for logs; use `money()` for display only.
+- `src/i18n/` is a leaf module: no system/UI imports, no DOM access, no RNG calls.
+- Static markup in `index.html` uses `data-i18n` / `data-i18n-aria`.
+
+## Save data
+
+The game autosaves to `localStorage` under the key `starlight_idol_save_v1`. Use the 🔑 button in the top bar to export an `SL1.…` code or a `.json` file and import it in another browser.
+
+## Deployment
+
+The site is hosted on GitHub Pages from the `gh-pages` branch, without GitHub Actions:
 
 ```bash
-UPDATE_GOLDEN=1 npx playwright test golden
+npm run deploy
 ```
 
-## Cấu trúc
+This builds with the `/vibe_code_game/` base path and force-pushes `dist/` to `gh-pages`.
 
-```
-src/core/      rng, util (hàm thuần)
-src/i18n/      t(), setLang, registry locale (src/i18n/locales/*.js)
-src/data/      hằng số & dữ liệu (rules, names, looks, offers)
-src/state.js   state toàn cục S (live binding) + setState
-src/systems/   logic game theo từng mảng (artists, managers, week, market, events, releases, awards, ext2, ext3 …)
-src/save/      storage (localStorage + migration), transfer (xuất/nhập mã SL1 & file .json)
-src/ui/        render & view (building, views, rooms, planning, tutorial, saveView, globals)
-src/styles/    CSS tách theo khu vực
-```
+> [!IMPORTANT]
+> One-time setup: in **Settings → Pages**, set **Source** to **Deploy from a branch**, branch `gh-pages`, folder `/ (root)`.
 
-Handler inline trong HTML sinh động được nối vào `window` ở một nơi duy nhất: `src/ui/globals.js`.
-Biến `let` dùng chung giữa module có setter (`setState`, `setCurView`, …).
+## Claude Code subagents
 
-## Đa ngôn ngữ
+The repository ships with [Claude Code](https://claude.com/claude-code) subagents in [`.claude/agents/`](.claude/agents/). Recommended workflow:
 
-Mặc định tiếng Việt (`vi`, nguồn chuẩn); có thêm tiếng Anh (`en`, beta). Người chơi đổi bằng nút 🌐 trên thanh trên
-cùng, game render lại tại chỗ. Lựa chọn lưu ở `localStorage['starlight_lang']`, tách khỏi save và mã `SL1.`.
-Giai đoạn 1 mới dịch giao diện cố định (thanh trên cùng, tên phòng, dock, nút chung, tutorial).
-
-**Thêm ngôn ngữ:** chép `src/i18n/locales/en.js` thành `xx.js`, sửa `meta` (`code`, `name`, `htmlLang`), dịch `dict`, rồi
-chạy `npm run check:i18n`. Registry tự nhận file mới.
-
-**Key:** phẳng, có dấu chấm, `vi.js` là chuẩn: `top.*`, `room.<id>.{name,dock,desc}`, `npc.<id>`, `btn.*`,
-`tut.<id>.{t,d}`, `lang.*`, `saved.*`, `fmt.units`. Giá trị là chuỗi có `{x}` hoặc hàm `(p) => string` (số nhiều).
-
-**Quy tắc:**
-- Không gọi `t()` ở top-level module (ngôn ngữ chưa khởi tạo); tra lúc render.
-- Từ điển là HTML tin cậy: tham số truyền vào `t()` phải `esc()` nếu là dữ liệu người dùng.
-- Không đưa chuỗi đã dịch vào `S` (`addLog`, `title`…); `fmt()` giữ đơn vị tiếng Việt cho log, chỉ dùng `money()` để hiển thị.
-- `src/i18n/` là module lá: không import system/UI, không chạm DOM, không gọi RNG.
-- Khung tĩnh trong `index.html` dùng `data-i18n` / `data-i18n-aria`.
-
-## Lưu game
-
-Tự lưu vào `localStorage` (khoá `starlight_idol_save_v1`). Nút 🔑 trên thanh trên cùng: xuất mã `SL1.…`
-hoặc file `.json`, và nhập lại ở trình duyệt khác.
-
-## Deploy
-
-Không dùng GitHub Actions. Chạy `npm run deploy`: build với base `/vibe_code_game/` rồi đẩy `dist/` lên nhánh `gh-pages`.
-Việc thủ công một lần: Settings → Pages → Source = **Deploy from a branch** → nhánh `gh-pages`, thư mục `/ (root)`.
-Test chạy tay trước khi deploy: `npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e`.
-
-## Subagent cho Claude Code
-
-Định nghĩa trong `.claude/agents/`. Luồng làm việc khuyên dùng:
-
-1. `planner`: khảo sát và ghi kế hoạch vào `docs/plans/` (không viết code)
-2. `gameplay-dev`: làm theo plan, mỗi task có test và một commit
-3. `golden-guardian`: chạy unit, check:handlers và e2e, chẩn đoán khi golden lệch (chỉ báo cáo)
-4. `code-reviewer`: review diff so với `main` trước khi merge hoặc deploy (chỉ đọc)
-5. `balance-analyst`: mô phỏng nhiều seed để phân tích cân bằng game (chỉ đọc)
+1. **`planner`**: investigates and writes a plan to `docs/plans/` (no code).
+2. **`gameplay-dev`**: implements the plan, one test and one commit per task.
+3. **`golden-guardian`**: runs unit, handler and e2e checks and diagnoses golden master drift (report only).
+4. **`code-reviewer`**: reviews the diff against `main` before merging or deploying (read only).
+5. **`balance-analyst`**: simulates many seeds to analyze game balance (read only).
