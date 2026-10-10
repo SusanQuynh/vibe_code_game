@@ -1,0 +1,39 @@
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* Layout: a night-time agency tower read like a magazine cover. One sticky masthead,
+   the lit building as the hero, a tabbed "contents" deck below, a lightstick-coloured
+   CTA pinned to the bottom. Committed single dark theme (stage lighting). */
+:root{
+  color-scheme:dark;
+  /* stage */
+  --bg:#0d0a0f; --bg2:#141016; --card:#1a1520; --card2:#221b28; --line:#2f2736; --line2:#43384c;
+  --ink:#f3ece5; --muted:#a69aa3; --dim:#76696f;
+  /* one accent: lightstick magenta */
+  --accent:#f2557f; --accent-d:#b93a5f; --accent-soft:rgba(242,85,127,.14); --on-accent:#1b0a11;
+  /* semantic (not accent) */
+  --good:#5fd0a0; --warn:#efb54d; --bad:#ff6f61; --info:#a497d6;
+  /* type */
+  --f-disp:"Noto Serif Display","Iowan Old Style",Georgia,serif;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* legacy names the game script references */
+  --pink:var(--accent); --pinkd:var(--accent-d); --violet:var(--info); --mint:var(--good);
+  --sun:var(--warn); --red:var(--bad); --orange:var(--warn);
+  --plate:rgba(13,10,15,.82);
+  /* room sets: same lightness, hue tells the department */
+  --r-ceo:#2b211c; --r-meet:#241e31; --r-studio:#1a2a30; --r-acting:#2f1c23; --r-vocal:#2c2718;
+  --r-dance:#1a2a20; --r-gym:#2a221b; --r-pr:#2e1b29; --r-lobby:#2d2418; --r-dorm:#1c2233;
+  --r-mgr:#1f2a1b; --r-roof:#182b2a; --r-invest:#2b2817; --r-market:#1c2331; --r-sales:#182b24; --r-hr:#281e2f;
+  --shadow:0 18px 40px -18px rgba(0,0,0,.8);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--f-body);-webkit-tap-highlight-color:transparent;
+  background-image:radial-gradient(ellipse 80% 40% at 50% -5%,rgba(242,85,127,.10),transparent 70%);background-attachment:fixed}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+h1,h2,h3{font-family:var(--f-disp);font-weight:600;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+b{font-weight:600}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:0 calc(104px + env(safe-area-inset-bottom,0px))}
