@@ -34,10 +34,11 @@
 .room::after{content:"";position:absolute;left:0;right:0;bottom:0;height:20px;pointer-events:none;
   background:linear-gradient(180deg,rgba(255,255,255,.10) 0 1px,transparent 1px),linear-gradient(180deg,#221a26,#141016)}
 .room:hover{border-color:rgba(242,85,127,.45);transform:translateY(-1px)}
-.room .rl{position:absolute;top:7px;left:7px;z-index:4;display:inline-flex;gap:5px;align-items:center;background:var(--plate);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:2px 7px 2px 4px;font:500 11.5px/1.35 var(--f-body);color:var(--ink);max-width:calc(100% - 14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room .rl{position:absolute;top:7px;left:7px;z-index:4;display:inline-flex;gap:5px;align-items:center;background:var(--plate);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:2px 7px 2px 4px;font:500 11.5px/1.35 var(--f-body);color:var(--ink);max-width:calc(100% - 14px);white-space:normal;align-items:flex-start;overflow:hidden}
+.room .rn{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .room .ri{font-size:12px}
 .room .badge,.dock .badge{position:absolute;background:var(--bad);color:var(--on-accent);font:600 10.5px/1.6 var(--f-mono);border-radius:5px;padding:0 6px;z-index:5}
-.room .badge{right:7px;top:34px}
+.room .badge{right:7px;top:46px}
 .pp{position:absolute;pointer-events:none;z-index:1;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45)) saturate(.9)}
 .win{position:absolute;top:32px;width:30px;height:36px;border-radius:4px;background:linear-gradient(#1f2b52,#45366b);box-shadow:inset 0 0 0 2px rgba(255,255,255,.18),inset 15px 0 0 -14px rgba(255,255,255,.2),0 0 18px rgba(120,110,200,.25);pointer-events:none}
 .desk{position:absolute;bottom:20px;height:15px;background:linear-gradient(#5a4436,#3e2e25);border-radius:3px 3px 0 0;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}

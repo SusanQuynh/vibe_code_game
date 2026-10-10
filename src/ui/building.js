@@ -70,7 +70,7 @@ export function renderBuilding(){
         const bub=a.scandal?'🚨':a.mood<30?'💢':a.energy<25?'💤':(datingPartner(a)?'💗':'');
         ch+=`<div class="chibi" data-id="${a.id}" style="left:${p}%;${blinkD(a.id)}" onclick="event.stopPropagation();view(()=>viewArtist(${a.id}))" title="${esc(a.name)}">${chibiHTML(a,`<div class="nm"><span>${esc(a.name)}</span></div>${bub?`<span class="bub">${bub}</span>`:''}`)}</div>`;
       }
-      h+=`<button class="room" style="--rc:var(--r-${r.id})" onclick="openRoom('${r.id}')" aria-label="${roomName(r.id)}" title="${roomName(r.id)}: ${t(`room.${r.id}.desc`)}"><span class="rl"><span class="ri">${r.ic}</span>${roomName(r.id)}</span>${PROPS[r.id]||''}${roomBadge(r.id)}${ch}</button>`;
+      h+=`<button class="room" style="--rc:var(--r-${r.id})" onclick="openRoom('${r.id}')" aria-label="${roomName(r.id)}" title="${roomName(r.id)}: ${t(`room.${r.id}.desc`)}"><span class="rl"><span class="ri">${r.ic}</span><span class="rn">${roomName(r.id)}</span></span>${PROPS[r.id]||''}${roomBadge(r.id)}${ch}</button>`;
     }
     h+='</div>';
   }
