@@ -9,6 +9,8 @@ import { targetName, targetNameT } from '../../src/systems/managers.js';
 import { wkLabel, wkLabelT } from '../../src/systems/secretary.js';
 import { debutRec, debutRecT } from '../../src/systems/debut.js';
 import { sv } from '../../src/i18n/index.js';
+import viL from '../../src/i18n/locales/vi.js';
+import enL from '../../src/i18n/locales/en.js';
 
 noToggle();
 const rich = () => structuredClone(JSON.parse(fs.readFileSync('tests/fixtures/ui-rich.json', 'utf8')));
@@ -69,5 +71,24 @@ describe('task 6: debutRecT, sv', () => {
   it('sv: giá trị biết trước được dịch, lạ thì giữ nguyên văn', () => {
     expect(sv('Xuất sắc')).toBe('Xuất sắc'); expect(sv('Điều lạ')).toBe('Điều lạ');
     setLang('en'); expect(sv('Xuất sắc')).toBe('Excellent'); expect(sv('Không đạt')).toBe('Fail'); expect(sv('Điều lạ')).toBe('Điều lạ');
+  });
+});
+
+describe('mọi key kiểu hàm (số nhiều)', () => {
+  const P = n => new Proxy({}, { get: (_, k) => (k === 'then' ? undefined : typeof k === 'string' && /^(b|names|hm)$/.test(k) ? 'X' : n) });
+  it.each([1, 2])('vi/en: gọi với mọi tham số = %i cho chuỗi sạch, en không còn chữ Việt', n => {
+    for (const [code, L] of [['vi', viL], ['en', enL]]) for (const [k, v] of Object.entries(L.dict)) {
+      if (typeof v !== 'function') continue;
+      const r = v(P(n));
+      expect(typeof r, `${code}:${k}`).toBe('string');
+      expect(r, `${code}:${k}`).not.toMatch(/undefined|NaN|\[object/);
+      if (code === 'en') expect(r, k).not.toMatch(VI);
+    }
+  });
+  it('en: 1 số ít, 2 số nhiều ở vài key tiêu biểu', () => {
+    setLang('en');
+    expect(t('report.done', { n: 1 })).toBe('<b>1</b> project done'); expect(t('report.done', { n: 2 })).toBe('<b>2</b> projects done');
+    expect(t('evframe.skipTitle', { n: 1 })).toBe('1 unresolved event'); expect(t('evframe.skipTitle', { n: 3 })).toBe('3 unresolved events');
+    expect(t('artist.hs.rec', { n: 1 })).toBe('Suggests 1 rest day/week.');
   });
 });

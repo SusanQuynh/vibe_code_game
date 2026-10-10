@@ -25,6 +25,9 @@ const VERBATIM = [
   /^artists\.\d+\.lessons\.\d+\.[ls]$/, // bài học rút ra
   /^artists\.\d+\.dw\.why$/, // lời mong muốn debut (dWish lưu vào S)
   /^artists\.\d+\.hsF\.why\.\d+$/, // lý do của chuyên gia sức khỏe
+  /^lastRep\.ev\.\d+$/, // dòng sự kiện tuần trong báo cáo (đi từ log)
+  /^lastRep\.a\.\d+\.(b|done)$/, // việc ngoài / dự án xong của nghệ sĩ trong báo cáo
+  /^awards\.\d+\.res\.\d+\.(cat|note)$/, // hạng mục + ghi chú giải thưởng
 ];
 function names(v, out = new Set(), key, path = '') {
   if (typeof v === 'string') {
@@ -39,8 +42,9 @@ function surfaceText(root) {
   for (const e of [root, ...root.querySelectorAll('*')]) for (const a of ['title', 'aria-label', 'placeholder', 'value']) { const v = e.getAttribute?.(a); if (v) parts.push(v); }
   return parts.join('\n');
 }
+const strip = (text, known) => { for (const v of [...known].sort((a, b) => b.length - a.length)) text = text.split(v).join(' '); return text; };
 export function leaks(text, known) {
-  for (const v of [...known].sort((a, b) => b.length - a.length)) text = text.split(v).join(' ');
+  text = strip(text, known);
   return text.split(/[^\p{L}\p{N}]+/u).filter(w => w && VI.test(w));
 }
 
@@ -72,7 +76,7 @@ describe('ui-en-leak', () => {
     const text = surfaceText(el);
     const known = names(S);
     expect(leaks(text, known)).toEqual([]);
-    expect(text.match(VI_PLAIN)).toBeNull();
+    expect(strip(text, known).match(VI_PLAIN)).toBeNull();
   });
 });
 
