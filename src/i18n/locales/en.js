@@ -18,6 +18,8 @@ export default {
     'log.title': 'Company log',
     'saved.ok': '💾 Autosaved',
     'saved.fail': '⚠️ Could not save',
+    'saved.lite': '💾 Saved (compact)',
+    'saved.noBackup': '💾 Saved · ⚠️ no backup',
     'room.ceo.name': 'CEO Office',
     'room.ceo.dock': 'CEO',
     'room.ceo.desc': 'Finance, training schedule',

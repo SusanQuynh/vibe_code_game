@@ -14,7 +14,7 @@ import { tutStart } from './ui/tutorial.js';
 import { initLang, t } from './i18n/index.js';
 import { applyHtmlLang, applyStatic } from './ui/lang.js';
 
-setSavedHook((ok) => { const el = $('#saved'); if (el) { el.dataset.i18n = ok ? 'saved.ok' : 'saved.fail'; el.textContent = t(el.dataset.i18n); } });
+setSavedHook((ok, info) => { const el = $('#saved'); if (el) { el.dataset.i18n = info === 'lite' ? 'saved.lite' : info === 'noBackup' ? 'saved.noBackup' : ok ? 'saved.ok' : 'saved.fail'; el.textContent = t(el.dataset.i18n); } });
 // language only touches the static DOM, no extra render (keeps the golden RNG sequence intact)
 initLang(); applyHtmlLang(); applyStatic();
 if (!load()) newGame();

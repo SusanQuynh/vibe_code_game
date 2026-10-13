@@ -19,6 +19,8 @@ export default {
     'log.title': 'Nhật ký công ty',
     'saved.ok': '💾 Đã lưu tự động',
     'saved.fail': '⚠️ Không lưu được',
+    'saved.lite': '💾 Đã lưu (bản rút gọn)',
+    'saved.noBackup': '💾 Đã lưu · ⚠️ chưa có sao lưu',
     'room.ceo.name': 'Phòng Giám đốc',
     'room.ceo.dock': 'Giám đốc',
     'room.ceo.desc': 'Tài chính, lịch tập',
