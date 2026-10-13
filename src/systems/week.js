@@ -18,6 +18,7 @@ import { promoWeek } from './promo.js';
 import { buildProps, propCount } from './proposals.js';
 import { getRel, groupsOf, setRel } from './relations.js';
 import { evalAll } from './review.js';
+import { recSal, recruitTick } from './recruit.js';
 import { runCbPlans } from './secretary.js';
 import { act } from '../ui/building.js';
 import { view } from '../ui/modal.js';
@@ -97,7 +98,7 @@ export const defaultDays=k=>k==='rest'?Array(7).fill('rest'):[k,k,k,k,k,'rest','
 export function ensureDays(a){if(!Array.isArray(a.days)||a.days.length!==7)a.days=defaultDays(a.sched||'vocal');a.days=a.days.map(k=>TRAIN[k]?k:'rest')}
 export const daysMini=a=>a.days.map(k=>TIC[k]).join('');
 export const trainDays=a=>a.days.filter(k=>k!=='rest').length;
-export function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)}
+export function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)+recSal()}
 export const TIC={vocal:'🎤',dance:'🪩',rap:'🎧',acting:'🎭',variety:'😂',gym:'🏋️',rest:'🛌'};
 export const STAT2T={vocal:'vocal',dance:'dance',rap:'rap',acting:'acting',variety:'variety',visual:'gym',stamina:'gym'};
 export function focusKeys(a){const idol=groupsOf(a).length||a.solo;if(a.status==='trainee')return['vocal','dance','rap','visual'];if(a.actor&&!idol)return['acting','visual','variety','stamina'];if(a.actor)return['vocal','dance','acting','visual','variety'];return['vocal','dance','rap','visual','variety','stamina']}
@@ -153,6 +154,7 @@ export function nextWeek(force,planned){
   mgrDomTick();mgrAuto();
   randomEvents();
   weekV2();
+  recruitTick();
   if(S.money<0)addLog(`⚠️ Công ty đang âm ${fmt(-S.money)}. Nghệ sĩ bắt đầu lo lắng!`,'bad');
   if(abs()%4===0)evalAll();
   finClose();

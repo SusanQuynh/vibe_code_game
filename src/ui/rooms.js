@@ -13,6 +13,7 @@ import { gmCardHTML, gmFee } from '../systems/gm.js';
 import { artDom, domOfAs, gmOf, inSub, mBoss, mCap, mKids, mgrOf, mgrTargets, retrain, targetName } from '../systems/managers.js';
 import { BIZ, bizLv, bizOwn, bizVal, bizWait, modV, rivalPress, totalFans, trendB, trendTag, upCost } from '../systems/market.js';
 import { canTake, effPay, offerOrder, slotsOf } from '../systems/offers.js';
+import { est, recEye, recHTML } from '../systems/recruit.js';
 import { PROMO_WK } from '../systems/promo.js';
 import { getRel, groupsOf, harmony } from '../systems/relations.js';
 import { actByKey, fanSugs } from '../systems/releases.js';
@@ -186,8 +187,10 @@ export const RV={
   lobby(){
     const tr=S.artists.filter(a=>!a.busy);
     modal(`<h2>🌟 ${roomName('lobby')}</h2><div class="sub">Tuyển thực tập sinh và cho ra mắt nhóm, solo hoặc diễn viên. Không giới hạn số nghệ sĩ.</div>${dqBanner()}
+    ${det('lb-hr',`🧑‍💼 Nhân viên tuyển dụng (${(S.rec?S.rec.staff.length:0)}/2)`,recHTML(),false)}
     ${det('lb-cast',`🧑‍🎤 Ứng viên casting (${S.pool.length})`,`<div class="small muted" style="margin-bottom:6px">Ký hợp đồng 20 tr/người. Danh sách mới mỗi 4 tuần.</div>${repCard()}
-    ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} · năng khiếu ${STATS[a.spec]} · tố chất x${a.talent}</span></div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">Ký hợp đồng</button></div>${bars(a)}</div>`).join('')||'<div class="small muted">Hết ứng viên.</div>'}
+    ${S.rec&&S.rec.sug.length?`<div class="card small row">⭐ NV tuyển dụng đề xuất ${S.rec.sug.filter(i=>S.pool.some(a=>a.id===i)).length} hồ sơ<span class="sp"></span><button class="btn sm pri" onclick="recSignSug()">Ký các đề xuất</button></div>`:''}
+    ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} · năng khiếu ${STATS[a.spec]} · tố chất x${a.talent}</span>${S.rec&&S.rec.sug.includes(a.id)?`<div class="small"><span class="tag s">⭐ NV đề xuất · ước tính ${Math.round(est(a,recEye()))}</span></div>`:''}</div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">Ký hợp đồng</button></div>${bars(a)}</div>`).join('')||'<div class="small muted">Hết ứng viên.</div>'}
     <button class="btn" onclick="recast()">Tổ chức casting mới (10 tr)</button>`,true)}
     ${det('lb-batches',`🌱 Các lứa thực tập sinh (${S.batches.length} lứa, ${S.artists.filter(a=>a.status==='trainee').length} TTS)`,batchHTML(),true)}
     ${det('lb-comp',`🏅 Cuộc thi cho thực tập sinh (${S.comps.filter(c=>kindOf(c)==='tts').length} đang mở)`,compHTML(),true)}

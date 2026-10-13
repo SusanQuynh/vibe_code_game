@@ -13,6 +13,7 @@ import { demoteGM, hireGM, promoteGM } from '../systems/gm.js';
 import { assignMgr, fireMgr, hireMgr, rehuntMgr, setAuto, setBoss, setDom, toggleMA } from '../systems/managers.js';
 import { buyBiz, buybackBiz, raiseBiz, sellBiz, upBiz } from '../systems/market.js';
 import { acceptOffer, acceptSel, investOffer, ocPick, ocPrev } from '../systems/offers.js';
+import { recHire, recHunt, recFire, recSet, recSignSug } from '../systems/recruit.js';
 import { postAuto, postDo, preAuto, preDo } from '../systems/promo.js';
 import { cfPick, propAll, propOk, propOkAll, viewProps } from '../systems/proposals.js';
 import { doFM, doLive, holdConcert, produceFilm, releaseSingle, viewCamp } from '../systems/releases.js';
@@ -103,6 +104,11 @@ Object.assign(window, {
   propOk,
   propOkAll,
   raiseBiz,
+  recFire,
+  recHire,
+  recHunt,
+  recSet,
+  recSignSug,
   recast,
   rehuntMgr,
   releaseSingle,

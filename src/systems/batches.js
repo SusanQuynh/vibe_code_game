@@ -16,7 +16,8 @@ export function initBatches(){S.bno=1;S.batches=[{id:uid(),n:'Lứa 1',w:abs()}]
 export const batchOf=a=>(S.batches||[]).find(b=>b.id===a.batch)||null;
 export const bMem=b=>S.artists.filter(a=>a.status==='trainee'&&a.batch===b.id);
 export function fixBatch(a){if(a.status==='trainee'&&!S.batches.some(b=>b.id===a.batch))a.batch=S.curBatch}
-export function newBatch(){const n='Lứa '+(++S.bno),b={id:uid(),n,w:abs()};S.batches.push(b);S.curBatch=b.id;S.ui=S.ui||{};S.ui['lb-b'+b.id]=true;addLog(`🌱 Mở ${n}. Thực tập sinh ký mới sẽ vào lứa này.`,'good');act()}
+export function openBatch(quiet){const n='Lứa '+(++S.bno),b={id:uid(),n,w:abs()};S.batches.push(b);S.curBatch=b.id;S.ui=S.ui||{};S.ui['lb-b'+b.id]=true;if(!quiet)addLog(`🌱 Mở ${n}. Thực tập sinh ký mới sẽ vào lứa này.`,'good');return b}
+export function newBatch(){openBatch();act()}
 export function setCurBatch(id){S.curBatch=+id;act()}
 export function moveBatch(aid,bid){const a=byId(aid),b=S.batches.find(x=>x.id===+bid);if(a&&b){a.batch=b.id;addLog(`🔀 Chuyển ${a.name} sang ${b.n}.`);act()}}
 export function batchSched(bid,v){if(!v)return;S.artists.filter(a=>a.status==='trainee'&&a.batch===bid&&!a.busy).forEach(a=>a.days=defaultDays(v));toast('Đã xếp lịch cho cả lứa');act()}
