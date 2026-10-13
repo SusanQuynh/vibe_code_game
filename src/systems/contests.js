@@ -1,6 +1,6 @@
 import { R, pick, rnd } from '../core/rng.js';
 import { $, clamp, esc, fmt } from '../core/util.js';
-import { STATS } from '../data/rules.js';
+import { CB, STATS } from '../data/rules.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fit } from './artists.js';
 import { batchOf } from './batches.js';
@@ -29,6 +29,10 @@ export function genComp(){const T=pick(COMP.filter(c=>!(S.comps||[]).some(x=>x.n
 /* contest kind table: tts (trainees) for now */
 export const kindOf=c=>c.k||'tts';
 export const KIND={tts:{elig:a=>a.status==='trainee'&&!a.busy,label:'thực tập sinh',fanMul:()=>1}};
+const bonusOf=(c,rank)=>rank<=3?Object.keys(c.w).map(k=>[k,+(CB[rank-1]*c.w[k]).toFixed(1)]):[];
+export const bonusTxt=(c,rank)=>bonusOf(c,rank).map(([k,g])=>`${STATS[k]} +${g}`).join(', ');
+/* top-3 stat bonus (no RNG); returns the text */
+export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100));return bonusTxt(c,rank)}
 export function compTick(){S.comps=(S.comps||[]).filter(c=>c.exp>abs());const n=S.comps.filter(c=>kindOf(c)==='tts').length;if(n<2||(n<4&&Math.random()<.35))genComp()}
 const compScore=(ms,ids,c)=>ms.reduce((t,a)=>t+fit(a,c.w),0)/Math.max(ms.length,1)*(1+(ms.length>1?chem(ids):0));
 const compRank=(c,sc)=>{let r=1;for(let j=0;j<7;j++)if(c.lvl+rnd(-12,14)>sc)r++;return r};
@@ -52,12 +56,12 @@ export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);i
   if(!run.res){const ms=run.ids.map(byId).filter(Boolean),f=compScore(ms,run.ids,c),sc=f+rnd(-8,8);
     const rank=compRank(c,sc),prize=rank<=3?c.prize[rank-1]:0;S.money+=prize;run.res={rank,prize};
     const who=ms.map(x=>x.name).join(', ');
-    addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}!`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'');
+    addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${bonusTxt(c,rank)}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'');
     {const m=ms.map(mgrOf).find(Boolean);if(m)mgrExp(m,rank===1?2:1)}}
   const r=run.res,q=r.rank===1?1.4:r.rank<=3?1.15:.9,fg=r.rank===1?R(3000,7000):r.rank<=3?R(1000,3000):R(200,800);a.fans+=fg;a.yr.fans+=fg;
-  const les={};for(const k in c.w)les[k]=c.w[k]*3;const ls=applyLesson(a,les,q);
-  a.lessons.unshift({t:`Cuộc thi «${c.n}»`,l:r.rank<=3?'Tự tin hơn khi thi đấu':'Học được nhiều từ đối thủ',s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
-  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(`N${S.year}: Cuộc thi «${c.n}» – hạng ${r.rank}`);a.wc=(a.wc||0)+1;
+  const les={};for(const k in c.w)les[k]=c.w[k]*3;const ls=applyLesson(a,les,q),bt=compBonus(a,c,r.rank);
+  a.lessons.unshift({t:`Cuộc thi «${c.n}»`,l:r.rank<=3?'Tự tin hơn khi thi đấu':'Học được nhiều từ đối thủ',s:ls,y:S.year,...(bt?{b:bt}:{})});if(a.lessons.length>12)a.lessons.length=12;
+  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(`N${S.year}: Cuộc thi «${c.n}» – hạng ${r.rank}${bt?` · 🏅 ${bt}`:''}`);a.wc=(a.wc||0)+1;
   if(!S.artists.some(x=>x.busy&&x.busy.run===run.id))S.compRuns=S.compRuns.filter(x=>x!==run)}
 export function compHTML(kinds=['tts']){const free=S.artists.filter(KIND.tts.elig),going=S.artists.filter(a=>a.busy&&a.busy.kind==='comp');
   return`<div class="small muted" style="margin-bottom:6px">Chỉ thực tập sinh được dự thi. Top 3 nhận tiền thưởng, ai cũng có thêm fan và bài học theo kỹ năng thi. ${going.length?`Đang thi: <b>${going.map(a=>esc(a.name)).join(', ')}</b>.`:''}</div>`+

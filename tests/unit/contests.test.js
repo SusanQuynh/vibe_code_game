@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL } from './helpers.js';
 import { S, abs, uid, newGame } from '../../src/state.js';
-import { enterComp, compDone, kindOf } from '../../src/systems/contests.js';
-import { act } from '../../src/ui/building.js';
+import { enterComp, compDone, compBonus, kindOf } from '../../src/systems/contests.js';
+import { viewArtist } from '../../src/ui/views.js';
+
+noToggle();
 
 beforeEach(() => {
   document.body.innerHTML = SHELL;
@@ -36,7 +38,9 @@ describe('contests', () => {
     expect(S.money - m0).toBe(EXPECT.money);
     expect(x.fans - f0).toBe(EXPECT.fans);
     expect(x.lessons[0].s).toBe(EXPECT.ls);
-    expect(x.hist[0]).toBe(EXPECT.h); expect(x.st.vocal).toBe(EXPECT.vocal);
+    expect(x.hist[0]).toBe(EXPECT.h + ' · 🏅 Vocal +3');
+    expect(S.log.some(l => l.t.includes('Thưởng chỉ số mỗi người: Vocal +3'))).toBe(true); expect(+(x.st.vocal - EXPECT.vocal).toFixed(1)).toBe(3); // rank-1 bonus only: delta asserted, RNG unchanged
+    expect(x.lessons[0].b).toBe('Vocal +3');
   });
   it('enterComp từ chối TTS đang chừa lịch debut', () => {
     newGame();
@@ -61,3 +65,31 @@ describe('contests', () => {
   });
 });
 const EXPECT = { money: 50e6, fans: 6623, ls: 'Vocal +3.7', h: 'N1: Cuộc thi «Test» – hạng 1', vocal: 12.7 };
+
+describe('compBonus', () => {
+  it('thưởng theo hạng và trọng số, không đổi khi hạng > 3', () => {
+    newGame();
+    const [a] = S.artists, c = mkComp({ w: { dance: .8, vocal: .4 } });
+    const d0 = a.st.dance, v0 = a.st.vocal;
+    expect(compBonus(a, c, 1)).toBe('Nhảy +2.4, Vocal +1.2');
+    expect(+(a.st.dance - d0).toFixed(1)).toBe(2.4);
+    expect(+(a.st.vocal - v0).toFixed(1)).toBe(1.2);
+    const s1 = { ...a.st };
+    expect(compBonus(a, c, 4)).toBe('');
+    expect(a.st).toEqual(s1);
+  });
+  it('kẹp ở 100', () => {
+    newGame();
+    const [a] = S.artists;
+    a.st.vocal = 99.5;
+    compBonus(a, mkComp(), 1);
+    expect(a.st.vocal).toBe(100);
+  });
+  it('viewArtist hiện 🏅 cho bài học có b', () => {
+    newGame();
+    const [a] = S.artists;
+    a.lessons.unshift({ t: 'Cuộc thi', l: 'x', s: 'Vocal +1', y: 1, b: 'Vocal +3' });
+    viewArtist(a.id);
+    expect(document.getElementById('sheet').innerHTML).toContain('🏅 Vocal +3');
+  });
+});
