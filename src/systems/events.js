@@ -101,17 +101,17 @@ export function randomEvents(){
 }
 export function evInfo(e){
   {const x=xInfo(e);if(x!==undefined)return x}
-  if(e.kind==='sx'){const D=SXD[e.sx];return D?{ic:D.ic,t:D.t,d:D.d(e),o:D.o(e)}:null}
+  if(e.kind==='sx'){const D=SXD[e.sx];return D?{ic:D.ic,t:D.t(),d:D.d(e),o:D.o(e)}:null}
   const a=byId(e.a),b=e.b?byId(e.b):null;if(!a||(e.b&&!b))return null;
   switch(e.kind){
-    case'req_rest':return{ic:'😮‍💨',t:`${a.name} xin nghỉ phép`,d:'Lịch trình dày khiến cậu ấy kiệt sức và muốn nghỉ 2 tuần.',o:[{k:'yes',l:'Cho nghỉ 2 tuần'},{k:'no',l:'Từ chối'}]};
-    case'req_raise':return{ic:'💸',t:`${a.name} muốn tăng lương`,d:`Lương hiện tại ${fmt(a.salary)}/tuần.`,o:[{k:'yes',l:'Tăng 3 tr/tuần'},{k:'no',l:'Từ chối'}]};
-    case'req_acting':return{ic:'🎭',t:`${a.name} muốn thử sức diễn xuất`,d:'Cậu ấy mong được nhận vai trong 10 tuần tới.',o:[{k:'yes',l:'Hứa sẽ tìm vai'},{k:'no',l:'Từ chối'}]};
-    case'req_solo':return{ic:'🎤',t:`${a.name} muốn ra mắt solo`,d:'Hoạt động solo song song với nhóm. Chi phí 80 tr.',o:[{k:'yes',l:'Cho ra solo (80 tr)'},{k:'no',l:'Để sau'}]};
-    case'req_leave':return{ic:'🚪',t:`${a.name} đòi rời công ty!`,d:`Tâm trạng chỉ còn ${Math.round(a.mood)}. Nếu không giữ chân, cậu ấy sẽ đi.`,o:[{k:'talk',l:'Thuyết phục (30 tr)'},{k:'raise',l:'Tăng lương 10 tr/tuần'},{k:'go',l:'Để rời đi'}]};
-    case'rel_conflict':return{ic:'⚡',t:`${a.name} và ${b.name} mâu thuẫn`,d:'Không khí trong công ty căng thẳng. Mâu thuẫn trong nhóm làm giảm chất lượng single.',o:[{k:'fix',l:'Hòa giải (10 tr)'},{k:'no',l:'Mặc kệ'}]};
-    case'poach':return{ic:'🕵️',t:`${e.r} muốn chiêu mộ ${a.name}`,d:`Họ đề nghị lương gấp đôi. Tâm trạng hiện tại ${Math.round(a.mood)}. Để đi thì nhận phí chuyển nhượng ${fmt(e.fee)}.`,o:[{k:'raise',l:`Giữ chân: tăng lương ${fmt(Math.max(5e6,Math.round(a.salary*.5/1e6)*1e6))}/tuần`},{k:'talk',l:'Nói chuyện (40 tr)'},{k:'go',l:`Để đi (+${fmt(e.fee)})`}]};
-    case'rel_dating':return{ic:'💞',t:`${a.name} và ${b.name} muốn hẹn hò`,d:'Hai người đã rất thân. Hẹn hò làm họ vui hơn nhưng có nguy cơ bị lộ.',o:[{k:'yes',l:'Cho phép (bí mật)'},{k:'no',l:'Cấm'}]};
+    case'req_rest':return{ic:'😮‍💨',t:t('ev.req_rest.t',{n:a.name}),d:t('ev.req_rest.d'),o:[{k:'yes',l:t('ev.req_rest.o.yes')},{k:'no',l:t('ev.o.refuse')}]};
+    case'req_raise':return{ic:'💸',t:t('ev.req_raise.t',{n:a.name}),d:t('ev.req_raise.d',{m:money(a.salary)}),o:[{k:'yes',l:t('ev.req_raise.o.yes',{m:money(3e6)})},{k:'no',l:t('ev.o.refuse')}]};
+    case'req_acting':return{ic:'🎭',t:t('ev.req_acting.t',{n:a.name}),d:t('ev.req_acting.d'),o:[{k:'yes',l:t('ev.req_acting.o.yes')},{k:'no',l:t('ev.o.refuse')}]};
+    case'req_solo':return{ic:'🎤',t:t('ev.req_solo.t',{n:a.name}),d:t('ev.req_solo.d',{m:money(80e6)}),o:[{k:'yes',l:t('ev.req_solo.o.yes',{m:money(80e6)})},{k:'no',l:t('ev.req_solo.o.no')}]};
+    case'req_leave':return{ic:'🚪',t:t('ev.req_leave.t',{n:a.name}),d:t('ev.req_leave.d',{m:Math.round(a.mood)}),o:[{k:'talk',l:t('ev.req_leave.o.talk',{m:money(30e6)})},{k:'raise',l:t('ev.req_leave.o.raise',{m:money(10e6)})},{k:'go',l:t('ev.req_leave.o.go')}]};
+    case'rel_conflict':return{ic:'⚡',t:t('ev.rel_conflict.t',{a:a.name,b:b.name}),d:t('ev.rel_conflict.d'),o:[{k:'fix',l:t('ev.rel_conflict.o.fix',{m:money(10e6)})},{k:'no',l:t('ev.rel_conflict.o.no')}]};
+    case'poach':return{ic:'🕵️',t:t('ev.poach.t',{r:e.r,n:a.name}),d:t('ev.poach.d',{m:Math.round(a.mood),f:money(e.fee)}),o:[{k:'raise',l:t('ev.poach.o.raise',{m:money(Math.max(5e6,Math.round(a.salary*.5/1e6)*1e6))})},{k:'talk',l:t('ev.poach.o.talk',{m:money(40e6)})},{k:'go',l:t('ev.poach.o.go',{m:money(e.fee)})}]};
+    case'rel_dating':return{ic:'💞',t:t('ev.rel_dating.t',{a:a.name,b:b.name}),d:t('ev.rel_dating.d'),o:[{k:'yes',l:t('ev.rel_dating.o.yes')},{k:'no',l:t('ev.rel_dating.o.no')}]};
     case'scandal':{if(!a.scandal)return null;const o=[{k:'deny',l:t('ev.scandal.o.deny')},{k:'sorry',l:t('ev.scandal.o.sorry')},{k:'sue',l:t('ev.scandal.o.sue',{m:money(30e6)})}];if(a.scandal.dating)o.push({k:'public',l:t('ev.scandal.o.public')});o.push({k:'silent',l:t('ev.scandal.o.silent')});
       return{ic:'🚨',t:t('ev.scandal.t',{n:a.name}),d:t('ev.scandal.d',{t:a.scandal.t,s:'🔥'.repeat(a.scandal.sev)}),o}}
   }

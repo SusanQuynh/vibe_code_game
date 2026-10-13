@@ -1,5 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { money, t } from '../i18n/index.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
 import { SONGS } from '../data/names.js';
 import { OFFER, PARTNERS, RIVALS } from '../data/offers.js';
@@ -43,12 +43,12 @@ export function rivalsTick(){const now=abs();
   if(cand.length&&Math.random()<.06){const a=pick(cand);if(Math.random()<1.1-a.mood/100-msk(a,'care')*.03){const r=pick(S.rivals);pushEv({kind:'poach',a:a.id,r:r.n,fee:clamp(Math.round(a.fans*1500/1e6)*1e6,30e6,3e9)})}}
 }
 export const SXD={
-  fire:{ic:'🔥',t:'Sự cố chập điện phòng tập',d:()=>'Phòng tập hư hỏng. Sửa tạm thì 4 tuần tới luyện tập kém hiệu quả.',o:()=>[{k:'fix',l:'Sửa ngay (60 tr)'},{k:'cheap',l:'Sửa tạm (15 tr)'}]},
-  sponsor:{ic:'🤝',t:'Nhà tài trợ bất ngờ',d:e=>`${e.p} muốn tài trợ ${fmt(e.v)} để gắn logo vào hoạt động của công ty. Một số fan có thể chê "thương mại hóa".`,o:()=>[{k:'yes',l:'Nhận tài trợ'},{k:'no',l:'Từ chối'}]},
-  tax:{ic:'🧾',t:'Thanh tra thuế',d:()=>'Cơ quan thuế kiểm tra sổ sách. Luật sư giỏi có thể giúp thoát phạt.',o:()=>[{k:'law',l:'Thuê luật sư (40 tr)'},{k:'pay',l:'Nộp phạt luôn'}]},
-  festival:{ic:'🌏',t:'Lời mời lễ hội quốc tế',d:e=>`Lễ hội âm nhạc châu Á mời ${e.n} biểu diễn 1 tuần. Chi phí 50 tr, đổi lại nhiều fan quốc tế.`,o:()=>[{k:'yes',l:'Nhận lời (50 tr)'},{k:'no',l:'Từ chối'}]},
-  leak:{ic:'💧',t:'Bản demo bị rò rỉ',d:()=>'Một bài hát chưa phát hành lan truyền trên mạng.',o:()=>[{k:'embrace',l:'Biến thành teaser'},{k:'sue',l:'Kiện người phát tán (20 tr)'},{k:'ignore',l:'Lờ đi'}]},
-  investor:{ic:'💼',t:'Quỹ đầu tư muốn rót vốn',d:e=>`${e.p} rót ${fmt(e.v)} ngay. Công ty trả lại ${fmt(Math.round(e.v*1.3/26/1e6)*1e6)}/tuần trong 26 tuần.`,o:()=>[{k:'yes',l:'Nhận vốn'},{k:'no',l:'Từ chối'}]}
+  fire:{ic:'🔥',t:()=>t('sx.fire.t'),d:()=>t('sx.fire.d'),o:()=>[{k:'fix',l:t('sx.fire.o.fix',{m:money(60e6)})},{k:'cheap',l:t('sx.fire.o.cheap',{m:money(15e6)})}]},
+  sponsor:{ic:'🤝',t:()=>t('sx.sponsor.t'),d:e=>t('sx.sponsor.d',{p:e.p,m:money(e.v)}),o:()=>[{k:'yes',l:t('sx.sponsor.o.yes')},{k:'no',l:t('ev.o.refuse')}]},
+  tax:{ic:'🧾',t:()=>t('sx.tax.t'),d:()=>t('sx.tax.d'),o:()=>[{k:'law',l:t('sx.tax.o.law',{m:money(40e6)})},{k:'pay',l:t('sx.tax.o.pay')}]},
+  festival:{ic:'🌏',t:()=>t('sx.festival.t'),d:e=>t('sx.festival.d',{n:e.n,m:money(50e6)}),o:()=>[{k:'yes',l:t('sx.festival.o.yes',{m:money(50e6)})},{k:'no',l:t('ev.o.refuse')}]},
+  leak:{ic:'💧',t:()=>t('sx.leak.t'),d:()=>t('sx.leak.d'),o:()=>[{k:'embrace',l:t('sx.leak.o.embrace')},{k:'sue',l:t('sx.leak.o.sue',{m:money(20e6)})},{k:'ignore',l:t('sx.leak.o.ignore')}]},
+  investor:{ic:'💼',t:()=>t('sx.investor.t'),d:e=>t('sx.investor.d',{p:e.p,m:money(e.v),w:money(Math.round(e.v*1.3/26/1e6)*1e6)}),o:()=>[{k:'yes',l:t('sx.investor.o.yes')},{k:'no',l:t('ev.o.refuse')}]}
 };
 export function surprise(){
   if(Math.random()>.24)return;
@@ -66,7 +66,7 @@ export function surprise(){
   else if(k==='investor')pushEv({kind:'sx',sx:k,p:pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng']),v:Math.round(R(200,500)*(1+S.year*.2))*1e6},true);
   else if(k==='festival'){const x=pick(free);pushEv({kind:'sx',sx:k,act:x.k,n:x.n.slice(2)},true)}
   else pushEv({kind:'sx',sx:k},true);
-  toast('⚡ Có sự kiện bất ngờ!');
+  toast(t('sx.toast'));
 }
 export function sxResolve(e,k){
   const D=SXD[e.sx];

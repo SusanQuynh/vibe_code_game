@@ -61,3 +61,16 @@ describe('data-t stays Vietnamese: S.prHist is language-independent', () => {
     expect(b.hist[0]).toMatch(/^T\d+: .*[ạảãàáâấầẩẫậăắằẳẵặđêếềểễệôốồổỗộơớờởỡợưứừửữự]/);
   });
 });
+
+describe('event choices keep their keys in en', () => {
+  const ks = r => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, v && typeof v === 'object' && Array.isArray(v.o) ? v.o.map(x => x.split('|')[0]) : v === null ? null : typeof v]));
+  for (const n of ['t12-basic', 't12-sx', 't12-mx', 't12-x', 't12-v3']) {
+    it(n, () => {
+      const c = CASES.find(x => x.name === n);
+      setLang('vi'); const a = ks(c.run(ctx));
+      setLang('en'); const b = ks(c.run(ctx));
+      expect(b).toEqual(a);
+      expect(Object.values(a).filter(v => Array.isArray(v)).length).toBeGreaterThan(3);
+    });
+  }
+});

@@ -433,5 +433,105 @@
   "file": "src/systems/proposals.js",
   "text": "xung đột chuyển lên Giám đốc",
   "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Bị chụp ảnh hẹn hò với",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Tin đồn thái độ với nhân viên",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Bị đào lại phát ngôn cũ",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Tin đồn chèn ép đồng nghiệp",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Lộ ảnh quá khứ gây tranh cãi",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "Tin đồn đạo nhái vũ đạo",
+  "why": "scandal text stored in a.scandal.t (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "vẫn quyết định rời công ty",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "đã rời công ty",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "chuyển sang",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/events.js",
+  "text": "(phí",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "mâu thuẫn nội bộ kéo dài",
+  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "các thành viên kiệt sức, tâm trạng sa sút",
+  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "các thành viên muốn theo đuổi con đường riêng",
+  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "bất đồng về định hướng âm nhạc",
+  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "Xuất sắc",
+  "why": "grade id stored in a.evG: compared as logic (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "Không đạt",
+  "why": "grade id stored in a.evG: compared as logic (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "đã hết hạn hợp đồng và rời công ty",
+  "why": "reason text passed to removeArtist()/disbandGroup(), which write it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "hòa giải thất bại",
+  "why": "reason text passed to removeArtist()/disbandGroup(), which write it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "tập",
+  "why": "part of hsRisk() text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "Giám đốc",
+  "why": "approver name passed to restDo(), which writes it into S.hist/S.log (phase 3)"
  }
 ]
