@@ -5,7 +5,7 @@ import { GENRES, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fame, fit, genPool } from './artists.js';
 import { awardToShow, awards, setAwardToShow } from './awards.js';
-import { compDone, compTick } from './batches.js';
+import { compDone, compTick } from './contests.js';
 import { evInfo, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
 import { dqList, viewDebutQ } from './ext3.js';

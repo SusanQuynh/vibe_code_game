@@ -1,6 +1,7 @@
 import { genArtist, genPool } from './systems/artists.js';
 import { t } from './i18n/index.js';
-import { genComp, initBatches } from './systems/batches.js';
+import { genComp } from './systems/contests.js';
+import { initBatches } from './systems/batches.js';
 import { genMgrPool } from './systems/managers.js';
 import { initWorld } from './systems/market.js';
 import { genOffers } from './systems/offers.js';

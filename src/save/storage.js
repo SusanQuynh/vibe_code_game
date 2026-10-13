@@ -1,6 +1,7 @@
 import { S, addLog, setState } from '../state.js';
 import { ensureLook } from '../systems/artists.js';
-import { fixBatch, genComp, initBatches } from '../systems/batches.js';
+import { fixBatch, initBatches } from '../systems/batches.js';
+import { genComp } from '../systems/contests.js';
 import { migrateV2 } from '../systems/ext2.js';
 import { genMgrPool, givePM } from '../systems/managers.js';
 import { initWorld } from '../systems/market.js';
