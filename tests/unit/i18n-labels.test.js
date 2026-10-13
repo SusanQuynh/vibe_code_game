@@ -5,6 +5,8 @@ import { setLang, t } from '../../src/i18n/index.js';
 import { PRE, POST } from '../../src/systems/promo.js';
 import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
 import { LEADS } from '../../src/systems/events.js';
+import { CFT } from '../../src/systems/proposals.js';
+import { BUDN } from '../../src/systems/secretary.js';
 import { statName, trainName, conceptName, genreName, offerName, mskName, mskDesc, domName, dayShort, dayName, bizName } from '../../src/i18n/labels.js';
 import { STATS, TRAIN, CONCEPTS, GENRES, MSK, MSKD, MDOM } from '../../src/data/rules.js';
 import { OFFER } from '../../src/data/offers.js';
@@ -36,6 +38,8 @@ const TABLES = [
   ['inv.leadN', Object.keys(LEADS), k => LEADS[k].n, k => t(`inv.leadN.${k}`)],
   ['inv.leadT', Object.keys(LEADS), k => LEADS[k].T, k => t(`inv.leadT.${k}`)],
   ['inv.leadF', Object.keys(LEADS), k => LEADS[k].F, k => t(`inv.leadF.${k}`)],
+  ['prop.cf', Object.keys(CFT), k => CFT[k], k => t(`prop.cf.${k}`)],
+  ['sec.bud', Object.keys(BUDN).map(k => k / 1e6), k => BUDN[k * 1e6], k => t(`sec.bud.${k}`)],
   ['fin.in', Object.keys(FIN_I), k => FIN_I[k], k => t(`fin.in.${k}`)],
   ['fin.out', Object.keys(FIN_X), k => FIN_X[k], k => t(`fin.out.${k}`)],
 ];

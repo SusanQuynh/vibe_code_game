@@ -581,3 +581,128 @@ add('t10-prgo', ctx => { // prGo stores the Vietnamese data-t in S.prHist whatev
   Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.slice(); out.sheetAfter = null;
   return out;
 }, [], ['dataT', 'btnT', 'hist']);
+
+// ---------------- task 11: meeting room, offers, proposals, secretary ----------------
+import { OFFER, PARTNERS } from '../../src/data/offers.js';
+import { GENRES } from '../../src/data/rules.js';
+import { canTake, acceptCast, acceptSel, ocPrev, ocPick, investOffer } from '../../src/systems/offers.js';
+import { buildProps, viewProps, itDesc, stTag, propOk, cfPick, CFT } from '../../src/systems/proposals.js';
+import { secPlan, secPlans, secSchedRec, viewSec, cbNow, cbSched, cbSchedRec, BUDN } from '../../src/systems/secretary.js';
+const mkOffer = (o = {}) => { const type = o.type || 'drama', O = OFFER[type], genre = O.film ? (o.genre || 'romance') : null;
+  const of = { id: uid(), type, partner: PARTNERS[type][0], genre, w: genre ? GENRES[genre].w : O.req, req: O.film ? { acting: 20, visual: 10 } : { ...O.req }, L: 20, fame: 0, weeks: 3, pay: 50e6, costar: null, exp: abs() + 3, title: 'Dự án thử ' + type, target: null, invest: null, invested: false, slots: 1, ...o };
+  Object.keys(of.req).forEach(k => { of.req[k] = Math.min(of.req[k], 20); }); S.offers.push(of); return of; };
+const trn = () => S.artists.filter(a => a.status === 'trainee');
+add('t11-meet', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('meet'); }
+  ctx.fresh(ctx.base);
+  const ds = deb(); S.offers = []; S.partners = { [PARTNERS.drama[0]]: 40, [PARTNERS.movie[0]]: 10 };
+  mkOffer({ type: 'drama', slots: 3, target: ds[0].id, invest: { budget: 6e8, share: .1 }, costar: 'Test Costar', fame: 3 });
+  mkOffer({ type: 'movie', genre: 'action', slots: 1, invest: { budget: 9e8, share: .2 }, invested: true, costar: 'Test Costar' });
+  mkOffer({ type: 'variety', slots: 2, req: { variety: 15 }, fame: 90 });
+  mkOffer({ type: 'music', slots: 1, target: ds[1] ? ds[1].id : null, req: { vocal: 5, dance: 5 } });
+  mkOffer({ type: 'backup', slots: 1, req: { dance: 5 } }); mkOffer({ type: 'guide', slots: 2, target: trn()[0] ? trn()[0].id : null, req: { vocal: 5 } });
+  S.events = [{ id: 901, kind: 'x' }]; // only the count is shown
+  if (ds[2]) ds[2].scandal = { t: 'x', sev: 2, left: 2, truth: true, dating: false, other: 0 };
+  if (ds[3]) ds[3].energy = 5;
+  out.rich = room('meet');
+  mkOffer({ type: 'music', slots: 1, req: { vocal: 9999 }, fame: 99999 }); out.lacks = room('meet');
+  S.artists.forEach(a => { a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; }); out.noFree = room('meet');
+  S.offers = []; S.events = []; out.noOffers = room('meet');
+  return out;
+}, ['Dự án thử drama', 'Dự án thử movie', 'Dự án thử variety', 'Dự án thử music', 'Dự án thử backup', 'Dự án thử guide', 'Test Costar', 'x', ...['drama', 'movie', 'variety', 'music', 'backup', 'guide'].map(k => PARTNERS[k][0])]);
+add('t11-meet-sec', ctx => { // the secretary card of the meeting room in several secretary states
+  const out = {}, A = () => acts()[0], free = x => x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; a.scandal = null; });
+  ctx.fresh(ctx.base); const x = A(); free(x); S.cbPlan = []; S.camp = {}; S.singles = []; S.rivals.forEach(r => { r.cb = null; });
+  out.ready = room('meet');
+  S.cbPlan = [{ k: x.k, n: x.n, w: abs() + 3, ck: 'cute', bud: 80e6, tries: 0 }]; out.planned = room('meet');
+  S.cbPlan = []; S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài X', ck: 'cute', rank: 5, best: 5, wins: 1, stages: 1, wn: 1, used: { wk: abs() - 3, l: [] }, hype: 0, inc: 0 }; out.post = room('meet');
+  S.camp = {}; S.singles = [{ k: x.k, act: x.n, w: abs() - 2, t: 'Bài Y', rank: 5 }]; out.recent = room('meet');
+  S.cbPlan = []; byId(x.m[0]).busy = { kind: 'offer', title: 'Dự án bận', left: 3, total: 3 }; S.singles = []; out.waitSched = room('meet');
+  return out;
+}, ['Bài X', 'Bài Y', 'Dự án bận']);
+add('t11-reasons', ctx => { // every canTake reason, and the checkbox/preview helpers
+  ctx.fresh(ctx.base); S.offers = []; const out = {}, ds = deb(), a = ds[0], t0 = trn()[0], x = acts()[0];
+  const of = mkOffer({ type: 'drama', slots: 1 }), tof = mkOffer({ type: 'backup', slots: 1, req: { dance: 5 } });
+  a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; out.busy = canTake(of, a); a.busy = null;
+  if (t0) { t0.dReady = 1; t0.noHold = false; out.hold = canTake(tof, t0); t0.dReady = 0; out.notDebuted = canTake(of, t0); }
+  of.target = ds[1].id; out.other = canTake(of, a); of.target = null;
+  a.scandal = { t: 'x', sev: 2, left: 2, truth: true, dating: false, other: 0 }; out.scandal = canTake(of, a); a.scandal = null;
+  S.cbPlan = [{ k: x.k, n: x.n, w: abs() + 1, ck: 'cute', bud: 80e6, tries: 0 }]; const mem = byId(x.m[0]); of.weeks = 5; out.cbHold = canTake(of, mem); S.cbPlan = []; of.weeks = 3;
+  of.fame = 9999; out.fame = canTake(of, a); of.fame = 0;
+  of.req = { vocal: 9999 }; out.lack = canTake(of, a); of.req = { acting: 1 };
+  out.ok = canTake(of, a);
+  return out;
+});
+add('t11-oc', ctx => { // multi-slot checkbox preview and the suggested cast
+  ctx.fresh(ctx.base); S.offers = []; const out = {}, ds = deb(); ds.forEach(a => { a.busy = null; a.energy = 100; a.scandal = null; });
+  const of = mkOffer({ type: 'drama', slots: 3, target: ds[0].id, req: { acting: 1 } }); room('meet');
+  const prev = () => { const e = document.getElementById('ocp' + of.id); return e ? e.innerHTML : null; };
+  out.start = prev(); const bx = [...document.querySelectorAll('.oc' + of.id)];
+  out.boxes = bx.length;
+  bx.slice(0, 2).forEach(b => { b.checked = true; }); ocPrev(of.id, bx[1]); out.two = prev();
+  bx.forEach(b => { b.checked = true; }); ocPrev(of.id, bx[bx.length - 1]); out.over = prev();
+  bx.forEach(b => { b.checked = false; }); ocPick(of.id); out.picked = prev();
+  return out;
+});
+add('t11-props', ctx => {
+  ctx.fresh(ctx.base); S.offers = []; const out = {}, ds = deb(), tr = trn()[0], ms = nonGm();
+  if (ms.length < 2) return { skip: 'few managers' };
+  const [m1, m2] = ms, of1 = mkOffer({ type: 'drama', slots: 2 }), of2 = mkOffer({ type: 'music', slots: 1, req: { vocal: 1 } });
+  S.managers.forEach(m => { if (!m.gm) m.boss = null; }); m2.boss = m1.id;
+  const sI = (a, ok, o = {}) => ({ a: a.id, days: ['vocal', 'dance', 'rest', 'rest', 'vocal'], why: 'bù Vocal (30)', ok, ...o });
+  const P = { w: abs(), m: {}, c: [], st: { auto: 2, boss: { [m1.name]: 3 }, res: 1 } };
+  P.m[m1.id] = { s: [sI(ds[0], 0, { cf: [1] }), sI(ds[1], 1, { by: 'Giám đốc' }), sI(ds[2], -2, { why2: 'Trùng người' }), sI(ds[3], -1), sI(ds[4] || ds[0], 0)], p: [{ of: of1.id, ids: [ds[0].id, ds[1].id], ok: 0, cf: [2, 3, 4, 5] }, { of: of2.id, ids: [ds[2].id], ok: 1, by: m1.name }, { of: 4242424, ids: [ds[3].id], ok: -2, why2: 'Quá sức' }, { of: of2.id, ids: [ds[4] ? ds[4].id : ds[0].id], ok: 0 }], d: tr ? [{ a: tr.id, t: 'group', txt: 'đủ điều kiện debut nhóm' }] : [] };
+  P.m[m2.id] = { s: [sI(ds[0], 0, { cf: [1] })], p: [], d: [] };
+  P.c = [{ id: 1, type: 'overlap', sev: 2, txt: 'Một nghệ sĩ được 2 quản lý xếp việc khác nhau', refs: [{ mid: m1.id, k: 's', i: 0 }, { mid: m2.id, k: 's', i: 0 }], path: [m1.name, 'Giám đốc'], pend: 1 },
+    { id: 2, type: 'offer', sev: 1, txt: '2 quản lý cùng muốn nhận «x»', refs: [{ mid: m1.id, k: 'p', i: 0 }, { mid: m1.id, k: 'p', i: 3 }], path: ['Giám đốc'], pend: 1 },
+    { id: 3, type: 'tired', sev: 1, txt: 'Vài người năng lượng thấp', refs: [{ mid: m1.id, k: 'p', i: 0 }], path: [m1.name, 'Giám đốc'], pend: 1 },
+    { id: 4, type: 'enemy', sev: 1, txt: 'Đội hình có hai người mâu thuẫn', refs: [{ mid: m1.id, k: 'p', i: 0 }], path: ['Giám đốc'], pend: 1 },
+    { id: 5, type: 'scandal', sev: 3, txt: 'Có người đang dính scandal', refs: [{ mid: m1.id, k: 'p', i: 0 }], path: ['Giám đốc'], pend: 1 },
+    { id: 6, type: 'tired', sev: 1, txt: 'Lịch quá dày', refs: [], path: [m1.name], pend: 0, done: 1, by: m1.name },
+    { id: 7, type: 'enemy', sev: 1, txt: 'Hai người mâu thuẫn', refs: [], path: [m1.name], pend: 0, done: 1, by: m1.name },
+    { id: 8, type: 'scandal', sev: 3, txt: 'Dính scandal', refs: [], path: [m1.name], pend: 0, done: 1, by: m1.name },
+    { id: 9, type: 'overlap', sev: 2, txt: 'Trùng người', refs: [], path: [m1.name], pend: 0, done: 1, by: m1.name }];
+  S.props = P; S.autoAppr = true;
+  viewProps(); out.full = sheet();
+  const L = []; for (const c of P.c) for (const r of c.refs) { const it = P.m[r.mid] && P.m[r.mid][r.k][r.i]; if (it) L.push({ mid: r.mid, kind: r.k, i: r.i, x: it, arts: r.k === 's' ? [it.a] : it.ids }); }
+  out.desc = L.slice(0, 6).map(itDesc); out.tags = [{ ok: 1, by: 'Giám đốc' }, { ok: 1 }, { ok: -2, why2: 'Trùng người' }, { ok: -2 }, { ok: -1 }, { ok: 0, cf: [1] }, { ok: 0 }].map(x => stTag(x));
+  S.autoAppr = false; for (const m of S.managers) m.boss = null; S.props.c = []; S.props.st = { auto: 0, boss: {}, res: 0 }; viewProps(); out.plain = sheet();
+  S.props = { w: abs(), m: {}, c: [], st: { auto: 0, boss: {}, res: 0 } }; viewProps(); out.empty = sheet();
+  return out;
+}, ['Giám đốc', 'bù Vocal (30)', 'Trùng người', 'Quá sức', 'đủ điều kiện debut nhóm', 'Dự án thử drama', 'Dự án thử music', '2 quản lý cùng muốn nhận «x»', 'Vài người năng lượng thấp', 'Đội hình có hai người mâu thuẫn', 'Có người đang dính scandal', 'Lịch quá dày', 'Hai người mâu thuẫn', 'Dính scandal', 'Một nghệ sĩ được 2 quản lý xếp việc khác nhau', 'đã có dự án']);
+add('t11-sec', ctx => {
+  const out = {}, A = () => acts()[0], free = x => x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; a.scandal = null; });
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); viewSec(); out[n] = sheet(); }
+  ctx.fresh(ctx.base); const x = A(); free(x); S.cbPlan = []; S.camp = {}; S.singles = []; S.rivals.forEach(r => { r.cb = null; });
+  const snap = k => { viewSec(); out[k] = sheet(); out[k + '.plan'] = JSON.stringify(secPlan(x).why); out[k + '.rec'] = JSON.stringify(secSchedRec().map(p => p.recWhy)); };
+  snap('ready');
+  S.singles = [{ k: x.k, act: x.n, w: abs() - 2, t: 'Bài Y', rank: 5 }]; byId(x.m[0]).energy = 30; snap('recent');
+  byId(x.m[0]).energy = 100; byId(x.m[0]).busy = { kind: 'offer', title: 'Dự án bận', left: 3, total: 3 }; S.trend.until = abs() + 2; snap('busy');
+  byId(x.m[0]).busy = null; S.singles = []; S.rivals[0].cb = { w: abs(), t: 'Bài Z', ck: S.trend.hot[0], p: 10, rank: 2 }; S.money = 1e6; snap('rival');
+  S.rivals[0].cb = null; S.money = 5e9; S.cbPlan = [{ k: x.k, n: x.n, w: abs() + 2, ck: 'cute', bud: 80e6, tries: 0 }]; snap('planned');
+  S.cbPlan = []; S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài X', ck: 'cute', rank: 5, best: 5, wins: 1, stages: 1, wn: 1, used: { wk: abs() - 3, l: [] }, hype: 0, inc: 0 }; snap('post');
+  S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 30, inc: 0 }; S.singles = [{ k: x.k, act: x.n, w: abs() - 2, t: 'Bài Y', rank: 5 }]; snap('pre');
+  S.camp = {}; S.singles = []; x.m.forEach(id => { byId(id).fans = 60000; }); S.concerts = []; snap('concert');
+  return out;
+}, ['Bài X', 'Bài Y', 'Bài Z', 'Dự án bận', 'x']);
+add('t11-toasts', ctx => {
+  const out = {}, T = (n, b, f) => { out[n] = toastOf(ctx, b, f); };
+  const B = ctx.base, ds = () => deb();
+  T('accept.none', B, () => { S.offers = []; const of = mkOffer({}); acceptCast(of.id, []); });
+  T('accept.max', B, () => { S.offers = []; const of = mkOffer({ slots: 1 }); acceptCast(of.id, [ds()[0].id, ds()[1].id]); });
+  T('accept.target', B, () => { S.offers = []; const of = mkOffer({ slots: 1, target: ds()[0].id }); acceptCast(of.id, [ds()[1].id]); });
+  T('accept.reason', B, () => { S.offers = []; const of = mkOffer({ slots: 1, req: { acting: 1 }, fame: 9999 }); acceptCast(of.id, [ds()[0].id]); });
+  T('accept.busy', B, () => { S.offers = []; const of = mkOffer({ slots: 1 }); const a = ds()[0]; a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; acceptCast(of.id, [a.id]); });
+  T('ocPrev.max', B, () => { S.offers = []; const of = mkOffer({ type: 'drama', slots: 2, req: { acting: 1 } }); ds().forEach(a => { a.busy = null; a.energy = 100; a.scandal = null; }); room('meet'); const bx = [...document.querySelectorAll('.oc' + of.id)]; bx.slice(0, 3).forEach(b => { b.checked = true; }); ocPrev(of.id, bx[2]); });
+  T('invest.money', B, () => { S.offers = []; const of = mkOffer({ type: 'drama', invest: { budget: 6e9, share: .5 } }); S.money = 0; investOffer(of.id); });
+  T('cbNow.cant', B, () => { const x = acts()[0]; x.m.forEach(id => { byId(id).busy = { kind: 'x', title: 'x', left: 3, total: 3 }; }); cbNow(x.k); });
+  const pr = (kind, f) => { S.offers = []; const of = mkOffer({ type: 'drama', slots: 1, req: { acting: 1 } }); const a = ds()[0]; a.busy = null; const m = nonGm()[0];
+    S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['rest'], why: 'x', ok: 0, cf: [1] }], p: [{ of: kind === 'gone' ? 99999 : of.id, ids: [a.id], ok: 0 }], d: [] } }, c: [{ id: 1, type: 'overlap', sev: 1, txt: 'x', refs: [], path: [], pend: 1 }], st: { auto: 0, boss: {}, res: 0 } };
+    if (kind === 'bad') a.scandal = { t: 'x', sev: 2, left: 2, truth: true, dating: false, other: 0 };
+    if (kind === 'conflict') propOk(m.id, 's', 0); else propOk(m.id, 'p', 0); };
+  T('prop.conflict', B, () => pr('conflict'));
+  T('prop.gone', B, () => pr('gone'));
+  T('prop.bad', B, () => pr('bad'));
+  return out;
+}, ['x']);
