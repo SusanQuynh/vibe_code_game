@@ -1,5 +1,5 @@
 import { $, fmt } from '../core/util.js';
-import { KEY, KEY_FULL, lastLoadSource, replaceSave, save, saveMeta, slotInfo } from '../save/storage.js';
+import { KEY, KEY_FULL, lastLoadSource, lastSaveError, replaceSave, save, saveMeta, slotInfo } from '../save/storage.js';
 import { exportCode, exportFile, importFile, parseSaveText } from '../save/transfer.js';
 import { S, addLog } from '../state.js';
 import { act, setPos } from './building.js';
@@ -26,7 +26,7 @@ export function viewCode() {
   ${rest}
   <div class="card"><b>📦 Bản lưu trên trình duyệt</b>
     ${slotRow('Bản rút gọn (tự lưu)', c, c && c.lvl === 2 ? ' · lite' : '')}
-    ${slotRow('Bản đầy đủ (sao lưu)', f, mf.err ? ' · ⚠️ lỗi ghi lần cuối' : '')}
+    ${slotRow('Bản đầy đủ (sao lưu)', f, (mf.prev ? ' · của ván trước' : '') + (mf.err ? ' · ⚠️ lỗi ghi lần cuối' : ''))}
     <div class="small muted" style="margin:4px 0">Bản rút gọn ghi sau mỗi thao tác (bỏ bớt lịch sử cũ). Bản đầy đủ tự sao lưu mỗi 4 tuần hoặc khi bạn bấm nút.</div>
     <div class="row"><button class="btn pri" onclick="saveBackupNow()">💾 Sao lưu đầy đủ ngay</button><button class="btn" onclick="saveExportSlot('c')" ${c ? '' : 'disabled'}>Xuất bản rút gọn</button><button class="btn" onclick="saveExportSlot('f')" ${f ? '' : 'disabled'}>Xuất bản đầy đủ</button><button class="btn warn" onclick="saveRestorePreview()" ${f ? '' : 'disabled'}>🛟 Khôi phục từ bản sao lưu</button></div></div>
   <h3>Xuất</h3>
@@ -93,7 +93,7 @@ export async function saveImportFile(input) {
 
 export function saveImportApply() {
   if (!preview) return;
-  if (!replaceSave(preview.d)) { ioMsg = '❌ Dữ liệu trong mã bị lỗi'; preview = null; return refresh(); }
+  if (!replaceSave(preview.d)) { ioMsg = lastSaveError() === 'quota' ? '❌ Hết dung lượng lưu trữ của trình duyệt, không nạp được' : '❌ Dữ liệu trong mã bị lỗi'; preview = null; return refresh(); }
   preview = null; ioMsg = '✅ Đã nạp game.';
   setPos({});
   addLog('🔑 Đã nạp game từ mã / file lưu.', 'gold');

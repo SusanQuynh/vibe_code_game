@@ -44,7 +44,8 @@ describe('save hai tầng', () => {
     expect(d.log.length).toBeLessThanOrEqual(30);
     expect(d.singles).toEqual(S.singles);
     expect(d.awards).toEqual(S.awards);
-    expect(d.artists.every(a => a.hist.length <= 12 && a.lessons.length <= 5)).toBe(true);
+    expect(d.artists.every(a => a.hist.length <= 30 && a.lessons.length <= 12)).toBe(true);
+    expect(compactOf(S, 2).artists.every(a => a.hist.length <= 5 && a.lessons.length <= 2)).toBe(true);
     expect(compactOf(S, 2).log.length).toBeLessThanOrEqual(10);
     expect(JSON.stringify(S)).toBe(before);
   });
@@ -63,7 +64,7 @@ describe('save hai tầng', () => {
     const A = run(full), B = run(compact);
     expect(B).toBe(A);
   });
-  it('nhịp sao lưu: tuần 1 ghi, 2-4 không, 5 ghi; save({full}) luôn ghi; newGame (lùi thời gian) ghi lại', () => {
+  it('nhịp sao lưu: tuần 1 ghi, 2-4 không, 5 ghi; save({full}) luôn ghi; newGame giữ bản sao lưu cũ đến chu kỳ đầu', () => {
     newGame();
     const writes = [];
     const orig = Storage.prototype.setItem;
@@ -73,10 +74,12 @@ describe('save hai tầng', () => {
       expect(writes).toEqual([1, 5]);
       S.week = 5; save({ full: true });
       expect(writes).toEqual([1, 5, 5]);
-      newGame(); save();
-      expect(writes).toEqual([1, 5, 5, 1]);
+      newGame(); save();                       // new game: old backup is protected until the first regular interval
+      expect(writes).toEqual([1, 5, 5]);
+      S.week = 5; save();
+      expect(writes).toEqual([1, 5, 5, 5]);
     } finally { Storage.prototype.setItem = orig; }
-    expect(slotInfo('f').w).toBe(1);
+    expect(slotInfo('f').w).toBe(5);
   });
   it('load: KEY hỏng + KEY_FULL tốt → tải từ bản sao lưu và ghi 🛟; thiếu cả hai → false', () => {
     newGame(); play(5);
@@ -104,7 +107,7 @@ describe('save hai tầng', () => {
     setState(null); load();
     expect(lastLoadSource()).toBe('compact');
     expect(S.money).toBe(m);
-    expect(S.artists[0].hist).toHaveLength(12);
+    expect(S.artists[0].hist).toHaveLength(20);
   });
   it('quota: lvl 1 hỏng, lvl 2 vừa → ok + info lite + meta lvl 2', () => {
     newGame(); play(40);
