@@ -1,0 +1,142 @@
+[
+ {
+  "file": "src/save/transfer.js",
+  "text": "Dữ liệu không phải save Starlight",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "Mã không hợp lệ",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "File không phải JSON hợp lệ",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/core/util.js",
+  "text": "tỷ",
+  "why": "FMT_VI default units: fmt() feeds the log sinks, so S stays language-independent"
+ },
+ {
+  "file": "src/systems/ext2.js",
+  "text": "Lứa ",
+  "why": "ensureCurBatch default batch name is stored in S.batches[].n (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Comeback «",
+  "why": "stored in S.rivals[].last (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Dính scandal, mất 10% fan",
+  "why": "stored in S.rivals[].last (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Giành lời mời «",
+  "why": "stored in S.rivals[].last (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Làn sóng K-pop: fan tăng nhanh",
+  "why": "market modifier name stored in S.mods[].n (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Suy thoái: thù lao −20%",
+  "why": "market modifier name stored in S.mods[].n (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Suy thoái: kinh doanh −30%",
+  "why": "market modifier name stored in S.mods[].n (phase 3)"
+ },
+ {
+  "file": "src/systems/market.js",
+  "text": "Phòng tập sửa tạm: luyện tập −20%",
+  "why": "market modifier name stored in S.mods[].n (phase 3)"
+ },
+ {
+  "file": "src/systems/proposals.js",
+  "text": "năng lượng thấp, nghỉ trước",
+  "why": "shortWhy text stored in S.props[].why (phase 3)"
+ },
+ {
+  "file": "src/systems/proposals.js",
+  "text": "tâm trạng xấu, cho nghỉ",
+  "why": "shortWhy text stored in S.props[].why (phase 3)"
+ },
+ {
+  "file": "src/systems/proposals.js",
+  "text": "muốn đóng phim, tập diễn",
+  "why": "shortWhy text stored in S.props[].why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "năng lượng chỉ còn",
+  "why": "hsRisk text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "tâm trạng xuống",
+  "why": "hsRisk text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "/7 ngày khi thể lực chưa hồi",
+  "why": "hsRisk text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "áp lực vì trượt đánh giá liên tiếp",
+  "why": "hsRisk text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "dự báo cạn sức cuối tuần",
+  "why": "hsRisk text stored in a.hsF.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "Em không hợp với",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": ", em muốn tự đứng trên sân khấu của mình.",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "Em tự tin vào",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "và muốn thử sức solo với concept",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "Em muốn debut cùng",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": ", tụi em đã cùng cố gắng rất lâu.",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "Em nghĩ đứng chung nhóm sẽ bổ trợ nhau tốt hơn, concept",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ },
+ {
+  "file": "src/systems/ext3.js",
+  "text": "rất hợp.",
+  "why": "dWish text stored in a.dw.why (phase 3)"
+ }
+]

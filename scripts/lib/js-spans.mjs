@@ -37,6 +37,9 @@ function skipBal(s, i) {
 }
 export { skipBal, skipStr, skipTpl };
 
+// Calls whose text lands in S (log, history, lessons, busy title, PR history, GM problems, events). Never translate these in phase 2.
+export const SINK_STARTS = ['addLog(', 'recLog(', 'pushEv(', '.hist.unshift(', '.lessons.unshift(', 'busy={', 'S.prHist.unshift(', 'prob.push('];
+
 // [{start, text}] for each occurrence of a start token (the token ends with its opening bracket).
 // Occurrences preceded by an identifier character are skipped (`recLog(` is not matched inside `xrecLog(`).
 export function spans(src, starts) {

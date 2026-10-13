@@ -156,7 +156,9 @@ export function renderSurface(name, base) {
 
 // text a player can read: textContent plus display attributes
 export function visibleText(root) {
-  const out = [root.textContent];
+  const out = [];
+  const w = document.createTreeWalker(root, 4 /* SHOW_TEXT */);
+  for (let n = w.nextNode(); n; n = w.nextNode()) out.push(n.nodeValue);
   root.querySelectorAll('[title],[aria-label],[placeholder],[label]').forEach(e => {
     for (const a of ['title', 'aria-label', 'placeholder', 'label']) if (e.hasAttribute(a)) out.push(e.getAttribute(a));
   });

@@ -13,3 +13,11 @@ export function diffLocales(base, other) {
   });
   return { missing, extra, badParams };
 }
+// Keys defined in more than one locale part (a spread would silently overwrite them). parts: [[name, dict], …]
+export function dupKeys(parts) {
+  const seen = new Map(), dup = new Map();
+  for (const [name, d] of parts) for (const k of Object.keys(d)) {
+    if (seen.has(k)) dup.set(k, [...(dup.get(k) || [seen.get(k)]), name]); else seen.set(k, name);
+  }
+  return [...dup].map(([key, ps]) => ({ key, parts: ps }));
+}

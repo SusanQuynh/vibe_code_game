@@ -11,11 +11,13 @@ export const getMeta = () => DICTS[cur].meta;
 export function setLang(c) { if (!has(c)) return false; cur = c; try { localStorage.setItem(LANG_KEY, c); } catch {} return true; }
 export function initLang() { let c = null; try { c = localStorage.getItem(LANG_KEY); } catch {} cur = has(c) ? c : 'vi'; return cur; }
 // Values: strings with {x}, or functions (p) => string. Dictionaries are trusted HTML; callers esc() parameters.
+const fmtv = (v, p) => typeof v === 'function' ? v(p || {}) : p ? v.replace(/\{(\w+)\}/g, (m, n) => (n in p ? p[n] : m)) : v;
 export function t(k, p) {
   const v = DICTS[cur]?.dict[k] ?? DICTS.vi.dict[k];
-  if (v == null) return k;
-  return typeof v === 'function' ? v(p || {}) : p ? v.replace(/\{(\w+)\}/g, (m, n) => (n in p ? p[n] : m)) : v;
+  return v == null ? k : fmtv(v, p);
 }
+// Pinned to Vietnamese: for helpers whose output also goes into S (log, hist, lessons…), so S stays language-independent.
+export function tVi(k, p) { const v = DICTS.vi.dict[k]; return v == null ? k : fmtv(v, p); }
 export const __setDicts = d => { DICTS = d; }; // tests only
 export const roomName = id => t(`room.${id}.name`);
 // Money for display, per language. Default fmt() (vi) is still used by addLog so S stays language-independent.

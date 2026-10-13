@@ -1,0 +1,11 @@
+export default {
+  'common.weeks': p => `${p.n} week${p.n == 1 ? '' : 's'}`,
+  'common.people': p => `${p.n} ${p.n == 1 ? 'person' : 'people'}`,
+  'common.members': p => `${p.n} member${p.n == 1 ? '' : 's'}`,
+  'common.artists': p => `${p.n} artist${p.n == 1 ? '' : 's'}`,
+  'common.trainees': p => `${p.n} trainee${p.n == 1 ? '' : 's'}`,
+  'common.yw': p => `Y${p.y}·W${p.w}`,
+  'common.none': '—',
+  'toast.noMoney': 'Not enough money',
+  'fmt.locale': 'en-GB',
+};
