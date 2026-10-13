@@ -9,7 +9,7 @@ import { applyLineup, applyRec, debut } from '../systems/debut.js';
 import { invBuy, invOpen, invStart, resolveEv } from '../systems/events.js';
 import { fireAsst, renewDo, setMentor, songAct, songRelease, toggleHold, viewRenew, viewSong, viewSongs, wPrev, writeSong } from '../systems/ext2.js';
 import { dqDo, dqKeep, dqLater, hsApply, hsFire, hsHire, paFire, paHire, paOpen, paRe, viewDebutQ } from '../systems/ext3.js';
-import { assignMgr, fireMgr, hireMgr, rehuntMgr, setAuto, setBoss, toggleMA } from '../systems/managers.js';
+import { assignMgr, fireMgr, hireMgr, rehuntMgr, setAuto, setBoss, setDom, toggleMA } from '../systems/managers.js';
 import { buyBiz, buybackBiz, raiseBiz, sellBiz, upBiz } from '../systems/market.js';
 import { acceptOffer, acceptSel, investOffer, ocPick, ocPrev } from '../systems/offers.js';
 import { postAuto, postDo, preAuto, preDo } from '../systems/promo.js';
@@ -112,6 +112,7 @@ Object.assign(window, {
   setAuto,
   setBoss,
   setCurBatch,
+  setDom,
   setMentor,
   setPropNext,
   setPs,

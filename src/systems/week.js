@@ -9,7 +9,7 @@ import { compDone, compTick } from './contests.js';
 import { evInfo, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
 import { dqList, viewDebutQ } from './ext3.js';
-import { effSk, genMgrPool, mgrAuto, mgrExp, mgrOf, msk } from './managers.js';
+import { effSk, genMgrPool, mgrAuto, mgrDomTick, mgrExp, mgrOf, msk } from './managers.js';
 import { bizLv, modV, weekWorld } from './market.js';
 import { genOffers } from './offers.js';
 import { promoWeek } from './promo.js';
@@ -141,7 +141,7 @@ export function nextWeek(force,planned){
   if(S.week%8===0)genMgrPool();
   for(const m of S.managers){S.money-=m.salary;book('mgr',-m.salary)}
   const bizP=weekWorld();
-  mgrAuto();
+  mgrDomTick();mgrAuto();
   randomEvents();
   weekV2();
   if(S.money<0)addLog(`⚠️ Công ty đang âm ${fmt(-S.money)}. Nghệ sĩ bắt đầu lo lắng!`,'bad');

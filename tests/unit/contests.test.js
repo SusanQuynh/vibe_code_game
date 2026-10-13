@@ -28,6 +28,7 @@ describe('contests', () => {
   it('compDone xác định (seed 5)', () => {
     newGame();
     const [x] = S.artists, c = mkComp({ lvl: -50 });
+    x.st.vocal = 9; // pin: newGame's artist stats shift whenever generation RNG changes
     S.comps.push(c);
     check(c, [x.id]);
     enterComp(c.id);
