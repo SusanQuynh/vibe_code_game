@@ -1,0 +1,21 @@
+{
+ "setBoss.gm": "Quản lý tổng báo cáo trực tiếp Giám đốc",
+ "setBoss.loop": "Không thể tạo vòng lặp cấp bậc",
+ "setBoss.cap": "Bùi Mỹ Linh chỉ quản được 2 người ở cấp hiện tại",
+ "setDom.money": "Không đủ tiền đào tạo lại",
+ "assign.gm": "Quản lý tổng không nhận phụ trách trực tiếp",
+ "assign.retrain": "Bùi Mỹ Linh đang đào tạo lại, còn 2 tuần",
+ "assign.taken": "Đã có quản lý phụ trách",
+ "assign.dom": "Quản lý mảng 🎬 Diễn viên không phụ trách mục này",
+ "toggle.dom": "Quản lý mảng 🌱 Thực tập sinh không phụ trách Việt Hoàng",
+ "toggle.cap": "Bùi Mỹ Linh cấp 1 quản tối đa 4 người",
+ "toggle.other": "Đã thuộc danh sách của Bùi Mỹ Linh",
+ "hire.money": "Không đủ tiền",
+ "hireGM.money": "Không đủ tiền",
+ "promote.money": "Không đủ tiền",
+ "rehunt.money": "Không đủ tiền",
+ "asst.max": "Mỗi quản lý tối đa 2 trợ lý",
+ "asst.money": "Không đủ tiền",
+ "demote.btn": "Chạm lần nữa để bãi nhiệm",
+ "demote.tap": null
+}

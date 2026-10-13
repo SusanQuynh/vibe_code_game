@@ -30,7 +30,7 @@ export default {
   'top.busyLeft': '({n}t)',
   'target.none': 'Chưa phân công',
   'target.allTts': 'tất cả thực tập sinh',
-  'target.batch': 'thực tập sinh {n}',
+  'target.batch': p => `thực tập sinh ${p.n.toLowerCase()}`, // vi lowercases the stored batch name
   'target.batchGone': 'lứa đã giải tán',
   'target.allSolo': 'tất cả nghệ sĩ solo',
   'target.allActors': 'tất cả diễn viên',

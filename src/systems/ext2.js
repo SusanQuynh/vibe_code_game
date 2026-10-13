@@ -78,7 +78,7 @@ export function mentorTick(){for(const a of S.artists){if(a.status!=='trainee'||
   if(m.busy)continue;m.energy=clamp(m.energy-3,0,100);MOOD(m,1);MOOD(a,2);setRel(a,m,getRel(a,m)+R(1,4));
   if(!a.tag[m.id]&&getRel(a,m)>=60){setTag(a,m,'friend');addLog(`🤝 ${a.name} và tiền bối ${m.name} trở nên thân thiết.`,'good')}}}
 /* ---- Manager assistants ---- */
-export function hireAsst(mid,k,v,name,fee,sal){const m=S.managers.find(x=>x.id===mid);if(!m)return false;if(asstOf(m).length>=2){toast('Mỗi quản lý tối đa 2 trợ lý');return false}if(S.money<fee){toast('Không đủ tiền');return false}
+export function hireAsst(mid,k,v,name,fee,sal){const m=S.managers.find(x=>x.id===mid);if(!m)return false;if(asstOf(m).length>=2){toast(t('mgr.toast.asstMax'));return false}if(S.money<fee){toast(t('toast.noMoney'));return false}
   S.money-=fee;book('hr',-fee);S.assts=S.assts||[];S.assts.push({id:uid(),mid,k,v,name,sal});addLog(`🧑‍💻 Tuyển trợ lý ${name} cho QL ${m.name}: ${MSK[k]} +${v}.`,'good');return true}
 export function fireAsst(id){const x=(S.assts||[]).find(z=>z.id===id);if(!x)return;S.assts=S.assts.filter(z=>z!==x);addLog(`👋 Cho trợ lý ${x.name} nghỉ việc.`);act()}
 /* ---- Manager & artist situations ---- */

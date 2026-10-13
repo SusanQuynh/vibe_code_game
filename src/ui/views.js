@@ -72,13 +72,13 @@ export function viewAward(e){
   <button class="btn pri" onclick="${S.repOn!==false&&S.lastRep?'view(viewReport)':'closeM()'}">Tiếp tục</button>`);
 }
 export let repDay=0;
-export function tnode(m){const ts=mgrTargets(m);return`<div class="tnode"><div class="chibi mini">${chibiHTML(m)}</div><div style="min-width:0">${mNameH(m)} <span class="tag v">Cấp ${m.lv}</span><div class="small muted">${m.as?'Phụ trách '+esc(targetName(m))+` (${ts.length})`:'Chưa phân công'}${m.ps===1?' · tự xếp lịch':m.ps===2?' · đề xuất lịch':''}${m.auto!=='off'?' · tự nhận việc':''}</div></div></div>`}
+export function tnode(m){const ts=mgrTargets(m);return`<div class="tnode"><div class="chibi mini">${chibiHTML(m)}</div><div style="min-width:0">${mNameH(m)} <span class="tag v">${t('mgr.lv',{n:m.lv})}</span><div class="small muted">${m.as?t('mgr.inCharge',{n:esc(targetName(m,t))})+` (${ts.length})`:t('target.none')}${m.ps===1?t('mgr.psAuto'):m.ps===2?t('mgr.psSug'):''}${m.auto!=='off'?t('mgr.sumAuto'):''}</div></div></div>`}
 export function orgTree(){
   const sub=m=>{const k=mKids(m);if(!k.length)return`<li>${tnode(m)}</li>`;const op=!(S.ui&&S.ui['ot-'+m.id]===false);
-    return`<li><details class="tdet" ${op?'open':''} ontoggle="togD('ot-${m.id}',this.open)"><summary>${tnode(m)}<span class="tcnt">${teamOf(m).length} người · ${k.length} cấp dưới</span></summary><ul>${k.map(sub).join('')}</ul></details></li>`};
+    return`<li><details class="tdet" ${op?'open':''} ontoggle="togD('ot-${m.id}',this.open)"><summary>${tnode(m)}<span class="tcnt">${t('mgr.tcnt',{a:teamOf(m).length,k:k.length})}</span></summary><ul>${k.map(sub).join('')}</ul></details></li>`};
   const top=S.managers.filter(m=>!mBoss(m));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Giám đốc (bạn)</b><div class="small muted">${S.managers.length} quản lý${gmOf()?' · 1 quản lý tổng':''} · ${free.length} nghệ sĩ báo cáo trực tiếp</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:'<div class="small muted" style="margin:6px 0 0 20px">Chưa có quản lý.</div>'}`;
+  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>${t('mgr.ceo')}</b><div class="small muted">${t('mgr.nMgrs',{n:S.managers.length})}${gmOf()?t('mgr.treeGm'):''}${t('mgr.treeFree',{n:free.length})}</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:`<div class="small muted" style="margin:6px 0 0 20px">${t('mgr.noMgr')}</div>`}`;
 }
 export function artDayLine(a,d){
   const r=S.lastRep&&S.lastRep.a[a.id];

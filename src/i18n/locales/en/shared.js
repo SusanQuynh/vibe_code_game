@@ -29,7 +29,7 @@ export default {
   'top.busyLeft': '({n}w)',
   'target.none': 'Unassigned',
   'target.allTts': 'all trainees',
-  'target.batch': 'trainees in {n}',
+  'target.batch': p => `trainees in ${p.n}`,
   'target.batchGone': 'batch disbanded',
   'target.allSolo': 'all solo artists',
   'target.allActors': 'all actors',

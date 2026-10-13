@@ -7,8 +7,8 @@ import { richState, renderSurface, runToasts, visibleText, offenders } from './s
 import { S, setState } from '../../src/state.js';
 
 noToggle();
-export const EN_DONE = ['lang', 'vocal', 'dance', 'roof', 'top', 'early-vocal', 'early-dance', 'early-roof', 'lobby', 'debutQ', 'early-lobby'];
-export const TOASTS_DONE = ['debut.group1', 'debut.solo2', 'debut.money', 'debut.busy', 'debut.name', 'recruit.recHire', 'recruit.recHireMax', 'contests.enterComp', 'batches.batchSched'];
+export const EN_DONE = ['lang', 'vocal', 'dance', 'roof', 'top', 'early-vocal', 'early-dance', 'early-roof', 'lobby', 'debutQ', 'early-lobby', 'mgr', 'early-mgr'];
+export const TOASTS_DONE = ['debut.group1', 'debut.solo2', 'debut.money', 'debut.busy', 'debut.name', 'recruit.recHire', 'recruit.recHireMax', 'contests.enterComp', 'batches.batchSched', 'managers.hireMgr', 'managers.retrain', 'managers.assignGM', 'managers.assignDom', 'gm.promoteGM'];
 
 let base, early;
 beforeAll(() => {
