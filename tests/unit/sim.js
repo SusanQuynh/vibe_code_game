@@ -240,7 +240,11 @@ function storedStrings(root) {
       all.push(v);
       if (v.length <= 40 && !underStored) for (const w of v.match(/\p{L}+/gu) || []) short.add(w);
     } else if (v && typeof v === 'object') {
-      for (const [k, x] of Object.entries(v)) walk(x, k, underStored || STORED_KEYS.has(k));
+      for (const [k, x] of Object.entries(v)) {
+        // object keys can be shown verbatim too (a.pw / S.partners are keyed by partner name)
+        if (VI_LETTER.test(k) && !/^\d+$/.test(k)) walk(k, '', underStored);
+        walk(x, k, underStored || STORED_KEYS.has(k));
+      }
     }
   };
   walk(root, '', false);

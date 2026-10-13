@@ -217,12 +217,11 @@ export const RV={
   dorm(){
     const pairs=[];const seen=new Set();
     for(const a of S.artists)for(const id in a.tag){const k=[a.id,+id].sort().join('-');if(seen.has(k))continue;seen.add(k);const b=byId(+id);if(b)pairs.push({a,b,t:a.tag[id],v:getRel(a,b)})}
-    const TN={friend:'🤝 Bạn thân',enemy:'⚡ Mâu thuẫn',dating:'💞 Hẹn hò bí mật',public:'💌 Hẹn hò công khai'};
-    modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',`💞 Quan hệ nội bộ (${pairs.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ cùng nhóm hoặc cùng phòng tập dễ thân nhau hơn. Quan hệ tạo ra sự kiện bạn bè, mâu thuẫn, hẹn hò.</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${TN[p.t]} <span class="muted">(${p.v})</span></div>`).join('')||'<div class="card small muted">Chưa có mối quan hệ đặc biệt nào.</div>'}`,true)}`));
+    modal(trainRoom(ROOMS[9],'rest',`${det('dm-rel',t('dorm.relH',{n:pairs.length}),`<div class="small muted" style="margin-bottom:6px">${t('dorm.relSub')}</div>${pairs.map(p=>`<div class="card small row"><b>${esc(p.a.name)} & ${esc(p.b.name)}</b><span class="sp"></span>${t(`rel.room.${p.t}`)} <span class="muted">(${p.v})</span></div>`).join('')||`<div class="card small muted">${t('dorm.relNone')}</div>`}`,true)}`));
     /* v3: outside-company contacts + personal assistants */
     const p=$('#sheet .panel');if(!p)return;
   const L=[];S.artists.forEach(a=>Object.keys(a.xr||{}).forEach(id=>{const x=extById(+id);if(x&&a.xr[id])L.push({a,x,v:a.xr[id]})}));L.sort((p,q)=>Math.abs(q.v)-Math.abs(p.v));
   const ml=S.artists.filter(a=>a.pa);
-  p.insertAdjacentHTML('beforeend',det('dm-ext',`🌐 Giao lưu ngoài công ty (${L.length})`,`<div class="small muted" style="margin-bottom:6px">Nghệ sĩ gặp idol công ty khác ở show âm nhạc, hậu trường, livestream. Quan hệ tốt mở ra lời mời hợp tác; thân quá dễ thành tin đồn.</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||'<div class="small muted">Chưa có giao lưu nào.</div>'}`,false)+(ml.length?det('dm-pa',`🧑‍💻 Trợ lý cá nhân (${ml.length})`,ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v}</div>`).join(''),false):''));
+  p.insertAdjacentHTML('beforeend',det('dm-ext',t('dorm.extH',{n:L.length}),`<div class="small muted" style="margin-bottom:6px">${t('dorm.extSub')}</div>${L.slice(0,15).map(z=>`<div class="card small row"><b>${esc(z.a.name)}</b> ↔ ${esc(z.x.name)} <span class="muted">(${esc(z.x.co)})</span><span class="sp"></span>${relTxt(z.v)}</div>`).join('')||`<div class="small muted">${t('dorm.extNone')}</div>`}`,false)+(ml.length?det('dm-pa',t('dorm.paH',{n:ml.length}),ml.map(a=>`<div class="small">${esc(a.name)}: ${esc(a.pa.name)} · ${mskName(a.pa.k)} +${a.pa.v}</div>`).join(''),false):''));
   }
 };

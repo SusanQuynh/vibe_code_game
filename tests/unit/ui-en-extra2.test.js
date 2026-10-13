@@ -31,7 +31,7 @@ describe('en extra scenarios have no Vietnamese', () => {
       for (const [k, v] of flat(r)) {
         const isToast = c.name.endsWith('toasts');
         if (isToast) expect(v, k).not.toMatch(/^THROW/);
-        const off = offenders(isToast ? v : textOf(v), S);
+        const off = offenders(isToast ? v : textOf(v), { S, base: ctx.base, early: ctx.early, extra: c.stored }); // stored strings of every state the case touched
         expect(off, `${c.name}/${k}: ${off.join(', ')}`).toEqual([]);
       }
     });

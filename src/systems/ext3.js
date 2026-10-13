@@ -1,6 +1,6 @@
 import { R, pick, rnd } from '../core/rng.js';
 import { money, t, t as tl, tVi } from '../i18n/index.js';
-import { conceptName } from '../i18n/labels.js';
+import { conceptName, mskDesc, mskName } from '../i18n/labels.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
 import { OFFER } from '../data/offers.js';
@@ -50,22 +50,21 @@ export function mgrBossHTML(){
 /* ---- Personal assistants for artists managed as a group ---- */
 export const paOK=a=>a.status==='debuted'&&groupsOf(a).length>0&&!a.pm;
 export const PA_NEED=a=>({care:(100-a.mood)/10+(groupsOf(a).some(g=>harmony(g.members)<0)?3:0),nego:fame(a)/12+2,pr:a.scandal?8:(datingPartner(a)?4:1),plan:(100-a.energy)/12+(a.busy?2:0)});
-export const PA_WHY={care:'muốn có người lắng nghe, giữ tinh thần ổn định',nego:'muốn được hỗ trợ đàm phán thù lao tốt hơn',pr:'lo truyền thông, muốn có người giữ gìn hình ảnh',plan:'lịch trình dày, cần người sắp xếp thời gian'};
 export function genPAC(a){const ks=Object.keys(MSK).sort(()=>Math.random()-.5).slice(0,3);a.paC=ks.map(k=>{const v=R(1,3);return{id:uid(),name:pick(LNM)+' '+pick(FN.concat(MN)),k,v,sal:(v+1)*5e5,fee:v*5e6}});a.paW=abs()}
 export function paPick(a){const n=PA_NEED(a);return(a.paC||[]).slice().sort((x,y)=>(n[y.k]*y.v-y.fee/1e7)-(n[x.k]*x.v-x.fee/1e7))[0]}
-export function paOpen(id){const a=byId(id);if(!a||!paOK(a))return toast('Chỉ nghệ sĩ được quản lý theo nhóm mới tự chọn trợ lý');if(!a.paC||abs()-(a.paW||0)>=8)genPAC(a);save();view(()=>viewPA(id))}
+export function paOpen(id){const a=byId(id);if(!a||!paOK(a))return toast(t('pa.toast.only'));if(!a.paC||abs()-(a.paW||0)>=8)genPAC(a);save();view(()=>viewPA(id))}
 export function viewPA(id){const a=byId(id);if(!a)return closeM();if(!a.paC)genPAC(a);setCurRC('var(--r-mgr)');const p=paPick(a),gm=groupsOf(a).map(g=>gMgr(g)).find(Boolean);
   const L=a.paC.slice().sort((x,y)=>(y===p)-(x===p));
-  modal(`<h2>🧑‍💻 Trợ lý cá nhân · ${esc(a.name)}</h2><div class="sub">Nghệ sĩ được quản lý theo nhóm có thể tự chọn một trợ lý riêng. Kỹ năng trợ lý cộng thêm vào kỹ năng quản lý áp dụng riêng cho ${esc(a.name)}${gm?` (trên nền QL nhóm ${esc(gm.name)})`:''}.</div>
-  ${a.pa?`<div class="card row"><span class="small" style="flex:1">Hiện tại: <b>${esc(a.pa.name)}</b> · ${MSK[a.pa.k]} +${a.pa.v} · ${fmt(a.pa.sal)}/tuần</span><button class="btn sm warn" onclick="paFire(${a.id})">Cho nghỉ</button></div>`:''}
-  <div class="card row wish"><div class="chibi mini">${chibiHTML(a)}</div><div class="small" style="flex:1">💬 <b>${esc(a.name)}:</b> "${p?`Em muốn chọn ${esc(p.name)} vì em ${PA_WHY[p.k]}.`:'Em chưa thấy ai phù hợp.'}"</div></div>
-  ${L.map(c=>`<div class="card"><div class="row"><b>${esc(c.name)}</b>${c===p?' <span class="tag s">💬 Nghệ sĩ tự chọn</span>':''}<span class="sp"></span><span class="tag v">${MSK[c.k]} +${c.v}</span></div><div class="small muted">${MSKD[c.k]} · Phí ${fmt(c.fee)} · lương ${fmt(c.sal)}/tuần</div><div class="row" style="margin-top:6px"><span class="sp"></span><button class="btn sm ${c===p?'pri':''}" onclick="paHire(${a.id},${c.id})">${c===p?'Đồng ý lựa chọn của '+esc(a.name):'Chọn người này thay'}</button></div></div>`).join('')}
-  <div class="row"><button class="btn" onclick="paRe(${a.id})">🔄 Ứng viên khác (3 tr)</button><span class="sp"></span><button class="btn" onclick="view(()=>viewArtist(${a.id}))">← Hồ sơ</button></div>`)}
-export function paHire(aid,cid){const a=byId(aid);if(!a)return;const c=(a.paC||[]).find(x=>x.id===cid);if(!c)return;if(S.money<c.fee)return toast('Không đủ tiền');
+  modal(`<h2>${t('pa.title',{n:esc(a.name)})}</h2><div class="sub">${t('pa.sub',{n:esc(a.name)})}${gm?t('pa.gmBase',{g:esc(gm.name)}):''}.</div>
+  ${a.pa?`<div class="card row"><span class="small" style="flex:1">${t('pa.current',{n:esc(a.pa.name),k:mskName(a.pa.k),v:a.pa.v,s:money(a.pa.sal)})}</span><button class="btn sm warn" onclick="paFire(${a.id})">${t('mgr.fire')}</button></div>`:''}
+  <div class="card row wish"><div class="chibi mini">${chibiHTML(a)}</div><div class="small" style="flex:1">💬 <b>${esc(a.name)}:</b> "${p?t('pa.want',{n:esc(p.name),w:t(`pa.why.${p.k}`)}):t('pa.noneFit')}"</div></div>
+  ${L.map(c=>`<div class="card"><div class="row"><b>${esc(c.name)}</b>${c===p?` <span class="tag s">${t('pa.pick')}</span>`:''}<span class="sp"></span><span class="tag v">${mskName(c.k)} +${c.v}</span></div><div class="small muted">${t('pa.cand',{d:mskDesc(c.k),f:money(c.fee),s:money(c.sal)})}</div><div class="row" style="margin-top:6px"><span class="sp"></span><button class="btn sm ${c===p?'pri':''}" onclick="paHire(${a.id},${c.id})">${c===p?t('pa.agreeWith',{n:esc(a.name)}):t('pa.pickThis')}</button></div></div>`).join('')}
+  <div class="row"><button class="btn" onclick="paRe(${a.id})">${t('pa.re',{f:money(3e6)})}</button><span class="sp"></span><button class="btn" onclick="view(()=>viewArtist(${a.id}))">${t('pa.back')}</button></div>`)}
+export function paHire(aid,cid){const a=byId(aid);if(!a)return;const c=(a.paC||[]).find(x=>x.id===cid);if(!c)return;if(S.money<c.fee)return toast(t('toast.noMoney'));
   const p=paPick(a);S.money-=c.fee;book('hr',-c.fee);a.pa={name:c.name,k:c.k,v:c.v,sal:c.sal};a.paC=null;
   if(c===p){MOOD(a,6);addLog(`🧑‍💻 ${a.name} tự chọn trợ lý cá nhân ${c.name} (${MSK[c.k]} +${c.v}).`,'good')}else{MOOD(a,-3);addLog(`🧑‍💻 Công ty chọn trợ lý ${c.name} cho ${a.name} thay vì người ${a.name} thích.`)}
   view(()=>viewArtist(aid));act()}
-export function paRe(aid){const a=byId(aid);if(!a)return;if(S.money<3e6)return toast('Không đủ tiền');S.money-=3e6;book('hr',-3e6);genPAC(a);act()}
+export function paRe(aid){const a=byId(aid);if(!a)return;if(S.money<3e6)return toast(t('toast.noMoney'));S.money-=3e6;book('hr',-3e6);genPAC(a);act()}
 export function paFire(aid){const a=byId(aid);if(!a||!a.pa)return;addLog(`👋 Trợ lý cá nhân ${a.pa.name} của ${a.name} nghỉ việc.`);a.pa=null;MOOD(a,-3);act()}
 /* ---- Health specialist ---- */
 export function genHSC(){S.hsC=[0,1].map(()=>{const sk=R(1,5);return{id:uid(),name:'BS. '+pick(LNM)+' '+pick(FN.concat(MN)),sk,sal:(sk+1)*1e6,fee:sk*8e6,look:mkLook(Math.random()<.5?'F':'M','#e9e9f2')}})}
@@ -214,10 +213,10 @@ export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):
   }}
 /* ---- Artist profile & rooms ---- */
 export function v3ArtistHTML(a){let h='';
-  if(paOK(a))h+=`<div class="card small">🧑‍💻 <b>Trợ lý cá nhân:</b> ${a.pa?`${esc(a.pa.name)} · ${MSK[a.pa.k]} +${a.pa.v} · ${fmt(a.pa.sal)}/tuần`:'<span class="muted">chưa có</span>'} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?'Đổi trợ lý':'Để '+esc(a.name)+' tự chọn'}</button><br><span class="muted">Nghệ sĩ được quản lý theo nhóm có thể tự chọn trợ lý riêng.</span></div>`;
-  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">🩺 <b>Chuyên gia sức khỏe:</b> ${esc(a.hsF.why.join(', '))}. Đề xuất ${a.hsF.n} ngày nghỉ/tuần. ${a.restRec>abs()?'<span class="good">Đang áp dụng.</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`;
-  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">💬 <b>Mong muốn debut:</b> ${DRT[w.t]} — "${esc(w.why)}" <button class="btn sm pri" onclick="view(viewDebutQ)">Quyết định</button></div>`}}
-  if(a.status==='debuted'&&menteesOf(a).length<2){const t=S.artists.filter(x=>x.status==='trainee'&&!x.mt&&x.tag[a.id]!=='enemy').sort((x,y)=>mentorScore(a,y)-mentorScore(a,x))[0];if(t&&mentorScore(a,t)>3)h+=`<div class="card small">🙋 <b>${esc(a.name)} đề xuất dẫn dắt:</b> ${esc(t.name)} (+${Math.round(mentorScore(a,t))}) <button class="btn sm" onclick="setMentor(${t.id},${a.id})">Đồng ý</button></div>`}
+  if(paOK(a))h+=`<div class="card small">${t('pa.h')} ${a.pa?t('pa.line',{n:esc(a.pa.name),k:mskName(a.pa.k),v:a.pa.v,s:money(a.pa.sal)}):`<span class="muted">${t('art.noneYet')}</span>`} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?t('pa.change'):t('pa.letPick',{n:esc(a.name)})}</button><br><span class="muted">${t('pa.note')}</span></div>`;
+  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">${t('hs.card',{w:esc(a.hsF.why.join(', ')),n:a.hsF.n})} ${a.restRec>abs()?`<span class="good">${t('hs.applied')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('btn.apply')}</button>`}</div>`;
+  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">${t('art.wish',{d:t(`debut.typeShort.${w.t}`),w:esc(w.why)})} <button class="btn sm pri" onclick="view(viewDebutQ)">${t('art.decide')}</button></div>`}}
+  if(a.status==='debuted'&&menteesOf(a).length<2){const t=S.artists.filter(x=>x.status==='trainee'&&!x.mt&&x.tag[a.id]!=='enemy').sort((x,y)=>mentorScore(a,y)-mentorScore(a,x))[0];if(t&&mentorScore(a,t)>3)h+=`<div class="card small">${tl('art.suggestMentor',{n:esc(a.name)})} ${esc(t.name)} (+${Math.round(mentorScore(a,t))}) <button class="btn sm" onclick="setMentor(${t.id},${a.id})">${tl('art.agree')}</button></div>`}
   const xs=Object.keys(a.xr||{}).map(id=>({x:extById(+id),v:a.xr[id]})).filter(z=>z.x).sort((p,q)=>q.v-p.v).slice(0,5);
-  if(xs.length)h+=`<div class="card small">🌐 <b>Quan hệ ngoài công ty:</b> ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;
+  if(xs.length)h+=`<div class="card small">${t('pa.extH')} ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;
   return h}

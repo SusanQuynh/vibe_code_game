@@ -1,4 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
+import { money, t } from '../i18n/index.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FT1, FT2, SONGS } from '../data/names.js';
 import { CONCEPTS, GENRES } from '../data/rules.js';
@@ -18,13 +19,13 @@ import { closeM, modal, toast } from '../ui/modal.js';
 /* ---- Fan engagement: livestreams & fan meetings ---- */
 export function liveInc(a){return Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)*rnd(.7,1.3)/1e5)*1e5}
 export function liveEst(ms){return ms.reduce((t,a)=>t+Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)/1e5)*1e5,0)}
-export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast('Tuần này đã livestream');if(S.money<1e6)return quiet||toast('Không đủ tiền');
+export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast(t('live.toast.twice'));if(S.money<1e6)return quiet||toast(t('toast.noMoney'));
   S.money-=1e6;let inc=0;for(const a of ms){inc+=liveInc(a);const g=Math.round(a.fans*.01+R(200,800)*(1+fame(a)/60));a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+8,0,100);a.energy=clamp(a.energy-4,0,100);a.lastLive=abs();a.lastFan=abs();projLesson(a,'live','Livestream')}
-  S.money+=inc;book('live',inc,ms);addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'');if(!quiet)toast(`Livestream thu ${fmt(inc)}`);
+  S.money+=inc;book('live',inc,ms);addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'');if(!quiet)toast(t('live.toast.income',{m:money(inc)}));
   if(Math.random()<.03){const a=pick(ms);if(!a.scandal&&a.status==='debuted'){a.scandal={t:'Lỡ lời khi livestream',sev:1,left:2,truth:true,dating:false,other:0};pushEv({kind:'scandal',a:a.id},true);addLog(`😬 ${a.name} lỡ lời khi livestream, dân mạng bàn tán.`,'bad')}}
   if(!quiet)act()}
 export const fmCost=x=>40e6+x.m.length*10e6;
-export function doFM(k){const x=actByKey(k);if(!x)return;if(!actFree(x))return toast('Đang bận');const ms=campMem(k),tf=ms.reduce((t,a)=>t+a.fans,0);if(tf<10000)return toast('Cần tổng 10K fan');const c=fmCost(x);if(S.money<c)return toast('Không đủ tiền');
+export function doFM(k){const x=actByKey(k);if(!x)return;if(!actFree(x))return toast(t('fm.toast.busy'));const ms=campMem(k),tf=ms.reduce((t,a)=>t+a.fans,0);if(tf<10000)return toast(t('fm.toast.fans'));const c=fmCost(x);if(S.money<c)return toast(t('toast.noMoney'));
   S.money-=c;book('prod',-c);const seats=Math.round(Math.min(tf*.03,8000)*rnd(.8,1.1)),inc=seats*150000;S.money+=inc;book('con',inc,ms);
   for(const a of ms){a.fans=Math.round(a.fans*1.03);a.mood=clamp(a.mood+12,0,100);a.energy=clamp(a.energy-10,0,100);a.lastFan=abs();a.wc=(a.wc||0)+1;a.busy={kind:'concert',title:'Fan meeting',left:1,total:1,lk:'fanmeet'}}
   S.fmLast=S.fmLast||{};S.fmLast[k]=abs();if(S.fmHint)delete S.fmHint[k];
