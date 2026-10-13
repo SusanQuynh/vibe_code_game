@@ -8,6 +8,7 @@ export default {
   'common.yw': p => `N${p.y}·T${p.w}`,
   'common.none': '—',
   'toast.noMoney': 'Không đủ tiền',
+  'toast.need': 'Không đủ {m}',
   'fmt.locale': 'vi-VN',
   'common.empty': 'Trống.',
   'common.wkShort': 'T{w}',

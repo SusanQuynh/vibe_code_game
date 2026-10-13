@@ -7,6 +7,7 @@ export default {
   'common.yw': p => `Y${p.y}·W${p.w}`,
   'common.none': '—',
   'toast.noMoney': 'Not enough money',
+  'toast.need': 'Not enough {m}',
   'fmt.locale': 'en-GB',
   'common.empty': 'Empty.',
   'common.wkShort': 'W{w}',

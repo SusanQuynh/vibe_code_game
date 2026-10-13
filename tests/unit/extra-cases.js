@@ -791,3 +791,51 @@ add('t12-toasts', ctx => {
   T('xcollab.busy', B, () => { const [a] = deb(); extFill(); a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; S.events = []; pushEv({ kind: 'v3', t: 'xcollab', a: a.id, x: S.ext[0].id }, true); resolveEv(S.events[0].id, 'yes'); });
   return out;
 }, ['x']);
+
+// ---------------- task 13: save view, transfer errors, remaining toasts ----------------
+import { viewCode, saveCopyCode, saveDownload, saveBackupNow, saveExportSlot, saveRestorePreview, saveImportText, saveImportApply } from '../../src/ui/saveView.js';
+import { save, load, saveMeta, KEY, KEY_META } from '../../src/save/storage.js';
+import { setCurView } from '../../src/ui/modal.js';
+import { importCode, parseSaveText } from '../../src/save/transfer.js';
+import { sign, recast } from '../../src/systems/artists.js';
+const dnorm = h => h.replace(/\d{1,2}:\d{2}(:\d{2})?[^<]*\d{4}|\d{1,2}\/\d{1,2}\/\d{4}[^<]*/g, '<date>');
+const openSave = () => { setCurView(viewCode); viewCode(); };
+const saveSheet = () => dnorm(sheet());
+add('t13-save', async ctx => {
+  const out = {}; localStorage.clear();
+  ctx.fresh(ctx.base); openSave(); out.empty = saveSheet();
+  save({ full: true }); openSave(); out.saved = saveSheet();
+  const m = saveMeta(); m.f.prev = 1; m.f.err = 1; m.c.lvl = 2; localStorage.setItem(KEY_META, JSON.stringify(m)); openSave(); out.flags = saveSheet();
+  localStorage.removeItem(KEY); load(); openSave(); out.restored = saveSheet();   // loaded from the full backup
+  saveRestorePreview(); out.preview = saveSheet();
+  for (const [k, v] of [['bad', 'xyz'], ['json', '{oops'], ['notsave', '{"a":1}'], ['trunc', 'SL1.@@@']]) { openSave(); document.getElementById('codeIn').value = v; await saveImportText(); out['err.' + k] = saveSheet(); }
+  openSave(); out.noBackup = null; localStorage.removeItem('starlight_idol_save_v1_full'); saveRestorePreview(); out.noBackup = saveSheet();
+  save({ full: true }); openSave(); document.getElementById('codeIn').value = JSON.stringify(S); await saveImportText(); out.prevJson = saveSheet();
+  const ok = saveImportApply(); out.applied = saveSheet();
+  save(); load(); // back to a compact load source for the cases that follow
+  openSave(); document.getElementById('codeIn').value = JSON.stringify(S); await saveImportText();
+  const orig = Storage.prototype.setItem; Storage.prototype.setItem = () => { const e = new Error('q'); e.name = 'QuotaExceededError'; throw e; };
+  try { saveImportApply(); out.quota = saveSheet(); } finally { Storage.prototype.setItem = orig; }
+  openSave(); document.getElementById('codeIn').value = JSON.stringify(S); await saveImportText(); S.artists = []; S.artists = null;
+  localStorage.clear(); save(); load();
+  return out;
+}, ['{oops', '{"a":1}', 'SL1.@@@', 'xyz']);
+add('t13-toasts', async ctx => {
+  const out = {}; localStorage.clear();
+  const T = async (n, b, f) => { ctx.fresh(b); clearToast(); try { await f(); } catch (e) { out[n] = 'THROW ' + e.message; return; } out[n] = toastText(); };
+  const B = ctx.base;
+  await T('sign.money', B, () => { S.money = 0; sign(S.pool[0].id); });
+  await T('recast.money', B, () => { S.money = 0; recast(); });
+  await T('copy.notReady', B, () => { openSave(); document.getElementById('codeShow').value = ''; return saveCopyCode(); });
+  await T('copy.fallback', B, () => { openSave(); document.getElementById('codeShow').value = 'SL1.abc'; return saveCopyCode(); });
+  await T('copy.ok', B, async () => { Object.defineProperty(navigator, 'clipboard', { value: { writeText: async () => {} }, configurable: true }); openSave(); document.getElementById('codeShow').value = 'SL1.abc'; await saveCopyCode(); delete navigator.clipboard; });
+  await T('download', B, () => { const cu = URL.createObjectURL, ru = URL.revokeObjectURL, ck = HTMLAnchorElement.prototype.click; URL.createObjectURL = () => 'blob:x'; URL.revokeObjectURL = () => {}; HTMLAnchorElement.prototype.click = () => {}; try { saveDownload(); } finally { HTMLAnchorElement.prototype.click = ck; } });
+  await T('backup.ok', B, () => { openSave(); saveBackupNow(); });
+  await T('backup.fail', B, () => { openSave(); const orig = Storage.prototype.setItem; Storage.prototype.setItem = () => { const e = new Error('q'); e.name = 'QuotaExceededError'; throw e; }; try { saveBackupNow(); } finally { Storage.prototype.setItem = orig; } });
+  await T('slot.none', B, () => { localStorage.clear(); return saveExportSlot('c'); });
+  await T('slot.c', B, async () => { save({ full: true }); const cu = URL.createObjectURL, ru = URL.revokeObjectURL, ck = HTMLAnchorElement.prototype.click; URL.createObjectURL = () => 'blob:x'; URL.revokeObjectURL = () => {}; HTMLAnchorElement.prototype.click = () => {}; try { openSave(); await saveExportSlot('c'); } finally { HTMLAnchorElement.prototype.click = ck; } });
+  await T('slot.f', B, async () => { save({ full: true }); const cu = URL.createObjectURL, ru = URL.revokeObjectURL, ck = HTMLAnchorElement.prototype.click; URL.createObjectURL = () => 'blob:x'; URL.revokeObjectURL = () => {}; HTMLAnchorElement.prototype.click = () => {}; try { openSave(); await saveExportSlot('f'); } finally { HTMLAnchorElement.prototype.click = ck; } });
+  localStorage.clear();
+  out.errKeys = await (async () => { const r = {}; for (const [k, v] of [['bad', 'xyz'], ['json', '{oops'], ['notsave', '{"a":1}'], ['trunc', 'SL1.@@@']]) { try { await parseSaveText(v); r[k] = 'ok'; } catch (e) { r[k] = e.message; } } try { await importCode('xyz'); } catch (e) { r.importCode = e.message; } return r; })();
+  return out;
+}, [], ['errKeys']);

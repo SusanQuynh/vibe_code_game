@@ -22,7 +22,7 @@ afterAll(() => vi.useRealTimers());
 describe('vi extra baselines', () => {
   for (const c of CASES) {
     it(c.name, async () => {
-      const r = c.run(ctx);
+      const r = await c.run(ctx);
       const files = typeof r === 'string' ? { [c.name + '.html']: r } : { [c.name + '.json']: JSON.stringify(r, null, 1) };
       for (const [f, v] of Object.entries(files)) await expect(v).toMatchFileSnapshot(`__snapshots__/ui-vi-extra2/${f}`);
     });

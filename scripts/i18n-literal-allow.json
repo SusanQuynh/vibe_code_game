@@ -533,5 +533,85 @@
   "file": "src/systems/ext3.js",
   "text": "Giám đốc",
   "why": "approver name passed to restDo(), which writes it into S.hist/S.log (phase 3)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "Mã không hợp lệ hoặc bị cắt cụt",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed"
+ },
+ {
+  "file": "src/systems/artists.js",
+  "text": "lứa mới",
+  "why": "fallback batch name written into the S.log line of signCore (phase 3)"
+ },
+ {
+  "file": "src/systems/artists.js",
+  "text": "đã chấm dứt hợp đồng",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Nghệ sĩ của năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "fan trong năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Tân binh của năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Bài hát của năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "hạng cao nhất",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Nữ",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "diễn viên xuất sắc",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "điểm diễn",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Ngôi sao tạp kỹ",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Phim của năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "Concert của năm",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "khán giả",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
+ },
+ {
+  "file": "src/systems/awards.js",
+  "text": "⭐ Starlight Ent. (bạn)",
+  "why": "award category, note and board row stored in S.awards (phase 3)"
  }
 ]

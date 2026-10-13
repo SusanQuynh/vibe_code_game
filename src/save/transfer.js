@@ -2,6 +2,9 @@
 const PREFIX = 'SL1.';
 const MAX_CODE = 30 * 1024 * 1024;
 
+// Errors keep their Vietnamese message (transfer.test.js) and carry a key that the save view translates.
+const err = (message, key) => Object.assign(new Error(message), { key });
+
 function toB64u(u8) {
   let s = '';
   for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
@@ -10,7 +13,7 @@ function toB64u(u8) {
 const fromB64u = (t) => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
 export function checkSave(d) {
-  if (!d || typeof d !== 'object' || !Array.isArray(d.artists)) throw new Error('Dữ liệu không phải save Starlight');
+  if (!d || typeof d !== 'object' || !Array.isArray(d.artists)) throw err('Dữ liệu không phải save Starlight', 'save.err.notSave');
   return d;
 }
 
@@ -21,16 +24,16 @@ export async function exportCode(state) {
 
 export async function importCode(code) {
   code = String(code ?? '').trim().replace(/\s+/g, '');
-  if (!code.startsWith(PREFIX) || code.length > MAX_CODE) throw new Error('Mã không hợp lệ');
+  if (!code.startsWith(PREFIX) || code.length > MAX_CODE) throw err('Mã không hợp lệ', 'save.err.invalid');
   let txt;
   try {
     const bin = fromB64u(code.slice(PREFIX.length));
     txt = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   } catch {
-    throw new Error('Mã không hợp lệ hoặc bị cắt cụt');
+    throw err('Mã không hợp lệ hoặc bị cắt cụt', 'save.err.truncated');
   }
   let d;
-  try { d = JSON.parse(txt); } catch { throw new Error('Mã không hợp lệ'); }
+  try { d = JSON.parse(txt); } catch { throw err('Mã không hợp lệ', 'save.err.invalid'); }
   return checkSave(d);
 }
 
@@ -40,10 +43,10 @@ export async function parseSaveText(text) {
   if (t.startsWith(PREFIX)) return importCode(t);
   if (t.startsWith('{')) {
     let d;
-    try { d = JSON.parse(t); } catch { throw new Error('File không phải JSON hợp lệ'); }
+    try { d = JSON.parse(t); } catch { throw err('File không phải JSON hợp lệ', 'save.err.json'); }
     return checkSave(d);
   }
-  throw new Error('Mã không hợp lệ');
+  throw err('Mã không hợp lệ', 'save.err.invalid');
 }
 
 export const importFile = async (file) => parseSaveText(await file.text());

@@ -8,6 +8,10 @@ import { closeM } from '../../src/ui/modal.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { richState, visibleText, offenders } from './sim.js';
 import { CASES } from './extra-cases.js';
+import { viewCode, saveImportText } from '../../src/ui/saveView.js';
+import { setCurView } from '../../src/ui/modal.js';
+import { importCode, parseSaveText } from '../../src/save/transfer.js';
+import { save, saveMeta } from '../../src/save/storage.js';
 
 noToggle(true);
 const ctx = {};
@@ -25,9 +29,9 @@ const flat = r => (typeof r === 'string' ? [['', r]] : Object.entries(r)).filter
 
 describe('en extra scenarios have no Vietnamese', () => {
   for (const c of CASES) {
-    it(c.name, () => {
+    it(c.name, async () => {
       setLang('en');
-      const r = c.run(ctx);
+      const r = await c.run(ctx);
       for (const [k, v] of flat(r).filter(([k]) => !c.skipEn.includes(k))) {
         const isToast = c.name.endsWith('toasts');
         if (isToast) expect(v, k).not.toMatch(/^THROW/);
@@ -73,4 +77,30 @@ describe('event choices keep their keys in en', () => {
       expect(Object.values(a).filter(v => Array.isArray(v)).length).toBeGreaterThan(3);
     });
   }
+});
+
+describe('save view and transfer errors', () => {
+  it('importCode rejects with a key and keeps the Vietnamese message', async () => {
+    await expect(importCode('xyz')).rejects.toMatchObject({ key: 'save.err.invalid', message: 'Mã không hợp lệ' });
+    await expect(parseSaveText('{"a":1}')).rejects.toMatchObject({ key: 'save.err.notSave' });
+    await expect(parseSaveText('{oops')).rejects.toMatchObject({ key: 'save.err.json' });
+  });
+  it('en shows the translated error and re-renders it when the language changes', async () => {
+    ctx.fresh(ctx.base); setLang('en'); setCurView(viewCode); viewCode();
+    document.getElementById('codeIn').value = 'xyz'; await saveImportText();
+    expect(document.getElementById('sheet').textContent).toContain('❌ Invalid code');
+    setLang('vi'); viewCode();
+    expect(document.getElementById('sheet').textContent).toContain('❌ Mã không hợp lệ');
+    setLang('en'); viewCode();
+    expect(document.getElementById('sheet').textContent).toContain('❌ Invalid code');
+    localStorage.clear();
+  });
+  it('the slot date follows the language (fmt.locale)', () => {
+    ctx.fresh(ctx.base); localStorage.clear(); save({ full: true }); setLang('en'); setCurView(viewCode); viewCode();
+    const at = saveMeta().c.at;
+    expect(document.getElementById('sheet').textContent).toContain(new Date(at).toLocaleString('en-GB'));
+    setLang('vi'); viewCode();
+    expect(document.getElementById('sheet').textContent).toContain(new Date(at).toLocaleString('vi-VN'));
+    localStorage.clear();
+  });
 });
