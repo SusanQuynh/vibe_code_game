@@ -220,7 +220,7 @@ export function writeSong(){const main=+$('#wMain').value,co=[...document.queryS
   if(!main)return toast('Chọn nhạc sĩ chính');if(co.length>2)return toast('Tối đa 2 người hợp tác');
   const ids=[main,...co],ws=ids.map(byId);if(ws.some(a=>!a||a.busy))return toast('Có người đang bận');
   if(S.money<5e6)return toast('Không đủ tiền');S.money-=5e6;book('prod',-5e6);
-  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:'Sáng tác «'+s.t+'»',left:1,total:1});
+  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:'Sáng tác «'+s.t+'»',left:1,total:1,lk:'write'});
   addLog(`✍️ ${ws.map(a=>a.name).join(', ')} vào phòng thu sáng tác «${s.t}» (${CONCEPTS[ck].n}). Demo xong sau 1 tuần.`);act()}
 export function wPrev(){const el=$('#wPrev');if(!el)return;const main=byId(+$('#wMain').value);if(!main){el.textContent='';return}
   const co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main.id);if(co.length>2){el.innerHTML='<span class="bad">Tối đa 2 người hợp tác</span>';return}

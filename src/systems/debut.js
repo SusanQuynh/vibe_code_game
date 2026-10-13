@@ -91,7 +91,7 @@ export function debutIds(type,ids,name){
     const g=R(2000,7000)*(type==='actor'?.5:1);a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+15,0,100);if(a.cf0==null||a.cs0===abs())a.cf0=a.fans;
     if(a.mt){const mt=byId(a.mt);if(mt){const b=Math.round(g*.3)+500;mt.fans+=b;MOOD(mt,10);setRel(a,mt,getRel(a,mt)+10);addLog(`👩‍🏫 Tiền bối ${mt.name} tự hào khi đàn em ${a.name} debut (+${fmtN(b)} fan).`,'good')}a.mtd=a.mt;a.mt=0}
     if(type==='solo'){if(groupsOf(a).length)givePM(a);a.solo=true}if(type==='actor')a.actor=true;
-    if(type!=='actor')a.busy={kind:'promo',title:'Showcase debut',left:2,total:2};
+    if(type!=='actor')a.busy={kind:'promo',title:'Showcase debut',left:2,total:2,lk:'showcase'};
   }
   if(type==='group'){const ck=Object.keys(CONCEPTS).sort((x,y)=>avgFit(mem,CONCEPTS[y].w)-avgFit(mem,CONCEPTS[x].w))[0];S.groups.push({id:uid(),name,members:ids,y:S.year,concept:ck});addLog(`🎊 Nhóm ${name} chính thức debut với ${ids.length} thành viên, hợp nhất concept ${CONCEPTS[ck].n}!`,'gold')}
   else addLog(`🎊 ${mem[0].name} debut ${type==='solo'?'solo':'diễn viên'}!`,'gold');

@@ -8,7 +8,7 @@ import { dHold } from './ext2.js';
 import { mgrExp, mgrOf } from './managers.js';
 import { cbHold, chem } from './offers.js';
 import { wkLabel } from './secretary.js';
-import { applyLesson } from './week.js';
+import { addPg, applyLesson } from './week.js';
 import { act } from '../ui/building.js';
 import { toast } from '../ui/modal.js';
 import { det } from '../ui/views.js';
@@ -61,7 +61,7 @@ const prizeOf=(c,rank,pm)=>pm?Math.round(c.prize[rank-1]*pm/1e6)*1e6:c.prize[ran
 const bonusOf=(c,rank)=>rank<=3?Object.keys(c.w).map(k=>[k,+(CB[rank-1]*c.w[k]).toFixed(1)]):[];
 export const bonusTxt=(c,rank)=>bonusOf(c,rank).map(([k,g])=>`${STATS[k]} +${g}`).join(', ');
 /* top-3 stat bonus (no RNG); returns the text */
-export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100));return bonusTxt(c,rank)}
+export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return bonusTxt(c,rank)}
 export function compTick(){S.comps=(S.comps||[]).filter(c=>c.exp>abs());const n=S.comps.filter(c=>kindOf(c)==='tts').length;if(n<2||(n<4&&Math.random()<.35))genComp();
   if(S.artists.some(a=>a.status==='debuted')){const ks=['grp','solo','act'].filter(k=>k==='grp'?S.groups.length:k==='solo'?S.artists.some(a=>a.solo):S.artists.some(a=>a.actor)),d=S.comps.filter(c=>kindOf(c)!=='tts');if(ks.length&&(d.length<2||(d.length<3&&Math.random()<.3)))genComp(pick(ks))}}
 const compScore=(ms,ids,c)=>ms.reduce((t,a)=>t+fit(a,c.w),0)/Math.max(ms.length,1)*(1+(ms.length>1?chem(ids):0));

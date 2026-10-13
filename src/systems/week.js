@@ -1,5 +1,6 @@
 import { R, pick, rnd } from '../core/rng.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
+import { PLESSON } from '../data/lessons.js';
 import { OFFER } from '../data/offers.js';
 import { GENRES, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
@@ -38,7 +39,13 @@ export function trainDay(a,k){
   return +gs.toFixed(2);
 }
 export function qLabel(q){return q>=1.25?'Xuất sắc':q>=1?'Tốt':q>=.8?'Ổn':'Chưa tốt'}
-export function applyLesson(a,lesson,q){const out=[];for(const k in lesson){const g=lesson[k]*(.8+q*.3);a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);out.push(`${STATS[k]} +${g.toFixed(1)}`)}return out.join(', ')}
+/* a.pg: cumulative skill points from projects (lazy, real applied delta) */
+export function addPg(a,k,d){d=+d.toFixed(1);if(d){a.pg=a.pg||{};a.pg[k]=+((a.pg[k]||0)+d).toFixed(1)}}
+export function applyLesson(a,lesson,q){const out=[];for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out.push(`${STATS[k]} +${g.toFixed(1)}`)}return out.join(', ')}
+/* deterministic project lesson (no RNG); consecutive livestreams merge into one entry */
+export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=P.lt[abs()%P.lt.length],s=applyLesson(a,P.l,1);
+  if(key==='live'&&L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in P.l)L.g[k]=(L.g[k]||P.l[k]*1.1*(L.n-1))+P.l[k]*1.1;L.t=`${title} (×${L.n})`;L.s=Object.keys(L.g).map(k=>`${STATS[k]} +${L.g[k].toFixed(1)}`).join(', ');L.y=S.year;return L.s}
+  a.lessons.unshift({t:title,l:lt,s,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return s}
 export function completeBusy(a){
   const b=a.busy;a.busy=null;
   if(b.kind==='offer'){
@@ -66,8 +73,9 @@ export function completeBusy(a){
       if(!S.artists.some(x=>x.busy&&x.busy.filmId===film.id)){film.status='Hậu kỳ';film.releaseAt=abs()+2}}
     a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(`N${S.year}: Đóng phim công ty «${b.title}»`);
     addLog(`🎬 ${a.name} đóng máy phim «${b.title}». ${ls}.`,'good');
-  }else if(b.kind==='promo'){addLog(`🎤 ${a.name} kết thúc đợt quảng bá.`)}
-  else if(b.kind==='concert'){addLog(`🏟️ ${a.name} trở về sau concert.`)}
+  }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(`🎤 ${a.name} kết thúc đợt quảng bá. (${s})`)}
+  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(b.title==='Fan meeting'?'fanmeet':'concert'),b.title);addLog(`🏟️ ${a.name} trở về sau concert. (${s})`)}
+  else if(b.kind==='write')projLesson(a,'write',b.title);
   else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(`🌴 ${a.name} quay lại sau kỳ nghỉ.`)}
   else if(b.kind==='comp')compDone(a,b);
 }

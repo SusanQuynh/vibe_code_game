@@ -11,6 +11,7 @@ import { rivalPress, trendB } from './market.js';
 import { POST, PRE, PROMO_WK, campMem, postRec, preRec } from './promo.js';
 import { harmony } from './relations.js';
 import { actFree, acts, wkLabel } from './secretary.js';
+import { projLesson } from './week.js';
 import { act } from '../ui/building.js';
 import { closeM, modal, toast } from '../ui/modal.js';
 
@@ -18,14 +19,14 @@ import { closeM, modal, toast } from '../ui/modal.js';
 export function liveInc(a){return Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)*rnd(.7,1.3)/1e5)*1e5}
 export function liveEst(ms){return ms.reduce((t,a)=>t+Math.round((a.fans*300+1.2e6)*(1+fame(a)/200)/1e5)*1e5,0)}
 export function doLive(ids,quiet){const ms=ids.map(byId).filter(Boolean).filter(a=>a.lastLive!==abs());if(!ms.length)return quiet||toast('Tuần này đã livestream');if(S.money<1e6)return quiet||toast('Không đủ tiền');
-  S.money-=1e6;let inc=0;for(const a of ms){inc+=liveInc(a);const g=Math.round(a.fans*.01+R(200,800)*(1+fame(a)/60));a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+8,0,100);a.energy=clamp(a.energy-4,0,100);a.lastLive=abs();a.lastFan=abs()}
+  S.money-=1e6;let inc=0;for(const a of ms){inc+=liveInc(a);const g=Math.round(a.fans*.01+R(200,800)*(1+fame(a)/60));a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+8,0,100);a.energy=clamp(a.energy-4,0,100);a.lastLive=abs();a.lastFan=abs();projLesson(a,'live','Livestream')}
   S.money+=inc;book('live',inc,ms);addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'');if(!quiet)toast(`Livestream thu ${fmt(inc)}`);
   if(Math.random()<.03){const a=pick(ms);if(!a.scandal&&a.status==='debuted'){a.scandal={t:'Lỡ lời khi livestream',sev:1,left:2,truth:true,dating:false,other:0};pushEv({kind:'scandal',a:a.id},true);addLog(`😬 ${a.name} lỡ lời khi livestream, dân mạng bàn tán.`,'bad')}}
   if(!quiet)act()}
 export const fmCost=x=>40e6+x.m.length*10e6;
 export function doFM(k){const x=actByKey(k);if(!x)return;if(!actFree(x))return toast('Đang bận');const ms=campMem(k),tf=ms.reduce((t,a)=>t+a.fans,0);if(tf<10000)return toast('Cần tổng 10K fan');const c=fmCost(x);if(S.money<c)return toast('Không đủ tiền');
   S.money-=c;book('prod',-c);const seats=Math.round(Math.min(tf*.03,8000)*rnd(.8,1.1)),inc=seats*150000;S.money+=inc;book('con',inc,ms);
-  for(const a of ms){a.fans=Math.round(a.fans*1.03);a.mood=clamp(a.mood+12,0,100);a.energy=clamp(a.energy-10,0,100);a.lastFan=abs();a.wc=(a.wc||0)+1;a.busy={kind:'concert',title:'Fan meeting',left:1,total:1}}
+  for(const a of ms){a.fans=Math.round(a.fans*1.03);a.mood=clamp(a.mood+12,0,100);a.energy=clamp(a.energy-10,0,100);a.lastFan=abs();a.wc=(a.wc||0)+1;a.busy={kind:'concert',title:'Fan meeting',left:1,total:1,lk:'fanmeet'}}
   S.fmLast=S.fmLast||{};S.fmLast[k]=abs();if(S.fmHint)delete S.fmHint[k];
   addLog(`💝 Fan meeting của ${x.n.slice(2).trim()}: ${fmtN(seats)} fan tham dự, thu ${fmt(inc)} (chi ${fmt(c)}).`,'gold');act()}
 export function fanSugs(){const now=abs(),L=[];
@@ -74,7 +75,7 @@ export function doSingle(ak,ck,bud,title,silent,sid){
   const rank=clamp(Math.round(118-score),1,100);
   const sales=Math.round(Math.pow(101-rank,1.8)*30*(1+fm/100));
   const inc=sales*5000;S.money+=inc;book('sgl',inc,mem);
-  for(const a of mem){const g=Math.round((101-rank)*R(60,130)*(1+fm/100)*(1+hp/100));a.fans+=g;a.yr.fans+=g;a.busy={kind:'promo',title:'Quảng bá «'+title+'»',left:PROMO_WK,total:PROMO_WK};a.mood=clamp(a.mood+5,0,100);a.hist.unshift(`N${S.year}: Single «${title}» – hạng ${rank}`);a.wc=(a.wc||0)+1}
+  for(const a of mem){const g=Math.round((101-rank)*R(60,130)*(1+fm/100)*(1+hp/100));a.fans+=g;a.yr.fans+=g;a.busy={kind:'promo',title:'Quảng bá «'+title+'»',left:PROMO_WK,total:PROMO_WK,lk:'promo'};a.mood=clamp(a.mood+5,0,100);a.hist.unshift(`N${S.year}: Single «${title}» – hạng ${rank}`);a.wc=(a.wc||0)+1}
   {const ms=new Set(mem.map(mgrOf).filter(Boolean));ms.forEach(m=>mgrExp(m))}
   S.singles.unshift({title,act:A.n,m:A.m,rank,y:S.year,concept:CONCEPTS[ck].n,k:ak,w:abs(),dig:Math.round(inc*.08/1e4)*1e4,dk:rank<=10?.93:rank<=40?.9:.86,dt:0,roy:sg?0:.15,sg:sg?sg.id:0});
   if(sg){sg.st='used';sg.rank=rank;sg.act=A.n;const ws=sg.by.map(byId).filter(Boolean);ws.forEach(a=>{const g=Math.round((101-rank)*R(20,50));a.fans+=g;a.yr.fans+=g;MOOD(a,10);a.hist.unshift(`N${S.year}: Sáng tác «${title}» – hạng ${rank}`)});addLog(`✍️ «${title}» do ${ws.map(a=>a.name).join(', ')} sáng tác, công ty giữ trọn doanh thu nhạc số.`,'good')}
@@ -92,7 +93,7 @@ export function holdConcert(k){
   if(S.money<200e6)return toast('Không đủ 200 tr');
   S.money-=200e6;book('prod',-200e6);
   const aud=Math.round(Math.min(tf*.04*rnd(.8,1.2),60000)),inc=aud*500000;S.money+=inc;book('con',inc,mem);
-  for(const a of mem){a.fans=Math.round(a.fans*1.08);a.mood=clamp(a.mood+10,0,100);a.energy=clamp(a.energy-25,0,100);a.busy={kind:'concert',title:'Concert',left:1,total:1}}
+  for(const a of mem){a.fans=Math.round(a.fans*1.08);a.mood=clamp(a.mood+10,0,100);a.energy=clamp(a.energy-25,0,100);a.busy={kind:'concert',title:'Concert',left:1,total:1,lk:'concert'}}
   S.concerts.push({act:A.n,aud,y:S.year,m:A.m,k:A.k,w:abs()});
   addLog(`🏟️ Concert của ${A.n.slice(2).trim()}: ${fmtN(aud)} khán giả, doanh thu ${fmt(inc)}.`,'gold');act();
 }
