@@ -4,7 +4,7 @@ import { CONCEPTS, GENRES, MSK, MSKD, ROOMS, STATS, TRAIN, TRAIN_COST } from '..
 import { S, abs, byId } from '../state.js';
 import { fame, fit } from '../systems/artists.js';
 import { bMem, batchHTML } from '../systems/batches.js';
-import { compHTML } from '../systems/contests.js';
+import { compHTML, kindOf } from '../systems/contests.js';
 import { DEBUT_COST, DEBUT_MIN, bestLineup, bestOf, debutAnalysis, recLine } from '../systems/debut.js';
 import { evInfo, invBlock } from '../systems/events.js';
 import { MAX_SA, asstOf, curSong, otherMgr, repCard, songCard, songOpts, songPrev } from '../systems/ext2.js';
@@ -123,7 +123,8 @@ export const RV={
       <div class="row" style="margin-top:6px"><span class="small muted" id="ocp${of.id}">Chọn tối đa ${slotsOf(of)} người</span><span class="sp"></span>${ok.length?`<button class="btn sm" onclick="ocPick(${of.id})">💡 Gợi ý đội hình</button><button class="btn sm pri" onclick="acceptSel(${of.id})">Nhận</button>`:''}</div>`})():`<div class="row" style="margin-top:6px"><select id="ofs${of.id}" style="flex:1;min-width:180px">${opts||'<option disabled>Không có ai rảnh</option>'}</select><button class="btn sm pri" onclick="acceptOffer(${of.id},+$('#ofs${of.id}').value)">Nhận</button></div>`}
       ${of.invest?`<div class="row" style="margin-top:6px"><span class="small">💰 Góp vốn ${Math.round(of.invest.share*100)}% / kinh phí ${fmt(of.invest.budget)}</span><span class="sp"></span><button class="btn sm" ${of.invested?'disabled':''} onclick="investOffer(${of.id})">${of.invested?'Đã góp vốn':'Góp '+fmt(of.invest.budget*of.invest.share)}</button></div>`:''}</div>`},tO=offerOrder(S.offers).filter(o=>OFFER[o.type].trainee),oO=offerOrder(S.offers).filter(o=>!OFFER[o.type].trainee),tgT=n=>{const k=n.filter(o=>byId(o.target)).length;return k?` · ⭐ ${k} mời đích danh`:''},nt=S.artists.filter(a=>a.status==='trainee').length;
       return det('mt-tts',`🌱 Dự án nhận thực tập sinh (${tO.length})${tgT(tO)}`,`<div class="small muted" style="margin-bottom:6px">Việc ngắn để thực tập sinh kiếm tiền, thêm fan và học kinh nghiệm. Tuần đi làm sẽ không tập ở công ty, nên cân nhắc với mục tiêu tăng ${EV_PCT}% chỉ số mỗi kỳ.</div>`+(tO.map(offCard).join('')||'<div class="card muted">Chưa có dự án cho thực tập sinh.</div>'),nt>0)
-        +det('mt-off',`📨 Lời mời cho nghệ sĩ (${oO.length})${tgT(oO)}`,oO.map(offCard).join('')||'<div class="card muted">Chưa có lời mời. Sang tuần mới để nhận thêm.</div>',true)})()}`);
+        +det('mt-off',`📨 Lời mời cho nghệ sĩ (${oO.length})${tgT(oO)}`,oO.map(offCard).join('')||'<div class="card muted">Chưa có lời mời. Sang tuần mới để nhận thêm.</div>',true)
+        +det('mt-comp',`🏆 Cuộc thi cho nghệ sĩ (${S.comps.filter(c=>kindOf(c)!=='tts').length} đang mở)`,compHTML(['grp','solo','act']),true)})()}`);
   },
   studio(){
     const all=acts(),A=all.filter(actFree),busyN=all.length-A.length;
@@ -178,7 +179,7 @@ export const RV={
     ${S.pool.map(a=>`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div><b>${esc(a.name)}</b> <span class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} · năng khiếu ${STATS[a.spec]} · tố chất x${a.talent}</span></div><span class="sp"></span><button class="btn sm pri" onclick="sign(${a.id})">Ký hợp đồng</button></div>${bars(a)}</div>`).join('')||'<div class="small muted">Hết ứng viên.</div>'}
     <button class="btn" onclick="recast()">Tổ chức casting mới (10 tr)</button>`,true)}
     ${det('lb-batches',`🌱 Các lứa thực tập sinh (${S.batches.length} lứa, ${S.artists.filter(a=>a.status==='trainee').length} TTS)`,batchHTML(),true)}
-    ${det('lb-comp',`🏅 Cuộc thi cho thực tập sinh (${S.comps.length} đang mở)`,compHTML(),true)}
+    ${det('lb-comp',`🏅 Cuộc thi cho thực tập sinh (${S.comps.filter(c=>kindOf(c)==='tts').length} đang mở)`,compHTML(),true)}
     ${(()=>{const ts=S.artists.filter(a=>a.status==='trainee'&&!a.busy).sort(eligSort);return ts.length?det('lb-rec',`🎯 Đề xuất hướng debut: tất cả thực tập sinh (${ts.length})`,`<div class="small muted" style="margin-bottom:4px">So sánh từng thực tập sinh khi ra solo, làm diễn viên hay vào nhóm. Chỉ đề xuất debut khi độ phù hợp trên ${DEBUT_MIN}%. Bấm "Áp dụng" để điền sẵn vào form bên dưới.</div><div class="card">${ts.map(recLine).join('')}</div>`,false):''})()}
     <h3>🎊 Debut</h3><div class="card"><div class="row"><select id="dType"><option value="group">Nhóm nhạc</option><option value="solo">Solo</option><option value="actor">Diễn viên</option></select><input type="text" id="dName" placeholder="Tên nhóm" style="flex:1"></div>
     <div id="dSug"></div><h3 style="margin-top:10px">Chọn nghệ sĩ</h3><div class="list" id="dList"></div><div class="card" id="dAna" style="margin-top:10px;background:var(--bg)"></div><div class="small muted" id="dCost" style="margin:6px 0"></div><button class="btn pink" onclick="debut()">Ra mắt</button></div>

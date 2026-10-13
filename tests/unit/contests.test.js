@@ -2,7 +2,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { noToggle, seed, SHELL } from './helpers.js';
 import { S, abs, uid, newGame } from '../../src/state.js';
-import { enterComp, compDone, compBonus, kindOf } from '../../src/systems/contests.js';
+import { fame } from '../../src/systems/artists.js';
+import { enterComp, compDone, compBonus, compTick, kindOf } from '../../src/systems/contests.js';
 import { viewArtist } from '../../src/ui/views.js';
 
 noToggle();
@@ -91,5 +92,68 @@ describe('compBonus', () => {
     a.lessons.unshift({ t: 'Cuộc thi', l: 'x', s: 'Vocal +1', y: 1, b: 'Vocal +3' });
     viewArtist(a.id);
     expect(document.getElementById('sheet').innerHTML).toContain('🏅 Vocal +3');
+  });
+});
+
+describe('cuộc thi nghệ sĩ đã debut', () => {
+  const debutSolo = a => { a.status = 'debuted'; a.solo = true; };
+  it('không có nghệ sĩ debut thì compTick không tạo cuộc thi khác tts', () => {
+    newGame();
+    for (let i = 0; i < 20; i++) { S.week++; compTick(); }
+    expect(S.comps.every(c => kindOf(c) === 'tts')).toBe(true);
+  });
+  it('có solo debut thì tạo solo, không tạo grp khi chưa có nhóm', () => {
+    newGame();
+    debutSolo(S.artists[0]);
+    for (let i = 0; i < 30; i++) { S.week++; compTick(); }
+    const d = S.comps.filter(c => kindOf(c) !== 'tts');
+    expect(d.length).toBeGreaterThan(0);
+    expect(d.every(c => kindOf(c) === 'solo')).toBe(true);
+  });
+  const mkGroup = () => {
+    newGame();
+    const [x, y] = S.artists;
+    [x, y].forEach(a => { a.status = 'debuted'; a.fans = 90000; });
+    const g = { id: uid(), name: 'Sao Mai', members: [x.id, y.id], y: 1, concept: 'bright' };
+    S.groups.push(g);
+    return { x, y, g };
+  };
+  it('enterComp nhóm bị từ chối khi một thành viên bận, thành công khi cả nhóm rảnh', () => {
+    const { x, y, g } = mkGroup();
+    const c = mkComp({ k: 'grp', t: [2, 9], lvl: 40, fee: 10e6 });
+    S.comps.push(c);
+    check(c, [g.id]);
+    x.busy = { kind: 'promo', title: 'x', left: 1, total: 1 };
+    const m = S.money;
+    enterComp(c.id);
+    expect(S.money).toBe(m);
+    expect(y.busy).toBeFalsy();
+    x.busy = null;
+    enterComp(c.id);
+    expect(x.busy.kind).toBe('comp');
+    expect(y.busy.run).toBe(x.busy.run);
+    expect(S.compRuns.at(-1).g).toBe(g.id);
+    expect(S.money).toBe(m - 10e6);
+  });
+  it('compDone debut: thưởng nhân run.pm, fan nhân danh tiếng, có thưởng chỉ số', () => {
+    const { x, y, g } = mkGroup();
+    const c = mkComp({ k: 'grp', t: [2, 9], lvl: -500, fee: 0, w: { vocal: 1 } });
+    S.comps.push(c);
+    check(c, [g.id]);
+    enterComp(c.id);
+    const run = S.compRuns.at(-1), pm = run.pm;
+    expect(pm).toBeCloseTo(1 + fame(x) / 60, 5);
+    const m0 = S.money, f0 = x.fans, v0 = x.st.vocal;
+    seed(9);
+    compDone(x, x.busy);
+    expect(run.res.rank).toBe(1);
+    expect(S.money - m0).toBe(Math.round(50e6 * pm / 1e6) * 1e6);
+    // same R draw with the tts multiplier (1) would give fg/mult; fame 95+ -> mult > 5
+    const mult = 2 + fame(x) / 25;
+    expect(x.fans - f0).toBeGreaterThanOrEqual(Math.round(3000 * mult));
+    expect(x.fans - f0).toBeLessThanOrEqual(Math.round(7000 * mult));
+    expect(x.st.vocal).toBeGreaterThan(v0 + 3);
+    expect(x.lessons[0].b).toBe('Vocal +3');
+    expect(S.log[0].t).toContain('Nhóm Sao Mai');
   });
 });
