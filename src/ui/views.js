@@ -8,7 +8,8 @@ import { DEBUT_MIN, DR, bestOf, debutRec } from '../systems/debut.js';
 import { evInfo, invBlock } from '../systems/events.js';
 import { candBlock, dHold, menteesOf, mentorScore, mentorSel, renewBlock, wp } from '../systems/ext2.js';
 import { mNameH, v3ArtistHTML } from '../systems/ext3.js';
-import { mBoss, mKids, mgrOf, mgrTargets, targetName } from '../systems/managers.js';
+import { gmCardHTML } from '../systems/gm.js';
+import { gmOf, mBoss, mKids, mgrOf, mgrTargets, targetName } from '../systems/managers.js';
 import { cbHold } from '../systems/offers.js';
 import { propCount } from '../systems/proposals.js';
 import { groupsOf } from '../systems/relations.js';
@@ -75,7 +76,7 @@ export function orgTree(){
     return`<li><details class="tdet" ${op?'open':''} ontoggle="togD('ot-${m.id}',this.open)"><summary>${tnode(m)}<span class="tcnt">${teamOf(m).length} người · ${k.length} cấp dưới</span></summary><ul>${k.map(sub).join('')}</ul></details></li>`};
   const top=S.managers.filter(m=>!mBoss(m));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Giám đốc (bạn)</b><div class="small muted">${S.managers.length} quản lý · ${free.length} nghệ sĩ báo cáo trực tiếp</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:'<div class="small muted" style="margin:6px 0 0 20px">Chưa có quản lý.</div>'}`;
+  return`<div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Giám đốc (bạn)</b><div class="small muted">${S.managers.length} quản lý${gmOf()?' · 1 quản lý tổng':''} · ${free.length} nghệ sĩ báo cáo trực tiếp</div></div></div>${top.length?`<ul>${top.map(sub).join('')}</ul>`:'<div class="small muted" style="margin:6px 0 0 20px">Chưa có quản lý.</div>'}`;
 }
 export function artDayLine(a,d){
   const r=S.lastRep&&S.lastRep.a[a.id];
@@ -108,6 +109,7 @@ export function viewReport(){
   modal(`<h2>📑 Báo cáo tuần ${L.w} · Năm ${L.y}</h2>
   <div class="grid2" style="margin-bottom:8px"><div class="card small">💰 <b class="${dm<0?'bad':'good'}">${dm==null?'—':(dm>=0?'+':'')+fmt(dm)}</b></div><div class="card small">💗 <b>${fans>=0?'+':''}${fmtN(fans)}</b> fan</div><div class="card small">🎬 <b>${dn}</b> dự án xong</div><div class="card small">⚠️ <b class="${wc?'bad':''}">${wc}</b> cần chú ý</div>${L.biz?`<div class="card small">📈 Kinh doanh <b class="${L.biz<0?'bad':'good'}">${L.biz>=0?'+':''}${fmt(L.biz)}</b></div>`:''}</div>
   ${L.evl?evalBrief(S.lastEval):''}
+  ${S.gmRep&&S.gmRep.w===abs()-1?gmCardHTML():''}
   ${cards}${free.length?briefCard('<b>👔 Chưa có quản lý</b>',free):''}
   ${(()=>{const P=S.props&&S.props.w===abs()?S.props:null;if(!P)return'';const nb=Object.values(P.st.boss).reduce((a,b)=>a+b,0),pd=P.c.filter(c=>c.pend).length;return(nb||P.st.auto||P.st.res||pd)?`<div class="card small rep">📨 Duyệt tuần mới: ${nb?`cấp trên duyệt ${nb}`:''}${P.st.auto?` · tự duyệt ${P.st.auto}`:''}${P.st.res?` · ⚖️ ${P.st.res} xung đột đã xử lý`:''}${pd?` · <span class="w">⚠️ ${pd} xung đột chờ bạn</span>`:''}</div>`:''})()}
   ${L.ev.length?`<h3>Đáng chú ý</h3><div class="card rep">${L.ev.slice(0,5).map(t=>`<div>${esc(t)}</div>`).join('')}${L.ev.length>5?`<div class="muted">+${L.ev.length-5} sự kiện khác trong Nhật ký</div>`:''}</div>`:''}

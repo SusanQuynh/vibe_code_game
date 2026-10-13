@@ -20,14 +20,17 @@ export function mgrOf(a){let best=null;for(const m of S.managers)if(m.as&&mgrTar
 export const mBoss=m=>m.boss?S.managers.find(x=>x.id===m.boss)||null:null;
 export const mKids=m=>S.managers.filter(x=>x.boss===m.id);
 export function inSub(root,x){for(const k of mKids(root))if(k===x||inSub(k,x))return true;return false}
-export const mCap=m=>2+Math.floor(m.lv/2);
-export const effSk=(m,k)=>{const b=mBoss(m);return Math.min(10,m.sk[k]+(b?Math.floor(b.sk[k]*.2):0)+asstB(m,k))};
+export const gmOf=()=>S.managers.find(m=>m.gm)||null;
+export const mCap=m=>m.gm?Infinity:2+Math.floor(m.lv/2);
+/* GM bonus: 10% of GM skill for managers below the GM that are not direct reports (those already get the boss +20%) */
+const gmB=(m,k)=>{const g=gmOf();return g&&g!==m&&m.boss!==g.id&&inSub(g,m)?Math.floor(g.sk[k]*.1):0};
+export const effSk=(m,k)=>{const b=mBoss(m);return Math.min(10,m.sk[k]+(b?Math.floor(b.sk[k]*.2):0)+gmB(m,k)+asstB(m,k))};
 export const msk=(a,k)=>{const m=mgrOf(a),v=m?effSk(m,k):0,b=a.pm?Math.max(v,a.pm.sk[k]||0):v;return Math.min(10,b+(a.pa&&a.pa.k===k?a.pa.v:0))};
 export function givePM(a,quiet){if(a.pm)return;const sk={};for(const k in MSK)sk[k]=R(3,7);a.pm={id:-a.id,name:pick(LNM)+' '+pick(MGN),sk,lv:1,ps:1,boss:null};
   for(const m of S.managers){if(m.as&&m.as.t==='a'&&m.as.id===a.id)m.as=null;if(m.as&&m.as.t==='l')m.as.ids=m.as.ids.filter(i=>i!==a.id)}S.props=null;
   if(!quiet)addLog(`🧑‍💼 ${a.name} tách solo và tự chọn quản lý riêng: ${a.pm.name}. Văn phòng Quản lý không cần phụ trách nữa.`)}
-export function setBoss(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return;
-  if(!v){m.boss=null;addLog(`📋 ${m.name} báo cáo trực tiếp Giám đốc.`)}
+export function setBoss(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return;if(m.gm)return toast('Quản lý tổng báo cáo trực tiếp Giám đốc');
+  if(!v){const g=gmOf();m.boss=g?g.id:null;addLog(g?`📋 ${m.name} báo cáo cho quản lý tổng ${g.name}.`:`📋 ${m.name} báo cáo trực tiếp Giám đốc.`)}
   else{const b=S.managers.find(x=>x.id===+v);if(!b||b===m||inSub(m,b))return toast('Không thể tạo vòng lặp cấp bậc');if(mKids(b).length>=mCap(b))return toast(`${b.name} chỉ quản được ${mCap(b)} người ở cấp hiện tại`);m.boss=b.id;addLog(`📋 ${m.name} giờ báo cáo cho ${b.name}.`)}
   act()}
 export function targetName(m){if(!m.as)return'Chưa phân công';if(m.as.t==='t')return'tất cả thực tập sinh';if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?'thực tập sinh '+b.n.toLowerCase():'lứa đã giải tán'}if(m.as.t==='s')return'tất cả nghệ sĩ solo';if(m.as.t==='d')return'tất cả diễn viên';if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?`${ts.length} nghệ sĩ: ${ts.slice(0,2).map(a=>a.name).join(', ')}${ts.length>2?'…':''}`:'danh sách trống'}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?'nhóm '+g.name:'—'}const a=byId(m.as.id);return a?a.name:'—'}
@@ -38,7 +41,7 @@ export function mgrAuto(){for(const m of S.managers){if(m.auto==='off'||!m.as)co
   for(const of of S.offers.slice().sort((x,y)=>(mine(y)-mine(x))||y.pay-x.pay)){if(!free().length)break;if(m.auto!=='all'&&of.weeks>2&&!mine(of))continue;
     const c=bestCast(of,free());if(c){addLog(`📋 Quản lý ${m.name} ${mine(of)?'ưu tiên dự án mời đích danh, ':''}nhận giúp ${c.map(i=>byId(i).name).join(', ')}: «${of.title}».`);acceptCast(of.id,c,true)}}}}
 export function cleanMgr(){for(const m of S.managers)if(m.as&&!'tsdlb'.includes(m.as.t)&&!mgrTargets(m).length&&!(m.as.t==='g'&&S.groups.find(g=>g.id===m.as.id)))m.as=null}
-export function hireMgr(id){const m=S.mgrPool.find(x=>x.id===id);if(!m)return;if(S.money<m.fee)return toast('Không đủ tiền');S.money-=m.fee;S.mgrPool=S.mgrPool.filter(x=>x!==m);S.managers.push(m);addLog(`🧑‍💼 Tuyển quản lý ${m.name}.`,'good');act()}
+export function hireMgr(id){const m=S.mgrPool.find(x=>x.id===id);if(!m)return;if(S.money<m.fee)return toast('Không đủ tiền');S.money-=m.fee;S.mgrPool=S.mgrPool.filter(x=>x!==m);S.managers.push(m);const g=gmOf();if(g)m.boss=g.id;addLog(`🧑‍💼 Tuyển quản lý ${m.name}.`,'good');act()}
 /* ---- Manager domains: m.dom in DOM_KEYS (MDOM labels) ---- */
 export const artDom=(a,dom)=>dom==='trainee'?a.status==='trainee':dom==='group'?groupsOf(a).length>0:dom==='solo'?!!a.solo&&!a.pm:dom==='actor'?!!a.actor:false;
 const AS_DOM={t:'trainee',b:'trainee',g:'group',s:'solo',d:'actor'};
@@ -67,5 +70,5 @@ export function toggleMA(mid,aid,on){const m=S.managers.find(x=>x.id===mid);if(!
     const o=S.managers.find(x=>x!==m&&x.as&&x.as.t==='l'&&x.as.ids.includes(aid));if(o){toast(`Đã thuộc danh sách của ${o.name}`);return act()}L.push(aid)}
   else m.as.ids=L.filter(i=>i!==aid);act()}
 export function setAuto(id,v){const m=S.managers.find(x=>x.id===id);if(m){S.props=null;m.auto=v;act()}}
-export function fireMgr(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainConfirm');return}const m=S.managers.find(x=>x.id===id);if(m){mKids(m).forEach(k=>k.boss=m.boss||null);S.managers=S.managers.filter(x=>x!==m);S.assts=(S.assts||[]).filter(x=>x.mid!==m.id);S.events=S.events.filter(e=>e.m!==m.id);addLog(`👋 Cho nghỉ việc quản lý ${m.name}.`);act()}}
+export function fireMgr(id,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainConfirm');return}const m=S.managers.find(x=>x.id===id);if(m){mKids(m).forEach(k=>k.boss=m.boss||null);S.managers=S.managers.filter(x=>x!==m);S.assts=(S.assts||[]).filter(x=>x.mid!==m.id);S.events=S.events.filter(e=>e.m!==m.id);addLog(`👋 Cho nghỉ việc ${m.gm?'quản lý tổng':'quản lý'} ${m.name}.`);act()}}
 export function rehuntMgr(){if(S.money<15e6)return toast('Không đủ tiền');S.money-=15e6;genMgrPool();act()}

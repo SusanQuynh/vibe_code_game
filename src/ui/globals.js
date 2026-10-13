@@ -9,6 +9,7 @@ import { applyLineup, applyRec, debut } from '../systems/debut.js';
 import { invBuy, invOpen, invStart, resolveEv } from '../systems/events.js';
 import { fireAsst, renewDo, setMentor, songAct, songRelease, toggleHold, viewRenew, viewSong, viewSongs, wPrev, writeSong } from '../systems/ext2.js';
 import { dqDo, dqKeep, dqLater, hsApply, hsFire, hsHire, paFire, paHire, paOpen, paRe, viewDebutQ } from '../systems/ext3.js';
+import { demoteGM, hireGM, promoteGM } from '../systems/gm.js';
 import { assignMgr, fireMgr, hireMgr, rehuntMgr, setAuto, setBoss, setDom, toggleMA } from '../systems/managers.js';
 import { buyBiz, buybackBiz, raiseBiz, sellBiz, upBiz } from '../systems/market.js';
 import { acceptOffer, acceptSel, investOffer, ocPick, ocPrev } from '../systems/offers.js';
@@ -52,6 +53,7 @@ Object.assign(window, {
   compPick,
   compPrev,
   debut,
+  demoteGM,
   doFM,
   doLive,
   dqDo,
@@ -61,6 +63,7 @@ Object.assign(window, {
   fire,
   fireAsst,
   fireMgr,
+  hireGM,
   hireMgr,
   holdConcert,
   hsApply,
@@ -95,6 +98,7 @@ Object.assign(window, {
   preAuto,
   preDo,
   produceFilm,
+  promoteGM,
   propAll,
   propOk,
   propOkAll,

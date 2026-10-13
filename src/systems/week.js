@@ -10,6 +10,7 @@ import { compDone, compTick } from './contests.js';
 import { evInfo, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
 import { dqList, viewDebutQ } from './ext3.js';
+import { gmReport } from './gm.js';
 import { effSk, genMgrPool, mgrAuto, mgrDomTick, mgrExp, mgrOf, msk } from './managers.js';
 import { bizLv, modV, weekWorld } from './market.js';
 import { genOffers } from './offers.js';
@@ -123,7 +124,7 @@ export function nextWeek(force,planned){
   if(!planned&&((S.planOn!==false&&S.artists.some(a=>!a.busy))||propCount()))return startPlan(force);
   mgrScheduleAll();
   if(force)for(const e of [...S.events]){const inf=evInfo(e);if(inf)resolveEv(e.id,inf.o[inf.o.length-1].k,true);else S.events=S.events.filter(x=>x!==e)}
-  const now=abs(),logMark=S.log[0],rep={y:S.year,w:S.week,a:{},ev:[],m0:S.money},f0={};S.artists.forEach(a=>f0[a.id]=a.fans);
+  const now=abs(),logMark=S.log[0],rep={y:S.year,w:S.week,a:{},ev:[],m0:S.money},f0={},lv0={},e0={};S.artists.forEach(a=>{f0[a.id]=a.fans;e0[a.id]=a.earn||0});S.managers.forEach(m=>lv0[m.id]=m.lv);
   promoWeek();
   for(const a of [...S.artists]){
     if(a.busy){rep.a[a.id]={b:a.busy.title};a.busy.left--;if(a.busy.left<=0){const bk=a.busy.kind,bt=a.busy.title;completeBusy(a);if(bk==='offer'||bk==='shoot')rep.a[a.id].done=bt}}
@@ -158,7 +159,7 @@ export function nextWeek(force,planned){
   S.week++;
   if(S.week>52){awards();S.week=1;S.year++}
   runCbPlans();
-  {const ix=S.log.indexOf(logMark);rep.ev=(ix<0?S.log:S.log.slice(0,ix)).slice(0,30).map(l=>l.t);rep.m1=S.money;if(S.lastEval&&S.lastEval.w===abs()-1)rep.evl=1;rep.biz=bizP;for(const a of S.artists)if(rep.a[a.id])rep.a[a.id].f=a.fans-(f0[a.id]||0);S.lastRep=rep}
+  {const ix=S.log.indexOf(logMark);rep.ev=(ix<0?S.log:S.log.slice(0,ix)).slice(0,30).map(l=>l.t);rep.m1=S.money;if(S.lastEval&&S.lastEval.w===abs()-1)rep.evl=1;rep.biz=bizP;for(const a of S.artists)if(rep.a[a.id])rep.a[a.id].f=a.fans-(f0[a.id]||0);S.lastRep=rep;gmReport(rep,lv0,e0)}
   act();
   setRepDay(0);
   if(awardToShow){const e=awardToShow;setAwardToShow(null);view(()=>viewAward(e))}
