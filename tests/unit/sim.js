@@ -224,3 +224,36 @@ export function runToasts(base) {
   }
   return out;
 }
+
+// ---- leftover-Vietnamese detection for lang=en (used by ui-en*.test.js) ----
+const VI_LETTER = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
+// proper nouns / names that come from data tables and are shown verbatim
+const ALLOW_WORDS = new Set(['Tiếng', 'Việt']);
+const STORED_KEYS = new Set(['log', 'hist', 'lessons', 'why', 'prob', 'ev', 'prHist']);
+
+// Vietnamese strings reachable from S: long ones are stripped whole, short ones (names…) allow their words
+function storedStrings(root) {
+  const all = [], short = new Set();
+  const walk = (v, key, underStored) => {
+    if (typeof v === 'string') {
+      if (!VI_LETTER.test(v)) return;
+      all.push(v);
+      if (v.length <= 40 && !underStored) for (const w of v.match(/\p{L}+/gu) || []) short.add(w);
+    } else if (v && typeof v === 'object') {
+      for (const [k, x] of Object.entries(v)) walk(x, k, underStored || STORED_KEYS.has(k));
+    }
+  };
+  walk(root, '', false);
+  return { all: all.sort((a, b) => b.length - a.length), short };
+}
+
+// returns the offending words/tokens of `text` (visible text of an en render)
+export function offenders(text, state) {
+  const { all, short } = storedStrings(state);
+  for (const s of all) text = text.split(s).join(' ');
+  const out = [];
+  for (const w of text.match(/\p{L}+/gu) || []) if (VI_LETTER.test(w) && !short.has(w) && !ALLOW_WORDS.has(w)) out.push(w);
+  for (const m of text.matchAll(/\b(TTS|QL|GĐ|CN|tr)\b|\bN\d+·T\d+\b|\bT[2-7]\b/gu)) out.push(m[0]);
+  return out;
+}
+

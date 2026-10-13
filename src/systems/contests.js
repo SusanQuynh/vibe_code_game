@@ -1,6 +1,8 @@
 import { R, pick, rnd } from '../core/rng.js';
 import { $, clamp, esc, fmt } from '../core/util.js';
-import { CB, STATS } from '../data/rules.js';
+import { CB } from '../data/rules.js';
+import { money, t, tVi } from '../i18n/index.js';
+import { statName } from '../i18n/labels.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit } from './artists.js';
 import { batchOf } from './batches.js';
@@ -46,20 +48,21 @@ export const kindOf=c=>c.k||'tts';
 const okD=a=>!a.busy&&!(a.scandal&&a.scandal.sev>=2);
 const fanD=a=>2+fame(a)/25;
 export const KIND={
-  tts:{elig:a=>a.status==='trainee'&&!a.busy,label:'thực tập sinh',fanMul:()=>1},
-  grp:{grp:1,elig:g=>!(g.hiatus>abs())&&g.members.length>0&&g.members.every(i=>{const a=byId(i);return a&&okD(a)}),label:'nhóm',fanMul:fanD,pm:1,sec:'Nhóm nhạc'},
-  solo:{elig:a=>a.status==='debuted'&&!!a.solo&&okD(a),label:'nghệ sĩ solo',fanMul:fanD,pm:1,sec:'Solo'},
-  act:{elig:a=>a.status==='debuted'&&!!a.actor&&okD(a),label:'diễn viên',fanMul:fanD,pm:1,sec:'Diễn viên'}
+  tts:{elig:a=>a.status==='trainee'&&!a.busy,fanMul:()=>1},
+  grp:{grp:1,elig:g=>!(g.hiatus>abs())&&g.members.length>0&&g.members.every(i=>{const a=byId(i);return a&&okD(a)}),fanMul:fanD,pm:1},
+  solo:{elig:a=>a.status==='debuted'&&!!a.solo&&okD(a),fanMul:fanD,pm:1},
+  act:{elig:a=>a.status==='debuted'&&!!a.actor&&okD(a),fanMul:fanD,pm:1}
 };
 const unitsOf=c=>{const K=KIND[kindOf(c)];return(K.grp?S.groups:S.artists).filter(K.elig)};
 const idsOfSel=(c,sel)=>{const K=KIND[kindOf(c)];if(!K.grp)return sel;const g=S.groups.find(x=>x.id===sel[0]);return g?g.members.slice():[]};
-const teamTxt=c=>KIND[kindOf(c)].grp?`Cả nhóm (${c.t[0]}–${c.t[1]} thành viên)`:c.t[1]===1?'Thi cá nhân':c.t[0]===c.t[1]?`Đội ${c.t[0]} người`:`Đội ${c.t[0]}–${c.t[1]} người`;
-const needTxt=c=>KIND[kindOf(c)].grp?'nhóm':`${c.t[0]===c.t[1]?c.t[0]:c.t[0]+'–'+c.t[1]} ${KIND[kindOf(c)].label}`;
+const teamTxt=c=>KIND[kindOf(c)].grp?t('comp.team.group',{a:c.t[0],b:c.t[1]}):c.t[1]===1?t('comp.team.solo'):c.t[0]===c.t[1]?t('comp.team.n',{n:c.t[0]}):t('comp.team.range',{a:c.t[0],b:c.t[1]});
+const kLbl=c=>t(`comp.kind.${kindOf(c)}.label`);
+const needTxt=c=>KIND[kindOf(c)].grp?t('comp.need.group'):t(`comp.kind.${kindOf(c)}.need`,{c:c.t[0]===c.t[1]?c.t[0]:c.t[0]+'–'+c.t[1],one:c.t[0]===c.t[1]&&c.t[0]===1});
 /* prize multiplier by fame at registration (debuted kinds only) */
 const pmOf=(c,ms)=>KIND[kindOf(c)].pm&&ms.length?1+ms.reduce((t,a)=>t+fame(a),0)/ms.length/60:0;
 const prizeOf=(c,rank,pm)=>pm?Math.round(c.prize[rank-1]*pm/1e6)*1e6:c.prize[rank-1];
 const bonusOf=(c,rank)=>rank<=3?Object.keys(c.w).map(k=>[k,+(CB[rank-1]*c.w[k]).toFixed(1)]):[];
-export const bonusTxt=(c,rank)=>bonusOf(c,rank).map(([k,g])=>`${STATS[k]} +${g}`).join(', ');
+export const bonusTxt=(c,rank,tr=tVi)=>bonusOf(c,rank).map(([k,g])=>`${tr(`stat.${k}`)} +${g}`).join(', ');
 /* top-3 stat bonus (no RNG); returns the text */
 export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return bonusTxt(c,rank)}
 export function compTick(){S.comps=(S.comps||[]).filter(c=>c.exp>abs());const n=S.comps.filter(c=>kindOf(c)==='tts').length;if(n<2||(n<4&&Math.random()<.35))genComp();
@@ -70,19 +73,19 @@ export function compOdds(c,ids){const ms=ids.map(byId).filter(Boolean);if(!ms.le
   let n=0;for(let i=0;i<300;i++){const sc=f+rnd(-8,8);if(compRank(c,sc)<=3)n++}return Math.round(n/3)}
 export function compSel(cid){return[...document.querySelectorAll('.cp'+cid+':checked')].map(x=>+x.value)}
 export function compPrev(cid){const c=S.comps.find(x=>x.id===cid),el=$('#cpo'+cid);if(!c||!el)return;const sel=compSel(cid),ids=idsOfSel(c,sel),ms=ids.map(byId).filter(Boolean);
-  if(!ids.length){el.textContent=`Chọn ${needTxt(c)}`;return}
-  const pm=pmOf(c,ms);el.textContent=`Đã chọn ${ids.length} người · cơ hội vào top 3 khoảng ${compOdds(c,ids)}%`+(pm?` · thưởng 🥇 ${fmt(prizeOf(c,1,pm))} · 🥈 ${fmt(prizeOf(c,2,pm))} · 🥉 ${fmt(prizeOf(c,3,pm))}`:'')}
+  if(!ids.length){el.textContent=t('comp.choose',{x:needTxt(c)});return}
+  const pm=pmOf(c,ms);el.textContent=t('comp.sel',{n:ids.length,p:compOdds(c,ids)})+(pm?` · ${t('comp.prize3',{a:money(prizeOf(c,1,pm)),b:money(prizeOf(c,2,pm)),c:money(prizeOf(c,3,pm))})}`:'')}
 export function compPick(cid){const c=S.comps.find(x=>x.id===cid);if(!c)return;const K=KIND[kindOf(c)];let L;
   if(K.grp)L=unitsOf(c).filter(g=>g.members.length>=c.t[0]&&g.members.length<=c.t[1]).sort((x,y)=>compScore(y.members.map(byId).filter(Boolean),y.members,c)-compScore(x.members.map(byId).filter(Boolean),x.members,c)).slice(0,1).map(g=>g.id);
   else{const n=c.t[1]>1?clamp(3,c.t[0],c.t[1]):1;L=unitsOf(c).sort((x,y)=>fit(y,c.w)-fit(x,c.w)).slice(0,n).map(a=>a.id)}
   document.querySelectorAll('.cp'+cid).forEach(x=>x.checked=L.includes(+x.value));compPrev(cid)}
 export function enterComp(cid){const c=S.comps.find(x=>x.id===cid);if(!c)return;const K=KIND[kindOf(c)],sel=compSel(cid);let g=null,ms;
-  if(K.grp){g=S.groups.find(x=>x.id===sel[0]);if(!g)return toast('Chọn một nhóm');if(!K.elig(g))return toast(`Nhóm ${g.name} đang bận hoặc tạm ngừng`);ms=g.members.map(byId).filter(Boolean)}
+  if(K.grp){g=S.groups.find(x=>x.id===sel[0]);if(!g)return toast(t('comp.toast.pickGroup'));if(!K.elig(g))return toast(t('comp.toast.groupBusy',{n:g.name}));ms=g.members.map(byId).filter(Boolean)}
   else ms=sel.map(byId).filter(a=>a&&K.elig(a));
-  {const h=ms.find(dHold);if(h)return toast(`${h.name} đang chừa lịch debut`)}
-  {const h=ms.find(a=>{const p=cbHold(a);return p&&abs()+c.wk>p.w});if(h)return toast(`${h.name} đang chừa lịch comeback ${wkLabel(cbHold(h).w)}`)}
-  if(ms.length<c.t[0]||ms.length>c.t[1])return toast(`Cần ${needTxt(c)}`);
-  if(S.money<c.fee)return toast('Không đủ tiền lệ phí');S.money-=c.fee;
+  {const h=ms.find(dHold);if(h)return toast(t('comp.toast.debutHold',{n:h.name}))}
+  {const h=ms.find(a=>{const p=cbHold(a);return p&&abs()+c.wk>p.w});if(h)return toast(t('comp.toast.cbHold',{n:h.name,w:wkLabel(cbHold(h).w,t)}))}
+  if(ms.length<c.t[0]||ms.length>c.t[1])return toast(t('comp.toast.need',{x:needTxt(c)}));
+  if(S.money<c.fee)return toast(t('comp.toast.noFee'));S.money-=c.fee;
   const run={id:uid(),c,ids:ms.map(a=>a.id),res:null};if(g)run.g=g.id;const pm=pmOf(c,ms);if(pm)run.pm=pm;S.compRuns=S.compRuns||[];S.compRuns.push(run);
   ms.forEach(a=>a.busy={kind:'comp',title:'Cuộc thi «'+c.n+'»',left:c.wk,total:c.wk,run:run.id});
   S.comps=S.comps.filter(x=>x!==c);addLog(`🏅 ${g?'Nhóm '+g.name:ms.map(a=>a.name).join(', ')} lên đường dự thi «${c.n}» (${c.wk} tuần, lệ phí ${fmt(c.fee)}).`,'good');act()}
@@ -99,12 +102,12 @@ export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);i
   if(!S.artists.some(x=>x.busy&&x.busy.run===run.id))S.compRuns=S.compRuns.filter(x=>x!==run)}
 export function compHTML(kinds=['tts']){const dbt=!kinds.includes('tts'),inK=c=>kinds.includes(kindOf(c)),
   going=S.artists.filter(a=>{if(!a.busy||a.busy.kind!=='comp')return false;const r=(S.compRuns||[]).find(x=>x.id===a.busy.run);return r?inK(r.c):!dbt});
-  return`<div class="small muted" style="margin-bottom:6px">${dbt?'Dành cho nghệ sĩ đã debut: nhóm thi theo nhóm, solo và diễn viên thi cá nhân. Đối thủ mạnh hơn, thưởng cao hơn, tiền thưởng và fan tăng theo danh tiếng. Top 3 nhận thêm chỉ số, ai cũng có bài học.':'Chỉ thực tập sinh được dự thi. Top 3 nhận tiền thưởng, ai cũng có thêm fan và bài học theo kỹ năng thi.'} ${going.length?`Đang thi: <b>${going.map(a=>esc(a.name)).join(', ')}</b>.`:''}</div>`+
+  return`<div class="small muted" style="margin-bottom:6px">${dbt?t('comp.help.deb'):t('comp.help.tts')} ${going.length?t('comp.going',{n:going.map(a=>esc(a.name)).join(', ')}):''}</div>`+
   (S.comps.filter(inK).map(c=>{const K=KIND[kindOf(c)],U=unitsOf(c),multi=c.t[1]>1&&!K.grp,
     sc=u=>K.grp?compScore(u.members.map(byId).filter(Boolean),u.members,c):fit(u,c.w),L=U.slice().sort((x,y)=>sc(y)-sc(x));
-    const list=x=>x.map(u=>{if(K.grp)return`<label><input type="radio" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${u.members.length} thành viên · điểm kỹ năng ${Math.round(sc(u))}</span></span></label>`;
-      const bt=batchOf(u);return`<label><input type="${multi?'checkbox':'radio'}" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${bt&&S.batches.length>1&&u.status==='trainee'?esc(bt.n)+' · ':''}điểm kỹ năng ${Math.round(sc(u))}${K.pm?' · danh tiếng '+fame(u):''}</span></span></label>`}).join('');
-    return`<div class="card"><div class="row"><b>${c.ic} ${esc(c.n)}</b><span class="sp"></span><span class="small muted">hạn đăng ký ${c.exp-abs()} tuần</span></div>
-    <div class="small">${teamTxt(c)} · ${c.wk} tuần · lệ phí ${fmt(c.fee)} · đối thủ khoảng ${c.lvl} điểm<br>🥇 ${fmt(c.prize[0])} · 🥈 ${fmt(c.prize[1])} · 🥉 ${fmt(c.prize[2])}${K.pm?' <span class="muted">(thưởng gốc, nhân theo danh tiếng khi đăng ký)</span>':''}</div>
-    <div class="req">Chấm điểm: ${Object.keys(c.w).map(k=>STATS[k]).join(', ')}</div>
-    ${L.length?det('cp-l'+c.id,`Chọn ${K.label} (${L.length} ${K.grp?'nhóm':'người'} rảnh)`,`<div class="list">${list(L)}</div>`,true)+`<div class="row" style="margin-top:6px"><span class="small muted" id="cpo${c.id}" style="flex:1">Chọn ${needTxt(c)}</span><button class="btn sm" onclick="compPick(${c.id})">💡 Gợi ý</button><button class="btn sm pri" onclick="enterComp(${c.id})">Đăng ký</button></div>`:`<div class="small muted">Không có ${K.label} rảnh.</div>`}</div>`}).join('')||'<div class="small muted">Chưa có cuộc thi nào mở đăng ký. Sang tuần mới để xem thêm.</div>')}
+    const list=x=>x.map(u=>{if(K.grp)return`<label><input type="radio" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${t('common.members',{n:u.members.length})} · ${t('comp.skill',{n:Math.round(sc(u))})}</span></span></label>`;
+      const bt=batchOf(u);return`<label><input type="${multi?'checkbox':'radio'}" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${bt&&S.batches.length>1&&u.status==='trainee'?esc(bt.n)+' · ':''}${t('comp.skill',{n:Math.round(sc(u))})}${K.pm?' · '+t('comp.fame',{n:fame(u)}):''}</span></span></label>`}).join('');
+    return`<div class="card"><div class="row"><b>${c.ic} ${esc(c.n)}</b><span class="sp"></span><span class="small muted">${t('comp.deadline',{w:t('common.weeks',{n:c.exp-abs()})})}</span></div>
+    <div class="small">${teamTxt(c)} · ${t('common.weeks',{n:c.wk})} · ${t('comp.fee',{m:money(c.fee)})} · ${t('comp.rivals',{n:c.lvl})}<br>🥇 ${money(c.prize[0])} · 🥈 ${money(c.prize[1])} · 🥉 ${money(c.prize[2])}${K.pm?` <span class="muted">${t('comp.pmNote')}</span>`:''}</div>
+    <div class="req">${t('comp.scoring')} ${Object.keys(c.w).map(k=>statName(k)).join(', ')}</div>
+    ${L.length?det('cp-l'+c.id,t('comp.pickSum',{k:kLbl(c),n:L.length,g:!!K.grp}),`<div class="list">${list(L)}</div>`,true)+`<div class="row" style="margin-top:6px"><span class="small muted" id="cpo${c.id}" style="flex:1">${t('comp.choose',{x:needTxt(c)})}</span><button class="btn sm" onclick="compPick(${c.id})">${t('comp.hint')}</button><button class="btn sm pri" onclick="enterComp(${c.id})">${t('comp.enter')}</button></div>`:`<div class="small muted">${t('comp.noneFree',{k:kLbl(c)})}</div>`}</div>`}).join('')||`<div class="small muted">${t('comp.empty')}</div>`)}

@@ -74,7 +74,8 @@ export function scanFile(file, src) {
 }
 
 export function loadAllow() { try { return JSON.parse(fs.readFileSync(ALLOW_FILE, 'utf8')); } catch { return []; } }
-export const isAllowed = (allow, file, frag) => allow.some(a => a.file === file && frag.includes(a.text));
+// exact (trimmed) fragment match; an entry may opt into substring matching with "contains": true
+export const isAllowed = (allow, file, frag) => allow.some(a => a.file === file && (a.contains ? frag.includes(a.text) : frag === a.text.trim()));
 
 function main() {
   const args = process.argv.slice(2), strict = args.includes('--strict');

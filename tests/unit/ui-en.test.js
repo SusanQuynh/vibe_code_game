@@ -3,43 +3,12 @@
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
 import { noToggle } from './helpers.js';
 import { setLang } from '../../src/i18n/index.js';
-import { richState, renderSurface, runToasts, visibleText } from './sim.js';
+import { richState, renderSurface, runToasts, visibleText, offenders } from './sim.js';
 import { S, setState } from '../../src/state.js';
 
 noToggle();
-export const EN_DONE = ['lang', 'vocal', 'dance', 'roof', 'top', 'early-vocal', 'early-dance', 'early-roof'];
-export const TOASTS_DONE = [];
-
-const VI_LETTER = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
-// proper nouns / names that come from data tables and are shown verbatim
-const ALLOW_WORDS = new Set(['Tiếng', 'Việt']);
-const STORED_KEYS = new Set(['log', 'hist', 'lessons', 'why', 'prob', 'ev', 'prHist']);
-
-// Vietnamese strings reachable from S: long ones are stripped whole, short ones (names…) allow their words
-function storedStrings(root) {
-  const all = [], short = new Set();
-  const walk = (v, key, underStored) => {
-    if (typeof v === 'string') {
-      if (!VI_LETTER.test(v)) return;
-      all.push(v);
-      if (v.length <= 40 && !underStored) for (const w of v.match(/\p{L}+/gu) || []) short.add(w);
-    } else if (v && typeof v === 'object') {
-      for (const [k, x] of Object.entries(v)) walk(x, k, underStored || STORED_KEYS.has(k));
-    }
-  };
-  walk(root, '', false);
-  return { all: all.sort((a, b) => b.length - a.length), short };
-}
-
-// returns the offending words/tokens of `text` (visible text of an en render)
-export function offenders(text, state) {
-  const { all, short } = storedStrings(state);
-  for (const s of all) text = text.split(s).join(' ');
-  const out = [];
-  for (const w of text.match(/\p{L}+/gu) || []) if (VI_LETTER.test(w) && !short.has(w) && !ALLOW_WORDS.has(w)) out.push(w);
-  for (const m of text.matchAll(/\b(TTS|QL|GĐ|CN|tr)\b|\bN\d+·T\d+\b|\bT[2-7]\b/gu)) out.push(m[0]);
-  return out;
-}
+export const EN_DONE = ['lang', 'vocal', 'dance', 'roof', 'top', 'early-vocal', 'early-dance', 'early-roof', 'lobby', 'debutQ', 'early-lobby'];
+export const TOASTS_DONE = ['debut.group1', 'debut.solo2', 'debut.money', 'debut.busy', 'debut.name', 'recruit.recHire', 'recruit.recHireMax', 'contests.enterComp', 'batches.batchSched'];
 
 let base, early;
 beforeAll(() => {

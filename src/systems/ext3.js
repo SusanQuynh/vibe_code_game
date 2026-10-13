@@ -1,5 +1,6 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { money, t, t as tl, tVi } from '../i18n/index.js';
+import { conceptName } from '../i18n/labels.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
 import { OFFER } from '../data/offers.js';
@@ -8,7 +9,7 @@ import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, genArtist, mkLook } from './artists.js';
 import { batchOf } from './batches.js';
-import { DEBUT_COST, DEBUT_MIN, DR, DRT, bestOf, debutIds, debutRec, lineupWith } from './debut.js';
+import { DEBUT_COST, DEBUT_MIN, DRT, bestOf, debutIds, debutRec, lineupWith } from './debut.js';
 import { pushEv } from './events.js';
 import { MOOD, SONGW, book, compRep, dHold, ensureCurBatch, gMgr, lowK, mdReview, menteesOf, mentorScore, mxP, songRelease } from './ext2.js';
 import { effSk, inSub, mBoss, mCap, mKids, mgrExp, mgrOf, targetName } from './managers.js';
@@ -87,7 +88,7 @@ export function hsHTML(){const fl=S.artists.filter(a=>a.hsF&&a.hsF.w>=abs()-3).s
   h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>Cần thêm lịch nghỉ (${fl.length})</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?'TTS · ':''}${esc(a.hsF.why.join(', '))} · đề xuất ${a.hsF.n} ngày nghỉ${m?' · QL '+mNameH(m):''}</span><span class="sp"></span>${a.hsF.st==='ok'?'<span class="tag m">✓ đã cho nghỉ</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`}).join('')}`:(S.hs?'<div class="small muted">Chưa phát hiện ai cần nghỉ thêm.</div>':'');
   return h}
 /* ---- Start-of-week debut: ask group or solo ---- */
-export function dOpts(a){if(a.status!=='trainee')return null;const r=debutRec(a);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];
+export function dOpts(a,tr=tVi){if(a.status!=='trainee')return null;const r=debutRec(a,tr);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];
   const pool=S.artists.filter(x=>x.status==='trainee'&&!x.busy&&!groupsOf(x).length);let grp=null,gk=null;
   for(const k in CONCEPTS){const l=lineupWith(a,pool,CONCEPTS[k].w);if(l&&(!grp||l.sc>grp.sc)){grp=l;gk=k}}
   const soloOK=so.f>DEBUT_MIN,grpOK=!!(grp&&grp.f>DEBUT_MIN),actOK=r.t==='actor';
@@ -98,23 +99,23 @@ export function dWish(a,o){if(a.dw&&a.dw.w>abs()-4)return a.dw;
   const why=t==='solo'?(en.length?`Em không hợp với ${en[0].name}, em muốn tự đứng trên sân khấu của mình.`:`Em tự tin vào ${STATS[a.spec]} và muốn thử sức solo với concept ${CONCEPTS[o.so.k].n}.`):(fr.length?`Em muốn debut cùng ${fr.map(x=>x.name).join(', ')}, tụi em đã cùng cố gắng rất lâu.`:`Em nghĩ đứng chung nhóm sẽ bổ trợ nhau tốt hơn, concept ${CONCEPTS[o.gk].n} rất hợp.`);
   a.dw={t,why,w:abs()};return a.dw}
 export const dqList=()=>S.artists.filter(a=>a.status==='trainee'&&a.dReady&&!a.busy&&(a.dqSkip||0)<=abs()).sort((x,y)=>debutRec(y).f-debutRec(x).f);
-export function dqBanner(){const L=dqList();return L.length?`<div class="card tg row"><span class="small" style="flex:1">🎊 <b>${L.length} TTS đủ điều kiện debut tuần này:</b> ${L.map(a=>esc(a.name)).join(', ')}</span><button class="btn sm pri" onclick="view(viewDebutQ)">Quyết định</button></div>`:''}
+export function dqBanner(){const L=dqList();return L.length?`<div class="card tg row"><span class="small" style="flex:1">🎊 <b>${t('dq.banner',{n:t('common.trainees',{n:L.length})})}</b> ${L.map(a=>esc(a.name)).join(', ')}</span><button class="btn sm pri" onclick="view(viewDebutQ)">${t('dq.decide')}</button></div>`:''}
 export function gName(a){if(!a.dqName||S.groups.some(g=>g.name===a.dqName))a.dqName=pick(GNAMES.filter(n=>!S.groups.some(g=>g.name===n)).concat(['Starlight '+R(2,9)]));return a.dqName}
 export function viewDebutQ(){setCurRC('var(--r-lobby)');const L=dqList();
-  const card=a=>{const o=dOpts(a);if(!o)return'';const w=o.both?dWish(a,o):null,gIds=o.grp?o.grp.ids:[],mates=gIds.filter(i=>i!==a.id).map(byId).filter(Boolean),notR=mates.filter(x=>!x.dReady);
-    const btn=(t,lbl,cost)=>`<button class="btn sm ${(w?w.t===t:o.r.t===t)?'pri':''}" onclick="dqDo(${a.id},'${t}')">${lbl} (${fmt(cost)})</button>`;
-    return`<div class="card ${o.both?'wish':''}"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="tag s">✅ Đủ điều kiện</span>${o.both?' <span class="tag v">Nhóm & Solo</span>':''}<div class="small muted">${esc((batchOf(a)||{n:''}).n)} · đề xuất: ${DR[o.r.t]} · ${esc(o.r.why)}</div></div></div>
-    ${o.grpOK?`<div class="small" style="margin-top:6px">👥 <b>Nhóm:</b> cùng ${mates.map(x=>esc(x.name)).join(', ')} · concept ${CONCEPTS[o.gk].n}${trendTag(o.gk)} ${Math.round(o.grp.f)}% · hòa hợp ${o.grp.hm>=0?'+':''}${o.grp.hm}${notR.length?` <span class="muted">(${notR.map(x=>esc(x.name)).join(', ')} chưa đủ điều kiện riêng nhưng hợp đội hình)</span>`:''}</div><div class="row" style="margin-top:4px"><span class="small">Tên nhóm:</span><input type="text" id="dqn${a.id}" value="${esc(gName(a))}" onchange="byId(${a.id}).dqName=this.value;save()" style="flex:1;min-width:0"></div>`:''}
-    ${o.soloOK?`<div class="small" style="margin-top:4px">🎤 <b>Solo:</b> concept ${CONCEPTS[o.so.k].n}${trendTag(o.so.k)} ${Math.round(o.so.f)}%</div>`:''}
-    ${w?`<div class="card row" style="margin:6px 0 0;background:var(--bg)"><span class="small">❓ Công ty hỏi: "Em muốn debut theo nhóm hay solo?"<br>💬 <b>${esc(a.name)}:</b> "${esc(w.why)}" → <b>muốn debut ${DRT[w.t]}</b></span></div>`:''}
-    <div class="row" style="margin-top:8px">${o.grpOK?btn('group','👥 Debut nhóm',DEBUT_COST.group(gIds.length)):''}${o.soloOK?btn('solo','🎤 Debut solo',DEBUT_COST.solo()):''}${o.actOK?btn('actor','🎬 Debut diễn viên',DEBUT_COST.actor()):''}</div>
-    <div class="row" style="margin-top:6px"><button class="btn sm" onclick="dqKeep(${a.id})">Tiếp tục làm TTS</button><button class="btn sm" onclick="dqLater(${a.id})">Để tuần sau</button><span class="sp"></span><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">Hồ sơ</button></div></div>`};
-  modal(`<h2>🎊 Đầu tuần ${S.week}: quyết định debut</h2><div class="sub">Các TTS đủ điều kiện debut. Chọn cho debut ngay hoặc tiếp tục làm thực tập sinh. Ai đủ điều kiện cả nhóm lẫn solo sẽ được hỏi ý kiến; chọn đúng mong muốn giúp tâm trạng tốt hơn.</div>
-  ${L.length?L.map(card).join(''):'<div class="card small">✅ Đã quyết định xong cho tất cả TTS đủ điều kiện tuần này.</div>'}
-  <label class="small row"><input type="checkbox" ${S.dqOn!==false?'checked':''} onchange="S.dqOn=this.checked;save()"> Tự hiện danh sách này mỗi đầu tuần</label>
-  <div class="row" style="margin-top:8px">${S.lastRep?'<button class="btn pri" onclick="view(viewReport)">📑 Xem báo cáo tuần trước</button>':''}<span class="sp"></span><button class="btn" onclick="closeM()">Đóng</button></div>`)}
-export function dqDo(id,t){const a=byId(id);if(!a)return;const o=dOpts(a);if(!o)return toast('Không còn đủ điều kiện');const w=o.both?a.dw:null;let ok=false;
-  if(t==='group'){if(!o.grp)return toast('Không đủ người lập nhóm');ok=debutIds('group',o.grp.ids,($('#dqn'+id)?.value||gName(a)))}else ok=debutIds(t,[id]);
+  const card=a=>{const o=dOpts(a,t);if(!o)return'';const w=o.both?dWish(a,o):null,gIds=o.grp?o.grp.ids:[],mates=gIds.filter(i=>i!==a.id).map(byId).filter(Boolean),notR=mates.filter(x=>!x.dReady);
+    const btn=(t,lbl,cost)=>`<button class="btn sm ${(w?w.t===t:o.r.t===t)?'pri':''}" onclick="dqDo(${a.id},'${t}')">${lbl} (${money(cost)})</button>`;
+    return`<div class="card ${o.both?'wish':''}"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="tag s">${t('dq.eligible')}</span>${o.both?` <span class="tag v">${t('dq.both')}</span>`:''}<div class="small muted">${esc((batchOf(a)||{n:''}).n)} · ${t('dq.recommend')} ${t(`debut.type.${o.r.t}`)} · ${esc(o.r.why)}</div></div></div>
+    ${o.grpOK?`<div class="small" style="margin-top:6px">${t('dq.grpLine',{m:mates.map(x=>esc(x.name)).join(', '),c:conceptName(o.gk)+trendTag(o.gk),f:Math.round(o.grp.f),h:(o.grp.hm>=0?'+':'')+o.grp.hm})}${notR.length?` <span class="muted">${t('dq.notReady',{n:notR.map(x=>esc(x.name)).join(', ')})}</span>`:''}</div><div class="row" style="margin-top:4px"><span class="small">${t('dq.groupName')}</span><input type="text" id="dqn${a.id}" value="${esc(gName(a))}" onchange="byId(${a.id}).dqName=this.value;save()" style="flex:1;min-width:0"></div>`:''}
+    ${o.soloOK?`<div class="small" style="margin-top:4px">${t('dq.soloLine',{c:conceptName(o.so.k)+trendTag(o.so.k),f:Math.round(o.so.f)})}</div>`:''}
+    ${w?`<div class="card row" style="margin:6px 0 0;background:var(--bg)"><span class="small">${t('dq.ask',{n:esc(a.name),why:esc(w.why),d:t(`debut.typeShort.${w.t}`)})}</span></div>`:''}
+    <div class="row" style="margin-top:8px">${o.grpOK?btn('group',t('dq.btn.group'),DEBUT_COST.group(gIds.length)):''}${o.soloOK?btn('solo',t('dq.btn.solo'),DEBUT_COST.solo()):''}${o.actOK?btn('actor',t('dq.btn.actor'),DEBUT_COST.actor()):''}</div>
+    <div class="row" style="margin-top:6px"><button class="btn sm" onclick="dqKeep(${a.id})">${t('dq.keep')}</button><button class="btn sm" onclick="dqLater(${a.id})">${t('dq.later')}</button><span class="sp"></span><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${t('dq.profile')}</button></div></div>`};
+  modal(`<h2>${t('dq.title',{w:S.week})}</h2><div class="sub">${t('dq.sub')}</div>
+  ${L.length?L.map(card).join(''):`<div class="card small">${t('dq.allDone')}</div>`}
+  <label class="small row"><input type="checkbox" ${S.dqOn!==false?'checked':''} onchange="S.dqOn=this.checked;save()"> ${t('dq.auto')}</label>
+  <div class="row" style="margin-top:8px">${S.lastRep?`<button class="btn pri" onclick="view(viewReport)">${t('dq.report')}</button>`:''}<span class="sp"></span><button class="btn" onclick="closeM()">${t('btn.close')}</button></div>`)}
+export function dqDo(id,t){const a=byId(id);if(!a)return;const o=dOpts(a);if(!o)return toast(tl('dq.toast.gone'));const w=o.both?a.dw:null;let ok=false;
+  if(t==='group'){if(!o.grp)return toast(tl('dq.toast.nogroup'));ok=debutIds('group',o.grp.ids,($('#dqn'+id)?.value||gName(a)))}else ok=debutIds(t,[id]);
   if(ok&&w){const h=w.t===t;MOOD(a,h?8:-8);addLog(h?`😊 ${a.name} vui vì được debut ${DRT[t]} đúng mong muốn.`:`😕 ${a.name} tiếc vì muốn debut ${DRT[w.t]} nhưng công ty chọn ${DRT[t]}.`,h?'good':'bad');act()}}
 export function dqKeep(id){const a=byId(id);if(!a)return;a.dqSkip=abs()+4;a.noHold=true;addLog(`🌱 ${a.name} tiếp tục làm thực tập sinh, mở lịch nhận dự án. Công ty sẽ hỏi lại sau 4 tuần.`);act()}
 export function dqLater(id){const a=byId(id);if(!a)return;a.dqSkip=abs()+1;act()}
