@@ -1,5 +1,5 @@
 import { $, fmt } from '../core/util.js';
-import { replaceSave } from '../save/storage.js';
+import { KEY, KEY_FULL, lastLoadSource, replaceSave, save, saveMeta, slotInfo } from '../save/storage.js';
 import { exportCode, exportFile, importFile, parseSaveText } from '../save/transfer.js';
 import { S, addLog } from '../state.js';
 import { act, setPos } from './building.js';
@@ -15,8 +15,20 @@ function setPreview(d) {
   ioMsg = '';
 }
 
+const slotRow = (label, i, extra) => `<div class="prow"><b>${label}</b><span class="small muted">${i
+  ? `Năm ${i.y} · Tuần ${i.w} · ${(i.len / 1024).toFixed(1)} KB${i.at ? ' · ' + new Date(i.at).toLocaleString('vi-VN') : ''}` : 'Chưa có'}${extra || ''}</span></div>`;
+const readSlotData = (k) => { try { const d = JSON.parse(localStorage.getItem(k)); return d && Array.isArray(d.artists) ? d : null; } catch { return null; } };
+
 export function viewCode() {
+  const c = slotInfo('c'), f = slotInfo('f'), mf = saveMeta().f || {};
+  const rest = lastLoadSource() === 'full' && f && f.at ? `<div class="card small">🛟 Đã khôi phục từ bản sao lưu lúc ${new Date(f.at).toLocaleString('vi-VN')}.</div>` : '';
   modal(`<h2>🔑 Lưu & chuyển game</h2><div class="sub">Game tự lưu trên trình duyệt này sau mỗi thao tác. Dùng mã hoặc file để sao lưu hoặc chơi tiếp trên thiết bị khác.</div>
+  ${rest}
+  <div class="card"><b>📦 Bản lưu trên trình duyệt</b>
+    ${slotRow('Bản rút gọn (tự lưu)', c, c && c.lvl === 2 ? ' · lite' : '')}
+    ${slotRow('Bản đầy đủ (sao lưu)', f, mf.err ? ' · ⚠️ lỗi ghi lần cuối' : '')}
+    <div class="small muted" style="margin:4px 0">Bản rút gọn ghi sau mỗi thao tác (bỏ bớt lịch sử cũ). Bản đầy đủ tự sao lưu mỗi 4 tuần hoặc khi bạn bấm nút.</div>
+    <div class="row"><button class="btn pri" onclick="saveBackupNow()">💾 Sao lưu đầy đủ ngay</button><button class="btn" onclick="saveExportSlot('c')" ${c ? '' : 'disabled'}>Xuất bản rút gọn</button><button class="btn" onclick="saveExportSlot('f')" ${f ? '' : 'disabled'}>Xuất bản đầy đủ</button><button class="btn warn" onclick="saveRestorePreview()" ${f ? '' : 'disabled'}>🛟 Khôi phục từ bản sao lưu</button></div></div>
   <h3>Xuất</h3>
   <div class="card"><div class="small" style="margin-bottom:6px">Mã lưu (Năm ${S.year} · Tuần ${S.week}):</div>
     <textarea id="codeShow" readonly rows="3" style="width:100%;font:12px 'JetBrains Mono',monospace" placeholder="Đang tạo mã…"></textarea>
@@ -41,6 +53,29 @@ export async function saveCopyCode() {
 }
 
 export function saveDownload() { exportFile(S); toast('Đã tải file lưu'); }
+
+export function saveBackupNow() {
+  if (save({ full: true })) toast('Đã sao lưu đầy đủ');
+  else toast('Không sao lưu được (hết dung lượng?)');
+  refresh();
+}
+
+// which: 'c' compact slot, 'f' full backup slot → fills the code box and downloads the file
+export async function saveExportSlot(which) {
+  const d = readSlotData(which === 'c' ? KEY : KEY_FULL);
+  if (!d) return toast('Chưa có bản lưu này');
+  exportFile(d);
+  try { const c = await exportCode(d), el = $('#codeShow'); if (el) el.value = c; } catch { /* file was still downloaded */ }
+  toast(which === 'c' ? 'Đã xuất bản rút gọn' : 'Đã xuất bản đầy đủ');
+}
+
+// preview the backup; the existing "Ghi đè game hiện tại" button then restores it into both slots
+export function saveRestorePreview() {
+  const d = readSlotData(KEY_FULL);
+  if (!d) { preview = null; ioMsg = '❌ Chưa có bản sao lưu đầy đủ'; return refresh(); }
+  setPreview(d);
+  refresh();
+}
 
 export async function saveImportText() {
   try { setPreview(await parseSaveText($('#codeIn').value)); }

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
-import { seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL } from './helpers.js';
 import { S, newGame, setState } from '../../src/state.js';
 import { sign } from '../../src/systems/artists.js';
 import { debutIds } from '../../src/systems/debut.js';
@@ -9,6 +9,8 @@ import { acceptOffer } from '../../src/systems/offers.js';
 import { KEY, KEY_FULL, KEY_META, compactOf, lastLoadSource, load, replaceSave, restoreBackup, save, saveMeta, setSavedHook, slotInfo } from '../../src/save/storage.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { setPos } from '../../src/ui/building.js';
+import { view } from '../../src/ui/modal.js';
+import { saveBackupNow, saveImportApply, saveRestorePreview, viewCode } from '../../src/ui/saveView.js';
 
 const clone = x => JSON.parse(JSON.stringify(x));
 const play = n => {
@@ -183,3 +185,43 @@ describe('save hai tầng', () => {
     for (let i = 0; i < 3; i++) nextWeek(true, true);
   });
 });
+
+describe('🔑 hai bản lưu', () => {
+  it('viewCode hiện cả hai hàng kèm dung lượng sau sao lưu đầy đủ', () => {
+    newGame(); play(3);
+    view(viewCode);
+    let h = document.getElementById('sheet').innerHTML;
+    expect(h).toContain('Bản rút gọn (tự lưu)');
+    expect(h).toContain('Bản đầy đủ (sao lưu)');
+    saveBackupNow();
+    h = document.getElementById('sheet').innerHTML;
+    expect(h).toMatch(/Bản đầy đủ \(sao lưu\)<\/b><span class="small muted">Năm 1 · Tuần 4 · [\d.]+ KB/);
+    expect(h).toContain('Xem trước');
+    expect(h).toContain('Sao lưu đầy đủ ngay');
+  });
+  it('saveRestorePreview + saveImportApply khôi phục bản sao lưu cũ (tuần 3)', () => {
+    newGame(); play(2);
+    save({ full: true });
+    const w = S.week;
+    play(3);
+    save();
+    view(viewCode);
+    saveRestorePreview();
+    const h = document.getElementById('sheet').innerHTML;
+    expect(h).toContain('Ghi đè game hiện tại');
+    expect(h).toContain('Tuần ' + w);
+    saveImportApply();
+    expect(S.week).toBe(w);
+    expect(JSON.parse(localStorage.getItem(KEY)).week).toBe(w);
+  });
+  it('khôi phục khi chưa có bản sao lưu báo lỗi, không đổi game', () => {
+    newGame();
+    localStorage.removeItem(KEY_FULL);
+    view(viewCode);
+    saveRestorePreview();
+    expect(document.getElementById('sheet').innerHTML).toContain('Chưa có bản sao lưu đầy đủ');
+    expect(S.week).toBe(1);
+  });
+});
+
+noToggle();

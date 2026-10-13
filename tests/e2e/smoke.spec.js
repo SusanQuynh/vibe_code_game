@@ -110,3 +110,18 @@ test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng t
   expect(await page.evaluate(() => __game.state().week)).toBe(4);
   expect(errors).toEqual([]);
 });
+
+test('sao lưu đầy đủ → làm hỏng bản chính → tải lại khôi phục từ bản sao lưu', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('./');
+  await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); window.closeM(); });
+  await page.locator('.hbtns .r1').click();
+  await expect(page.locator('#sheet')).toContainText('Bản đầy đủ (sao lưu)');
+  await page.getByRole('button', { name: 'Sao lưu đầy đủ ngay' }).click();
+  await expect(page.locator('#sheet')).toContainText(/Bản đầy đủ \(sao lưu\)Năm 1 · Tuần 4/);
+  await page.evaluate(() => { localStorage.setItem('starlight_idol_save_v1', '{hỏng'); });
+  await page.reload();
+  expect(await page.evaluate(() => __game.state().week)).toBe(4);
+  await expect(page.locator('#log')).toContainText('🛟');
+  expect(errors).toEqual([]);
+});

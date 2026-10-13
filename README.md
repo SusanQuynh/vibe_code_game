@@ -85,7 +85,14 @@ npm run dev        # http://localhost:5173
 
 ### Saving
 
-The game autosaves to `localStorage` (`starlight_idol_save_v1`) after every action. The 🔑 button exports your game as an `SL1.…` code (gzipped JSON, base64url) or a `.json` file, and imports either one in another browser after a preview. Older saves are migrated on load.
+The game keeps two copies in `localStorage`:
+
+- **Compact** (`starlight_idol_save_v1`), written after every action. It drops history nothing in the game reads (older log lines, per-artist history and lessons, old finance weeks, finished films and concerts from past years). Singles, awards and everything gameplay uses are kept.
+- **Full backup** (`starlight_idol_save_v1_full`), written every 4 weeks and whenever you press "Sao lưu đầy đủ ngay" in 🔑.
+
+Sizes and times live in a separate `starlight_save_meta` key, never inside the game state. On load the compact copy is used; if it is missing or corrupt the full backup takes over (with a 🛟 log line), and if the backup is the very same game moment it is preferred because it keeps the full history. If the browser quota is hit, autosave first shrinks the compact copy, then drops the backup so the main save always survives (the `#saved` badge shows "compact" or "no backup"). The 🔑 view lists both copies (size, time), exports either one and can restore from the backup. Details: [`docs/plans/2026-10-13-staff-contests-managers.md`](docs/plans/2026-10-13-staff-contests-managers.md) (task 9).
+
+The 🔑 button exports your game as an `SL1.…` code (gzipped JSON, base64url) or a `.json` file, and imports either one in another browser after a preview. Older saves are migrated on load.
 
 ## Architecture
 
