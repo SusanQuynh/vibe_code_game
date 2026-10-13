@@ -38,7 +38,7 @@ export function viewArtist(id){
   const cos=Object.keys(a.co).map(c=>`${esc(c)} ${a.co[c]}`);
   modal(`<div class="big"><div class="bigwrap"><div class="chibi big" style="${blinkD(a.id)}">${chibiHTML(a)}</div></div><div><h2>${esc(a.name)}</h2><div>${aTags(a)}</div><div class="small muted">${a.g==='F'?'Nữ':'Nam'}, ${a.age} tuổi · Năng khiếu: ${STATS[a.spec]} · Tố chất x${a.talent}</div></div></div>
   <div class="grid2" style="margin:10px 0"><div class="card">💗 <b>${fmtN(a.fans)}</b> fan<br><span class="small muted">Danh tiếng ${fame(a)}/100</span></div><div class="card">⚡ Năng lượng <b>${Math.round(a.energy)}</b><br>🙂 Tâm trạng <b class="${a.mood<30?'bad':''}">${Math.round(a.mood)}</b></div><div class="card">💵 Lương <b>${fmt(a.salary)}</b>/tuần<br><span class="small muted">${a.busy?'Đang: '+esc(a.busy.title)+` (${a.busy.left} tuần)`:'Ở công ty'}</span></div></div>
-  <div class="card small">${a.pm?`🧑‍💼 Quản lý riêng (tự chọn khi tách solo): <b>${esc(a.pm.name)}</b> · ${Object.keys(MSK).map(k=>MSK[k]+' '+a.pm.sk[k]).join(' · ')} · tự xếp lịch, không thuộc Văn phòng Quản lý<br>`:''}📋 Quản lý công ty: ${(()=>{const m=mgrOf(a);return m?`<b>${esc(m.name)}</b> (cấp ${m.lv}) · ${Object.keys(MSK).map(k=>MSK[k]+' '+m.sk[k]).join(' · ')}`:'<span class="muted">Chưa có. Tuyển ở Văn phòng Quản lý (tầng 6).</span>'})()}</div>
+  <div class="card small">${a.pm?`🧑‍💼 Quản lý riêng (tự chọn khi tách solo): <b>${esc(a.pm.name)}</b> · ${Object.keys(MSK).map(k=>MSK[k]+' '+a.pm.sk[k]).join(' · ')} · tự xếp lịch, không thuộc Văn phòng Quản lý<br>`:''}📋 Quản lý công ty: ${(()=>{const m=mgrOf(a);return m?`${mNameH(m)} (cấp ${m.lv}) · ${Object.keys(MSK).map(k=>MSK[k]+' '+m.sk[k]).join(' · ')}`:'<span class="muted">Chưa có. Tuyển ở Văn phòng Quản lý (tầng 6).</span>'})()}</div>
   ${a.scandal?`<div class="card tg">🚨 <b>${esc(a.scandal.t)}</b> · mức ${a.scandal.sev} · còn ${a.scandal.left} tuần. Xử lý ở Phòng Truyền thông.</div>`:''}
   ${a.wantAct?`<div class="card">🎭 Đã hứa tìm vai trước tuần tuyệt đối ${a.wantAct} (còn ${a.wantAct-abs()} tuần).</div>`:''}
   ${(()=>{const r=debutRec(a);if(a.status==='trainee')return`<div class="card small">🎯 <b>Hướng debut:</b> ${r.t==='wait'?'chưa nên debut':DR[r.t]} — ${esc(r.why)}</div>`;
@@ -104,7 +104,7 @@ export function viewReport(){
   const dm=L.m1!=null?L.m1-L.m0:null,fans=Object.values(L.a).reduce((t,r)=>t+(r.f||0),0),dn=Object.values(L.a).filter(r=>r.done).length,wc=warnCount(S.artists,7);
   const lst=[],walk=(m,d)=>{lst.push([m,d]);mKids(m).forEach(k=>walk(k,d+1))};S.managers.filter(m=>!mBoss(m)).forEach(m=>walk(m,0));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`<b>📋 ${esc(m.name)}</b> <span class="muted">· ${esc(targetName(m))}</span>`,ts,m)}</div>`}).join('');
+  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`📋 ${mNameH(m)} <span class="muted">· ${esc(targetName(m))}</span>`,ts,m)}</div>`}).join('');
   const pc=propCount();
   modal(`<h2>📑 Báo cáo tuần ${L.w} · Năm ${L.y}</h2>
   <div class="grid2" style="margin-bottom:8px"><div class="card small">💰 <b class="${dm<0?'bad':'good'}">${dm==null?'—':(dm>=0?'+':'')+fmt(dm)}</b></div><div class="card small">💗 <b>${fans>=0?'+':''}${fmtN(fans)}</b> fan</div><div class="card small">🎬 <b>${dn}</b> dự án xong</div><div class="card small">⚠️ <b class="${wc?'bad':''}">${wc}</b> cần chú ý</div>${L.biz?`<div class="card small">📈 Kinh doanh <b class="${L.biz<0?'bad':'good'}">${L.biz>=0?'+':''}${fmt(L.biz)}</b></div>`:''}</div>
@@ -119,7 +119,7 @@ export function viewReportFull(){
   const R=S.lastRep;if(!R){modal('<h2>📑 Báo cáo</h2><div class="sub">Chưa có báo cáo. Hãy chơi qua một tuần.</div>');return}
   const d=repDay;
   const node=m=>{const ts=mgrTargets(m),kids=mKids(m),team=teamOf(m),wc=warnCount(team,d);
-    return`<li><div class="card" style="margin:0"><div class="row"><div class="chibi mini" style="transform:scale(.72);margin:-8px 0 -8px 0">${chibiHTML(m)}</div><div><b>📋 ${esc(m.name)}</b> <span class="small muted">cấp ${m.lv}${mBoss(m)?' · báo cáo lên '+esc(mBoss(m).name):' · báo cáo Giám đốc'}</span></div></div>
+    return`<li><div class="card" style="margin:0"><div class="row"><div class="chibi mini" style="transform:scale(.72);margin:-8px 0 -8px 0">${chibiHTML(m)}</div><div>📋 ${mNameH(m)} <span class="small muted">cấp ${m.lv}${mBoss(m)?' · báo cáo lên '+mNameH(mBoss(m)):' · báo cáo Giám đốc'}</span></div></div>
     <div class="rep" style="margin-top:4px">${ts.length?ts.map(a=>artDayLine(a,d)).join(''):'<div class="muted">Không trực tiếp phụ trách nghệ sĩ nào.</div>'}
     ${kids.length?`<div style="margin-top:4px">👥 <b>Tóm tắt đội:</b> ${team.length} nghệ sĩ dưới quyền${wc?`, <span class="w">${wc} cần chú ý</span>`:', mọi người ổn định'}.</div>`:''}</div></div>
     ${kids.length?`<ul>${kids.map(node).join('')}</ul>`:''}</li>`};

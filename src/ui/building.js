@@ -5,6 +5,7 @@ import { CONCEPTS, ROOMS, TRAIN } from '../data/rules.js';
 import { save } from '../save/storage.js';
 import { S, abs } from '../state.js';
 import { cleanBatches } from '../systems/ext2.js';
+import { mNameH } from '../systems/ext3.js';
 import { mgrTargets, targetName } from '../systems/managers.js';
 import { campMem } from '../systems/promo.js';
 import { datingPartner } from '../systems/relations.js';
@@ -93,7 +94,7 @@ export function renderTop(){
   const n=S.events.length;$('#evn').hidden=!n;$('#evn').textContent=n;
   $('#roofInfo').textContent=t('top.roof',{g:S.groups.length,s:S.artists.filter(a=>a.solo).length,a:S.artists.filter(a=>a.actor).length});
   const out=S.artists.filter(a=>a.busy),mo=S.managers.filter(m=>m.as&&!mgrRoom(m));
-  $('#outside').innerHTML=out.length?`<span class="lbl">🚐 Đang làm việc bên ngoài</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>QL ${esc(m.name)} đi cùng ${esc(targetName(m))}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} (${a.busy.left}t)</button>`).join(''):'';
+  $('#outside').innerHTML=out.length?`<span class="lbl">🚐 Đang làm việc bên ngoài</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>QL ${mNameH(m)} đi cùng ${esc(targetName(m))}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} (${a.busy.left}t)</button>`).join(''):'';
   $('#log').innerHTML=S.log.map(l=>`<div class="${l.c}"><span class="w">${l.w}</span>${esc(l.t)}</div>`).join('');
 }
 export const campKeyOf=a=>Object.keys(S.camp||{}).find(k=>S.camp[k].ph==='post'&&campMem(k).includes(a));

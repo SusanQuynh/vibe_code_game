@@ -6,6 +6,7 @@ import { demoteGM, gmOf, hireGM, promoteGM } from '../../src/systems/gm.js';
 import { assignMgr, effSk, fireMgr, genManager, hireMgr, mCap, setBoss } from '../../src/systems/managers.js';
 import { buildProps } from '../../src/systems/proposals.js';
 import { nextWeek } from '../../src/systems/week.js';
+import { mNameH } from '../../src/systems/ext3.js';
 import { openRoom } from '../../src/ui/rooms.js';
 
 noToggle();
@@ -126,5 +127,32 @@ describe('Quản lý tổng', () => {
     h = document.getElementById('sheet').innerHTML;
     expect(h).toContain('Bãi nhiệm');
     expect(h).toContain('(Quản lý tổng)');
+  });
+});
+
+describe('màu tên quản lý theo vị trí', () => {
+  it('mNameH: GM, trưởng nhóm, quản lý thường', () => {
+    newGame();
+    const [a, b, c] = tree3(), g = hire();
+    promoteGM(g.id);
+    expect(mNameH(g)).toContain('mn-gm');
+    expect(mNameH(a)).toContain('mn-lead');   // a có c dưới quyền
+    expect(mNameH(b)).toContain('mn-reg');
+    expect(mNameH(c)).toContain('mn-reg');
+    expect(mNameH({ ...b, name: '<x>' })).toContain('&lt;x&gt;');
+  });
+  it('phòng Quản lý và báo cáo không còn style màu trên tên quản lý', () => {
+    newGame();
+    const [a, , c] = tree3(), g = hire();
+    promoteGM(g.id);
+    a.as = { t: 'b', id: S.batches[0].id }; c.as = null;
+    openRoom('mgr');
+    const h = document.getElementById('sheet').innerHTML;
+    expect(h).not.toMatch(/style="color:[^"]*"[^>]*>[^<]*<\/b>/);
+    expect(h).not.toContain('style="color:#');
+    expect(h).toContain('mn-gm');
+    expect(h).toContain('mn-lead');
+    expect(h).toContain('mn-reg');
+    expect(h).toContain('● Quản lý tổng');
   });
 });

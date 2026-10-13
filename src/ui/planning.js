@@ -2,6 +2,7 @@ import { esc, fmt, fmtN } from '../core/util.js';
 import { STATS, TRAIN } from '../data/rules.js';
 import { save } from '../save/storage.js';
 import { S, abs, byId } from '../state.js';
+import { mNameH } from '../systems/ext3.js';
 import { mgrOf } from '../systems/managers.js';
 import { propCount, viewProps } from '../systems/proposals.js';
 import { DAYN, DAYS, TIC, daysMini, defaultDays, mgrScheduleAll, mgrSchedules, nextWeek, planWeek, planWhy, projEnergy, trainDays, weekCost } from '../systems/week.js';
@@ -63,7 +64,7 @@ export function viewPlan(){
   <div class="small" style="margin:8px 0 0"><b>${DAYN[d]}:</b> ${TIC[a.days[d]]} ${TRAIN[a.days[d]].n}</div>
   <div class="tiles">${tiles}</div>
   <div class="card small">💡 Lịch gợi ý: <span class="dmini">${recW.map(k=>TIC[k]).join('')}</span> — ${planWhy(a)}.${a.scandal?' 🚨 Đang dính scandal.':''}
-  ${(()=>{const m=mgrOf(a),pr=m&&S.props&&S.props.w===abs()&&S.props.m[m.id]?S.props.m[m.id].s.find(x=>x.a===a.id):null;return pr?`<div style="margin-top:6px">📋 QL ${esc(m.name)} đề xuất: <span class="dmini">${pr.days.map(k=>TIC[k]).join('')}</span> — ${esc(pr.why)} <button class="btn sm" onclick="planMgr()">Dùng</button></div>`:''})()}
+  ${(()=>{const m=mgrOf(a),pr=m&&S.props&&S.props.w===abs()&&S.props.m[m.id]?S.props.m[m.id].s.find(x=>x.a===a.id):null;return pr?`<div style="margin-top:6px">📋 QL ${mNameH(m)} đề xuất: <span class="dmini">${pr.days.map(k=>TIC[k]).join('')}</span> — ${esc(pr.why)} <button class="btn sm" onclick="planMgr()">Dùng</button></div>`:''})()}
   <div class="row" style="margin-top:6px"><button class="btn sm" onclick="planRec()">Dùng lịch gợi ý</button><button class="btn sm" onclick="planFill()">Cả tuần như ${DAYS[d]} (nghỉ cuối tuần)</button></div></div>
   <div class="row">${P.i>0?'<button class="btn" onclick="planBack()">◀ Người trước</button>':''}${!P.single?`<button class="btn sm" onclick="planSkip()">Giữ lịch cũ cho ${n-P.i} người còn lại</button>`:''}<span class="sp"></span><button class="btn pri" onclick="planNext()">${P.single?'Lưu lịch':last?'Xong ▶ Tổng kết':'Người tiếp ▶'}</button></div>
   ${P.single?'':'<div class="small muted" style="margin-top:8px">Mẹo: giao quản lý "Xếp lịch tập & nghỉ" để họ tự lo cho nghệ sĩ mình phụ trách.</div>'}`);

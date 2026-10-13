@@ -25,10 +25,9 @@ import { det, teamOf, viewArtist } from '../ui/views.js';
 export const eligSort=(x,y)=>((y.dReady&&y.status==='trainee')?1:0)-((x.dReady&&x.status==='trainee')?1:0);
 export function dElig(a,t){if(a.status!=='trainee')return false;const tbl=t==='actor'?GENRES:CONCEPTS;if(t==='group')return!!a.dReady;return bestOf(a,tbl)[0].f>DEBUT_MIN}
 export function migrateV3(){S.mrel=S.mrel||{};S.ext=S.ext||[];S.artists.forEach(a=>{a.xr=a.xr||{}})}
-/* ---- Manager name color by level & managers of managers ---- */
-export const LVC=['#f2557f','#a497d6','#5fd0a0','#efb54d','#6fb3f2','#f2895e','#c49bf0','#4fc8d9','#f07fae','#a8cf5a'];
-export const lvColor=lv=>LVC[(Math.max(1,lv)-1)%LVC.length];
-export function mNameH(m){return mBoss(m)?`<b style="color:${lvColor(m.lv)}">${esc(m.name)}</b>`:`<b>${esc(m.name)}</b>`}
+/* ---- Manager name colour by role in the tree (gm / lead / reg) & managers of managers ---- */
+export const mRole=m=>m.gm?'gm':mKids(m).length?'lead':'reg';
+export function mNameH(m){return`<b class="mn mn-${mRole(m)}">${esc(m.name)}</b>`}
 export const mrK=(x,y)=>x.id<y.id?x.id+'-'+y.id:y.id+'-'+x.id;
 export const mrel=(x,y)=>(S.mrel||{})[mrK(x,y)]||0;
 export function setMrel(x,y,v){S.mrel=S.mrel||{};S.mrel[mrK(x,y)]=clamp(Math.round(v),-100,100)}
@@ -37,10 +36,9 @@ export const relTxt=v=>`<b class="${v<0?'bad':v>0?'good':''}">${v>0?'+':''}${v}<
 export function mgrBossHTML(){
   if(!S.managers.length)return'';
   const L=S.managers.slice().sort((a,b)=>mKids(b).length-mKids(a).length||b.lv-a.lv);
-  const lvs=[...new Set(S.managers.map(m=>m.lv))].sort((a,b)=>a-b);
-  const legend=`<div class="small" style="margin-bottom:6px">Quản lý có cấp trên là quản lý khác sẽ hiện tên màu theo cấp (cùng cấp cùng màu): ${lvs.map(l=>`<b style="color:${lvColor(l)}">● Cấp ${l}</b>`).join(' ')} · tên màu thường là người báo cáo trực tiếp Giám đốc.</div>`;
+  const legend=`<div class="small" style="margin-bottom:6px">Màu tên theo vị trí trong sơ đồ: <b class="mn mn-gm">● Quản lý tổng</b> · <b class="mn mn-lead">● Trưởng nhóm (có QL cấp dưới)</b> · <b class="mn mn-reg">● Quản lý</b></div>`;
   const row=m=>{const ks=mKids(m),cand=S.managers.filter(x=>canKid(m,x)).sort((a,b)=>(a.boss?1:0)-(b.boss?1:0)||a.lv-b.lv);
-    return`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(m)}</div><div style="flex:1;min-width:0">${mNameH(m)} <span class="tag v">Cấp ${m.lv}</span>${m.gm?' <span class="tag s">⭐ Quản lý tổng</span>':ks.length?' <span class="tag s">👔 Trưởng nhóm</span>':''}<div class="small muted">${mBoss(m)?'Báo cáo cho '+esc(mBoss(m).name):'Báo cáo trực tiếp Giám đốc'} · kèm cặp ${ks.length}/${m.gm?'∞':mCap(m)} quản lý · cả đội ${teamOf(m).length} nghệ sĩ</div></div></div>
+    return`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(m)}</div><div style="flex:1;min-width:0">${mNameH(m)} <span class="tag v">Cấp ${m.lv}</span>${m.gm?' <span class="tag s">⭐ Quản lý tổng</span>':ks.length?' <span class="tag s">👔 Trưởng nhóm</span>':''}<div class="small muted">${mBoss(m)?'Báo cáo cho '+mNameH(mBoss(m)):'Báo cáo trực tiếp Giám đốc'} · kèm cặp ${ks.length}/${m.gm?'∞':mCap(m)} quản lý · cả đội ${teamOf(m).length} nghệ sĩ</div></div></div>
     ${ks.length?ks.map(k=>`<div class="prow">↳ ${mNameH(k)}<span class="small muted">Cấp ${k.lv} · ${esc(targetName(k))} · quan hệ ${relTxt(mrel(m,k))}${mKids(k).length?` · kèm ${mKids(k).length} QL`:''}</span><span class="sp"></span><button class="btn sm" onclick="setBoss(${k.id},'')">Tách ra</button></div>`).join(''):'<div class="small muted" style="margin-top:4px">Chưa kèm cặp quản lý nào.</div>'}
     ${cand.length?`<div class="row" style="margin-top:6px"><select onchange="if(this.value)setBoss(+this.value,${m.id})" style="flex:1;min-width:0" aria-label="Giao quản lý cấp dưới"><option value="">+ Giao quản lý cấp dưới cho ${esc(m.name)}…</option>${cand.map(x=>`<option value="${x.id}">${esc(x.name)} (cấp ${x.lv})${x.boss?' – đang dưới '+esc((mBoss(x)||{}).name||''):''}</option>`).join('')}</select></div>`:(ks.length>=mCap(m)?'<div class="small muted">Đã đủ số cấp dưới ở cấp hiện tại.</div>':'')}</div>`};
   const pairs=[];for(let i=0;i<S.managers.length;i++)for(let j=i+1;j<S.managers.length;j++){const x=S.managers[i],y=S.managers[j],v=mrel(x,y);if(v)pairs.push({x,y,v})}
@@ -86,7 +84,7 @@ export function hsHTML(){const fl=S.artists.filter(a=>a.hsF&&a.hsF.w>=abs()-3).s
   let h=`<h3>🩺 Chuyên gia chăm sóc sức khỏe</h3>`;
   if(S.hs)h+=`<div class="card row"><div class="chibi mini">${chibiHTML(S.hs)}</div><div class="small" style="flex:1"><b>${esc(S.hs.name)}</b> · chuyên môn ${S.hs.sk}/5 · lương ${fmt(S.hs.sal)}/tuần<br><span class="muted">Mỗi tuần kiểm tra năng lượng, tâm trạng, lịch tập của nghệ sĩ và TTS. Ai cần nghỉ nhiều hơn sẽ được báo để quản lý cân nhắc. Chuyên môn cao phát hiện chính xác hơn.</span></div><button class="btn sm warn" onclick="hsFire(this)">Cho nghỉ</button></div>`;
   else{if(!S.hsC)genHSC();h+=`<div class="small muted" style="margin-bottom:6px">Chưa có chuyên gia. Chuyên gia sẽ phát hiện nghệ sĩ/TTS cần thêm lịch nghỉ và báo quản lý cân nhắc.</div>${S.hsC.map(c=>`<div class="card row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small" style="flex:1"><b>${esc(c.name)}</b><br>Chuyên môn ${c.sk}/5 · lương ${fmt(c.sal)}/tuần</div><button class="btn sm pri" onclick="hsHire(${c.id})">Tuyển (${fmt(c.fee)})</button></div>`).join('')}`}
-  h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>Cần thêm lịch nghỉ (${fl.length})</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?'TTS · ':''}${esc(a.hsF.why.join(', '))} · đề xuất ${a.hsF.n} ngày nghỉ${m?' · QL '+esc(m.name):''}</span><span class="sp"></span>${a.hsF.st==='ok'?'<span class="tag m">✓ đã cho nghỉ</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`}).join('')}`:(S.hs?'<div class="small muted">Chưa phát hiện ai cần nghỉ thêm.</div>':'');
+  h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>Cần thêm lịch nghỉ (${fl.length})</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?'TTS · ':''}${esc(a.hsF.why.join(', '))} · đề xuất ${a.hsF.n} ngày nghỉ${m?' · QL '+mNameH(m):''}</span><span class="sp"></span>${a.hsF.st==='ok'?'<span class="tag m">✓ đã cho nghỉ</span>':`<button class="btn sm pri" onclick="hsApply(${a.id})">Áp dụng</button>`}</div>`}).join('')}`:(S.hs?'<div class="small muted">Chưa phát hiện ai cần nghỉ thêm.</div>':'');
   return h}
 /* ---- Start-of-week debut: ask group or solo ---- */
 export function dOpts(a){if(a.status!=='trainee')return null;const r=debutRec(a);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];

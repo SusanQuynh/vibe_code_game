@@ -5,6 +5,7 @@ import { CONCEPTS, STATS, TRAIN } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fit } from './artists.js';
 import { debutRec } from './debut.js';
+import { mNameH } from './ext3.js';
 import { effSk, mBoss, mgrExp, mgrOf, mgrTargets } from './managers.js';
 import { acceptCast, bestCast, canTake, chem, effPay } from './offers.js';
 import { secPlans } from './secretary.js';
@@ -120,7 +121,7 @@ export function viewProps(){
     const dl=it.d.map(x=>{const a=byId(x.a);if(!a||a.status!=='trainee')return'';return`<div class="prow">🎯 <b>${esc(a.name)}</b><span class="small">${esc(x.txt)}</span><span class="sp"></span><button class="btn sm" onclick="openRoom('lobby')">Xem</button></div>`}).join('');
     if(!sl&&!pl&&!dl)return'';
     const pend=it.s.filter(x=>!x.ok).length+it.p.filter(x=>!x.ok).length,b=mBoss(m);
-    return det('pr-'+m.id,`📋 ${esc(m.name)} <span class="small muted" style="font-weight:500">· báo cáo ${b?esc(b.name):'Giám đốc'} · ${pend?pend+' chưa duyệt':'xong'}</span>`,`${pend&&!b?`<div class="row"><span class="sp"></span><button class="btn sm" onclick="propOkAll(${m.id})">Duyệt hết</button></div>`:''}${pl}${sl}${dl}`,pend>0)}).join('');
+    return det('pr-'+m.id,`📋 ${mNameH(m)} <span class="small muted" style="font-weight:500">· báo cáo ${b?mNameH(b):'Giám đốc'} · ${pend?pend+' chưa duyệt':'xong'}</span>`,`${pend&&!b?`<div class="row"><span class="sp"></span><button class="btn sm" onclick="propOkAll(${m.id})">Duyệt hết</button></div>`:''}${pl}${sl}${dl}`,pend>0)}).join('');
   const nb=Object.entries(P.st.boss);
   const go=propNext;
   modal(`<h2>📋 Đề xuất của quản lý</h2><div class="sub">Tuần ${S.week}. Quản lý báo cáo lên cấp trên: không xung đột thì được duyệt ngay, có xung đột thì chuyển lên người cao hơn, tới Giám đốc nếu không ai đủ thẩm quyền.</div>
