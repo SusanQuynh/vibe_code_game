@@ -56,6 +56,8 @@ export function mgrDomTick(){for(const m of S.managers){if(m.rt&&m.rt<=abs()+1){
   if(m.as.t==='l'){const keep=m.as.ids.filter(i=>{const a=byId(i);return a&&artDom(a,m.dom)});if(keep.length!==m.as.ids.length){addLog(`📋 ${m.name} không còn phụ trách ${m.as.ids.length-keep.length} nghệ sĩ ngoài mảng ${MDOM[m.dom]}.`);m.as.ids=keep;S.props=null}}
   else if(m.as.t==='a'&&!domOk(m,m.as)){addLog(`📋 ${m.name} không còn phụ trách ${targetName(m)} (ngoài mảng ${MDOM[m.dom]}).`);m.as=null;S.props=null}}}
 /* old saves: infer the domain from the current assignment (tie order solo > actor > group > trainee) */
+/* legacy as.t t/s/d is rewritten by migrateV2: map it to a domain first (call before migrateV2) */
+export function legacyDom(){for(const m of S.managers)if(!m.dom&&m.as&&'tsd'.includes(m.as.t))m.dom=AS_DOM[m.as.t]}
 export function migrateDom(){const ORD=['solo','actor','group','trainee'];
   for(const m of S.managers){if(m.dom)continue;const as=m.as;let d=as&&AS_DOM[as.t];
     if(!d&&as&&(as.t==='l'||as.t==='a')){const ts=as.t==='l'?as.ids.map(byId).filter(Boolean):[byId(as.id)].filter(Boolean),cnt=ORD.map(k=>ts.filter(a=>artDom(a,k)).length),mx=Math.max(0,...cnt);

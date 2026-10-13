@@ -3,7 +3,7 @@ import { ensureLook } from '../systems/artists.js';
 import { fixBatch, initBatches } from '../systems/batches.js';
 import { genComp } from '../systems/contests.js';
 import { migrateV2 } from '../systems/ext2.js';
-import { genMgrPool, givePM, migrateDom } from '../systems/managers.js';
+import { genMgrPool, givePM, legacyDom, migrateDom } from '../systems/managers.js';
 import { initWorld } from '../systems/market.js';
 import { groupsOf } from '../systems/relations.js';
 import { ensureDays } from '../systems/week.js';
@@ -62,4 +62,4 @@ export function load(){try{let d=readSlot(KEY),restored=false;loadSrc='compact';
   else if(!d&&f){d=f;loadSrc='full';restored=true}
   if(!d)return false;setState(d);
   for(const k of ['groups','offers','films','events','log','singles','concerts','awards','pool'])if(!Array.isArray(S[k]))S[k]=[];
-  if(!S.partners)S.partners={};if(!Array.isArray(S.managers)){S.managers=[];genMgrPool();addLog('📋 Văn phòng Quản lý vừa mở ở tầng 6: tuyển quản lý để chia nhau phụ trách nhóm và nghệ sĩ.','gold')}if(!Array.isArray(S.mgrPool))genMgrPool();[...S.artists,...S.pool,...S.managers,...S.mgrPool].forEach(ensureLook);[...S.artists,...S.pool].forEach(ensureDays);S.artists.forEach(a=>{if(a.solo&&groupsOf(a).length&&!a.pm)givePM(a,true)});initWorld();S.managers.forEach(m=>{if(m.ps===true)m.ps=1;else if(m.ps!==1&&m.ps!==0)m.ps=2});if(S.planOn===undefined)S.planOn=true;if(!Array.isArray(S.batches)||!S.batches.length)initBatches();S.artists.forEach(fixBatch);if(!Array.isArray(S.comps)){S.comps=[];genComp();genComp()}if(!Array.isArray(S.compRuns))S.compRuns=[];S.artists.forEach(a=>{if(!a.pg)a.pg={}});migrateV2();migrateDom();if(restored)addLog('🛟 Bản lưu chính bị lỗi, đã khôi phục từ bản sao lưu đầy đủ.','bad');return true}catch(e){console.error(e);return false}}
+  if(!S.partners)S.partners={};if(!Array.isArray(S.managers)){S.managers=[];genMgrPool();addLog('📋 Văn phòng Quản lý vừa mở ở tầng 6: tuyển quản lý để chia nhau phụ trách nhóm và nghệ sĩ.','gold')}if(!Array.isArray(S.mgrPool))genMgrPool();[...S.artists,...S.pool,...S.managers,...S.mgrPool].forEach(ensureLook);[...S.artists,...S.pool].forEach(ensureDays);S.artists.forEach(a=>{if(a.solo&&groupsOf(a).length&&!a.pm)givePM(a,true)});initWorld();S.managers.forEach(m=>{if(m.ps===true)m.ps=1;else if(m.ps!==1&&m.ps!==0)m.ps=2});if(S.planOn===undefined)S.planOn=true;if(!Array.isArray(S.batches)||!S.batches.length)initBatches();S.artists.forEach(fixBatch);if(!Array.isArray(S.comps)){S.comps=[];genComp();genComp()}if(!Array.isArray(S.compRuns))S.compRuns=[];S.artists.forEach(a=>{if(!a.pg)a.pg={}});legacyDom();migrateV2();migrateDom();if(restored)addLog('🛟 Bản lưu chính bị lỗi, đã khôi phục từ bản sao lưu đầy đủ.','bad');return true}catch(e){console.error(e);return false}}

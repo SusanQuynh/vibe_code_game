@@ -116,4 +116,15 @@ describe('migrateDom', () => {
     expect(DOM_KEYS).toContain(S.mgrPool[0].dom);
     for (let i = 0; i < 3; i++) nextWeek(true, true);
   });
+  it('QL cũ as.t s/d/t (không có solo) được suy ra mảng, không phải ngẫu nhiên', () => {
+    newGame();
+    const d = JSON.parse(fs.readFileSync('tests/fixtures/save-v1.json', 'utf8'));
+    d.artists.forEach(a => { a.solo = false; a.actor = false; });
+    d.batches = [{ id: 9000, n: 'Lứa 1', w: 1 }]; d.bno = 1; d.curBatch = 9000;
+    const mk = t => { const m = genManager(); delete m.dom; m.as = { t, id: 0 }; return { ...m, id: m.id + 100000 + t.charCodeAt(0) }; };
+    d.managers = [mk('s'), mk('d'), mk('t')];
+    localStorage.setItem(KEY, JSON.stringify(d));
+    expect(load()).toBe(true);
+    expect(S.managers.map(m => m.dom)).toEqual(['solo', 'actor', 'trainee']);
+  });
 });

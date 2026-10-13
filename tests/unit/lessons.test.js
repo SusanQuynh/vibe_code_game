@@ -69,6 +69,22 @@ describe('completeBusy lessons', () => {
   });
 });
 
+describe('livestream gộp dùng điểm thực', () => {
+  it('4 livestream: tổng trên thẻ khớp a.pg; chỉ số 100 thì không tăng', () => {
+    newGame();
+    const [a] = S.artists;
+    a.st.variety = 98.7;
+    for (let i = 0; i < 4; i++) { doLive([a.id], true); S.week++; }
+    expect(a.lessons[0].t).toContain('(×4)');
+    expect(a.lessons[0].g.variety).toBeCloseTo(a.pg.variety, 5);
+    expect(a.lessons[0].s).toContain(`+${a.pg.variety.toFixed(1)}`);
+    expect(a.st.variety).toBe(100);
+    const g = a.pg.variety;
+    doLive([a.id], true);
+    expect(a.pg.variety).toBe(g);
+  });
+});
+
 describe('migration và golden-neutral', () => {
   it('fixture save-v1 có pg = {} cho mọi nghệ sĩ và chạy 3 tuần', () => {
     newGame();

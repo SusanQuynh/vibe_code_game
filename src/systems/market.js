@@ -77,7 +77,7 @@ export function sxResolve(e,k){
     case'sponsor:no':S.artists.forEach(a=>a.mood=clamp(a.mood+3,0,100));addLog('Từ chối tài trợ, fan khen công ty có tâm.');break;
     case'tax:law':S.money-=40e6;if(Math.random()<.6)addLog('⚖️ Luật sư chứng minh sổ sách hợp lệ, không bị phạt.','good');else{const f=clamp(Math.round(Math.abs(S.money)*.05/1e6)*1e6,30e6,300e6);S.money-=f;addLog(`🧾 Vẫn bị phạt ${fmt(f)}.`,'bad')}break;
     case'tax:pay':{const f=clamp(Math.round(Math.abs(S.money)*.04/1e6)*1e6,20e6,250e6);S.money-=f;addLog(`🧾 Nộp phạt thuế ${fmt(f)}.`,'bad');break}
-    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog('Không thể cử người đi lễ hội lúc này.','bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:'Lễ hội quốc tế',left:1,total:1}}addLog(`🌏 ${e.n} biểu diễn ở lễ hội quốc tế, fan nước ngoài tăng mạnh!`,'gold');break}
+    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog('Không thể cử người đi lễ hội lúc này.','bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:'Lễ hội quốc tế',left:1,total:1,lk:'concert'}}addLog(`🌏 ${e.n} biểu diễn ở lễ hội quốc tế, fan nước ngoài tăng mạnh!`,'gold');break}
     case'festival:no':break;
     case'leak:embrace':if(Math.random()<.6){S.artists.filter(a=>a.status==='debuted').forEach(a=>a.fans+=R(500,2500));addLog('💧 Teaser bất đắc dĩ gây sốt, fan háo hức chờ bài mới!','good')}else addLog('💧 Teaser không tạo được tiếng vang.');break;
     case'leak:sue':S.money-=20e6;addLog('⚖️ Đã khởi kiện người phát tán bản demo.');break;

@@ -6,6 +6,7 @@ import { save } from '../save/storage.js';
 import { S, abs } from '../state.js';
 import { cleanBatches } from '../systems/ext2.js';
 import { mNameH } from '../systems/ext3.js';
+import { kindOf } from '../systems/contests.js';
 import { mgrTargets, targetName } from '../systems/managers.js';
 import { campMem } from '../systems/promo.js';
 import { datingPartner } from '../systems/relations.js';
@@ -55,7 +56,7 @@ export function roomBadge(id){
   if(id==='sales'){const n=S.singles.filter(s=>s.dig&&!s.end).length;return n?`<span class="badge" style="background:var(--mint)">${n} 🎧</span>`:''}
   if(id==='invest'){const n=(S.biz||[]).length;return n?`<span class="badge" style="background:var(--mint)">${n}</span>`:''}
   if(id==='market'){const n=(S.rivals||[]).filter(r=>r.cb&&r.cb.w>=abs()-1).length;return n?`<span class="badge">⚔️${n}</span>`:''}
-  if(id==='lobby'){const n=S.artists.filter(a=>a.status==='trainee').length,c=(S.comps||[]).length;return n?`<span class="badge" style="background:var(--violet)">${n} TTS${c?' · 🏅'+c:''}</span>`:''}
+  if(id==='lobby'){const n=S.artists.filter(a=>a.status==='trainee').length,c=(S.comps||[]).filter(x=>kindOf(x)==='tts').length;return n?`<span class="badge" style="background:var(--violet)">${n} TTS${c?' · 🏅'+c:''}</span>`:''}
   return'';
 }
 export function renderBuilding(){
