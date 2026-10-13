@@ -20,7 +20,7 @@ import { DAYN, DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/w
 import { blinkD, campKeyOf, chibiHTML } from './building.js';
 import { closeM, modal } from './modal.js';
 import { money, t } from '../i18n/index.js';
-import { conceptName, dayShort, genreName, mskName, relTagName, statName, trainName } from '../i18n/labels.js';
+import { conceptName, dayName, dayShort, genreName, mskName, relTagName, statName, trainName } from '../i18n/labels.js';
 
 /* ================= COLLAPSIBLES ================= */
 export function det(k,sum,body,def){S.ui=S.ui||{};const o=S.ui[k],op=o===undefined?def:o;return`<details class="cl" ${op?'open':''} ontoggle="togD('${k}',this.open)"><summary>${sum}</summary><div class="clb">${body}</div></details>`}
@@ -59,16 +59,16 @@ export function viewArtist(id){
 }
 export function viewEvents(){
   const list=S.events.map(e=>({e,i:evInfo(e)})).filter(x=>x.i);
-  modal(`<h2>🔔 Sự kiện</h2><div class="sub">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div>${list.length?list.map(({e,i})=>`<div class="card"><b>${i.ic} ${esc(i.t)}</b><div class="small muted" style="margin:4px 0 8px">${esc(i.d)}</div>${e.kind==='scandal'?invBlock(byId(e.a)):''}${e.kind==='renew'?renewBlock(byId(e.a),e.mul):''}${(e.kind==='mp'||e.kind==='v3')&&e.cand?candBlock(e.cand):''}<div class="row">${i.o.map(o=>`<button class="btn sm ${o.k==='yes'||o.k==='fix'||o.k==='talk'||o.k==='r1'?'pri':o.k==='end'||o.k==='split'?'warn':''}" onclick="resolveEv(${e.id},'${o.k}')">${o.l}</button>`).join('')}</div></div>`).join(''):'<div class="card muted">Không có sự kiện nào. Mọi thứ đang yên bình.</div>'}`);
+  modal(`<h2>${t('rep.evH')}</h2><div class="sub">${t('rep.evSub')}</div>${list.length?list.map(({e,i})=>`<div class="card"><b>${i.ic} ${esc(i.t)}</b><div class="small muted" style="margin:4px 0 8px">${esc(i.d)}</div>${e.kind==='scandal'?invBlock(byId(e.a)):''}${e.kind==='renew'?renewBlock(byId(e.a),e.mul):''}${(e.kind==='mp'||e.kind==='v3')&&e.cand?candBlock(e.cand):''}<div class="row">${i.o.map(o=>`<button class="btn sm ${o.k==='yes'||o.k==='fix'||o.k==='talk'||o.k==='r1'?'pri':o.k==='end'||o.k==='split'?'warn':''}" onclick="resolveEv(${e.id},'${o.k}')">${o.l}</button>`).join('')}</div></div>`).join(''):`<div class="card muted">${t('rep.evNone')}</div>`}`);
 }
 export function viewSkipWarn(){
-  modal(`<h2>Còn ${S.events.length} sự kiện chưa xử lý</h2><div class="sub">Nếu sang tuần, các sự kiện sẽ tự chọn phương án cuối (thường là bất lợi).</div><div class="row"><button class="btn pri" onclick="view(viewEvents)">Xử lý ngay</button><button class="btn" onclick="closeM();nextWeek(true)">Bỏ qua & sang tuần</button></div>`);
+  modal(`<h2>${t('rep.skipH',{n:S.events.length})}</h2><div class="sub">${t('rep.skipSub')}</div><div class="row"><button class="btn pri" onclick="view(viewEvents)">${t('rep.skipNow')}</button><button class="btn" onclick="closeM();nextWeek(true)">${t('rep.skipGo')}</button></div>`);
 }
 export function viewAward(e){
-  modal(`<div class="stage">🏆</div><h2 style="text-align:center">Lễ trao giải năm ${e.y}</h2><div class="sub" style="text-align:center">Năm mới bắt đầu, trò chơi tiếp tục không giới hạn.</div>
-  ${e.res.length?e.res.map(r=>`<div class="card row"><b>${r.ok?'🥇':'—'} ${r.cat}</b><span class="sp"></span><span class="small">${esc(r.names)} <span class="muted">(${r.note})</span> ${r.ok?'<span class="tag s">Thắng</span>':'<span class="tag">Đề cử</span>'}</span></div>`).join(''):'<div class="card muted">Năm nay công ty chưa có đề cử nào.</div>'}
-  <h3>Xếp hạng công ty cuối năm</h3>${e.board.map((b,i)=>`<div class="card row" style="${b.me?'border-color:var(--pink)':''}"><b>#${i+1}</b> ${esc(b.n)}<span class="sp"></span>${fmtN(b.f)} fan</div>`).join('')}
-  <button class="btn pri" onclick="${S.repOn!==false&&S.lastRep?'view(viewReport)':'closeM()'}">Tiếp tục</button>`);
+  modal(`<div class="stage">🏆</div><h2 style="text-align:center">${t('rep.awardH',{y:e.y})}</h2><div class="sub" style="text-align:center">${t('rep.awardSub')}</div>
+  ${e.res.length?e.res.map(r=>`<div class="card row"><b>${r.ok?'🥇':'—'} ${r.cat}</b><span class="sp"></span><span class="small">${esc(r.names)} <span class="muted">(${r.note})</span> ${r.ok?`<span class="tag s">${t('rep.won')}</span>`:`<span class="tag">${t('rep.nominated')}</span>`}</span></div>`).join(''):`<div class="card muted">${t('rep.awardNone')}</div>`}
+  <h3>${t('rep.board')}</h3>${e.board.map((b,i)=>`<div class="card row" style="${b.me?'border-color:var(--pink)':''}"><b>#${i+1}</b> ${esc(b.n)}<span class="sp"></span>${t('common.fanN',{n:fmtN(b.f)})}</div>`).join('')}
+  <button class="btn pri" onclick="${S.repOn!==false&&S.lastRep?'view(viewReport)':'closeM()'}">${t('rep.continue')}</button>`);
 }
 export let repDay=0;
 export function tnode(m){const ts=mgrTargets(m);return`<div class="tnode"><div class="chibi mini">${chibiHTML(m)}</div><div style="min-width:0">${mNameH(m)} <span class="tag v">${t('mgr.lv',{n:m.lv})}</span><div class="small muted">${m.as?t('mgr.inCharge',{n:esc(targetName(m,t))})+` (${ts.length})`:t('target.none')}${m.ps===1?t('mgr.psAuto'):m.ps===2?t('mgr.psSug'):''}${m.auto!=='off'?t('mgr.sumAuto'):''}</div></div></div>`}
@@ -81,56 +81,56 @@ export function orgTree(){
 }
 export function artDayLine(a,d){
   const r=S.lastRep&&S.lastRep.a[a.id];
-  if(!r)return`<div>🆕 <b>${esc(a.name)}</b>: mới gia nhập, chưa có số liệu.</div>`;
-  if(r.b)return`<div>🚶 <b>${esc(a.name)}</b>: làm việc bên ngoài – ${esc(r.b)}.</div>`;
+  if(!r)return`<div>${t('rep.newJoin',{n:esc(a.name)})}</div>`;
+  if(r.b)return`<div>${t('rep.outside',{n:esc(a.name),b:esc(r.b)})}</div>`;
   if(d===7){const g=r.d.reduce((s,x)=>s+x[1],0),tr=r.d.filter(x=>x[0]!=='rest').length,end=r.d[6];
-    return`<div>${daysMini({days:r.d.map(x=>x[0])})} <b>${esc(a.name)}</b>: ${tr} ngày tập, +${g.toFixed(1)} điểm chỉ số · cuối tuần ⚡${end[2]} 🙂${end[3]}${end[2]<30?' <span class="w">⚠️ kiệt sức</span>':''}</div>`}
+    return`<div>${daysMini({days:r.d.map(x=>x[0])})} <b>${esc(a.name)}</b>: ${t('rep.weekLine',{d:tr,g:g.toFixed(1),e:end[2],m:end[3]})}${end[2]<30?` <span class="w">${t('rep.warnExh')}</span>`:''}</div>`}
   const [k,g,e,mo]=r.d[d];
-  const warn=(e<30?' <span class="w">⚠️ cần nghỉ</span>':'')+(mo<30?' <span class="w">💢 tâm trạng xấu</span>':'');
-  return`<div>${TIC[k]} <b>${esc(a.name)}</b>: ${TRAIN[k].n}${g?` (+${g.toFixed(1)})`:''} · ⚡${e} · 🙂${mo}${warn}</div>`;
+  const warn=(e<30?` <span class="w">${t('rep.warnRest')}</span>`:'')+(mo<30?` <span class="w">${t('rep.warnMood')}</span>`:'');
+  return`<div>${TIC[k]} <b>${esc(a.name)}</b>: ${trainName(k)}${g?` (+${g.toFixed(1)})`:''} · ⚡${e} · 🙂${mo}${warn}</div>`;
 }
 export function teamOf(m){let r=[...mgrTargets(m)];for(const k of mKids(m))r=r.concat(teamOf(k));return[...new Set(r)]}
 export function warnCount(arts,d){if(!S.lastRep)return 0;return arts.filter(a=>{const r=S.lastRep.a[a.id];if(!r||!r.d)return false;const x=r.d[d===7?6:d];return x[2]<30||x[3]<30}).length}
 export function briefOf(arts){const L=S.lastRep;let g=0,tr=0,fans=0;const warn=[],wn=[],done=[],out=[];
   for(const a of arts){const r=L.a[a.id];if(!r)continue;fans+=r.f||0;if(r.done)done.push(`${a.name} «${r.done}»`);
-    if(r.d){g+=r.d.reduce((t,x)=>t+x[1],0);tr++;const e=r.d[6];if(e[2]<30){warn.push(`${a.name} kiệt sức`);wn.push(a.name)}else if(e[3]<30){warn.push(`${a.name} tâm trạng xấu`);wn.push(a.name)}}else if(!r.done)out.push(a.name)}
+    if(r.d){g+=r.d.reduce((t,x)=>t+x[1],0);tr++;const e=r.d[6];if(e[2]<30){warn.push(`${a.name} ${t('rep.exh')}`);wn.push(a.name)}else if(e[3]<30){warn.push(`${a.name} ${t('rep.badMood')}`);wn.push(a.name)}}else if(!r.done)out.push(a.name)}
   return{g,tr,fans,warn,wn,done,out,dec:arts.reduce((t,a)=>t+((L.a[a.id]||{}).dec||0),0)}}
 export function briefCard(title,arts,m){const b=briefOf(arts);
-  let tip='';if(b.wn.length)tip=`cho ${b.wn.join(', ')} nghỉ 2–3 ngày`;
-  else{const t=arts.find(a=>a.status==='trainee'&&!a.busy&&debutRec(a).t!=='wait');if(t)tip=`${t.name} ${debutRec(t).short}`}
-  const l1=`${arts.length} người · 📈 +${(b.g/Math.max(b.tr,1)).toFixed(1)}/người${b.dec?` · 📉 −${b.dec.toFixed(1)} (TTS sa sút)`:''} · 💗 ${b.fans>=0?'+':''}${fmtN(b.fans)}${b.out.length?` · 🚶 ${b.out.length} đi làm`:''}`;
-  return`<div class="card rep" style="margin:0 0 6px">${title}<div>${l1}</div><div>${b.warn.length?`<span class="w">⚠️ ${esc(b.warn.join(', '))}</span>`:'✅ Ổn định'}${b.done.length?` · 🎬 Xong ${esc(b.done.join(', '))}`:''}</div>${tip?`<div class="muted">💡 ${esc(tip)}</div>`:''}</div>`}
+  let tip='';if(b.wn.length)tip=t('rep.tipRest',{n:b.wn.join(', ')});
+  else{const x=arts.find(a=>a.status==='trainee'&&!a.busy&&debutRec(a).t!=='wait');if(x)tip=`${x.name} ${debutRec(x,t).short}`}
+  const l1=`${t('common.people',{n:arts.length})} · 📈 +${(b.g/Math.max(b.tr,1)).toFixed(1)}${t('rep.perPerson')}${b.dec?t('rep.decline',{n:b.dec.toFixed(1)}):''} · 💗 ${b.fans>=0?'+':''}${fmtN(b.fans)}${b.out.length?t('rep.goneOut',{n:b.out.length}):''}`;
+  return`<div class="card rep" style="margin:0 0 6px">${title}<div>${l1}</div><div>${b.warn.length?`<span class="w">⚠️ ${esc(b.warn.join(', '))}</span>`:t('rep.stable')}${b.done.length?t('rep.doneBy',{n:esc(b.done.join(', '))}):''}</div>${tip?`<div class="muted">💡 ${esc(tip)}</div>`:''}</div>`}
 export function viewReport(){
-  const L=S.lastRep;if(!L){modal('<h2>📑 Báo cáo</h2><div class="sub">Chưa có báo cáo. Hãy chơi qua một tuần.</div>');return}
+  const L=S.lastRep;if(!L){modal(`<h2>${t('rep.emptyH')}</h2><div class="sub">${t('rep.emptySub')}</div>`);return}
   const dm=L.m1!=null?L.m1-L.m0:null,fans=Object.values(L.a).reduce((t,r)=>t+(r.f||0),0),dn=Object.values(L.a).filter(r=>r.done).length,wc=warnCount(S.artists,7);
   const lst=[],walk=(m,d)=>{lst.push([m,d]);mKids(m).forEach(k=>walk(k,d+1))};S.managers.filter(m=>!mBoss(m)).forEach(m=>walk(m,0));
   const free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`📋 ${mNameH(m)} <span class="muted">· ${esc(targetName(m))}</span>`,ts,m)}</div>`}).join('');
+  const cards=lst.map(([m,d])=>{const ts=mgrTargets(m);if(!ts.length)return'';return`<div style="margin-left:${d*14}px">${briefCard(`📋 ${mNameH(m)} <span class="muted">· ${esc(targetName(m,t))}</span>`,ts,m)}</div>`}).join('');
   const pc=propCount();
-  modal(`<h2>📑 Báo cáo tuần ${L.w} · Năm ${L.y}</h2>
-  <div class="grid2" style="margin-bottom:8px"><div class="card small">💰 <b class="${dm<0?'bad':'good'}">${dm==null?'—':(dm>=0?'+':'')+fmt(dm)}</b></div><div class="card small">💗 <b>${fans>=0?'+':''}${fmtN(fans)}</b> fan</div><div class="card small">🎬 <b>${dn}</b> dự án xong</div><div class="card small">⚠️ <b class="${wc?'bad':''}">${wc}</b> cần chú ý</div>${L.biz?`<div class="card small">📈 Kinh doanh <b class="${L.biz<0?'bad':'good'}">${L.biz>=0?'+':''}${fmt(L.biz)}</b></div>`:''}</div>
+  modal(`<h2>${t('rep.weekH',{w:L.w,y:L.y})}</h2>
+  <div class="grid2" style="margin-bottom:8px"><div class="card small">💰 <b class="${dm<0?'bad':'good'}">${dm==null?'—':(dm>=0?'+':'')+money(dm)}</b></div><div class="card small">${t('rep.fans',{n:(fans>=0?'+':'')+fmtN(fans)})}</div><div class="card small">${t('rep.done',{n:dn})}</div><div class="card small">${t('rep.warns',{c:wc?'bad':'',n:wc})}</div>${L.biz?`<div class="card small">${t('rep.biz',{c:L.biz<0?'bad':'good',v:(L.biz>=0?'+':'')+money(L.biz)})}</div>`:''}</div>
   ${L.evl?evalBrief(S.lastEval):''}
   ${S.gmRep&&S.gmRep.w===abs()-1?gmCardHTML():''}
-  ${cards}${free.length?briefCard('<b>👔 Chưa có quản lý</b>',free):''}
-  ${(()=>{const P=S.props&&S.props.w===abs()?S.props:null;if(!P)return'';const nb=Object.values(P.st.boss).reduce((a,b)=>a+b,0),pd=P.c.filter(c=>c.pend).length;return(nb||P.st.auto||P.st.res||pd)?`<div class="card small rep">📨 Duyệt tuần mới: ${nb?`cấp trên duyệt ${nb}`:''}${P.st.auto?` · tự duyệt ${P.st.auto}`:''}${P.st.res?` · ⚖️ ${P.st.res} xung đột đã xử lý`:''}${pd?` · <span class="w">⚠️ ${pd} xung đột chờ bạn</span>`:''}</div>`:''})()}
-  ${L.ev.length?`<h3>Đáng chú ý</h3><div class="card rep">${L.ev.slice(0,5).map(t=>`<div>${esc(t)}</div>`).join('')}${L.ev.length>5?`<div class="muted">+${L.ev.length-5} sự kiện khác trong Nhật ký</div>`:''}</div>`:''}
-  <div class="row" style="margin-top:10px"><button class="btn" onclick="setRepDay(7);view(viewReportFull)">Chi tiết theo ngày</button>${pc?`<button class="btn" onclick="setPropNext(null);view(viewProps)">📋 ${pc} đề xuất</button>`:''}<span class="sp"></span><button class="btn pri" onclick="closeM()">Đóng</button></div>`);
+  ${cards}${free.length?briefCard(`<b>${t('rep.noMgrB')}</b>`,free):''}
+  ${(()=>{const P=S.props&&S.props.w===abs()?S.props:null;if(!P)return'';const nb=Object.values(P.st.boss).reduce((a,b)=>a+b,0),pd=P.c.filter(c=>c.pend).length;return(nb||P.st.auto||P.st.res||pd)?`<div class="card small rep">${t('rep.appr')} ${nb?t('rep.byBoss',{n:nb}):''}${P.st.auto?t('rep.auto',{n:P.st.auto}):''}${P.st.res?t('rep.resolved',{n:P.st.res}):''}${pd?t('rep.pending',{n:pd}):''}</div>`:''})()}
+  ${L.ev.length?`<h3>${t('rep.noteworthy')}</h3><div class="card rep">${L.ev.slice(0,5).map(t=>`<div>${esc(t)}</div>`).join('')}${L.ev.length>5?`<div class="muted">${t('rep.moreEv',{n:L.ev.length-5})}</div>`:''}</div>`:''}
+  <div class="row" style="margin-top:10px"><button class="btn" onclick="setRepDay(7);view(viewReportFull)">${t('rep.byDay')}</button>${pc?`<button class="btn" onclick="setPropNext(null);view(viewProps)">${t('rep.proposals',{n:pc})}</button>`:''}<span class="sp"></span><button class="btn pri" onclick="closeM()">${t('btn.close')}</button></div>`);
 }
 export function viewReportFull(){
-  const R=S.lastRep;if(!R){modal('<h2>📑 Báo cáo</h2><div class="sub">Chưa có báo cáo. Hãy chơi qua một tuần.</div>');return}
+  const R=S.lastRep;if(!R){modal(`<h2>${t('rep.emptyH')}</h2><div class="sub">${t('rep.emptySub')}</div>`);return}
   const d=repDay;
   const node=m=>{const ts=mgrTargets(m),kids=mKids(m),team=teamOf(m),wc=warnCount(team,d);
-    return`<li><div class="card" style="margin:0"><div class="row"><div class="chibi mini" style="transform:scale(.72);margin:-8px 0 -8px 0">${chibiHTML(m)}</div><div>📋 ${mNameH(m)} <span class="small muted">cấp ${m.lv}${mBoss(m)?' · báo cáo lên '+mNameH(mBoss(m)):' · báo cáo Giám đốc'}</span></div></div>
-    <div class="rep" style="margin-top:4px">${ts.length?ts.map(a=>artDayLine(a,d)).join(''):'<div class="muted">Không trực tiếp phụ trách nghệ sĩ nào.</div>'}
-    ${kids.length?`<div style="margin-top:4px">👥 <b>Tóm tắt đội:</b> ${team.length} nghệ sĩ dưới quyền${wc?`, <span class="w">${wc} cần chú ý</span>`:', mọi người ổn định'}.</div>`:''}</div></div>
+    return`<li><div class="card" style="margin:0"><div class="row"><div class="chibi mini" style="transform:scale(.72);margin:-8px 0 -8px 0">${chibiHTML(m)}</div><div>📋 ${mNameH(m)} <span class="small muted">${t('mgr.lvLow',{n:m.lv})}${mBoss(m)?t('rep.rptUp',{b:mNameH(mBoss(m))}):t('rep.rptCeo')}</span></div></div>
+    <div class="rep" style="margin-top:4px">${ts.length?ts.map(a=>artDayLine(a,d)).join(''):`<div class="muted">${t('rep.noDirect')}</div>`}
+    ${kids.length?`<div style="margin-top:4px">${t('rep.teamSum',{a:team.length,w:wc?t('rep.teamWarn',{n:wc}):t('rep.teamCalm')})}</div>`:''}</div></div>
     ${kids.length?`<ul>${kids.map(node).join('')}</ul>`:''}</li>`};
   const top=S.managers.filter(m=>!mBoss(m)),free=S.artists.filter(a=>!mgrOf(a)&&!a.pm);
-  modal(`<h2>📑 Báo cáo tuần ${R.w} · Năm ${R.y}</h2><div class="sub">${d===7?'Tổng kết cả tuần':'Báo cáo cuối ngày '+DAYN[d]} theo sơ đồ quản lý.</div>
-  <div class="tabs">${DAYS.map((x,i)=>`<button class="${i===d?'on':''}" onclick="setRepDay(${i});viewReportFull()">${x}</button>`).join('')}<button class="${d===7?'on':''}" onclick="setRepDay(7);viewReportFull()">Cả tuần</button></div>
-  <div class="tree"><div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>Gửi Giám đốc</b><div class="small muted">${warnCount(S.artists,d)} nghệ sĩ cần chú ý ${d===7?'cuối tuần':'hôm nay'}</div></div></div>
-  <ul>${top.map(node).join('')}${free.length?`<li><div class="card" style="margin:0"><b>👔 Báo cáo trực tiếp (chưa có quản lý)</b><div class="rep" style="margin-top:4px">${free.map(a=>artDayLine(a,d)).join('')}</div></div></li>`:''}</ul></div>
-  ${d===7&&R.ev.length?`<h3>Sự kiện trong tuần</h3><div class="card rep">${R.ev.map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
-  <div class="row" style="margin-top:10px">${d>0?`<button class="btn" onclick="setRepDay(${d-1});viewReportFull()">◀ Hôm trước</button>`:''}<span class="sp"></span>${d<7?`<button class="btn pri" onclick="setRepDay(${d+1});viewReportFull()">${d===6?'Tổng kết tuần ▶':'Hôm sau ▶'}</button>`:'<button class="btn" onclick="view(viewReport)">◀ Bản gọn</button><button class="btn pri" onclick="closeM()">Đóng</button>'}</div>`);
+  modal(`<h2>${t('rep.weekH',{w:R.w,y:R.y})}</h2><div class="sub">${d===7?t('rep.subWeek'):t('rep.subDay',{d:dayName(d)})}</div>
+  <div class="tabs">${DAYS.map((x,i)=>`<button class="${i===d?'on':''}" onclick="setRepDay(${i});viewReportFull()">${dayShort(i)}</button>`).join('')}<button class="${d===7?'on':''}" onclick="setRepDay(7);viewReportFull()">${t('rep.allWeek')}</button></div>
+  <div class="tree"><div class="tnode ceo"><span style="font-size:24px;padding:0 6px">👔</span><div><b>${t('rep.toCeo')}</b><div class="small muted">${t('rep.attn',{n:warnCount(S.artists,d),w:t(d===7?'rep.whenWeek':'rep.whenToday')})}</div></div></div>
+  <ul>${top.map(node).join('')}${free.length?`<li><div class="card" style="margin:0"><b>${t('rep.direct')}</b><div class="rep" style="margin-top:4px">${free.map(a=>artDayLine(a,d)).join('')}</div></div></li>`:''}</ul></div>
+  ${d===7&&R.ev.length?`<h3>${t('rep.weekEv')}</h3><div class="card rep">${R.ev.map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
+  <div class="row" style="margin-top:10px">${d>0?`<button class="btn" onclick="setRepDay(${d-1});viewReportFull()">${t('rep.prevDay')}</button>`:''}<span class="sp"></span>${d<7?`<button class="btn pri" onclick="setRepDay(${d+1});viewReportFull()">${d===6?t('rep.sumBtn'):t('rep.nextDay')}</button>`:`<button class="btn" onclick="view(viewReport)">${t('rep.brief')}</button><button class="btn pri" onclick="closeM()">${t('btn.close')}</button>`}</div>`);
 }
 export function mgrBars(m){return`<div class="bars">${Object.keys(MSK).map(k=>`<span>${mskName(k)}</span><div class="bar"><i style="width:${m.sk[k]*10}%"></i></div><b>${m.sk[k]}</b>`).join('')}</div>`}
 export const setRepDay=v=>{repDay=v};

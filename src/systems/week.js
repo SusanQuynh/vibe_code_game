@@ -1,4 +1,6 @@
 import { R, pick, rnd } from '../core/rng.js';
+import { t } from '../i18n/index.js';
+import { statName } from '../i18n/labels.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
 import { PLESSON } from '../data/lessons.js';
 import { OFFER } from '../data/offers.js';
@@ -118,7 +120,7 @@ export function planWeek(a,skill=10){
   if(a.restRec&&a.restRec>abs()){let c=out.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<(a.restN||3);i--)if(out[i]!=='rest'){out[i]='rest';c++}}
   return out;
 }
-export function planWhy(a){if(a.energy<40)return'năng lượng đang thấp nên cần nghỉ trước';if(a.mood<28)return'tâm trạng đang xấu';if(a.wantAct)return'đang muốn đóng phim';const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return`ưu tiên ${STATS[k]} đang yếu nhất (${Math.round(a.st[k])}), nghỉ để giữ năng lượng`}
+export function planWhy(a){if(a.energy<40)return t('plan.why.energy');if(a.mood<28)return t('plan.why.mood');if(a.wantAct)return t('plan.why.act');const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return t('plan.why.focus',{s:statName(k),v:Math.round(a.st[k])})}
 export function projEnergy(a){let e=a.energy;return a.days.map(k=>{e=clamp(e+(k==='rest'?12:TRAIN[k].e*.3),0,100);return Math.round(e)})}
 export const mgrSchedules=a=>{if(a.pm)return a.pm;const m=mgrOf(a);return m&&m.ps===1?m:null};
 export function mgrScheduleAll(){for(const a of S.artists){if(a.busy)continue;const m=mgrSchedules(a);if(m)a.days=planWeek(a,effSk(m,'plan'))}}

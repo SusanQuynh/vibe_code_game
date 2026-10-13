@@ -1,4 +1,5 @@
 import { R } from '../core/rng.js';
+import { t } from '../i18n/index.js';
 import { clamp, esc, fmt, fmtN } from '../core/util.js';
 import { CONCEPTS, GENRES } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
@@ -50,7 +51,7 @@ export function evalAll(){const R0={w:abs(),y:S.year,wk:S.week,t:[],a:[]};
   addLog(`📋 Đánh giá định kỳ: TTS ${R0.t.length-tf.length}/${R0.t.length} đạt · Nghệ sĩ ${ex.length} xuất sắc${ex.length?` (thưởng ${fmt(-ex.reduce((t,x)=>t+x.money,0))})`:''}, ${fa.length} không đạt${fa.length?` (trừ ${fmt(fa.reduce((t,x)=>t+x.money,0))})`:''}.`,fa.length||tf.length?'':'good');
 }
 export function evalBrief(E){if(!E)return'';const tf=E.t.filter(x=>x.g==='Không đạt'),ex=E.a.filter(x=>x.g==='Xuất sắc'),fa=E.a.filter(x=>x.g==='Không đạt');
-  return`<div class="card rep">📋 <b>Đánh giá định kỳ</b> (T${E.wk} N${E.y})<br>🌱 TTS: ${E.t.length-tf.length}/${E.t.length} đạt${tf.length?` · <span class="w">${tf.map(x=>esc(x.n)+(x.out?' bị loại':` ${x.f}/${EV_TTS}`)).join(', ')}</span>`:''}<br>⭐ Nghệ sĩ: ${ex.length?`🏅 ${ex.map(x=>esc(x.n)).join(', ')} (+thưởng)`:'không ai xuất sắc'}${fa.length?` · <span class="w">${fa.map(x=>esc(x.n)+(x.out?' bị chấm dứt HĐ':` ${x.f}/${EV_ART}`)).join(', ')}</span>`:''}</div>`}
+  return`<div class="card rep">${t('rep.ev.h',{yw:t('common.wkShort',{w:E.wk})+' '+t('common.wkYear',{y:E.y})})}<br>${t('rep.ev.tts',{a:E.t.length-tf.length,b:E.t.length})}${tf.length?` · <span class="w">${tf.map(x=>esc(x.n)+(x.out?t('rep.ev.out'):` ${x.f}/${EV_TTS}`)).join(', ')}</span>`:''}<br>${t('rep.ev.art')} ${ex.length?t('rep.ev.ex',{n:ex.map(x=>esc(x.n)).join(', ')}):t('rep.ev.noex')}${fa.length?` · <span class="w">${fa.map(x=>esc(x.n)+(x.out?t('rep.ev.term'):` ${x.f}/${EV_ART}`)).join(', ')}</span>`:''}</div>`}
 export function evalTable(E){if(!E)return'<div class="small muted">Chưa có kỳ đánh giá nào.</div>';const gc=g=>g==='Xuất sắc'?'tag s':g==='Tốt'||g==='Đạt'?'tag m':'tag r';
   return`${E.t.length?`<div class="small"><b>🌱 Thực tập sinh</b> (tổng chỉ số phải tăng trên ${EV_PCT}% so với 4 tuần trước; bản thân đã đủ điểm debut trên ${DEBUT_MIN}% cũng tính đạt)</div>${E.t.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.p>=0?'+':''}${x.p}%${x.g==='Không đạt'?` · ${x.out?'đã bị loại':`trượt ${x.f}/${EV_TTS} liên tiếp`}`:''}</span></div>`).join('')}`:''}
   ${E.a.length?`<div class="small" style="margin-top:6px"><b>⭐ Nghệ sĩ</b> (điểm = % fan tăng + 6/hoạt động − scandal; ≥20 xuất sắc, ≥5 đạt)</div>${E.a.map(x=>`<div class="prow"><b>${esc(x.n)}</b><span class="${gc(x.g)}">${x.g}</span><span class="small muted">${x.pts} điểm${x.money<0?` · thưởng ${fmt(-x.money)}`:x.money>0?` · trừ ${fmt(x.money)}`:''}${x.g==='Không đạt'?` · ${x.out?'đã chấm dứt HĐ':`trượt ${x.f}/${EV_ART} liên tiếp`}`:''}</span></div>`).join('')}`:''}`}

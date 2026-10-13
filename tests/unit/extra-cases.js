@@ -171,3 +171,110 @@ add('t6-toasts', ctx => {
   T('fm.money', B, () => { const x = acts()[0]; x.m.forEach(id => { const a = byId(id); a.busy = null; a.fans = 1e6; }); S.money = 0; doFM(x.k); });
   return out;
 });
+
+// ---------------- task 7: reports, planner, awards, skip warning ----------------
+import { viewReport, viewReportFull, setRepDay, viewAward, viewSkipWarn, viewEvents, briefCard } from '../../src/ui/views.js';
+import { startPlan, startPlanOne, planSel, planNext, planSkip, setPlan } from '../../src/ui/planning.js';
+import { mgrOf } from '../../src/systems/managers.js';
+import { planWhy } from '../../src/systems/week.js';
+const rep = () => (viewReport(), sheet());
+// fabricate per-artist report rows under the managers so every row/warning branch is rendered
+const fab = () => {
+  const ms = S.managers.filter(m => !m.gm), arts = S.artists;
+  S.managers.forEach(m => { m.as = null; });
+  ms.forEach((m, i) => { m.dom = null; m.as = { t: 'l', id: 0, ids: arts.filter((_, j) => j % Math.max(ms.length, 1) === i).map(a => a.id) }; });
+  const mk = (e, mo) => Array.from({ length: 7 }, (_, k) => [['vocal', 'dance', 'rest', 'gym', 'rap', 'acting', 'variety'][k], k === 2 ? 0 : 1.2, e, mo]);
+  arts.forEach((a, i) => { const v = i % 6; if (v === 5) delete S.lastRep.a[a.id]; else S.lastRep.a[a.id] = v === 0 ? { d: mk(70, 70), f: 12 } : v === 1 ? { d: mk(10, 70), f: -3 } : v === 2 ? { d: mk(70, 10), f: 0, done: 'Phim test' } : v === 3 ? { b: 'Việc ngoài test', f: 5 } : { d: mk(70, 70), f: 1, dec: 1.5, done: 'Phim test' }; });
+};
+const full = d => (setRepDay(d), viewReportFull(), sheet());
+add('t7-report', ctx => {
+  const out = {};
+  ctx.fresh(ctx.early); out.none = rep(); out.noneFull = full(0);
+  ctx.fresh(ctx.base); out.base = rep();
+  S.lastRep.m1 = null; S.lastRep.biz = -5e6; out.nullMoney = rep();
+  ctx.fresh(ctx.base); S.lastRep.biz = 0; S.lastRep.evl = 0; S.lastRep.m1 = S.lastRep.m0 - 3e6; S.lastRep.ev = ['dòng 1', 'dòng 2', 'dòng 3', 'dòng 4', 'dòng 5', 'dòng 6', 'dòng 7']; out.neg = rep();
+  S.lastRep.ev = []; S.lastRep.evl = 1; out.noEv = rep();
+  ctx.fresh(ctx.base);
+  fab();
+  S.props = { w: abs(), m: {}, c: [{ pend: 1 }, { pend: 1 }], st: { boss: { 1: 2, 2: 1 }, auto: 3, res: 2 } };
+  out.warns = rep();
+  S.props = { w: abs(), m: {}, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.noProps = rep();
+  ctx.fresh(ctx.base); S.managers.forEach(m => { m.as = null; }); out.noTeams = rep();
+  return out;
+}, ['dòng 1', 'dòng 2', 'dòng 3', 'dòng 4', 'dòng 5', 'dòng 6', 'dòng 7', 'Phim test', 'Việc ngoài test']);
+add('t7-full', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base);
+  fab();
+  for (let d = 0; d <= 7; d++) out['d' + d] = full(d);
+  S.managers.forEach(m => { m.as = null; m.boss = null; }); out.noMgr = full(7); fab(); S.managers.forEach(m => { m.boss = null; }); out.flat = full(7);
+  ctx.fresh(ctx.base); fab(); for (const id in S.lastRep.a) { const r = S.lastRep.a[id]; if (r.d) r.d = r.d.map(x => [x[0], x[1], 70, 70]); } out.calm = full(7);
+  S.managers = []; out.noMgrs = full(3);
+  S.lastRep.ev = []; out.noEv = full(7);
+  setRepDay(0);
+  return out;
+}, ['Phim test', 'Việc ngoài test']);
+add('t7-brief', ctx => {
+  const out = {};
+  ctx.fresh(ctx.early); boost(); // no lastRep yet: fake one
+  S.lastRep = { w: 1, y: 1, m0: 0, m1: 0, ev: [], a: {} };
+  const tr = S.artists.filter(a => a.status === 'trainee');
+  tr.forEach((a, i) => { S.lastRep.a[a.id] = { d: Array.from({ length: 7 }, (_, k) => ['vocal', i % 2 ? 1.5 : 0, 70 - i * 20, 60]), f: 10, dec: i ? 0.5 : 0 }; });
+  out.ok = briefCard('<b>T</b>', tr);
+  S.lastRep.a[tr[0].id].d[6][2] = 5; out.warn = briefCard('<b>T</b>', tr);
+  S.lastRep.a[tr[0].id] = { b: 'Việc test' }; delete S.lastRep.a[tr[1].id]; out.out = briefCard('<b>T</b>', tr);
+  S.lastRep.a[tr[0].id] = { done: 'Phim test' }; out.done = briefCard('<b>T</b>', tr);
+  ctx.fresh(ctx.base); out.empty = briefCard('<b>E</b>', []);
+  return out;
+}, ['Việc test', 'Phim test']);
+add('t7-award', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base);
+  (S.awards || []).forEach((e, i) => { out['a' + i] = (viewAward(e), sheet()); });
+  const e0 = S.awards && S.awards.at(-1) || { y: 3, res: [], board: [{ n: 'Cty A', f: 100, me: 0 }, { n: 'Starlight', f: 50, me: 1 }] };
+  const e1 = { ...e0, res: [] }; out.noRes = (viewAward(e1), sheet());
+  const e2 = { ...e0, res: [{ ok: 1, cat: 'Hạng mục test', names: 'Ai đó', note: 'ghi chú' }, { ok: 0, cat: 'Hạng mục test 2', names: 'Ai đó', note: 'ghi chú' }] }; out.res = (viewAward(e2), sheet());
+  S.repOn = false; out.noRep = (viewAward(e2), sheet()); S.repOn = true; S.lastRep = null; out.noLast = (viewAward(e2), sheet());
+  return out;
+}, ['Hạng mục test', 'Hạng mục test 2', 'Ai đó', 'ghi chú', 'Cty A']);
+add('t7-skip', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base);
+  for (const n of [0, 1, 4]) { S.events = S.events.slice(0, 0); for (let i = 0; i < n; i++) S.events.push({ id: 900 + i, kind: 'zz' }); out['skip' + n] = (viewSkipWarn(), sheet()); }
+  S.events = []; out.eventsEmpty = (viewEvents(), sheet());
+  return out;
+});
+add('t7-plan', ctx => {
+  const out = {};
+  const walkPlan = (name, f) => {
+    f(); let i = 0, guard = 0;
+    while (document.getElementById('sheet').innerHTML && guard++ < 20) {
+      const h = sheet(); out[name + i++] = h;
+      if (i === 1) { planSel(3); out[name + 'd3'] = sheet(); planSel(6); out[name + 'd6'] = sheet(); }
+      if (!document.querySelector('[onclick="planNext()"]')) break;
+      planNext();
+    }
+  };
+  ctx.fresh(ctx.base);
+  walkPlan('base', () => startPlan(true, true));
+  ctx.fresh(ctx.base); S.managers.forEach(m => { m.ps = 1; }); const ap = S.artists.find(x => !x.busy); if (ap) ap.appr = abs(); S.artists.find(x => x.busy) || (S.artists.at(-1).busy = { kind: 'x', title: 'Việc ngoài', left: 2, total: 2 });
+  walkPlan('mg', () => startPlan(true, true));
+  ctx.fresh(ctx.early); boost();
+  walkPlan('early', () => startPlan(true, true));
+  // variants of the per-artist page
+  ctx.fresh(ctx.base);
+  const a = S.artists.find(x => x.status === 'debuted' && !x.busy && !mgrOf(x)) || S.artists.find(x => !x.busy);
+  const m = S.managers.find(x => !x.gm);
+  const setup = (fn) => { setPlan({ list: [a.id], i: 0, day: 0, force: true }); fn(); viewPlanSheet(); return sheet(); };
+  const viewPlanSheet = () => planSel(0);
+  out.lowEnergy = setup(() => { a.energy = 20; });
+  out.lowMood = setup(() => { a.energy = 90; a.mood = 10; });
+  out.wantAct = setup(() => { a.mood = 90; a.wantAct = abs() + 3; });
+  out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: 'Tin đồn test', sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
+  out.plain = setup(() => { a.scandal = null; });
+  if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: 'Lý do test', ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
+  startPlanOne(a.id); out.single = sheet(); planSel(2); out.singleD2 = sheet();
+  out.why = [20, 90].map(e => { a.energy = e; a.mood = e < 50 ? 90 : 10; return planWhy(a); });
+  a.energy = 90; a.mood = 90; a.wantAct = abs() + 1; out.why.push(planWhy(a)); a.wantAct = 0; out.why.push(planWhy(a));
+  return out;
+}, ['Tin đồn test', 'Lý do test']);
