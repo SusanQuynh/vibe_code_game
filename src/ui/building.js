@@ -12,12 +12,13 @@ import { campMem } from '../systems/promo.js';
 import { datingPartner } from '../systems/relations.js';
 import { prPlans } from '../systems/review.js';
 import { money, roomName, t } from '../i18n/index.js';
+import { conceptName } from '../i18n/labels.js';
 import { curView } from './modal.js';
 
 export let pos={};
 export function renderTrend(){const el=$('#trendBar');if(!el||!S.trend)return;const L=S.trend.until-abs(),cb=S.rivals.filter(r=>r.cb&&r.cb.w>=abs()-1);
   const ms=Object.values(S.mods||{}).filter(m=>m.until>abs());
-  el.innerHTML=`🔥 Thịnh hành: <b>${S.trend.hot.map(k=>CONCEPTS[k].n).join(', ')}</b> <span class="muted">· ❄️ ${CONCEPTS[S.trend.cold].n} · còn ${L} tuần</span>${cb.length?` · ⚔️ ${cb.length} đối thủ comeback`:''}${ms.length?` · ${ms.map(m=>esc(m.n)).join(' · ')}`:''}`}
+  el.innerHTML=`${t('trend.line',{hot:S.trend.hot.map(k=>conceptName(k)).join(', '),cold:conceptName(S.trend.cold),w:t('common.weeks',{n:L})})}${cb.length?` · ⚔️ ${t('trend.cb',{n:cb.length})}`:''}${ms.length?` · ${ms.map(m=>esc(m.n)).join(' · ')}`:''}`}
 /* ================= RENDER: BUILDING ================= */
 export function chibiHTML(a,extra=''){
   const L=a.look,st=L.style||(L.long?'long':'short'),c=L.hair;
@@ -50,13 +51,13 @@ export const NPC=[{id:'n1',room:'ceo',look:{hair:'#2b2233',skin:'#f8d0b0',out:'#
 export function roomBadge(id){
   if(id==='meet'){const n=S.offers.length+S.events.length;return n?`<span class="badge">${n}</span>`:''}
   if(id==='pr'){const n=S.artists.filter(a=>a.scandal).length,p=prPlans().length;return n?`<span class="badge">${n}🚨</span>`:p?`<span class="badge" style="background:var(--violet)">${p} 📣</span>`:''}
-  if(id==='mgr'){const n=S.managers.filter(m=>!m.as).length;return n?`<span class="badge" style="background:var(--violet)">${n} rảnh</span>`:''}
+  if(id==='mgr'){const n=S.managers.filter(m=>!m.as).length;return n?`<span class="badge" style="background:var(--violet)">${t('badge.free',{n})}</span>`:''}
   if(id==='studio'){const n=(S.songs||[]).filter(s=>s.st==='review').length;return n?`<span class="badge" style="background:var(--violet)">${n} 🎼</span>`:''}
   if(id==='hr'){const n=S.artists.filter(a=>a.status==='debuted'&&a.ce&&a.ce-abs()<=8&&!a.ceNo).length;return n?`<span class="badge">${n} 📄</span>`:''}
   if(id==='sales'){const n=S.singles.filter(s=>s.dig&&!s.end).length;return n?`<span class="badge" style="background:var(--mint)">${n} 🎧</span>`:''}
   if(id==='invest'){const n=(S.biz||[]).length;return n?`<span class="badge" style="background:var(--mint)">${n}</span>`:''}
   if(id==='market'){const n=(S.rivals||[]).filter(r=>r.cb&&r.cb.w>=abs()-1).length;return n?`<span class="badge">⚔️${n}</span>`:''}
-  if(id==='lobby'){const n=S.artists.filter(a=>a.status==='trainee').length,c=(S.comps||[]).filter(x=>kindOf(x)==='tts').length;return n?`<span class="badge" style="background:var(--violet)">${n} TTS${c?' · 🏅'+c:''}</span>`:''}
+  if(id==='lobby'){const n=S.artists.filter(a=>a.status==='trainee').length,c=(S.comps||[]).filter(x=>kindOf(x)==='tts').length;return n?`<span class="badge" style="background:var(--violet)">${t('common.trainees',{n})}${c?' · 🏅'+c:''}</span>`:''}
   return'';
 }
 export function renderBuilding(){
@@ -95,7 +96,7 @@ export function renderTop(){
   const n=S.events.length;$('#evn').hidden=!n;$('#evn').textContent=n;
   $('#roofInfo').textContent=t('top.roof',{g:S.groups.length,s:S.artists.filter(a=>a.solo).length,a:S.artists.filter(a=>a.actor).length});
   const out=S.artists.filter(a=>a.busy),mo=S.managers.filter(m=>m.as&&!mgrRoom(m));
-  $('#outside').innerHTML=out.length?`<span class="lbl">🚐 Đang làm việc bên ngoài</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>QL ${mNameH(m)} đi cùng ${esc(targetName(m))}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} (${a.busy.left}t)</button>`).join(''):'';
+  $('#outside').innerHTML=out.length?`<span class="lbl">${t('top.outside')}</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>${t('top.mgrWith',{m:mNameH(m),n:esc(targetName(m,t))})}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(a.busy.title)} ${t('top.busyLeft',{n:a.busy.left})}</button>`).join(''):'';
   $('#log').innerHTML=S.log.map(l=>`<div class="${l.c}"><span class="w">${l.w}</span>${esc(l.t)}</div>`).join('');
 }
 export const campKeyOf=a=>Object.keys(S.camp||{}).find(k=>S.camp[k].ph==='post'&&campMem(k).includes(a));

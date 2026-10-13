@@ -1,5 +1,5 @@
 import { R, pick } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { t, tVi } from '../i18n/index.js';
 import { clamp, fmt } from '../core/util.js';
 import { LNM, MGN } from '../data/names.js';
 import { DOM_KEYS, MDOM, MSK } from '../data/rules.js';
@@ -33,7 +33,7 @@ export function setBoss(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return
   if(!v){const g=gmOf();m.boss=g?g.id:null;addLog(g?`📋 ${m.name} báo cáo cho quản lý tổng ${g.name}.`:`📋 ${m.name} báo cáo trực tiếp Giám đốc.`)}
   else{const b=S.managers.find(x=>x.id===+v);if(!b||b===m||inSub(m,b))return toast('Không thể tạo vòng lặp cấp bậc');if(mKids(b).length>=mCap(b))return toast(`${b.name} chỉ quản được ${mCap(b)} người ở cấp hiện tại`);m.boss=b.id;addLog(`📋 ${m.name} giờ báo cáo cho ${b.name}.`)}
   act()}
-export function targetName(m){if(!m.as)return'Chưa phân công';if(m.as.t==='t')return'tất cả thực tập sinh';if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?'thực tập sinh '+b.n.toLowerCase():'lứa đã giải tán'}if(m.as.t==='s')return'tất cả nghệ sĩ solo';if(m.as.t==='d')return'tất cả diễn viên';if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?`${ts.length} nghệ sĩ: ${ts.slice(0,2).map(a=>a.name).join(', ')}${ts.length>2?'…':''}`:'danh sách trống'}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?'nhóm '+g.name:'—'}const a=byId(m.as.id);return a?a.name:'—'}
+export function targetName(m,tr=tVi){if(!m.as)return tr('target.none');if(m.as.t==='t')return tr('target.allTts');if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?tr('target.batch',{n:b.n.toLowerCase()}):tr('target.batchGone')}if(m.as.t==='s')return tr('target.allSolo');if(m.as.t==='d')return tr('target.allActors');if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?tr('target.list',{n:ts.length,names:ts.slice(0,2).map(a=>a.name).join(', ')+(ts.length>2?'…':'')}):tr('target.empty')}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?tr('target.group',{n:g.name}):'—'}const a=byId(m.as.id);return a?a.name:'—'}
 export function mgrExp(m,n=1){const b=mBoss(m);if(b&&n>=.25)mgrExp(b,n*.5);m.exp=+(m.exp+n).toFixed(2);while(m.exp>=m.lv*4){m.exp-=m.lv*4;m.lv++;const ks=Object.keys(MSK).filter(k=>m.sk[k]<10),k=ks.length?pick(ks):null;if(k)m.sk[k]++;m.salary+=1e6;addLog(`📈 Quản lý ${m.name} lên cấp ${m.lv}${k?' ('+MSK[k]+' +1)':''}.`,'good')}}
 export function mgrAuto(){for(const m of S.managers){if(m.auto==='off'||!m.as)continue;
   const free=()=>mgrTargets(m).filter(a=>!a.busy);

@@ -7,7 +7,7 @@ import { richState, renderSurface, runToasts, visibleText } from './sim.js';
 import { S, setState } from '../../src/state.js';
 
 noToggle();
-export const EN_DONE = ['lang'];
+export const EN_DONE = ['lang', 'vocal', 'dance', 'roof', 'top', 'early-vocal', 'early-dance', 'early-roof'];
 export const TOASTS_DONE = [];
 
 const VI_LETTER = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
@@ -66,7 +66,8 @@ describe('en render has no Vietnamese', () => {
     const base_ = early_ ? early : base;
     const html = renderSurface(early_ ? name.slice(6) : name, base_);
     if (html == null) return;
-    const root = document.getElementById('sheet').isConnected && name !== 'top' ? document.getElementById('sheet') : document.body;
+    let root = document.getElementById('sheet');
+    if (name === 'top' || name === 'early-top') { root = document.body.cloneNode(true); root.querySelector('#log')?.remove(); } // the log is stored text
     const off = offenders(visibleText(root), S);
     expect(off, `${name}: ${off.join(', ')}`).toEqual([]);
   });

@@ -8,4 +8,7 @@ export default {
   'common.none': '—',
   'toast.noMoney': 'Not enough money',
   'fmt.locale': 'en-GB',
+  'common.empty': 'Empty.',
+  'common.wkShort': 'W{w}',
+  'common.wkYear': 'Y{y}',
 };

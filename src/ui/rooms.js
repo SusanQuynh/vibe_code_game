@@ -20,7 +20,8 @@ import { actByKey, fanSugs } from '../systems/releases.js';
 import { EV_ART, EV_PCT, EV_TTS, evNext, evalTable, prHTML, prPlans } from '../systems/review.js';
 import { actFree, acts, conceptRec, secPlans, secSchedRec } from '../systems/secretary.js';
 import { defaultDays, weekCost } from '../systems/week.js';
-import { roomName } from '../i18n/index.js';
+import { money, roomName, t } from '../i18n/index.js';
+import { conceptName, genreName, statName } from '../i18n/labels.js';
 import { NPC, act, chibiHTML, lastRoom, renderDock, setLastRoom } from './building.js';
 import { curView, modal, setCurRC, setCurView } from './modal.js';
 import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './views.js';
@@ -28,14 +29,14 @@ import { artistLine, bars, det, mgrBars, orgTree, schedSel, wTable } from './vie
 export function openRoom(id){if(lastRoom!==id){setLastRoom(id);renderDock()}setCurRC(`var(--r-${id})`);setCurView(()=>RV[id]());curView()}
 export function ttsSplit(arr,fn,key,empty,ttsBtn){const tt=arr.filter(a=>a.status==='trainee').sort(eligSort),ot=arr.filter(a=>a.status!=='trainee');
   const byB=(S.batches||[]).length>1?S.batches.map(b=>({b,l:tt.filter(a=>a.batch===b.id)})).filter(x=>x.l.length):null;
-  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,`🌱 Tất cả thực tập sinh (${tt.length})`,(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${esc(x.b.n)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
+  return(ot.map(fn).join('')||(tt.length?'':`<div class="small muted">${empty}</div>`))+(tt.length?det(key,t('tts.all',{n:tt.length}),(ttsBtn||'')+(byB?byB.map(x=>det(key+'-b'+x.b.id,`${esc(x.b.n)} (${x.l.length})`,x.l.map(fn).join(''),true)).join(''):tt.map(fn).join('')),false):'')}
 export function setSchedTTS(v){S.artists.filter(a=>a.status==='trainee'&&!a.busy).forEach(a=>{a.days=a.days.some(k=>k!=='rest')?a.days.map(k=>k==='rest'?'rest':v):defaultDays(v)});act()}
 export function trainRoom(r,key,extra=''){
   const here=S.artists.filter(a=>!a.busy&&a.days.includes(key)),others=S.artists.filter(a=>!a.busy&&!a.days.includes(key));
-  const t=TRAIN[key];
-  return`<h2>${r.ic} ${roomName(r.id)}</h2><div class="sub">${key==='rest'?'Mỗi ngày nghỉ hồi +12 năng lượng và tâm trạng, miễn phí.':`Mỗi ngày tập tăng ${Object.keys(t.g).map(k=>STATS[k]).join(', ')}, tốn khoảng ${Math.abs(Math.round(t.e*.3))} năng lượng và ${fmt(TRAIN_COST/5)}. Năng lượng dưới 25 thì tập kém hiệu quả.`}</div>${extra}
-  ${det('rm-'+key+'-in',`Đang ở đây (${here.length})`,ttsSplit(here,a=>artistLine(a,`<span class="small">${a.days.filter(k=>k===key).length} ngày · ${Object.keys(t.g).map(k=>STATS[k]+' '+Math.round(a.st[k])).join(' · ')}</span>`),'rm-'+key+'-in-t','Trống.',''),true)}
-  ${det('rm-'+key+'-out',`Chuyển nghệ sĩ vào phòng (${others.length})`,ttsSplit(others,a=>artistLine(a,`<button class="btn sm pri" onclick="setSched(${a.id},'${key}')">Chuyển vào</button>`),'rm-'+key+'-out-t','Không còn ai rảnh.',`<button class="btn sm pri" onclick="setSchedTTS('${key}')">Chuyển cả lứa thực tập sinh vào</button>`),false)}`;
+  const T=TRAIN[key];
+  return`<h2>${r.ic} ${roomName(r.id)}</h2><div class="sub">${key==='rest'?t('train.restSub'):t('train.sub',{stats:Object.keys(T.g).map(k=>statName(k)).join(', '),e:Math.abs(Math.round(T.e*.3)),cost:money(TRAIN_COST/5)})}</div>${extra}
+  ${det('rm-'+key+'-in',t('room.here',{n:here.length}),ttsSplit(here,a=>artistLine(a,`<span class="small">${t('train.days',{n:a.days.filter(k=>k===key).length})} · ${Object.keys(T.g).map(k=>statName(k)+' '+Math.round(a.st[k])).join(' · ')}</span>`),'rm-'+key+'-in-t',t('common.empty'),''),true)}
+  ${det('rm-'+key+'-out',t('room.moveIn',{n:others.length}),ttsSplit(others,a=>artistLine(a,`<button class="btn sm pri" onclick="setSched(${a.id},'${key}')">${t('room.moveBtn')}</button>`),'rm-'+key+'-out-t',t('room.noneFree'),`<button class="btn sm pri" onclick="setSchedTTS('${key}')">${t('room.moveAllTts')}</button>`),false)}`;
 }
 export const RV={
   mgr(){
@@ -103,7 +104,7 @@ export const RV={
     ${det('mk-rank','⚔️ Bảng xếp hạng công ty',list.map((r,i)=>`<div class="card" style="${r.me?'border-color:var(--pink)':''}"><div class="row"><b>#${i+1} ${esc(r.n)}</b><span class="sp"></span><b>${fmtN(r.fans)}</b> fan</div><div class="bar" style="margin:4px 0"><i style="width:${r.fans/mx*100}%;${r.me?'background:var(--pink)':''}"></i></div>${r.me?'':`<div class="small muted">Năm nay ${r.fans>=r.f0?'+':''}${fmtN(r.fans-r.f0)} fan${r.stole?` · đã giành ${r.stole} lời mời`:''}${r.last?' · '+esc(r.last):''}${r.cb&&r.cb.w>=abs()-1?' · <b class="bad">đang comeback</b>':''}</div>`}</div>`).join(''),true)}
     <div class="small muted">Đối thủ có thể comeback cùng lúc với bạn (làm single khó lên hạng), giành lời mời béo bở và chiêu mộ nghệ sĩ tâm trạng kém. Xếp hạng cuối năm dựa trên tổng fan.</div>`);
   },
-  roof(){modal(trainRoom(ROOMS.find(r=>r.id==='roof'),'rest','<div class="small muted">Nghệ sĩ nghỉ ngơi sẽ tản ra Ký túc xá, Sảnh và Sân thượng.</div>'))},
+  roof(){modal(trainRoom(ROOMS.find(r=>r.id==='roof'),'rest',`<div class="small muted">${t('roof.note')}</div>`))},
   ceo(){
     const wk=weekCost();
     const last=S.awards[S.awards.length-1];
@@ -154,7 +155,7 @@ export const RV={
     <div class="row" style="margin-top:6px"><select id="sBud"><option value="30000000">Tiết kiệm – 30 tr</option><option value="80000000" selected>Tiêu chuẩn – 80 tr</option><option value="200000000">Bom tấn – 200 tr</option></select><input type="text" id="sTitle" placeholder="Tên bài hát (tuỳ chọn)" style="flex:1"></div>
     <div class="row" style="margin-top:6px"><select id="sSong" style="flex:1;min-width:0">${songOpts()}</select></div>
     <div class="small muted" id="sPrev" style="margin:6px 0"></div><button class="btn pink" onclick="releaseSingle()">Phát hành</button></div>`:`<div class="card small muted">${all.length?'Tất cả nhóm/solo đang bận. Chờ họ quay về nhé.':'Cần debut nhóm hoặc solo trước (Sảnh Tuyển dụng).'}</div>`}
-    ${det('st-tbl','📋 Bảng chỉ số theo concept',`<div class="small muted">Tỉ trọng chỉ số quyết định điểm concept. Bạn bè trong nhóm cộng điểm, mâu thuẫn trừ điểm.</div>${wTable(CONCEPTS)}`,false)}
+    ${det('st-tbl','📋 Bảng chỉ số theo concept',`<div class="small muted">Tỉ trọng chỉ số quyết định điểm concept. Bạn bè trong nhóm cộng điểm, mâu thuẫn trừ điểm.</div>${wTable(CONCEPTS,conceptName)}`,false)}
     <h3>🏟️ Tổ chức concert</h3>${A.length?`<div class="card"><div class="row"><select id="cAct">${opt}</select><button class="btn pri" onclick="holdConcert()">Tổ chức (200 tr)</button></div><div class="small muted">Cần tổng ≥ 30K fan. Doanh thu theo số vé bán.</div></div>`:'<div class="small muted">Không có ai rảnh.</div>'}
     ${det('st-hist','💿 Single đã phát hành',`<div class="small">${S.singles.slice(0,10).map(s=>`N${s.y} «${esc(s.title)}» – ${esc(s.act.slice(2))} – ${s.concept} – hạng ${s.rank}`).join('<br>')||'<span class="muted">Chưa có.</span>'}</div>`,false)}`));
     const up=()=>{const a=actByKey($('#sAct')?.value);if(!a)return;const m=a.m.map(byId).filter(Boolean),k=$('#sCon').value,w=CONCEPTS[k].w,tb=trendB(k);$('#sPrev').innerHTML=`Độ hợp concept: <b>${Math.round(m.reduce((s,x)=>s+fit(x,w),0)/m.length)}%</b> · Hòa hợp ${harmony(a.m)}${tb?` · ${tb>0?'🔥 hợp xu hướng +'+tb:'❄️ hết thời '+tb}`:''}${rp?` · ⚔️ đối thủ −${rp}`:''}${songPrev(a)}`};
@@ -170,7 +171,7 @@ export const RV={
     <div class="list" id="fList">${cands.map(a=>`<label><input type="checkbox" class="fcast" value="${a.id}"> ${esc(a.name)} <span class="small muted" data-f="${a.id}"></span></label>`).join('')||'<div class="small muted">Không có nghệ sĩ đã ra mắt nào rảnh.</div>'}</div>
     <button class="btn pink" style="margin-top:6px" onclick="produceFilm()">Bấm máy</button></div>
     <div class="small muted">Góp vốn vào phim được mời tại Phòng Họp (phim truyền hình & điện ảnh).</div>
-    ${det('fl-tbl','📋 Bảng chỉ số theo thể loại phim',wTable(GENRES),false)}
+    ${det('fl-tbl','📋 Bảng chỉ số theo thể loại phim',wTable(GENRES,genreName),false)}
     ${det('fl-list',`🎞️ Phim của công ty (${S.films.length})`,S.films.slice().reverse().map(f=>`<div class="card small"><b>«${esc(f.title)}»</b> ${GENRES[f.genre].n} · ${f.own?'Tự sản xuất':'Góp vốn '+Math.round(f.share*100)+'%'} · Vốn ${fmt(f.cost)}<br>${f.done?`Doanh thu ${fmt(f.rev)} (x${f.mult}) · Nhận ${fmt(f.inc)}`:f.status+(f.releaseAt?` · chiếu sau ${f.releaseAt-abs()} tuần`:'')}${f.cast.length?' · Cast: '+f.cast.map(byId).filter(Boolean).map(a=>esc(a.name)).join(', '):''}</div>`).join('')||'<div class="small muted">Chưa có phim.</div>',true)}`));
     const up=()=>{const w=GENRES[$('#fGen').value].w;document.querySelectorAll('[data-f]').forEach(el=>{const a=byId(+el.dataset.f);el.textContent=`phù hợp ${Math.round(fit(a,w))}% · danh tiếng ${fame(a)}`})};
     $('#fGen').onchange=up;up();

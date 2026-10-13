@@ -9,4 +9,7 @@ export default {
   'common.none': '—',
   'toast.noMoney': 'Không đủ tiền',
   'fmt.locale': 'vi-VN',
+  'common.empty': 'Trống.',
+  'common.wkShort': 'T{w}',
+  'common.wkYear': 'N{y}',
 };
