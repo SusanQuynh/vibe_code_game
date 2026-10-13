@@ -28,7 +28,7 @@ describe('en extra scenarios have no Vietnamese', () => {
     it(c.name, () => {
       setLang('en');
       const r = c.run(ctx);
-      for (const [k, v] of flat(r)) {
+      for (const [k, v] of flat(r).filter(([k]) => !c.skipEn.includes(k))) {
         const isToast = c.name.endsWith('toasts');
         if (isToast) expect(v, k).not.toMatch(/^THROW/);
         const off = offenders(isToast ? v : textOf(v), { S, base: ctx.base, early: ctx.early, extra: c.stored }); // stored strings of every state the case touched
@@ -40,7 +40,7 @@ describe('en extra scenarios have no Vietnamese', () => {
 
 describe('en keeps <option> values and onclick targets identical to vi', () => {
   const sig = () => { const el = document.getElementById('sheet'); return { o: [...el.querySelectorAll('option')].map(o => o.value), c: [...el.querySelectorAll('[onclick]')].map(e => e.getAttribute('onclick')), v: [...el.querySelectorAll('[value]')].map(e => e.getAttribute('value')) }; };
-  for (const room of ['mgr', 'studio', 'acting', 'hr', 'gym']) {
+  for (const room of ['mgr', 'studio', 'acting', 'hr', 'gym', 'market', 'invest', 'ceo', 'pr']) {
     it(room, () => {
       ctx.fresh(ctx.base); setLang('vi'); openRoom(room); const a = sig();
       ctx.fresh(ctx.base); setLang('en'); openRoom(room); const b = sig();
@@ -49,4 +49,15 @@ describe('en keeps <option> values and onclick targets identical to vi', () => {
       if (room === 'acting') expect(a.o.length).toBeGreaterThan(5);
     });
   }
+});
+
+describe('data-t stays Vietnamese: S.prHist is language-independent', () => {
+  it('t10-prgo gives identical output in vi and en', () => {
+    const c = CASES.find(x => x.name === 't10-prgo');
+    setLang('vi'); const a = c.run(ctx);
+    setLang('en'); const b = c.run(ctx);
+    expect(a.dataT.length).toBeGreaterThan(3);
+    expect(b).toEqual(a);
+    expect(b.hist[0]).toMatch(/^T\d+: .*[ạảãàáâấầẩẫậăắằẳẵặđêếềểễệôốồổỗộơớờởỡợưứừửữự]/);
+  });
 });

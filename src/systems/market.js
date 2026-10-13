@@ -102,14 +102,14 @@ export function bizTick(){const fF=clamp(totalFans()/300000,0,2);let t=0;
   for(const b of S.biz){const B=BIZ[b.k];const p=Math.round(B.base*b.lv*(1+B.syn*fF)*rnd(1-B.vol,1+B.vol)*modV('econ')/1e5)*1e5;const q=Math.round(p*bizOwn(b));b.last=p;b.tot+=q;t+=q}
   S.money+=t;book('biz',t);if(S.loan){S.money-=S.loan.pay;S.loan.left--;if(S.loan.left<=0){addLog(`💼 Đã trả xong khoản vốn của ${S.loan.n}.`,'good');S.loan=null}}
   return t}
-export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast('Không đủ tiền');S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
-export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
+export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast(t('toast.noMoney'));S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
+export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast(t('toast.noMoney'));S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
 export function sellBiz(k,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}const b=S.biz.find(x=>x.k===k);if(!b)return;const v=Math.round(b.inv*.6*bizOwn(b));S.money+=v;S.biz=S.biz.filter(x=>x!==b);addLog(`${BIZ[k].ic} Bán ${BIZ[k].n}, thu về ${fmt(v)}.`);act()}
 export const bizOwn=b=>b.own??1;
 export const bizVal=b=>{const B=BIZ[b.k],fF=clamp(totalFans()/300000,0,2),exp=B.base*b.lv*(1+B.syn*fF);return Math.round((b.inv+exp*26)/1e6)*1e6};
 export const bizWait=b=>Math.max(0,8-(abs()-(b.rw??-99)));
-export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast('Phải giữ tối thiểu 51% cổ phần');if(bizWait(b))return toast(`Chờ ${bizWait(b)} tuần nữa mới gọi vốn tiếp`);const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
-export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
+export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast(t('invest.toast.keep51'));if(bizWait(b))return toast(t('invest.toast.wait',{w:bizWait(b)}));const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
+export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast(t('toast.noMoney'));S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
 export function weekWorld(){
   if(!S.trend||abs()>=S.trend.until)newTrend();
   rivalsTick();surprise();

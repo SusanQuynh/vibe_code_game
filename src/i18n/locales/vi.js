@@ -8,9 +8,11 @@ import artist from './vi/artist.js';
 import report from './vi/report.js';
 import studio from './vi/studio.js';
 import hr from './vi/hr.js';
+import market from './vi/market.js';
+import events from './vi/events.js';
 
 // Dictionary parts per area; the merged dict is what t() reads. check:i18n reports keys defined in two parts.
-export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr]];
+export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr], ['market', market], ['events', events]];
 export default {
   meta: { code: 'vi', name: 'Tiếng Việt', htmlLang: 'vi' },
   parts,

@@ -13,7 +13,8 @@ import { orgTree } from '../../src/ui/views.js';
 
 export const CASES = [];
 // `stored`: Vietnamese test strings the case writes into S (the en guard treats them like stored text)
-export const add = (name, run, stored = []) => CASES.push({ name, run, stored });
+// `skipEn`: result keys the en guard ignores because they are meant to stay Vietnamese (checked by a dedicated test)
+export const add = (name, run, stored = [], skipEn = []) => CASES.push({ name, run, stored, skipEn });
 export const sheet = () => document.getElementById('sheet').innerHTML;
 export const toastText = () => document.getElementById('toast')?.textContent || null;
 export const clearToast = () => { const el = document.getElementById('toast'); if (el) el.textContent = ''; };
@@ -484,3 +485,99 @@ add('t9-toasts', ctx => {
   T('hs.money', B, () => { S.hs = null; S.hsC = [{ id: 9100, name: 'BS. X', sk: 3, sal: 1e6, fee: 50e6 }]; S.money = 0; hsHire(9100); });
   return out;
 });
+
+// ---------------- task 10: market, investment, CEO office, PR room ----------------
+import { BIZ, setMod, buyBiz, upBiz, raiseBiz, buybackBiz } from '../../src/systems/market.js';
+import { prPlans, prHTML, prGo, prDo, evalTable } from '../../src/systems/review.js';
+import { invStart, invOpen, invBuy, viewInv, invBlock, invVerdict, invRec, LEADS, pushEv } from '../../src/systems/events.js';
+const scand = (a, o = {}) => { a.scandal = { t: 'Tin đồn thái độ', sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; if (!S.events.some(e => e.kind === 'scandal' && e.a === a.id)) pushEv({ kind: 'scandal', a: a.id }, true); return a; };
+add('t10-invest', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('invest'); }
+  ctx.fresh(ctx.base);
+  S.biz = [{ k: 'cafe', lv: 2, inv: 150e6, tot: 12e6, last: 3e6, y: 1, own: .7, rw: abs() - 1 }, { k: 'game', lv: 5, inv: 900e6, tot: -5e6, last: -4e6, y: 1 }, { k: 'estate', lv: 1, inv: 1200e6, tot: 0, last: 0, y: 1, own: .9, rw: abs() - 20 }];
+  S.loan = { pay: 5e6, left: 12, n: 'Quỹ Sao Mai' }; setMod('econ', .7, 6, 'Suy thoái: kinh doanh −30%');
+  out.rich = room('invest');
+  S.biz = Object.keys(BIZ).map(k => ({ k, lv: 1, inv: BIZ[k].cost, tot: 1, last: 1e6, y: 1 })); S.loan = null; S.mods = {}; out.all = room('invest');
+  S.biz = []; out.none = room('invest');
+  return out;
+}, ['Quỹ Sao Mai', 'Suy thoái: kinh doanh −30%']);
+add('t10-market', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('market'); }
+  ctx.fresh(ctx.base);
+  S.mods = { fan: { v: 1.6, until: abs() + 3, n: 'Làn sóng K-pop: fan tăng nhanh' }, pay: { v: .8, until: abs() + 5, n: 'Suy thoái: thù lao −20%' } };
+  S.rivals.forEach((r, i) => { r.f0 = r.fans * (i ? 1.2 : .8); r.stole = i; r.last = i === 1 ? 'Dính scandal, mất 10% fan' : ''; r.cb = i === 0 ? { w: abs(), t: 'Bài X', ck: 'cute', p: 3, rank: 5 } : null; });
+  out.rich = room('market');
+  S.rivals.forEach(r => { r.fans = 1; r.cb = null; r.stole = 0; r.last = ''; r.f0 = 1; }); S.mods = {}; out.top = room('market'); // player on top, no mods
+  return out;
+}, ['Làn sóng K-pop: fan tăng nhanh', 'Suy thoái: thù lao −20%', 'Bài X', 'Dính scandal, mất 10% fan']);
+add('t10-ceo', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('ceo'); }
+  ctx.fresh(ctx.base);
+  S.partners = { 'Đài ABC': 3, 'Hãng XYZ': 5 };
+  S.awards = [{ y: 1, rank: 2, res: [{ ok: 1, cat: 'Nhóm mới xuất sắc', note: 'n' }, { ok: 0, cat: 'Bài hát của năm', note: 'n' }] }, { y: 2, rank: 4, res: [{ ok: 0, cat: 'Bài hát của năm', note: 'n' }] }];
+  S.lastEval = { w: 8, y: 1, wk: 8, t: [{ id: 1, n: 'Test A', g: 'Đạt', p: 25, f: 0 }], a: [{ id: 2, n: 'Test B', g: 'Xuất sắc', pts: 30, f: 0, money: -5e6 }] };
+  out.rich = room('ceo');
+  S.artists = []; S.groups = []; S.partners = {}; S.awards = []; S.lastEval = null; out.empty = room('ceo');
+  return out;
+}, ['Đài ABC', 'Hãng XYZ', 'Nhóm mới xuất sắc', 'Bài hát của năm', 'Test A', 'Test B', 'Đạt', 'Xuất sắc', 'n']);
+add('t10-eval', ctx => {
+  ctx.fresh(ctx.base);
+  const T = (g, p, f, out) => ({ id: 1, n: 'TTS ' + g, g, p, f, ...(out ? { out } : {}) }), A = (g, pts, f, money, out) => ({ id: 2, n: 'NS ' + g, g, pts, f, money, ...(out ? { out } : {}) });
+  const E = { w: 8, y: 1, wk: 8, t: [T('Xuất sắc', 40, 0), T('Tốt', 30, 0), T('Đạt', 22, 0), T('Không đạt', 3, 2), T('Không đạt', -2, 5, 1)], a: [A('Xuất sắc', 30, 0, -5e6), A('Đạt', 7, 0, 0), A('Không đạt', -3, 2, 2e6), A('Không đạt', -9, 10, 1e6, 1)] };
+  return { full: evalTable(E), none: evalTable(null), ttsOnly: evalTable({ ...E, a: [] }), artOnly: evalTable({ ...E, t: [] }) };
+}, ['TTS Xuất sắc', 'TTS Tốt', 'TTS Đạt', 'TTS Không đạt', 'NS Xuất sắc', 'NS Đạt', 'NS Không đạt', 'Xuất sắc', 'Tốt', 'Đạt', 'Không đạt']);
+add('t10-pr', ctx => {
+  const out = {}, A = () => acts()[0], free = x => x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; a.scandal = null; });
+  const snap = k => { const L = prPlans(); out[k] = { plans: L.map(p => ({ ic: p.ic, t: p.t, why: p.why, cost: p.cost, go: p.go, hot: p.hot || 0 })), html: prHTML(L), room: room('pr') }; };
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('pr'); }
+  ctx.fresh(ctx.base); let x = A(); free(x); S.camp = {}; S.cbPlan = []; S.singles.forEach(s => { s.w = abs() - 12; });
+  snap('gap');
+  S.singles = []; snap('nosingle');
+  S.cbPlan = [{ k: x.k, w: abs() + 2 }]; snap('cbplan');
+  S.cbPlan = []; S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 20, inc: 0 }; snap('pre');
+  S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài X', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 0, inc: 0 }; snap('post');
+  S.camp = {}; byId(x.m[0]).scandal = { t: 'Tin đồn', sev: 1, left: 3, truth: false, dating: false, other: 0 }; snap('press');
+  byId(x.m[0]).scandal = null; S.singles = [{ k: x.k, act: x.n, w: abs() - 6, t: 'Bài Y', rank: 5 }]; S.artists.forEach(a => { a.st.visual = 80; }); snap('mag');
+  S.artists.forEach(a => { if (a.status !== 'trainee') a.actor = 1; a.wantAct = 1; }); snap('actor');
+  S.prUsed = { 'sns:g1': abs() }; S.prHist = ['T3: Chạy quảng cáo SNS cho Test']; out.hist = room('pr');
+  S.prUsed = {}; S.prHist = [];
+  return out;
+}, ['Bài X', 'Bài Y', 'Tin đồn', 'Tin đồn thái độ', 'T3: Chạy quảng cáo SNS cho Test']);
+add('t10-inv', ctx => {
+  const out = {}, ds = () => S.artists.filter(a => a.status === 'debuted');
+  ctx.fresh(ctx.base); const a = scand(ds()[0]);
+  S.money = 1e10; out.block0 = invBlock(a); out.closed = (viewInv(424242), sheet());
+  invStart(a.id); out.opened = sheet(); out.prEv = room('pr'); out.block1 = invBlock(a);
+  for (let i = 0; i < 6; i++) { invOpen(a.id, i); } out.some = sheet();
+  invBuy(a.id); out.bought = sheet();
+  out.verdicts = [0.1, 0.5, 0.9].map(p => ({ ...invVerdict(p), rec: [invRec(invVerdict(p).v, false), invRec(invVerdict(p).v, true)] }));
+  a.scandal.inv.p = .9; out.sure = sheet(); viewInv(a.id); out.sureV = sheet(); a.scandal.inv.p = .1; viewInv(a.id); out.falseV = sheet();
+  S.events = S.events.filter(e => e.kind !== 'scandal'); viewInv(a.id); out.silent = sheet();
+  a.scandal.inv.ap = 0; a.scandal.inv.leads.forEach(L => { L.open = false; }); viewInv(a.id); out.noap = sheet();
+  out.pr = room('pr');
+  return out;
+}, ['Tin đồn thái độ']);
+add('t10-toasts', ctx => {
+  const out = {}, T = (n, b, f) => { out[n] = toastOf(ctx, b, f); };
+  const B = ctx.base, ds = () => S.artists.filter(a => a.status === 'debuted'), x0 = () => acts()[0];
+  T('prDo.money', B, () => { S.money = 0; prDo('sns', x0().k); });
+  T('invStart.money', B, () => { S.money = 0; invStart(scand(ds()[0]).id); });
+  T('invOpen.noap', B, () => { S.money = 1e10; const a = scand(ds()[0]); invStart(a.id); a.scandal.inv.ap = 0; invOpen(a.id, 0); });
+  T('invBuy.money', B, () => { S.money = 1e10; const a = scand(ds()[0]); invStart(a.id); S.money = 0; invBuy(a.id); });
+  T('buyBiz.money', B, () => { S.biz = []; S.money = 0; buyBiz('cafe'); });
+  T('upBiz.money', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1 }]; S.money = 0; upBiz('cafe'); });
+  T('raiseBiz.51', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1, own: .55 }]; raiseBiz('cafe', .1); });
+  T('raiseBiz.wait', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1, rw: abs() - 2 }]; raiseBiz('cafe', .1); });
+  T('buyback.money', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1, own: .7 }]; S.money = 0; buybackBiz('cafe'); });
+  return out;
+}, ['Tin đồn thái độ']);
+add('t10-prgo', ctx => { // prGo stores the Vietnamese data-t in S.prHist whatever the language
+  ctx.fresh(ctx.base); const x = acts()[0]; x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; }); S.camp = {}; S.singles = []; S.prHist = [];
+  const L = prPlans(), out = { dataT: L.map(p => p.t) };
+  const d = document.createElement('div'); d.innerHTML = prHTML(L); const b = d.querySelector('button[data-t]');
+  Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.slice(); out.sheetAfter = null;
+  return out;
+}, [], ['dataT', 'btnT', 'hist']);

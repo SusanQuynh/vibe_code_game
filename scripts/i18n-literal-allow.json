@@ -248,5 +248,85 @@
   "file": "src/systems/releases.js",
   "text": "Đang quay",
   "why": "stored film status in S.films[].status (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Xuất sắc",
+  "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Tốt",
+  "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Đạt",
+  "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Không đạt",
+  "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "bị loại khỏi chương trình đào tạo sau",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "lần đánh giá không đạt liên tiếp",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "bị chấm dứt hợp đồng sau",
+  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "tất cả thực tập sinh",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Quảng cáo SNS cho",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "trả lời phỏng vấn, dư luận dịu lại (+",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "lên tạp chí: +",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "Clip của",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "thực tập sinh lan truyền: +",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "fan, cả lứa vui hơn.",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "quảng bá hình ảnh: +",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
+ },
+ {
+  "file": "src/systems/review.js",
+  "text": "fan, Diễn xuất +0.5.",
+  "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
  }
 ]

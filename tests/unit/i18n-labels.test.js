@@ -4,6 +4,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { setLang, t } from '../../src/i18n/index.js';
 import { PRE, POST } from '../../src/systems/promo.js';
 import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
+import { LEADS } from '../../src/systems/events.js';
 import { statName, trainName, conceptName, genreName, offerName, mskName, mskDesc, domName, dayShort, dayName, bizName } from '../../src/i18n/labels.js';
 import { STATS, TRAIN, CONCEPTS, GENRES, MSK, MSKD, MDOM } from '../../src/data/rules.js';
 import { OFFER } from '../../src/data/offers.js';
@@ -31,6 +32,10 @@ const TABLES = [
   ['promo.pre', Object.keys(PRE), k => PRE[k].n, k => t(`promo.pre.${k}`)],
   ['promo.preD', Object.keys(PRE), k => PRE[k].d, k => t(`promo.preD.${k}`)],
   ['promo.post', Object.keys(POST), k => POST[k].n, k => t(`promo.post.${k}`)],
+  ['biz.d', Object.keys(BIZ), k => BIZ[k].d, k => t(`biz.d.${k}`)],
+  ['inv.leadN', Object.keys(LEADS), k => LEADS[k].n, k => t(`inv.leadN.${k}`)],
+  ['inv.leadT', Object.keys(LEADS), k => LEADS[k].T, k => t(`inv.leadT.${k}`)],
+  ['inv.leadF', Object.keys(LEADS), k => LEADS[k].F, k => t(`inv.leadF.${k}`)],
   ['fin.in', Object.keys(FIN_I), k => FIN_I[k], k => t(`fin.in.${k}`)],
   ['fin.out', Object.keys(FIN_X), k => FIN_X[k], k => t(`fin.out.${k}`)],
 ];
