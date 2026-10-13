@@ -40,7 +40,7 @@ describe('en extra scenarios have no Vietnamese', () => {
 
 describe('en keeps <option> values and onclick targets identical to vi', () => {
   const sig = () => { const el = document.getElementById('sheet'); return { o: [...el.querySelectorAll('option')].map(o => o.value), c: [...el.querySelectorAll('[onclick]')].map(e => e.getAttribute('onclick')), v: [...el.querySelectorAll('[value]')].map(e => e.getAttribute('value')) }; };
-  for (const room of ['mgr', 'studio', 'acting']) {
+  for (const room of ['mgr', 'studio', 'acting', 'hr', 'gym']) {
     it(room, () => {
       ctx.fresh(ctx.base); setLang('vi'); openRoom(room); const a = sig();
       ctx.fresh(ctx.base); setLang('en'); openRoom(room); const b = sig();

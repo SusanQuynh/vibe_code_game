@@ -1,7 +1,9 @@
 // Display-name helpers (src/i18n/labels.js) must reproduce the Vietnamese data tables exactly in vi,
 // and every table id must have a key in every locale.
 import { describe, it, expect, afterEach } from 'vitest';
-import { setLang } from '../../src/i18n/index.js';
+import { setLang, t } from '../../src/i18n/index.js';
+import { PRE, POST } from '../../src/systems/promo.js';
+import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
 import { statName, trainName, conceptName, genreName, offerName, mskName, mskDesc, domName, dayShort, dayName, bizName } from '../../src/i18n/labels.js';
 import { STATS, TRAIN, CONCEPTS, GENRES, MSK, MSKD, MDOM } from '../../src/data/rules.js';
 import { OFFER } from '../../src/data/offers.js';
@@ -26,6 +28,11 @@ const TABLES = [
   ['day', DAYS.map((_, i) => i), i => DAYS[i], dayShort],
   ['dayn', DAYN.map((_, i) => i), i => DAYN[i], dayName],
   ['biz', Object.keys(BIZ), k => BIZ[k].n, bizName],
+  ['promo.pre', Object.keys(PRE), k => PRE[k].n, k => t(`promo.pre.${k}`)],
+  ['promo.preD', Object.keys(PRE), k => PRE[k].d, k => t(`promo.preD.${k}`)],
+  ['promo.post', Object.keys(POST), k => POST[k].n, k => t(`promo.post.${k}`)],
+  ['fin.in', Object.keys(FIN_I), k => FIN_I[k], k => t(`fin.in.${k}`)],
+  ['fin.out', Object.keys(FIN_X), k => FIN_X[k], k => t(`fin.out.${k}`)],
 ];
 
 describe('label helpers', () => {

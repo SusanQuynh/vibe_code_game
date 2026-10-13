@@ -404,3 +404,83 @@ add('t8-toasts', ctx => {
   T('promo.preAuto', B, () => { const x = A(); free(x); S.camp = {}; S.money = 0; preAuto(x.k); });
   return out;
 });
+
+// ---------------- task 9: sales & finance, HR, contracts, health specialist ----------------
+import { renewEval, renewBlock, renewOpts, renewDo, viewRenew, finChart, catRows, repCard, repStars, FIN_I, FIN_X, ctInit } from '../../src/systems/ext2.js';
+import { hsHTML, hsHire, hsApply, genHSC } from '../../src/systems/ext3.js';
+const deb = () => S.artists.filter(a => a.status === 'debuted');
+add('t9-sales', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('sales'); }
+  ctx.fresh(ctx.base);
+  const ds = deb(), A = acts()[0];
+  S.singles.forEach(s => { s.dig = 1; s.end = 0; s.dl = 3e6; s.dt = 9e6; s.roy = 0; s.rank = 4; s.w = abs() - 3; });
+  if (S.singles[0]) { S.singles[0].roy = .15; S.singles[0].dl = 1e6; }
+  if (S.singles[1]) S.singles[1].end = 1;
+  ds.forEach((a, i) => { a.earn = (i + 1) * 5e6; });
+  S.fc = { w: abs(), m0: S.money, i: { dig: 5e6, oth: 1e6, zzz: 2e6 }, x: { sal: 3e6, mgr: 1e6, trn: 1e6, prod: 2e6, hr: 1e6, oth: 1e5 } };
+  out.rich = room('sales');
+  S.fin = S.fin.map((f, i) => ({ ...f, i: { dig: 4e6, sgl: 3e6, job: 2e6, con: 1e6, film: 1e6, live: 1e6, biz: 1e6, oth: 1e6 }, x: { sal: 5e6, mgr: 2e6, trn: 1e6, prod: 3e6, hr: 1e6, oth: 1e6 } }));
+  out.ledger = room('sales');
+  S.singles = []; S.artists.forEach(a => { a.earn = 0; }); S.fin = []; S.fc = { w: abs(), m0: S.money, i: {}, x: {} };
+  out.empty = room('sales');
+  out.chart0 = finChart([]); out.chart1 = finChart([{ wk: 3, i: { dig: 1e6 }, x: { sal: 2e6 } }]); out.catEmpty = catRows({}, FIN_I, 'red'); out.catUnknown = catRows({ dig: 1, zz: 3 }, FIN_X, 'blue');
+  return out;
+});
+add('t9-hr', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('hr'); }
+  ctx.fresh(ctx.base);
+  const ds = deb(); ds.forEach(ctInit);
+  if (ds[0]) { ds[0].ce = abs() + 5; ds[0].ceNo = 1; }
+  if (ds[1]) ds[1].ce = abs() + 30;
+  if (ds[2]) { ds[2].ce = abs() + 3; ds[2].mood = 20; ds[2].scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; }
+  S.assts = [{ id: 1, name: 'Trợ Lý A', mid: S.managers[0] ? S.managers[0].id : 0, k: 'nego', v: 3, sal: 2e6 }, { id: 2, name: 'Trợ Lý B', mid: 424242, k: 'care', v: 2, sal: 1e6 }];
+  out.rich = room('hr');
+  S.artists.forEach(a => { if (a.status === 'trainee') a.mt = null; });
+  const tr = S.artists.find(a => a.status === 'trainee'); if (ds[0] && tr) { tr.mt = ds[0].id; }
+  out.mentor = room('hr');
+  S.assts = []; S.artists = S.artists.filter(a => a.status !== 'trainee'); out.noTts = room('hr');
+  S.artists = S.artists.filter(a => a.status !== 'debuted'); out.noDeb = room('hr');
+  out.stars = [0, 24, 25, 50, 75, 99, 150].map(repStars); out.repCard = repCard();
+  return out;
+}, ['Trợ Lý A', 'Trợ Lý B', 'x']);
+add('t9-renew', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base);
+  const ds = deb(); ds.forEach(ctInit); const a = ds[0];
+  a.ce = abs() + 6; a.earnC = 0; a.salary = 2e6; a.mood = 80; a.scandal = null; a.evG = null; a.evFail = 0;
+  out.plain = [renewEval(a), renewEval(a, 1.3)].map(e => ({ ...e }));
+  out.block = renewBlock(a); out.block13 = renewBlock(a, 1.3); out.none = renewBlock(null);
+  const var1 = (k, f) => { f(); out[k] = { ev: renewEval(a), blk: renewBlock(a), opts: renewOpts(a) }; };
+  var1('great', () => { a.earnC = 5e9; a.fans = a.fans * 3 + 1e5; a.evG = 'Xuất sắc'; a.evFail = 0; });
+  var1('good-evFail', () => { a.evG = 'Đạt'; a.evFail = 2; });
+  var1('bad', () => { a.earnC = 0; a.cf0 = a.fans * 2 + 1e5; a.evG = 'Không đạt'; a.evFail = 3; a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.mood = 20; });
+  out.optsSix = renewOpts(a, 1.3);
+  a.scandal = null; a.mood = 70; a.ce = abs() + 6; a.ceNo = 0;
+  S.events = []; out.view = (viewRenew(a.id), sheet());
+  a.ceNo = 1; out.viewNo = (viewRenew(a.id), sheet()); a.ceNo = 0;
+  S.events.push({ kind: 'renew', a: a.id, mul: 1.3 }); out.view13 = (viewRenew(a.id), sheet());
+  out.missing = (viewRenew(424242), document.getElementById('sheet') ? sheet() : null);
+  return out;
+}, ['x', 'Xuất sắc', 'Đạt', 'Không đạt']);
+add('t9-gym', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('gym'); out[n + 'Html'] = hsHTML(); }
+  ctx.fresh(ctx.base);
+  S.hs = null; S.hsC = null; out.cands = room('gym');
+  S.hs = { id: 9100, name: 'BS. Test', sk: 3, sal: 4e6, fee: 24e6, look: S.hsC ? S.hsC[0].look : S.managers[0].look };
+  S.hsC = null; out.hired = room('gym');
+  const ds = S.artists.slice(0, 3); const mg = S.managers[0];
+  ds.forEach((a, i) => { a.hsF = { w: abs(), why: ['năng lượng chỉ còn 20', 'tâm trạng xuống 25'].slice(0, i + 1), n: 3, st: i === 1 ? 'ok' : 'new' }; });
+  out.flagged = room('gym');
+  return out;
+}, ['BS. Test', 'năng lượng chỉ còn 20', 'tâm trạng xuống 25']);
+add('t9-toasts', ctx => {
+  const out = {}, T = (n, b, f) => { out[n] = toastOf(ctx, b, f); };
+  const B = ctx.base;
+  T('renew.money', B, () => { const a = deb()[0]; ctInit(a); a.ce = abs() + 5; S.money = 0; renewDo(a.id, 'r1'); });
+  T('renew.money3', B, () => { const a = deb()[0]; ctInit(a); S.money = 1; renewDo(a.id, 'r3', 1.3); });
+  T('hs.money', B, () => { S.hs = null; S.hsC = [{ id: 9100, name: 'BS. X', sk: 3, sal: 1e6, fee: 50e6 }]; S.money = 0; hsHire(9100); });
+  return out;
+});
