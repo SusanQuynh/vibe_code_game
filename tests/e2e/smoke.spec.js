@@ -125,3 +125,36 @@ test('sao lưu đầy đủ → làm hỏng bản chính → tải lại khôi p
   await expect(page.locator('#log')).toContainText('🛟');
   expect(errors).toEqual([]);
 });
+
+test('every room in English at 375px: no error, no horizontal scroll, no Vietnamese chrome', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => { localStorage.setItem('starlight_lang', 'en'); });
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
+  await page.evaluate(() => window.closeM());
+  const n = await page.locator('#dock button').count();
+  expect(n).toBeGreaterThanOrEqual(10);
+  for (let i = 0; i < n; i++) {
+    await page.locator('#dock button').nth(i).click();
+    await expect(page.locator('#sheet')).toHaveClass(/on/);
+    const r = await page.evaluate(() => {
+      const VI = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
+      // text stored in the state (names, log lines…) stays Vietnamese until phase 3: strip it, longest first
+      const stored = new Set();
+      const walk = (v) => { if (typeof v === 'string') { if (VI.test(v)) stored.add(v); } else if (v && typeof v === 'object') for (const x of Object.values(v)) walk(x); };
+      walk(window.__game.state());
+      let txt = document.querySelector('#sheet').innerText;
+      for (const s of [...stored].sort((a, b) => b.length - a.length)) txt = txt.split(s).join(' ');
+      const left = (txt.match(/\p{L}+/gu) || []).filter((w) => VI.test(w) && ![...stored].some((s) => s.includes(w)));
+      return { w: document.documentElement.scrollWidth, sw: document.querySelector('#sheet .panel').scrollWidth, left };
+    });
+    expect(r.w, `room ${i}: page scrollWidth`).toBeLessThanOrEqual(375);
+    expect(r.sw, `room ${i}: sheet scrollWidth`).toBeLessThanOrEqual(375);
+    expect(r.left, `room ${i}: Vietnamese words`).toEqual([]);
+    await page.locator('#sheet .x').first().click();
+    await expect(page.locator('#sheet')).not.toHaveClass(/on/);
+  }
+  expect(errors).toEqual([]);
+});

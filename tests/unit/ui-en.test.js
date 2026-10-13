@@ -3,7 +3,9 @@
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
 import { noToggle } from './helpers.js';
 import { setLang } from '../../src/i18n/index.js';
-import { richState, renderSurface, runToasts, visibleText, offenders } from './sim.js';
+import { richState, renderSurface, runToasts, visibleText, offenders, SURFACES, TOAST_CASES, skipped } from './sim.js';
+import { ROOMS } from '../../src/data/rules.js';
+import { applyHtmlLang } from '../../src/ui/lang.js';
 import { S, setState } from '../../src/state.js';
 
 noToggle();
@@ -39,10 +41,34 @@ describe('en render has no Vietnamese', () => {
     if (name === 'top' || name === 'early-top') { root = document.body.cloneNode(true); root.querySelector('#log')?.remove(); } // the log is stored text
     const off = offenders(visibleText(root), S);
     expect(off, `${name}: ${off.join(', ')}`).toEqual([]);
+    if (name !== 'top' && name !== 'early-top') for (const b of root.querySelectorAll('.x')) expect(b.getAttribute('aria-label'), `${name}: close button`).toBe('Close');
   });
   it('toasts', () => {
     setLang('en');
     const res = runToasts(base);
     for (const n of TOASTS_DONE) expect(offenders(res[n] || '', base), n).toEqual([]);
+  });
+});
+
+describe('coverage is complete', () => {
+  it('EN_DONE lists every surface and every early room', () => {
+    const want = new Set([...SURFACES.map(x => x.name), ...ROOMS.map(r => 'early-' + r.id)]);
+    expect(new Set(EN_DONE)).toEqual(want);
+    expect(EN_DONE.length).toBe(want.size);
+  });
+  it('TOASTS_DONE lists every toast case', () => {
+    expect(new Set(TOASTS_DONE)).toEqual(new Set(TOAST_CASES.map(c => c.name)));
+  });
+  it('no surface is skipped in the rich or the early state', () => {
+    skipped.length = 0;
+    for (const x of SURFACES) renderSurface(x.name, base);
+    for (const r of ROOMS) renderSurface(r.id, early);
+    expect(skipped).toEqual([]);
+  });
+  it('<html lang> follows the language', () => {
+    setLang('en'); applyHtmlLang();
+    expect(document.documentElement.lang).toBe('en');
+    setLang('vi'); applyHtmlLang();
+    expect(document.documentElement.lang).toBe('vi');
   });
 });
