@@ -278,3 +278,129 @@ add('t7-plan', ctx => {
   a.energy = 90; a.mood = 90; a.wantAct = abs() + 1; out.why.push(planWhy(a)); a.wantAct = 0; out.why.push(planWhy(a));
   return out;
 }, ['Tin đồn test', 'Lý do test']);
+
+// ---------------- task 8: studio, acting, songs, releases, promotion ----------------
+import { songCard, songOpts, songPrev, wPrev, viewSongs, viewSong, writeSong, songAct, songRelease, mkSong, mdReview, curSong } from '../../src/systems/ext2.js';
+import { viewCamp, fanHTML, fanSugs, releaseSingle, doSingle, holdConcert, produceFilm, actByKey } from '../../src/systems/releases.js';
+import { preDo, postDo, postAuto, preAuto } from '../../src/systems/promo.js';
+import { cbNow } from '../../src/systems/secretary.js';
+import { genOffers } from '../../src/systems/offers.js';
+const room = id => (openRoom(id), sheet());
+add('t8-studio', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('studio'); out[n + 'Prev'] = document.getElementById('sPrev')?.innerHTML ?? null; }
+  ctx.fresh(ctx.base); S.artists.forEach(a => { a.busy = null; }); // rival comeback, hiatus group, promo entries, trend variants
+  S.rivals = S.rivals || []; if (S.rivals[0]) S.rivals[0].cb = { w: abs(), ck: 'cute', p: 6 };
+  const g = S.groups[0]; if (g) g.hiatus = abs() + 3;
+  const L = acts(); if (L[1]) S.camp[L[1].k] = { k: L[1].k, n: L[1].n, ph: 'post', t: 'Bài test', ck: 'cute', rank: 12, best: 5, wins: 2, stages: 3, wn: 1, used: { wk: abs(), l: [] }, hype: 10, inc: 5e6 };
+  out.rival = room('studio'); out.rivalPrev = document.getElementById('sPrev')?.innerHTML ?? null;
+  S.trend = { hot: ['cute', 'edm'], cold: 'ballad', until: abs() + 4 };
+  const sel = document.getElementById('sCon'); const prevs = {};
+  if (sel) for (const k of ['cute', 'ballad', 'retro']) { sel.value = k; sel.onchange(); prevs[k] = document.getElementById('sPrev').innerHTML; }
+  out.prevs = prevs;
+  const s1 = mkSong([S.artists.find(a => a.status === 'debuted').id], 'cute', 'Bài ok', false); s1.st = 'ok'; s1.rv = { g: 'A', mk: 70 }; s1.for = acts()[0] && acts()[0].k;
+  const s2 = mkSong([S.artists.find(a => a.status === 'debuted').id], 'edm', 'Bài md', false); s2.st = 'ok'; s2.md = 1; s2.rv = null;
+  out.withSongs = room('studio');
+  const so = document.getElementById('sSong'); if (so) for (const s of [s1, s2]) { so.value = s.id; so.onchange(); out['song' + s.id] = document.getElementById('sPrev').innerHTML + '|' + document.getElementById('sTitle').value; }
+  S.artists.forEach(a => { a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; }); out.allBusy = room('studio');
+  ctx.fresh(ctx.early); S.groups = []; S.artists.forEach(a => { a.solo = 0; }); out.noActs = room('studio');
+  return out;
+}, ['Bài test', 'Bài ok', 'Bài md', 'x']);
+add('t8-acting', ctx => {
+  const out = {};
+  for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('acting'); }
+  ctx.fresh(ctx.base);
+  const d = S.artists.find(a => a.status === 'debuted');
+  S.films = [
+    { id: 901, title: 'Phim A', genre: 'romance', own: true, budget: 3e8, share: 1, cost: 3e8, cast: [d.id], status: 'Đang quay', releaseAt: 0, done: false, y: 2 },
+    { id: 902, title: 'Phim B', genre: 'action', own: false, budget: 8e8, share: .3, cost: 2.4e8, cast: [], status: 'Hậu kỳ', releaseAt: abs() + 2, done: false, y: 2 },
+    { id: 903, title: 'Phim C', genre: 'horror', own: true, budget: 2e9, share: 1, cost: 2e9, cast: [d.id, 999999], status: 'Đã chiếu', releaseAt: 0, done: true, rev: 5e9, mult: 1.5, inc: 5e9, y: 2 }];
+  out.films = room('acting');
+  const sel = document.getElementById('fGen'); const fits = {}; for (const k of ['romance', 'horror', 'musical']) { sel.value = k; sel.onchange(); fits[k] = [...document.querySelectorAll('[data-f]')].map(e => e.textContent); } out.fits = fits;
+  S.artists.forEach(a => { a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; }); out.noCands = room('acting');
+  return out;
+}, ['Phim A', 'Phim B', 'Phim C', 'x']);
+add('t8-songs', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base); S.artists.forEach(a => { a.busy = null; a.scandal = null; }); S.songs = []; out.card0 = songCard(); out.opts0 = songOpts(); out.list0 = (viewSongs(), sheet());
+  const ds = S.artists.filter(a => a.status === 'debuted'); const A = acts()[0];
+  const mk = (st, ck, q) => { const s = mkSong([ds[0].id], ck, 'Bài ' + st + q, st === 'writing'); s.st = st; s.q = q; if (st === 'ok') s.rv = { g: 'B', mk: 55 }; if (st === 'used') { s.rank = 7; s.act = A ? A.n : '👥 X'; s.rv = { g: 'S', mk: 90 }; } return s; };
+  const ss = [mk('review', 'cute', 90), mk('review', 'edm', 60), mk('review', 'ballad', 45), mk('ok', 'retro', 30), mk('used', 'hiphop', 10), mk('writing', 'crush', 50), mk('review', 'retro', 75), mk('review', 'retro', 60)];
+  ss[3].for = A && A.k; ss[3].md = 1; ss[3].by = [];
+  S.trend = { hot: ['cute'], cold: 'edm', until: abs() + 5 };
+  out.card = songCard(); out.opts = songOpts(); out.list = (viewSongs(), sheet());
+  ss.forEach((s, i) => { out['song' + i] = (viewSong(s.id), sheet()); out['rv' + i] = mdReview(s); });
+  acts().forEach(z => campBusy(z, true)); out.songBusy = (viewSong(ss[0].id), sheet()); acts().forEach(z => campBusy(z, false)); const gs = S.groups, ar = S.artists.filter(a => a.solo); S.groups = []; S.artists.forEach(a => { a.solo = 0; }); out.songNoActs = (viewSong(ss[0].id), sheet()); S.groups = gs; ar.forEach(a => { a.solo = 1; });
+  ss[0].rw = 2; out.song0max = (viewSong(ss[0].id), sheet());
+  out.missing = (viewSong(424242), sheet());
+  S.rivals = S.rivals || []; if (S.rivals[0]) S.rivals[0].cb = { w: abs(), ck: 'cute', p: 6 }; out.rivalSong = (viewSong(ss[0].id), sheet());
+  // preview / compose form
+  viewSongs(); const wm = document.getElementById('wMain'); out.wprev0 = document.getElementById('wPrev').innerHTML;
+  const boxes = [...document.querySelectorAll('.wco')]; boxes.slice(0, 1).forEach(b => { b.checked = true; }); wPrev(); out.wprev1 = document.getElementById('wPrev').innerHTML;
+  boxes.forEach(b => { b.checked = true; }); wPrev(); out.wprev3 = document.getElementById('wPrev').innerHTML;
+  boxes.forEach(b => { b.checked = false; }); S.artists.forEach(a => S.artists.forEach(b => { if (a !== b) a.tag[b.id] = 'enemy'; })); boxes.slice(0, 2).forEach(b => { b.checked = true; }); wPrev(); out.wprevEnemy = document.getElementById('wPrev').innerHTML; S.artists.forEach(a => { a.tag = {}; });
+  boxes.forEach(b => { b.checked = false; }); const t0 = S.trend; S.trend = null; wPrev(); out.wprevNoTrend = document.getElementById('wPrev').innerHTML; S.trend = t0;
+  out.songPrevBuy = songPrev(A || { m: [] });
+  openRoom('studio'); const so = document.getElementById('sSong'); so.value = ss[3].id; out.songPrevOwn = songPrev(A || { m: [] });
+  ctx.fresh(ctx.early); out.earlyList = (viewSongs(), sheet()); out.earlyCard = songCard();
+  return out;
+}, ['Bài review90', 'Bài review60', 'Bài review45', 'Bài ok30', 'Bài used10', 'Bài writing50', 'Bài review75']);
+add('t8-camp', ctx => {
+  const out = {};
+  ctx.fresh(ctx.base); S.artists.forEach(a => { a.busy = null; });
+  const L = acts(); const x = L[0];
+  out.pre = (viewCamp(x.k), sheet());
+  S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', hype: 24, done: { sched: abs(), photo: abs() } }; out.preDone = (viewCamp(x.k), sheet());
+  S.cbPlan = [{ k: x.k, w: abs() + 3 }]; out.prePlanned = (viewCamp(x.k), sheet()); S.cbPlan = [];
+  S.money = 5e6; out.preBroke = (viewCamp(x.k), sheet()); S.money = 1e10;
+  campBusy(x, true); out.preBusy = (viewCamp(x.k), sheet()); campBusy(x, false);
+  S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài test', ck: 'cute', rank: 12, best: 5, wins: 2, stages: 3, wn: 1, used: { wk: abs(), l: ['s1', 'radio'] }, hype: 10, inc: 5e6 };
+  out.post = (viewCamp(x.k), sheet());
+  x.m.forEach(id => { byId(id).energy = 5; }); out.postTired = (viewCamp(x.k), sheet());
+  S.autoPromo = false; out.postNoAuto = (viewCamp(x.k), sheet());
+  out.fanHTML = fanHTML(); out.sugs = fanSugs().map(f => ({ ...f }));
+  S.fmHint = { [x.k]: abs() }; S.fmLast = {}; out.fanHint = fanHTML();
+  ctx.fresh(ctx.base); S.artists.filter(a => a.status === 'debuted').forEach((a, i) => { a.lastLive = -9; a.lastFan = i % 2 ? 0 : abs() - 7; a.mood = i === 0 ? 20 : 80; if (i === 1) a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.busy = null; a.fans = 5e5; });
+  S.fmLast = {}; out.fanVariants = fanHTML(); out.sugs2 = fanSugs().map(f => f.why);
+  acts().forEach(z => { S.fmLast[z.k] = abs() - 20; }); out.fanGap = fanHTML(); out.sugs3 = fanSugs().map(f => f.why);
+  S.artists.forEach(a => { a.lastLive = abs(); }); acts().forEach(z => { S.fmLast[z.k] = abs(); }); out.fanNone = fanHTML();
+  ctx.fresh(ctx.early); out.earlyNone = fanHTML();
+  return out;
+}, ['Bài test', 'x']);
+function campBusy(x, on) { x.m.forEach(id => { byId(id).busy = on ? { kind: 'x', title: 'x', left: 2, total: 2 } : null; }); }
+add('t8-toasts', ctx => {
+  const out = {}, T = (n, b, f) => { out[n] = toastOf(ctx, b, f); };
+  const B = ctx.base;
+  const A = () => acts()[0];
+  const free = x => x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; });
+  const form = () => { S.artists.forEach(a => { if (!a.scandal) a.busy = null; }); openRoom('studio'); return document.getElementById('sAct') ? 1 : 0; };
+  T('single.none', B, () => { form(); document.getElementById('sAct').value = ''; releaseSingle(); });
+  T('single.hiatus', B, () => { const x = A(); free(x); S.groups[0].hiatus = abs() + 3; doSingle(x.k, 'cute', 1e6, 't', false, 0); });
+  T('single.busy', B, () => { const x = A(); campBusy(x, true); doSingle(x.k, 'cute', 1e6, 't', false, 0); });
+  T('single.money', B, () => { const x = A(); free(x); S.money = 0; form(); document.getElementById('sAct').value = x.k; releaseSingle(); });
+  T('concert.none', B, () => { form(); holdConcert('zzz'); });
+  T('concert.fans', B, () => { const x = A(); free(x); x.m.forEach(id => { byId(id).fans = 0; }); holdConcert(x.k); });
+  T('concert.busy', B, () => { const x = A(); free(x); x.m.forEach(id => { byId(id).fans = 1e6; }); byId(x.m[0]).busy = { kind: 'x', title: 'x', left: 2, total: 2 }; holdConcert(x.k); });
+  T('concert.hiatus', B, () => { const x = A(); free(x); x.m.forEach(id => { byId(id).fans = 1e6; }); const g = S.groups.find(z => 'g' + z.id === x.k); if (g) g.hiatus = abs() + 3; holdConcert(x.k); });
+  T('concert.money', B, () => { const x = A(); free(x); x.m.forEach(id => { byId(id).fans = 1e6; }); S.money = 100e6; holdConcert(x.k); });
+  T('film.none', B, () => { openRoom('acting'); document.querySelectorAll('.fcast').forEach(c => { c.checked = false; }); produceFilm(); });
+  T('film.many', B, () => { S.artists.forEach(a => { if (a.status === 'debuted') a.busy = null; }); const ds = S.artists.filter(a => a.status === 'debuted'); while (ds.length < 4) { const c = structuredClone(ds[0]); c.id = uid(); S.artists.push(c); ds.push(c); } openRoom('acting'); document.querySelectorAll('.fcast').forEach(c => { c.checked = true; }); produceFilm(); });
+  T('film.money', B, () => { S.artists.forEach(a => { if (a.status === 'debuted') a.busy = null; }); openRoom('acting'); document.querySelectorAll('.fcast')[0].checked = true; S.money = 0; produceFilm(); });
+  T('song.nomain', B, () => { viewSongs(); document.getElementById('wMain').value = ''; writeSong(); });
+  T('song.many', B, () => { S.artists.forEach(a => { a.busy = null; }); S.money = 1e10; viewSongs(); const bx = [...document.querySelectorAll('.wco')]; bx.forEach(b => { b.checked = true; }); writeSong(); });
+  T('song.busy', B, () => { S.artists.forEach(a => { a.busy = null; }); viewSongs(); const m = byId(+document.getElementById('wMain').value); m.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; writeSong(); });
+  T('song.money', B, () => { S.artists.forEach(a => { a.busy = null; }); S.money = 0; viewSongs(); writeSong(); });
+  T('song.redoMoney', B, () => { const s = mkSong([S.artists[0].id], 'cute', 'x', false); S.money = 0; songAct(s.id, 'redo'); });
+  T('song.redoMax', B, () => { const s = mkSong([S.artists[0].id], 'cute', 'x', false); s.rw = 2; S.money = 1e10; songAct(s.id, 'redo'); });
+  T('song.releaseBusy', B, () => { const s = mkSong([S.artists[0].id], 'cute', 'x', false); s.st = 'ok'; const x = A(); campBusy(x, true); songRelease(s.id, x.k); });
+  T('promo.preBusy', B, () => { const x = A(); campBusy(x, true); preDo(x.k, 'photo'); });
+  T('promo.preInPost', B, () => { const x = A(); free(x); S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs(), l: [] }, hype: 0, inc: 0 }; preDo(x.k, 'photo'); });
+  T('promo.preDone', B, () => { const x = A(); free(x); S.camp = {}; S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', hype: 0, done: { photo: abs() } }; preDo(x.k, 'photo'); });
+  T('promo.preMoney', B, () => { const x = A(); free(x); S.camp = {}; S.money = 0; preDo(x.k, 'photo'); });
+  T('promo.preTired', B, () => { const x = A(); free(x); S.camp = {}; byId(x.m[0]).energy = 3; preDo(x.k, 'photo'); });
+  T('promo.postTwice', B, () => { const x = A(); free(x); S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs(), l: ['s1'] }, hype: 0, inc: 0 }; postDo(x.k, 's1'); });
+  T('promo.postTired', B, () => { const x = A(); free(x); S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs(), l: [] }, hype: 0, inc: 0 }; byId(x.m[0]).energy = 3; postDo(x.k, 's1'); });
+  T('promo.postAutoTired', B, () => { const x = A(); free(x); S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs(), l: [] }, hype: 0, inc: 0 }; x.m.forEach(id => { byId(id).energy = 20; }); postAuto(x.k); });
+  T('promo.preAuto', B, () => { const x = A(); free(x); S.camp = {}; S.money = 0; preAuto(x.k); });
+  return out;
+});

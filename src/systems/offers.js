@@ -1,5 +1,6 @@
 import { R, pick } from '../core/rng.js';
 import { $, clamp, fmt } from '../core/util.js';
+import { t } from '../i18n/index.js';
 import { COSTARS } from '../data/names.js';
 import { OFFER, PARTNERS } from '../data/offers.js';
 import { GENRES, STATS } from '../data/rules.js';
@@ -57,7 +58,7 @@ export const slotsOf=of=>of.slots||1;
 export const offerOrder=list=>list.slice().reverse().sort((x,y)=>(byId(x.target)?0:1)-(byId(y.target)?0:1));
 export function cbHold(a){let best=null;for(const p of (S.cbPlan||[])){const x=actByKey(p.k);if(x&&x.m.includes(a.id)&&(!best||p.w<best.w))best=p}return best}
 export function chem(ids){let c=0;const ms=ids.map(byId).filter(Boolean);for(let i=0;i<ms.length;i++)for(let j=i+1;j<ms.length;j++){const t=ms[i].tag[ms[j].id];c+=t==='friend'?.08:t==='enemy'?-.12:(t==='dating'||t==='public')?.04:0;if(sameGroup(ms[i],ms[j]))c+=.05}return clamp(+c.toFixed(2),-.3,.3)}
-export const chemTxt=c=>c>0?`ăn ý +${Math.round(c*100)}%`:c<0?`<span class="bad">lục đục ${Math.round(c*100)}%</span>`:'';
+export const chemTxt=c=>c>0?t('chem.pos',{p:Math.round(c*100)}):c<0?t('chem.neg',{p:Math.round(c*100)}):'';
 export function bestCast(of,pool){
   const el=pool.filter(a=>!canTake(of,a));if(!el.length)return null;
   let first;if(of.target){first=el.find(a=>a.id===of.target);if(!first)return null}
