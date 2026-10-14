@@ -105,26 +105,6 @@
   "why": "compDone: 'Nhóm <name>' is interpolated into addLog (stored in S.log, phase 3)"
  },
  {
-  "file": "src/systems/week.js",
-  "text": "Xuất sắc",
-  "why": "qLabel() result is only used inside addLog/hist/lessons sinks (stored in S, phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Tốt",
-  "why": "qLabel() result is only used inside addLog/hist/lessons sinks (stored in S, phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Ổn",
-  "why": "qLabel() result is only used inside addLog/hist/lessons sinks (stored in S, phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Chưa tốt",
-  "why": "qLabel() result is only used inside addLog/hist/lessons sinks (stored in S, phase 3)"
- },
- {
   "file": "src/systems/promo.js",
   "text": "» giành cúp #1 tại",
   "why": "postDo msg text is written to the log via addLog (phase 3)"

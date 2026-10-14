@@ -191,6 +191,84 @@
   "k": "hist.disband"
  },
  {
+  "k": "hist.film"
+ },
+ {
+  "k": "hist.offer"
+ },
+ {
+  "k": "les.film"
+ },
+ {
+  "k": "les.filmLt"
+ },
+ {
+  "k": "les.lt.collab.0"
+ },
+ {
+  "k": "les.lt.collab.1"
+ },
+ {
+  "k": "les.lt.collab.2"
+ },
+ {
+  "k": "les.lt.concert.0"
+ },
+ {
+  "k": "les.lt.concert.1"
+ },
+ {
+  "k": "les.lt.concert.2"
+ },
+ {
+  "k": "les.lt.fanmeet.0"
+ },
+ {
+  "k": "les.lt.fanmeet.1"
+ },
+ {
+  "k": "les.lt.fanmeet.2"
+ },
+ {
+  "k": "les.lt.live.0"
+ },
+ {
+  "k": "les.lt.live.1"
+ },
+ {
+  "k": "les.lt.promo.0"
+ },
+ {
+  "k": "les.lt.promo.1"
+ },
+ {
+  "k": "les.lt.promo.2"
+ },
+ {
+  "k": "les.lt.showcase.0"
+ },
+ {
+  "k": "les.lt.showcase.1"
+ },
+ {
+  "k": "les.lt.showcase.2"
+ },
+ {
+  "k": "les.lt.write.0"
+ },
+ {
+  "k": "les.lt.write.1"
+ },
+ {
+  "k": "les.offer"
+ },
+ {
+  "k": "les.rep"
+ },
+ {
+  "k": "les.with"
+ },
+ {
   "k": "log.art.sign"
  },
  {
@@ -230,6 +308,36 @@
   "k": "log.sv.load"
  },
  {
+  "k": "log.wk.calm"
+ },
+ {
+  "k": "log.wk.concert"
+ },
+ {
+  "k": "log.wk.debt"
+ },
+ {
+  "k": "log.wk.done"
+ },
+ {
+  "k": "log.wk.film"
+ },
+ {
+  "k": "log.wk.filmShare"
+ },
+ {
+  "k": "log.wk.leave"
+ },
+ {
+  "k": "log.wk.promo"
+ },
+ {
+  "k": "log.wk.shoot"
+ },
+ {
+  "k": "log.wk.wantAct"
+ },
+ {
   "k": "log.x2.disband"
  },
  {
@@ -240,6 +348,84 @@
  },
  {
   "k": "offer.*"
+ },
+ {
+  "k": "offer.lt.ad.0"
+ },
+ {
+  "k": "offer.lt.ad.1"
+ },
+ {
+  "k": "offer.lt.backup.0"
+ },
+ {
+  "k": "offer.lt.backup.1"
+ },
+ {
+  "k": "offer.lt.drama.0"
+ },
+ {
+  "k": "offer.lt.drama.1"
+ },
+ {
+  "k": "offer.lt.drama.2"
+ },
+ {
+  "k": "offer.lt.extra.0"
+ },
+ {
+  "k": "offer.lt.extra.1"
+ },
+ {
+  "k": "offer.lt.guide.0"
+ },
+ {
+  "k": "offer.lt.guide.1"
+ },
+ {
+  "k": "offer.lt.magazine.0"
+ },
+ {
+  "k": "offer.lt.magazine.1"
+ },
+ {
+  "k": "offer.lt.model.0"
+ },
+ {
+  "k": "offer.lt.model.1"
+ },
+ {
+  "k": "offer.lt.movie.0"
+ },
+ {
+  "k": "offer.lt.movie.1"
+ },
+ {
+  "k": "offer.lt.movie.2"
+ },
+ {
+  "k": "offer.lt.music.0"
+ },
+ {
+  "k": "offer.lt.music.1"
+ },
+ {
+  "k": "offer.lt.survival.0"
+ },
+ {
+  "k": "offer.lt.survival.1"
+ },
+ {
+  "k": "offer.lt.variety.0"
+ },
+ {
+  "k": "offer.lt.variety.1"
+ },
+ {
+  "k": "offer.lt.web.0"
+ },
+ {
+  "k": "offer.lt.web.1"
  },
  {
   "k": "prop.ceo",

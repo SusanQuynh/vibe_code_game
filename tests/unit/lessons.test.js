@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import fs from 'node:fs';
-import { noToggle, seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL, viT } from './helpers.js';
 import { S, newGame } from '../../src/state.js';
 import { STATS } from '../../src/data/rules.js';
 import { PLESSON } from '../../src/data/lessons.js';
@@ -25,7 +25,7 @@ describe('applyLesson / a.pg', () => {
     const [a] = S.artists;
     a.st.vocal = 10; a.st.dance = 99.5;
     const s = applyLesson(a, { vocal: 5, dance: 5 }, 1);
-    expect(s).toBe('Vocal +5.5, Nhảy +5.5');
+    expect(viT(s)).toBe('Vocal +5.5, Nhảy +5.5');
     expect(a.pg.vocal).toBe(5.5);
     expect(a.pg.dance).toBe(0.5);
     expect(a.st.dance).toBe(100);
@@ -63,7 +63,7 @@ describe('completeBusy lessons', () => {
     S.week++;
     doLive([a.id], true);
     expect(a.lessons).toHaveLength(1);
-    expect(a.lessons[0].t).toContain('(×2)');
+    expect(viT(a.lessons[0].t)).toContain('(×2)');
     expect(a.pg.variety).toBeCloseTo(a.st.variety - v0, 5);
     expect(a.pg.variety).toBeGreaterThan(0.9);
   });
@@ -75,9 +75,9 @@ describe('livestream gộp dùng điểm thực', () => {
     const [a] = S.artists;
     a.st.variety = 98.7;
     for (let i = 0; i < 4; i++) { doLive([a.id], true); S.week++; }
-    expect(a.lessons[0].t).toContain('(×4)');
+    expect(viT(a.lessons[0].t)).toContain('(×4)');
     expect(a.lessons[0].g.variety).toBeCloseTo(a.pg.variety, 5);
-    expect(a.lessons[0].s).toContain(`+${a.pg.variety.toFixed(1)}`);
+    expect(viT(a.lessons[0].s)).toContain(`+${a.pg.variety.toFixed(1)}`);
     expect(a.st.variety).toBe(100);
     const g = a.pg.variety;
     doLive([a.id], true);
