@@ -154,6 +154,16 @@ export function renderSurface(name, base) {
   return norm(sh.innerHTML);
 }
 
+// innerHTML of the company log (#log) after a full render of `base`
+export function renderLog(base) {
+  setState(structuredClone(base));
+  S.ui = {};
+  closeM();
+  seed(99);
+  render();
+  return norm(document.getElementById('log')?.innerHTML ?? '');
+}
+
 // text a player can read: textContent plus display attributes
 export function visibleText(root) {
   const out = [];

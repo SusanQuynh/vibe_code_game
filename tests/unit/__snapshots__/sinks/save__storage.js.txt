@@ -1,0 +1,2 @@
+src/save/storage.js: addLog('📋 Văn phòng Quản lý vừa mở ở tầng 6: tuyển quản lý để chia nhau phụ trách nhóm và nghệ sĩ.','gold')
+src/save/storage.js: addLog('🛟 Bản lưu chính bị lỗi, đã khôi phục từ bản sao lưu đầy đủ.','bad')

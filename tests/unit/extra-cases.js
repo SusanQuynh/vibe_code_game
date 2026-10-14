@@ -839,3 +839,163 @@ add('t13-toasts', async ctx => {
   out.errKeys = await (async () => { const r = {}; for (const [k, v] of [['bad', 'xyz'], ['json', '{oops'], ['notsave', '{"a":1}'], ['trunc', 'SL1.@@@']]) { try { await parseSaveText(v); r[k] = 'ok'; } catch (e) { r[k] = e.message; } } try { await importCode('xyz'); } catch (e) { r.importCode = e.message; } return r; })();
   return out;
 }, [], ['errKeys']);
+
+// ---------------- phase 3 task 1: rare stored texts (recorded on pre-phase-3 code; proves the sinks keep their vi bytes) ----------------
+// Keys starting with '~' are baseline-only probes (stored values rendered to Vietnamese, log rows): the en guard skips them.
+import * as I18N from '../../src/i18n/index.js';
+import { render } from '../../src/ui/building.js';
+import { surprise, bizTick } from '../../src/systems/market.js';
+import { disbandTick, mxTick } from '../../src/systems/ext2.js';
+import { interTick, v3Tick, hsTick, hsHTML as hsHTML3 } from '../../src/systems/ext3.js';
+import { makeScandal } from '../../src/systems/events.js';
+import { awards } from '../../src/systems/awards.js';
+import { nextWeek } from '../../src/systems/week.js';
+import { setTag } from '../../src/systems/relations.js';
+const vt = v => (I18N.txVi ? I18N.txVi(v) : v);          // stored value as Vietnamese text (strings pass through)
+const logTop = (n = 4) => { render(); return [...document.querySelectorAll('#log > div')].slice(0, n).map(x => x.outerHTML).join('\n'); };
+const SAFE = f => { try { return f(); } catch (e) { return 'THROW ' + e.message; } };
+const J = v => JSON.stringify(v);
+// run f with Math.random returning vals in turn (then the case's own seeded stream resumes)
+const rstub = (vals, f) => { const o = Math.random; let i = 0; Math.random = () => vals[i++ % vals.length]; try { return f(); } finally { Math.random = o; } };
+// Search seeds 1..max for runs where probe() yields a new key; returns {key: seed}. `prep` builds the start state, `run` does the step.
+function hunt(ctx, base, prep, run, probe, want, max) {
+  const found = {};
+  for (let s = 1; s <= max && Object.keys(found).length < want; s++) {
+    ctx.fresh(base); prep(); seed(s);
+    try { run(); const k = probe(); if (k != null && !(k in found)) found[k] = s; } catch { /* seed did not work */ }
+  }
+  return found;
+}
+const replay = (ctx, base, prep, run, s) => { ctx.fresh(base); prep(); seed(s); run(); };
+// seed-hunt a pool of stored variants and render each: out['~found'] lists them, out[`${i}.sheet`] etc. come from `show`
+function pool(ctx, prep, run, probe, want, max, show) {
+  const found = hunt(ctx, ctx.base, prep, run, probe, want, max), out = { '~found': J(Object.keys(found).sort()) };
+  Object.entries(found).sort().forEach(([k, s], i) => { replay(ctx, ctx.base, prep, run, s); Object.assign(out, show(i)); });
+  return out;
+}
+const P3N = []; // names of generated candidates shown in event cards (proper nouns, treated like stored text by the en guard)
+const evSheet = i => { viewEvents(); for (const e of S.events) if (e.cand && e.cand.name) P3N.push(e.cand.name); return { [`ev${i}`]: sheet() }; };
+
+add('p3-loan', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.events = []; S.loan = null;
+  pushEv({ kind: 'sx', sx: 'investor', p: 'Quỹ Sao Mai', v: 300e6 }, true);
+  out['~res'] = SAFE(() => { resolveEv(S.events[0].id, 'yes'); return 'ok'; });
+  out['~log1'] = logTop(2); out.invest = room('invest'); out['~loan1'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
+  if (S.loan) S.loan.left = 1; bizTick(); out['~log2'] = logTop(2); out.invest2 = room('invest'); out['~loan2'] = J(S.loan);
+  S.events = []; pushEv({ kind: 'sx', sx: 'investor', p: 'Quỹ Rồng Vàng', v: 200e6 }, true); resolveEv(S.events[0].id, 'yes'); out.invest3 = room('invest'); out['~loan3'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
+  return out;
+}, ['Quỹ Sao Mai', 'Quỹ Rồng Vàng']);
+
+add('p3-mods', ctx => {
+  ctx.fresh(ctx.base); const out = {};
+  S.events = []; pushEv({ kind: 'sx', sx: 'fire' }, true);
+  out['~cheap'] = SAFE(() => { resolveEv(S.events[0].id, 'cheap'); return 'ok'; }); out['~cheapLog'] = logTop(2); out.cheapMarket = room('market');
+  out['~cheapMods'] = J(Object.entries(S.mods).map(([k, m]) => [k, m.v, vt(m.n)]));
+  // surprise(): pick(pool) → boom / crisis for some seed
+  const prep = () => { S.mods = {}; };
+  const run = () => { for (let i = 0; i < 40 && !Object.keys(S.mods).length; i++) surprise(); };
+  const probe = () => Object.keys(S.mods).filter(k => k === 'fan' || k === 'pay').join('+') || null;
+  Object.assign(out, pool(ctx, prep, run, probe, 2, 400, i => ({ [`~mods${i}`]: J(Object.entries(S.mods).map(([a, m]) => [a, m.v, vt(m.n)])), [`~log${i}`]: logTop(2), [`market${i}`]: room('market') })));
+  return out;
+}, ['Phòng tập sửa tạm: luyện tập −20%', 'Làn sóng K-pop: fan tăng nhanh', 'Suy thoái: thù lao −20%', 'Suy thoái: kinh doanh −30%']);
+
+add('p3-disband', ctx => {
+  const out = {}, setup = (mood, rel, age) => { ctx.fresh(ctx.base); S.events = []; S.camp = {}; const g = S.groups[0]; if (!g) return null; g.hiatus = 0; g.y = S.year - age; const ms = g.members.map(byId).filter(Boolean); ms.forEach(a => { a.mood = mood; }); for (const a of ms) for (const b of ms) if (a !== b) setTag(a, b, rel < 0 ? 'enemy' : null); return g; };
+  const cases = { conflict: [80, -30, 1], tired: [10, 60, 1], old: [80, 60, 5], music: [80, 60, 1] };
+  for (const [k, [mood, rel, age]] of Object.entries(cases)) {
+    const g = setup(mood, rel, age); if (!g) return { skip: 'no group' };
+    SAFE(() => rstub([0], () => disbandTick()));
+    const e = S.events.find(x => x.kind === 'disband');
+    out['~' + k + '.why'] = e ? J(vt(e.why)) : 'none'; out['~' + k + '.log'] = logTop(1);
+    if (e) { viewEvents(); out[k + '.sheet'] = sheet(); const m0 = g.members[0]; SAFE(() => resolveEv(e.id, 'split')); out['~' + k + '.split'] = logTop(2); out['~' + k + '.hist'] = J(byId(m0) ? byId(m0).hist.slice(0, 1).map(vt) : null); }
+  }
+  return out;
+}, ['mâu thuẫn nội bộ kéo dài', 'các thành viên kiệt sức, tâm trạng sa sút', 'các thành viên muốn theo đuổi con đường riêng', 'bất đồng về định hướng âm nhạc']);
+
+add('p3-mmclash', ctx => pool(ctx, () => { S.events = []; S.managers.forEach(m => { m.as = m.as || { t: 't', id: 0 }; m.boss = null; }); }, () => { interTick(); },
+  () => { const e = S.events.find(x => x.t === 'mmclash'); return e ? vt(e.why) : null; }, 4, 1500, evSheet), ['tranh lịch phòng tập cho nghệ sĩ mình phụ trách', 'tranh lời mời béo bở', 'bất đồng cách xử lý truyền thông', 'đổ lỗi cho nhau về lịch trình trùng']);
+
+add('p3-intro', ctx => pool(ctx, () => { S.events = []; }, () => { v3Tick(); },
+  () => { const e = S.events.find(x => x.t === 'intro'); return e ? vt(e.how) : null; }, 6, 2500, evSheet), P3N);
+P3N.push('bạn thời cấp ba', 'đàn em cùng lớp nhảy', 'người quen ở phòng thu', 'em họ', 'bạn cùng xóm', 'đàn em ở câu lạc bộ âm nhạc');
+
+add('p3-scout', ctx => pool(ctx, () => { S.events = []; S.managers.forEach(m => { m.as = m.as || { t: 't', id: 0 }; }); },
+  () => { for (let i = 0; i < 12; i++) { mxTick(); if (S.events.some(x => x.kind === 'mp' && x.t === 'scout')) break; } },
+  () => { const e = S.events.find(x => x.kind === 'mp' && x.t === 'scout'); return e ? vt(e.where) : null; }, 6, 600, evSheet), P3N);
+P3N.push('ở quán cà phê gần phim trường', 'trong buổi fan meeting', 'ở một lễ hội âm nhạc trường học', 'tại cuộc thi hát karaoke khu phố', 'trên chuyến tàu đi quay ngoại cảnh', 'khi xem một buổi diễn đường phố');
+
+add('p3-scandal', ctx => {
+  const prep = () => { S.events = []; S.artists.forEach(a => { a.scandal = null; }); };
+  const run = () => { makeScandal(S.artists.filter(x => x.status === 'debuted')[0]); };
+  const probe = () => vt(S.artists.filter(x => x.status === 'debuted')[0].scandal.t);
+  const out = pool(ctx, prep, run, probe, 5, 300, i => { const a = S.artists.filter(x => x.status === 'debuted')[0]; return { [`~log${i}`]: logTop(1), [`artist${i}`]: (viewArtist(a.id), sheet()), [`pr${i}`]: room('pr') }; });
+  // dating variant: partner tagged 'dating'
+  const prepD = () => { prep(); const [a, b] = S.artists.filter(x => x.status === 'debuted'); a.tag[b.id] = 'dating'; b.tag[a.id] = 'dating'; };
+  const fd = hunt(ctx, ctx.base, prepD, run, probe, 6, 100);
+  for (const [k, s] of Object.entries(fd)) if (k.includes('hẹn hò')) { replay(ctx, ctx.base, prepD, run, s); out['~dating.t'] = k; out['~dating.log'] = logTop(1); out['dating.pr'] = room('pr'); }
+  return out;
+}, ['Tin đồn thái độ với nhân viên', 'Bị đào lại phát ngôn cũ', 'Tin đồn chèn ép đồng nghiệp', 'Lộ ảnh quá khứ gây tranh cãi', 'Tin đồn đạo nhái vũ đạo', 'Bị chụp ảnh hẹn hò với']);
+
+add('p3-prhist', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.prHist = [];
+  const plans = prPlans(); out['~plans'] = J(plans.map(p => [p.go, p.t]));
+  const mk = (go, tt) => { const b = document.createElement('button'); b.dataset.go = go; b.dataset.t = tt; return b; };
+  prGo(mk('void 0', '📣 Quảng bá <b>nhóm</b> thử')); prGo(mk('void 0', '🎤 Hậu quảng bá'));
+  if (plans[0]) prGo(mk('void 0', plans[0].t));
+  out['~hist'] = J(S.prHist.map(vt)); out.pr = room('pr');
+  return out;
+});
+
+add('p3-films', ctx => {
+  ctx.fresh(ctx.base); S.offers = []; S.films = []; const out = {}; S.money = Math.max(S.money, 5e9);
+  const seen = [], snap = tag => { const k = S.films.map(f => vt(f.status)).join('|'); if (seen.at(-1) !== k) { seen.push(k); out[`${tag}.acting`] = room('acting'); out[`~${tag}.st`] = k; } };
+  const of = mkOffer({ type: 'drama', slots: 1, invest: { budget: 2e9, share: .2 } }); of.invested = false;
+  SAFE(() => investOffer(of.id)); snap('invested');
+  openRoom('acting');
+  const gen = document.querySelector('#fGen'), bud = document.querySelector('#fBud'), ti = document.querySelector('#fTitle');
+  out['~produce'] = SAFE(() => { if (ti) ti.value = 'Phim Thử Nghiệm'; if (gen) gen.selectedIndex = 0; if (bud && bud.options && bud.options.length) bud.selectedIndex = 0; document.querySelectorAll('.fcast').forEach((c, i) => { c.checked = i === 0; }); produceFilm(); return 'ok'; });
+  snap('shooting');
+  for (let w = 0; w < 16; w++) { SAFE(() => nextWeek(true, true)); snap('w' + w); }
+  out['~log'] = logTop(3); out['~last'] = J(S.films.map(f => [f.title, vt(f.status)]));
+  return out;
+}, ['Phim Thử Nghiệm', 'Sắp chiếu', 'Đang quay', 'Hậu kỳ', 'Đã chiếu']);
+
+add('p3-award', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.awards = S.awards || [];
+  S.artists.forEach(a => { if (a.yr) { a.yr.fans = 900000; a.yr.actQ = 95; a.yr.variety = 9; } });
+  SAFE(() => awards()); const w = S.awards.at(-1);
+  out['~cats'] = J((w.res || []).map(r => [vt(r.cat), vt(r.note), r.ok]));
+  out['~board'] = J((w.board || []).filter(b => b.me).map(b => vt(b.n)));
+  out['~log'] = logTop(1); viewAward(w); out.sheet = sheet(); out.ceo = room('ceo');
+  out['~hist'] = J(S.artists.map(a => a.hist.filter(h => String(vt(h)).includes('🏆')).map(vt)).filter(h => h.length));
+  return out;
+});
+
+add('p3-hs', ctx => {
+  ctx.fresh(ctx.base); const out = {}; const ds = S.artists.filter(a => a.status === 'debuted' && !a.busy), tr = S.artists.find(a => a.status === 'trainee' && !a.busy);
+  S.hsC = null; genHSC(); S.hs = { ...S.hsC[0], sk: 5 }; S.hsC = [];
+  const tire = a => { a.busy = null; a.energy = 20; a.mood = 20; a.restRec = 0; a.hsF = null; a.days = ['vocal', 'dance', 'vocal', 'dance', 'vocal', 'dance', 'rap']; a.ttsFail = 3; };
+  [ds[0], tr].filter(Boolean).forEach(tire);
+  const a2 = ds[1]; if (a2) { a2.busy = null; a2.energy = 60; a2.mood = 80; a2.restRec = 0; a2.hsF = null; a2.days = ['vocal', 'dance', 'vocal', 'dance', 'vocal', 'dance', 'rap']; }
+  SAFE(() => rstub([0], () => hsTick()));
+  out['~flagged'] = J(S.artists.filter(a => a.hsF).map(a => [a.name, a.hsF.why.map(vt), a.hsF.n]));
+  out.gym = room('gym'); out.hs = hsHTML3(); out['~log'] = logTop(2);
+  const b = S.artists.find(a => a.hsF); if (b) { viewArtist(b.id); out.artist = sheet(); }
+  return out;
+});
+
+add('p3-props', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.offers = []; S.props = null; S.autoAppr = true;
+  S.money = Math.max(S.money, 5e9); while (nonGm().length < 3 && S.mgrPool.length) hireMgr(S.mgrPool[0].id);
+  S.artists.forEach(a => { a.busy = null; }); const ms = nonGm(), ds = S.artists.filter(a => a.status === 'debuted').concat(S.artists.filter(a => a.status === 'trainee')).slice(0, 5);
+  if (ms.length < 2 || ds.length < 3) return { skip: 'few managers ' + ms.length + ' ' + ds.length };
+  mkOffer({ type: 'drama', slots: 2, req: { acting: 1 } }); mkOffer({ type: 'music', slots: 1, req: { vocal: 1 } });
+  ds.forEach(a => { a.busy = null; a.energy = 100; a.scandal = null; a.appr = 0; });
+  ms.forEach((m, i) => { m.boss = i === 1 ? ms[0].id : null; m.ps = 2; m.auto = 'off'; m.dom = null; m.as = { t: 'l', id: 0, ids: ds.slice(0, 3).map(a => a.id) }; });
+  out['~built'] = SAFE(() => { const P = buildProps(); return J({ c: P.c.map(c => [c.type, vt(c.txt), vt(c.by), (c.path || []).map(vt), c.pend]), st: P.st }); });
+  out.sheet = SAFE(() => { viewProps(); return sheet(); });
+  out['~ceo'] = SAFE(() => { const c = S.props && S.props.c.find(x => x.pend); if (c) cfPick(c.id); return J(S.props.c.map(x => [vt(x.txt), vt(x.by), x.pend])); }); out['~ceoLog'] = logTop(2);
+  out.after = SAFE(() => { viewProps(); return sheet(); });
+  out['~items'] = SAFE(() => J(Object.values(S.props.m).map(it => ({ s: it.s.map(x => [vt(x.why), vt(x.why2), vt(x.by), x.ok]), p: it.p.map(x => [vt(x.why2), vt(x.by), x.ok]), d: it.d.map(x => vt(x.txt)) }))));
+  return out;
+}, ['Dự án thử drama', 'Dự án thử music']);

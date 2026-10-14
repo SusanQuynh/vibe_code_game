@@ -1,0 +1,3 @@
+src/state.js: addLog('Mẹo: chạm vào từng phòng để dùng chức năng, chạm vào nhân vật để xem chi tiết.')
+src/state.js: addLog('🎉 Chào mừng giám đốc! Starlight Ent. bắt đầu với vốn 600 triệu và 2 thực tập sinh.','gold')
+src/state.js: addLog(t,c='')

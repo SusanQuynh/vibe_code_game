@@ -1,6 +1,7 @@
 // Static scanner for Vietnamese string literals left in src/ (display code that is not translated yet).
 //   node scripts/i18n-literals.mjs --report [files…]   list findings (always exit 0)
 //   node scripts/i18n-literals.mjs --strict            exit 1 on findings missing from scripts/i18n-literal-allow.json
+//   --sinks                                            also scan sink spans (text stored in S); progress reports only
 // Ignored: comments, sink spans (text stored in S), the kept data/name tables (KEEP_CONSTS) and src/i18n/locales/**.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -57,9 +58,9 @@ function eachLiteral(s, cb) {
   run(0, s.length);
 }
 
-export function scanFile(file, src) {
+export function scanFile(file, src, sinks = false) {
   let s = stripComments(src);
-  for (const sp of spans(s, SINK_STARTS)) s = blank(s, sp.start, sp.start + sp.text.length);
+  if (!sinks) for (const sp of spans(s, SINK_STARTS)) s = blank(s, sp.start, sp.start + sp.text.length);
   for (const n of KEEP_CONSTS) {
     const re = new RegExp(`(?:export\\s+)?(?:const|let)\\s+${n}\\s*=\\s*`, 'g');
     let m;
@@ -78,12 +79,12 @@ export function loadAllow() { try { return JSON.parse(fs.readFileSync(ALLOW_FILE
 export const isAllowed = (allow, file, frag) => allow.some(a => a.file === file && (a.contains ? frag.includes(a.text) : frag === a.text.trim()));
 
 function main() {
-  const args = process.argv.slice(2), strict = args.includes('--strict');
+  const args = process.argv.slice(2), strict = args.includes('--strict'), sinks = args.includes('--sinks');
   const named = args.filter(a => !a.startsWith('--'));
   const files = (named.length ? named : [...walk('src')]).map(f => f.replace(/\\/g, '/')).filter(f => !f.startsWith('src/i18n/locales/')).sort();
   const allow = loadAllow(), bad = [], per = {};
   for (const f of files) {
-    const frs = scanFile(f, fs.readFileSync(f, 'utf8'));
+    const frs = scanFile(f, fs.readFileSync(f, 'utf8'), sinks);
     per[f] = frs.length;
     for (const fr of frs) {
       const ok = isAllowed(allow, f, fr);

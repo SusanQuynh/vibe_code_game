@@ -1,0 +1,18 @@
+src/systems/releases.js: .hist.unshift(`N${S.year}: Single «${title}» – hạng ${rank}`)
+src/systems/releases.js: .hist.unshift(`N${S.year}: Sáng tác «${title}» – hạng ${rank}`)
+src/systems/releases.js: addLog(`✍️ «${title}» do ${ws.map(a=>a.name).join(', ')} sáng tác, công ty giữ trọn doanh thu nhạc số.`,'good')
+src/systems/releases.js: addLog(`🎬 Khởi quay phim ${GENRES[genre].n} «${title}», kinh phí ${fmt(bud)}.`,'gold')
+src/systems/releases.js: addLog(`🏟️ Concert của ${A.n.slice(2).trim()}: ${fmtN(aud)} khán giả, doanh thu ${fmt(inc)}.`,'gold')
+src/systems/releases.js: addLog(`💝 Fan meeting của ${x.n.slice(2).trim()}: ${fmtN(seats)} fan tham dự, thu ${fmt(inc)} (chi ${fmt(c)}).`,'gold')
+src/systems/releases.js: addLog(`💿 Single «${title}» của ${A.n.slice(2).trim()} (${CONCEPTS[ck].n}) đạt hạng ${rank}! Doanh thu ${fmt(inc)}.${tb>0?' 🔥 Hợp xu hướng.':tb<0?' ❄️ Concept đã hết thời.':''}${rp?' ⚔️ Bị đối thủ cạnh tranh.':''}${h<0?' Mâu thuẫn nội bộ kéo điểm xuống.':''}`,rank<=10?'gold':'good')
+src/systems/releases.js: addLog(`📣 Hype ${hp} từ hoạt động teaser giúp «${title}» ra mắt mạnh hơn.`,'good')
+src/systems/releases.js: addLog(`📱 ${ms.length>3?ms.length+' người':ms.map(a=>a.name).join(', ')} livestream trò chuyện với fan, thu ${fmt(inc)} tiền donate và quảng cáo (chi 1 tr).`,inc>1e6?'good':'')
+src/systems/releases.js: addLog(`😬 ${a.name} lỡ lời khi livestream, dân mạng bàn tán.`,'bad')
+src/systems/releases.js: busy={kind:'concert',title:'Concert',left:1,total:1,lk:'concert'}
+src/systems/releases.js: busy={kind:'concert',title:'Fan meeting',left:1,total:1,lk:'fanmeet'}
+src/systems/releases.js: busy={kind:'promo',title:'Quảng bá «'+title+'»',left:PROMO_WK,total:PROMO_WK,lk:'promo'}
+src/systems/releases.js: busy={kind:'shoot',filmId:f.id,title,left:8,total:8}
+src/systems/releases.js: concept:CONCEPTS[ck].n
+src/systems/releases.js: pushEv({kind:'scandal',a:a.id},true)
+src/systems/releases.js: scandal={t:'Lỡ lời khi livestream',sev:1,left:2,truth:true,dating:false,other:0}
+src/systems/releases.js: status:'Đang quay'

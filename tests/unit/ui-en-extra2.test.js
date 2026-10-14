@@ -32,7 +32,7 @@ describe('en extra scenarios have no Vietnamese', () => {
     it(c.name, async () => {
       setLang('en');
       const r = await c.run(ctx);
-      for (const [k, v] of flat(r).filter(([k]) => !c.skipEn.includes(k))) {
+      for (const [k, v] of flat(r).filter(([k]) => !k.startsWith('~') && !c.skipEn.includes(k))) {
         const isToast = c.name.endsWith('toasts');
         if (isToast) expect(v, k).not.toMatch(/^THROW/);
         const off = offenders(isToast ? v : textOf(v), { S, base: ctx.base, early: ctx.early, extra: c.stored }); // stored strings of every state the case touched

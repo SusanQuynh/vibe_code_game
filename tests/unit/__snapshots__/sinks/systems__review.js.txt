@@ -1,0 +1,7 @@
+src/systems/review.js: S.prHist.unshift(`${wkLabel(abs())}: ${t.replace(/<[^>]+>/g,'')}`)
+src/systems/review.js: addLog(`⚠️ ${a.name} không đạt đánh giá ${a.evFail}/${EV_ART} lần liên tiếp. Sắp bị chấm dứt hợp đồng!`,'bad')
+src/systems/review.js: addLog(`⚠️ TTS ${a.name} không đạt đánh giá lần ${a.ttsFail}/${EV_TTS} liên tiếp. Thêm ${EV_TTS-a.ttsFail} lần nữa sẽ bị loại.`,'bad')
+src/systems/review.js: addLog(`📋 Đánh giá định kỳ: TTS ${R0.t.length-tf.length}/${R0.t.length} đạt · Nghệ sĩ ${ex.length} xuất sắc${ex.length?` (thưởng ${fmt(-ex.reduce((t,x)=>t+x.money,0))})`:''}, ${fa.length} không đạt${fa.length?` (trừ ${fmt(fa.reduce((t,x)=>t+x.money,0))})`:''}.`,fa.length||tf.length?'':'good')
+src/systems/review.js: addLog(msg,'good')
+src/systems/review.js: removeArtist(a,`bị chấm dứt hợp đồng sau ${EV_ART} lần đánh giá không đạt liên tiếp`)
+src/systems/review.js: removeArtist(a,`bị loại khỏi chương trình đào tạo sau ${EV_TTS} lần đánh giá không đạt liên tiếp`)
