@@ -1,6 +1,6 @@
 import { R, pick } from '../core/rng.js';
 import { clamp, esc, fmt } from '../core/util.js';
-import { money, t } from '../i18n/index.js';
+import { money, t, tx } from '../i18n/index.js';
 import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { XK, pct, xInfo, xResolve } from './ext2.js';
@@ -60,7 +60,7 @@ export function viewInv(aId){
   const files=inv.leads.map((L,i)=>{const D=LEADS[L.k],rot=`--rot:${(i%3-1)*1.6}deg`;
     if(L.open){const fr=L.fresh?' flip':'';L.fresh=false;return`<div class="file open ${L.says?'t':'f'}${fr}" style="${rot}"><b>${D.ic} ${t(`inv.leadN.${L.k}`)}</b>${L.says?t(`inv.leadT.${L.k}`):t(`inv.leadF.${L.k}`)}<br><span class="stamp" style="color:${L.says?'var(--red)':'var(--mint)'}">${L.says?t('inv.stampT'):t('inv.stampF')}</span> <span class="small" style="opacity:.7">${t('inv.rel',{p:Math.round(L.r*100)})}</span></div>`}
     return`<button class="file" style="${rot}" onclick="invOpen(${a.id},${i})" ${inv.ap<=0?'aria-disabled="true"':''}><b>${D.ic} ${t(`inv.leadN.${L.k}`)}</b>${t('inv.cred',{s:`${'★'.repeat(Math.round(L.r*5))}${'☆'.repeat(5-Math.round(L.r*5))}`})}<div style="margin-top:14px;font-weight:700">${t('inv.tap')}</div></button>`}).join('');
-  modal(`<h2>${t('inv.h',{n:esc(a.name)})}</h2><div class="sub">${esc(sc.t)}${t('pr.scMeta',{s:'🔥'.repeat(sc.sev),w:sc.left})}</div>
+  modal(`<h2>${t('inv.h',{n:esc(a.name)})}</h2><div class="sub">${esc(tx(sc.t))}${t('pr.scMeta',{s:'🔥'.repeat(sc.sev),w:sc.left})}</div>
   <div class="card"><div class="row"><b>${t('inv.ap')}</b><span style="font-size:18px">${'🔎'.repeat(inv.ap)||`<span class="small muted">${t('inv.apNone')}</span>`}</span><span class="sp"></span><button class="btn sm" onclick="invBuy(${a.id})">${t('inv.buy',{m:money(8e6)})}</button></div>
   <div class="meter"><div class="needle" style="left:${pct}%" data-p="${t('inv.pTrue',{p:pct})}"></div></div><div class="mlab"><span>${t('inv.mFalse')}</span><span>${t('inv.mUnsure')}</span><span>${t('inv.mTrue')}</span></div></div>
   <div class="small muted">${t('inv.help')}</div>

@@ -15,7 +15,7 @@ import { getRel, harmony, setRel, setTag } from './relations.js';
 import { actByKey } from './releases.js';
 import { actFree, acts } from './secretary.js';
 import { focusKeys } from './week.js';
-import { money, roomName, t, t as tl } from '../i18n/index.js';
+import { isK, money, roomName, t, t as tl, tx, txVi } from '../i18n/index.js';
 import { conceptName, mskName, statName } from '../i18n/labels.js';
 import { NPC, act, chibiHTML } from '../ui/building.js';
 import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
@@ -63,7 +63,7 @@ export function ensureCurBatch(){if(!S.batches.some(b=>b.id===S.curBatch)){const
 /* ---- Hold schedule for debut ---- */
 export const dHold=a=>a.status==='trainee'&&a.dReady&&!a.noHold;
 export function debutHoldTick(){for(const a of S.artists){if(a.status!=='trainee')continue;const r=debutRec(a),ok=r.t!=='wait';
-  if(ok&&!a.dReady){a.dReady=1;addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${r.short}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')}else if(!ok)a.dReady=0}}
+  if(ok&&!a.dReady){a.dReady=1;addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${txVi(r.short)}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')}else if(!ok)a.dReady=0}}
 export function toggleHold(id){const a=byId(id);if(a){a.noHold=!a.noHold;addLog(a.noHold?`📅 Mở lịch cho ${a.name} nhận dự án dù đã đủ điều kiện debut.`:`📅 Chừa lịch debut cho ${a.name}.`);act()}}
 /* ---- Senior mentors ---- */
 export const menteesOf=m=>S.artists.filter(a=>a.status==='trainee'&&a.mt===m.id);
@@ -168,7 +168,7 @@ export function renewEval(a,mul=1){const wk=Math.max(1,abs()-(a.cs0||abs()-26)),
   sc+=clamp((roi-1)*20,-25,25);L.push(t('renew.roi',{e:money(earn),c:money(cost),x:roi.toFixed(2)}));
   sc+=clamp(gp/5,-10,15);L.push(t('renew.fans',{g:(grow>=0?'+':'')+fmtN(grow),p:(gp>=0?'+':'')+Math.round(gp)}));
   sc+=fame(a)*.15;L.push(t('renew.fame',{n:fame(a)}));
-  if(a.evG){sc+=a.evG==='Xuất sắc'?8:a.evG==='Không đạt'?-12:0;L.push(t('renew.lastEv',{g:a.evG})+(a.evFail?t('renew.fails',{n:a.evFail}):''))}
+  if(a.evG){sc+=isK(a.evG,'grade.ex')?8:isK(a.evG,'grade.fail')?-12:0;L.push(t('renew.lastEv',{g:a.evG})+(a.evFail?t('renew.fails',{n:a.evFail}):''))}
   sc-=(a.evFail||0)*2;if(a.scandal){sc-=10;L.push(t('renew.scandal'))}
   if(a.mood<35)L.push(t('renew.lowMood',{m:Math.round(a.mood)}));
   sc=clamp(Math.round(sc),0,100);
@@ -288,7 +288,7 @@ export function weekV2(){mentorTick();songTick();digTick();
   contractTick();debutHoldTick();disbandTick();mxTick();
   if(Math.random()<compRep()/120&&S.pool.length<poolSize()+4){const a=genArtist();S.pool.push(a);addLog(`📨 ${a.name} (${a.g==='F'?'nữ':'nam'}, ${a.age}) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.`,'good')};migrateV3();v3Tick()}
 export function migrateV2(){S.assts=S.assts||[];S.songs=S.songs||[];S.fin=S.fin||[];
-  if(!S.bno)S.bno=Math.max(S.batches.length,...S.batches.map(b=>+((b.n.match(/\d+/)||[0])[0])));
+  if(!S.bno)S.bno=Math.max(S.batches.length,...S.batches.map(b=>typeof b.n==='string'?+((b.n.match(/\d+/)||[0])[0]):+(b.n.p&&b.n.p.i||0)));
   for(const m of S.managers){if(!m.as)continue;const t=m.as.t;
     if(t==='t'){const b=S.batches.find(b=>bMem(b).length&&!S.managers.some(x=>x.as&&x.as.t==='b'&&x.as.id===b.id));m.as=b?{t:'b',id:b.id}:null;addLog(`📋 Quản lý TTS giờ chỉ theo lứa: ${m.name} ${b?'chuyển sang phụ trách '+b.n:'chờ được giao lứa mới'}.`)}
     else if(t==='s'||t==='d'){const pool=S.artists.filter(a=>(t==='s'?a.solo&&!a.pm:a.actor)&&!S.managers.some(x=>x!==m&&x.as&&x.as.t!=='s'&&x.as.t!=='d'&&mgrTargets(x).includes(a))).slice(0,MAX_SA);m.as={t:'l',id:0,ids:pool.map(a=>a.id)};addLog(`📋 ${m.name} giờ quản lý danh sách tối đa ${MAX_SA} nghệ sĩ solo/diễn viên.`)}
@@ -323,7 +323,7 @@ RV.hr=function(){
   modal(`<h2>🗂️ ${roomName('hr')}</h2><div class="sub">${t('hr.sub')}</div>
   ${repCard()}
   ${det('hr-ct',t('hr.ctH',{n:deb.length}),`<div class="small muted" style="margin-bottom:6px">${t('hr.ctNote')}</div>`+deb.map(a=>{const E=renewEval(a),l=a.ce-abs();return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${t('hr.left',{c:l<=8?'bad':'',l,s:money(a.salary)})}</span><span class="tag ${E.rec[1]}">${a.ceNo?t('hr.noRenew'):E.rec[0]}</span><span class="sp"></span><button class="btn sm ${l<=8?'pri':''}" onclick="view(()=>viewRenew(${a.id}))">${t('hr.eval')}</button></div>`}).join('')||`<div class="small muted">${t('hr.noDeb')}</div>`,true)}
-  ${det('hr-mt',t('hr.mtH',{a:tts.filter(a=>a.mt).length,b:tts.length}),`<div class="small muted" style="margin-bottom:6px">${t('hr.mtNote')}</div>`+(tts.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${esc((batchOf(a)||{n:''}).n)}</span><span class="sp"></span>${mentorSel(a)}</div>`).join('')||`<div class="small muted">${t('hr.noTts')}</div>`)+(mentors.length?`<div class="small" style="margin-top:6px">${t('hr.mentoring')} ${mentors.map(m=>`${esc(m.name)} → ${menteesOf(m).map(x=>esc(x.name)).join(', ')}`).join(' · ')}</div>`:''),true)}
+  ${det('hr-mt',t('hr.mtH',{a:tts.filter(a=>a.mt).length,b:tts.length}),`<div class="small muted" style="margin-bottom:6px">${t('hr.mtNote')}</div>`+(tts.map(a=>`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${esc(tx((batchOf(a)||{n:''}).n))}</span><span class="sp"></span>${mentorSel(a)}</div>`).join('')||`<div class="small muted">${t('hr.noTts')}</div>`)+(mentors.length?`<div class="small" style="margin-top:6px">${t('hr.mentoring')} ${mentors.map(m=>`${esc(m.name)} → ${menteesOf(m).map(x=>esc(x.name)).join(', ')}`).join(' · ')}</div>`:''),true)}
   ${det('hr-as',t('hr.asH',{n:(S.assts||[]).length}),(S.assts||[]).map(x=>{const m=S.managers.find(z=>z.id===x.mid);return`<div class="prow"><b>${esc(x.name)}</b><span class="small muted">${t('hr.asRow',{m:esc(m?m.name:'?'),k:mskName(x.k),v:x.v,s:money(x.sal)})}</span><span class="sp"></span><button class="btn sm warn" onclick="fireAsst(${x.id})">${t('hr.fire')}</button></div>`}).join('')||`<div class="small muted">${t('hr.asNone')}</div>`,false)}`);
 };
 /* ================= EXTENSION v3 ================= */

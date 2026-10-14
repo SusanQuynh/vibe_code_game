@@ -2,7 +2,7 @@ import { R, pick } from '../core/rng.js';
 import { $, clamp, esc, fmtN } from '../core/util.js';
 import { GNAMES } from '../data/names.js';
 import { CONCEPTS, GENRES } from '../data/rules.js';
-import { t, tVi } from '../i18n/index.js';
+import { Lk, t, tx } from '../i18n/index.js';
 import { conceptName, genreName, statName } from '../i18n/labels.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit } from './artists.js';
@@ -41,7 +41,7 @@ export function debutAnalysis(){
     <div class="small" style="margin-top:6px"><b>${t('da.roles')}</b><br>${sel.map(a=>`${esc(a.name)}: ${(roles[a.id]||[t('da.member')]).join(', ')}`).join('<br>')}</div>`;
   }
   if(!sel.length)return`<div class="small muted">${t('da.pick1')}</div>`;
-  const a=sel[0],rc=debutRec(a,t),cmp=a.status==='trainee'?`<div class="small" style="margin-top:6px">${t('da.common')} <b>${rc.t==='wait'?t('debut.notYet'):t(`debut.type.${rc.t}`)}</b>${rc.t!==ty&&rc.t!=='wait'?` <span class="bad">${t('da.differs')}</span>`:''}</div>`:'';
+  const a=sel[0],rc=debutRec(a),cmp=a.status==='trainee'?`<div class="small" style="margin-top:6px">${t('da.common')} <b>${rc.t==='wait'?t('debut.notYet'):t(`debut.type.${rc.t}`)}</b>${rc.t!==ty&&rc.t!=='wait'?` <span class="bad">${t('da.differs')}</span>`:''}</div>`:'';
   if(ty==='solo')return`<b>${t('da.soloTitle',{n:esc(a.name)})}</b>${fitRows(bestOf(a,CONCEPTS),conceptName)}<div class="small">${t('da.soloBest',{c:conceptName(bestOf(a,CONCEPTS)[0].k)})}</div>`+cmp;
   if(ty==='actor')return`<b>${t('da.actTitle',{n:esc(a.name)})}</b> · ${statName('acting')} ${Math.round(a.st.acting)}${fitRows(bestOf(a,GENRES),genreName)}<div class="small">${t('da.actBest',{g:genreName(bestOf(a,GENRES)[0].k)})}</div>`+cmp;
   if(ty==='solo')return`<b>${t('da.soloTitle',{n:esc(a.name)})}</b>${fitRows(bestOf(a,CONCEPTS),conceptName)}<div class="small">${t('da.soloBest',{c:conceptName(bestOf(a,CONCEPTS)[0].k)})}</div>`;
@@ -53,7 +53,7 @@ export function lineupWith(a,pool,w){const others=pool.filter(x=>x!==a);if(!othe
   for(let n=2;n<=Math.min(5,others.length+1);n++){const pk=[a];while(pk.length<n){let bc=null,bs=-1e9;for(const c of others){if(pk.includes(c))continue;const sc=fit(c,w)+pk.reduce((t,p)=>t+tagScore(p,c),0)*3;if(sc>bs){bs=sc;bc=c}}pk.push(bc)}
     const ids=pk.map(x=>x.id),f=avgFit(pk,w),hm=harmony(ids),sc=f+hm*1.5+n*2;if(!best||sc>best.sc)best={ids,f,hm,sc}}return best}
 export const DEBUT_MIN=50;
-export function debutRec(a,tr=tVi){
+export function debutRec(a){
   const so=bestOf(a,CONCEPTS)[0],ac=bestOf(a,GENRES)[0],music=Math.max(a.st.vocal,a.st.dance,a.st.rap);
   const soloS=so.f*.85+music*.25+(a.st.visual>=50?3:0)-(a.mood<30?5:0);
   const actS=ac.f*.9+(a.st.acting-(a.st.vocal+a.st.dance)/2)*.3;
@@ -63,16 +63,16 @@ export function debutRec(a,tr=tVi){
   const sc={solo:Math.round(soloS),actor:Math.round(actS),group:grp?Math.round(grpS):null};
   let t='solo';if(actS>soloS)t='actor';if(grpS>Math.max(soloS,actS))t='group';
   const r={t,sc,k:t==='group'?gk:t==='solo'?so.k:ac.k,ids:grp?grp.ids:[a.id],f:t==='group'?grp.f:t==='solo'?so.f:ac.f};
-  const lbl=tr(t==='actor'?'genre.'+r.k:'concept.'+r.k);
-  if(t==='group'){const mates=grp.ids.filter(i=>i!==a.id).map(i=>byId(i).name);r.why=tr('debut.why.group',{m:mates.join(', '),c:lbl,f:Math.round(grp.f),h:grp.hm>0?tr('debut.why.harm'):''})}
-  else if(t==='solo')r.why=tr('debut.why.solo',{s:tr('stat.'+['vocal','dance','rap'].reduce((m,k)=>a.st[k]>a.st[m]?k:m,'vocal')),n:Math.round(music),c:lbl,f:Math.round(so.f)});
-  else r.why=tr('debut.why.actor',{n:Math.round(a.st.acting),c:lbl,f:Math.round(ac.f)});
-  r.short=tr('debut.short',{d:tr(`debut.typeShort.${t}`),c:lbl,f:Math.round(r.f)});
+  const lbl=Lk(t==='actor'?`genre.${r.k}`:`concept.${r.k}`);
+  if(t==='group'){const mates=grp.ids.filter(i=>i!==a.id).map(i=>byId(i).name);r.why=Lk('debut.why.group',{m:mates.join(', '),c:lbl,f:Math.round(grp.f),h:grp.hm>0?Lk('debut.why.harm'):''})}
+  else if(t==='solo')r.why=Lk('debut.why.solo',{s:Lk(`stat.${['vocal','dance','rap'].reduce((m,k)=>a.st[k]>a.st[m]?k:m,'vocal')}`),n:Math.round(music),c:lbl,f:Math.round(so.f)});
+  else r.why=Lk('debut.why.actor',{n:Math.round(a.st.acting),c:lbl,f:Math.round(ac.f)});
+  r.short=Lk('debut.short',{d:Lk(`debut.typeShort.${t}`),c:lbl,f:Math.round(r.f)});
   if(a.status==='trainee'&&r.f<=DEBUT_MIN){const W=t==='actor'?GENRES[r.k].w:CONCEPTS[r.k].w,k=Object.keys(W).reduce((m,x)=>W[x]*(100-a.st[x])>W[m]*(100-a.st[m])?x:m);
-    r.best=t;r.t='wait';r.why=tr('debut.why.wait',{f:Math.round(r.f),m:DEBUT_MIN,s:tr('stat.'+k),d:tr(`debut.typeShort.${t}`),c:lbl});r.short=tr('debut.short.wait',{f:Math.round(r.f),m:DEBUT_MIN})}
+    r.best=t;r.t='wait';r.why=Lk('debut.why.wait',{f:Math.round(r.f),m:DEBUT_MIN,s:Lk(`stat.${k}`),d:Lk(`debut.typeShort.${t}`),c:lbl});r.short=Lk('debut.short.wait',{f:Math.round(r.f),m:DEBUT_MIN})}
   return r;
 }
-export function recLine(a){const r=debutRec(a,t);const s=r.sc;return`<div class="prow"><b>${esc(a.name)}</b><span class="small">${r.t==='wait'?t('debut.wait'):`<b>${t(`debut.type.${r.t}`)}</b>`}<br><span class="muted">${esc(r.why)}</span><br><span class="muted">${t('debut.fitLine',{f:Math.round(r.f),m:DEBUT_MIN,s:s.solo,a:s.actor})}${s.group!=null?' · '+t('debut.scoreGroup',{n:s.group}):''}</span></span><span class="sp"></span>${r.t==='wait'?'':`<button class="btn sm pri" onclick="applyRec(${a.id})">${t('btn.apply')}</button>`}</div>`}
+export function recLine(a){const r=debutRec(a);const s=r.sc;return`<div class="prow"><b>${esc(a.name)}</b><span class="small">${r.t==='wait'?t('debut.wait'):`<b>${t(`debut.type.${r.t}`)}</b>`}<br><span class="muted">${esc(tx(r.why))}</span><br><span class="muted">${t('debut.fitLine',{f:Math.round(r.f),m:DEBUT_MIN,s:s.solo,a:s.actor})}${s.group!=null?' · '+t('debut.scoreGroup',{n:s.group}):''}</span></span><span class="sp"></span>${r.t==='wait'?'':`<button class="btn sm pri" onclick="applyRec(${a.id})">${t('btn.apply')}</button>`}</div>`}
 export function applyRec(id){const a=byId(id);if(!a)return;const r=debutRec(a);if(r.t==='wait')return;$('#dType').value=r.t;$('#dType').onchange();
   if(r.t==='group')applyLineup(r.ids);else{const x=[...document.querySelectorAll('.dsel')].find(e=>+e.value===id);if(x){x.checked=true;x.onchange&&x.onchange()}}
   $('#dAna')?.scrollIntoView({behavior:'smooth',block:'center'})}

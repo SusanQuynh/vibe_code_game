@@ -81,3 +81,38 @@ export function census(S) {
 // grown by the writer tasks
 export const P3_DONE = [];
 export const P3_FIELDS = [];
+
+// Replace every stored-text field of a state by a structured entry (mirrors TXT_PATHS). Used to prove that no reader prints a raw object.
+export function msgify(S, M = { k: 'batch.n', p: { i: 9 } }) {
+  const m = () => ({ k: M.k, p: { ...M.p } });
+  const arrM = a => { if (Array.isArray(a)) for (let i = 0; i < a.length; i++) a[i] = m(); };
+  for (const l of arr(S.log)) l.t = m();
+  const R = rep(S);
+  arrM(R.ev); for (const x of vals(R.a)) if (x.b) x.b = m();
+  for (const a of S.artists) {
+    arrM(a.hist);
+    for (const l of arr(a.lessons)) { l.t = m(); l.l = m(); l.s = { $g: { vocal: '1.5' } }; if (l.b) l.b = { $g: { dance: '2' } }; }
+    if (a.busy && a.busy.kind !== 'offer' && a.busy.kind !== 'shoot') a.busy.title = m();
+    if (a.hsF) arrM(a.hsF.why);
+    if (a.dw) a.dw.why = m();
+    if (a.scandal) a.scandal.t = m();
+    if (a.evG) a.evG = { k: 'grade.pass' };
+  }
+  for (const w of arr(S.awards)) { for (const r of arr(w.res)) { r.cat = m(); r.note = m(); } for (const b of arr(w.board)) if (b.me) b.n = m(); }
+  for (const c of arr(S.comps)) c.n = m();
+  for (const r of arr(S.rivals)) if (r.last) r.last = m();
+  for (const x of vals(S.mods)) if (x) x.n = m();
+  if (S.loan) S.loan.n = m();
+  if (S.gmRep) arrM(S.gmRep.prob);
+  if (S.rec) arrM(S.rec.log);
+  const P = S.props || {};
+  for (const x of vals(P.m)) { for (const s of arr(x.s)) { s.why = m(); if (s.why2) s.why2 = m(); if (s.by) s.by = m(); } for (const d of arr(x.d)) d.txt = m(); for (const p of arr(x.p)) { if (p.why2) p.why2 = m(); if (p.by) p.by = m(); } }
+  for (const c of arr(P.c)) { c.txt = m(); if (c.by) c.by = m(); c.path = arr(c.path).map(() => m()); }
+  for (const e of arr(S.events)) for (const k of ['why', 'how', 'where']) if (e[k]) e[k] = m();
+  arrM(S.prHist);
+  for (const b of arr(S.batches)) b.n = m();
+  for (const f of arr(S.films)) f.status = { k: 'film.st.post' };
+  for (const s of arr(S.singles)) s.concept = { k: 'concept.cute' };
+  const le = S.lastEval; if (le) for (const x of [...arr(le.t), ...arr(le.a)]) x.g = { k: 'grade.pass' };
+  return S;
+}

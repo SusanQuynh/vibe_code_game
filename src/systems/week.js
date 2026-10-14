@@ -1,5 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { isK, t } from '../i18n/index.js';
 import { statName } from '../i18n/labels.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
 import { PLESSON } from '../data/lessons.js';
@@ -82,7 +82,7 @@ export function completeBusy(a){
     a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(`N${S.year}: Đóng phim công ty «${b.title}»`);
     addLog(`🎬 ${a.name} đóng máy phim «${b.title}». ${ls}.`,'good');
   }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(`🎤 ${a.name} kết thúc đợt quảng bá. (${s})`)}
-  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(b.title==='Fan meeting'?'fanmeet':'concert'),b.title);addLog(`🏟️ ${a.name} trở về sau concert. (${s})`)}
+  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(isK(b.title,'busy.fanmeet')?'fanmeet':'concert'),b.title);addLog(`🏟️ ${a.name} trở về sau concert. (${s})`)}
   else if(b.kind==='write')projLesson(a,'write',b.title);
   else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(`🌴 ${a.name} quay lại sau kỳ nghỉ.`)}
   else if(b.kind==='comp')compDone(a,b);
@@ -144,7 +144,7 @@ export function nextWeek(force,planned){
     {const c=msk(a,'care');if(c)a.mood=clamp(a.mood+c*.25,0,100)}
     if(S.money<0)a.mood=clamp(a.mood-2,0,100);
   }
-  for(const f of S.films)if(!f.done&&f.status!=='Đang quay'&&f.releaseAt&&f.releaseAt<=now)releaseFilm(f);
+  for(const f of S.films)if(!f.done&&!isK(f.status,'film.st.shoot')&&f.releaseAt&&f.releaseAt<=now)releaseFilm(f);
   S.offers=S.offers.filter(o=>o.exp>now);
   genOffers(R(2,4)+(S.artists.length>6?1:0)+(S.artists.length>12?1:0));
   {const nt=S.artists.filter(a=>a.status==='trainee').length,ho=S.offers.filter(o=>OFFER[o.type].tj).length;if(nt&&ho<Math.min(5,1+Math.ceil(nt/3)))genOffers(R(1,2),1)}

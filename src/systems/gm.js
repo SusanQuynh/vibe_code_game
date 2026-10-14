@@ -1,5 +1,5 @@
 import { esc, fmt, fmtN } from '../core/util.js';
-import { money, t } from '../i18n/index.js';
+import { money, t, tx } from '../i18n/index.js';
 import { S, abs, addLog } from '../state.js';
 import { book } from './ext2.js';
 import { gmOf, mKids } from './managers.js';
@@ -39,4 +39,4 @@ export function gmCardHTML(){const R=S.gmRep,g=gmOf();if(!g||!R)return'';
   return`<div class="card rep" style="margin:0 0 8px"><b>${t('gm.title',{n:esc(g.name)})}</b>
   ${R.teams.map(x=>`<div>• ${esc(nm(x.mid))}: ${t('common.people',{n:x.n})} · 💗 ${x.fans>=0?'+':''}${fmtN(x.fans)} · 💰 ${x.earn>=0?'+':''}${money(x.earn)}${x.warn?` · <span class="w">${t('gm.warn',{n:x.warn})}</span>`:''}</div>`).join('')||`<div class="muted">${t('gm.noTeams')}</div>`}
   ${R.up.length?`<div class="good">${t('gm.up',{n:R.up.map(esc).join(', ')})}</div>`:''}
-  ${R.prob.length?`<div class="w">⚠️ ${R.prob.slice(0,5).map(esc).join(' · ')}${R.prob.length>5?t('gm.more',{n:R.prob.length-5}):''}</div>`:`<div class="muted">${t('gm.none')}</div>`}</div>`}
+  ${R.prob.length?`<div class="w">⚠️ ${R.prob.slice(0,5).map(x=>esc(tx(x))).join(' · ')}${R.prob.length>5?t('gm.more',{n:R.prob.length-5}):''}</div>`:`<div class="muted">${t('gm.none')}</div>`}</div>`}

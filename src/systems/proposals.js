@@ -2,7 +2,7 @@ import { rnd } from '../core/rng.js';
 import { clamp, esc, fmt } from '../core/util.js';
 import { OFFER } from '../data/offers.js';
 import { CONCEPTS, STATS, TRAIN } from '../data/rules.js';
-import { money, t } from '../i18n/index.js';
+import { isK, money, t, tx, txVi } from '../i18n/index.js';
 import { conceptName } from '../i18n/labels.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fit } from './artists.js';
@@ -29,7 +29,7 @@ export function buildProps(){
       const tg=o=>o.target&&free.some(a=>a.id===o.target)?1:0;for(const of of S.offers.slice().sort((x,y)=>(tg(y)-tg(x))||(y.pay*rnd(.6,1.4)-x.pay*rnd(.6,1.4)))){if(it.p.length>=2)break;
         const c=bestCast(of,free.filter(a=>!used.has(a.id)&&a.energy>=35));if(!c)continue;
         c.forEach(i=>used.add(i));it.p.push({of:of.id,ids:c,ok:0})}}
-    for(const a of free)if(a.status==='trainee'){const r=debutRec(a);if(r.t!=='wait')it.d.push({a:a.id,t:r.t,txt:r.short})}
+    for(const a of free)if(a.status==='trainee'){const r=debutRec(a);if(r.t!=='wait')it.d.push({a:a.id,t:r.t,txt:txVi(r.short)})}
     if(it.s.length||it.p.length||it.d.length)P.m[m.id]=it}
   S.props=P;routeProps(P);return P;
 }
@@ -43,7 +43,7 @@ export const refIt=(P,r)=>{const x=P.m[r.mid]&&P.m[r.mid][r.k][r.i];return x?{mi
 export function itDesc(it){const m=mById(it.mid),who=m?m.name:'?';if(it.kind==='s'){const a=byId(it.x.a);return t('prop.itS',{w:who,a:a?a.name:'',d:it.x.days.map(k=>TIC[k]).join('')})}
   const of=S.offers.find(o=>o.id===it.x.of);return`${t('prop.itP',{w:who,t:of?of.title:'?',n:it.x.ids.map(byId).filter(Boolean).map(a=>a.name).join(', ')})}${of?' (+'+money(it.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0))+')':''}`}
 export function itScore(t){if(t.kind==='p'){const of=S.offers.find(o=>o.id===t.x.of);return 1e13+(of?t.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0):0)}const a=byId(t.x.a),m=a&&mgrOf(a);return m&&m.id===t.mid?2:1}
-export function dropIt(t,c){t.x.ok=-2;t.x.why2=CFT[c.type];if(t.kind==='p'){const it=S.props&&S.props.m[t.mid];if(it)it.s.forEach(x=>{if(x.ok===-2&&x.why2==='đã có dự án'&&t.x.ids.includes(x.a)){x.ok=0;delete x.why2}})}}
+export function dropIt(t,c){t.x.ok=-2;t.x.why2=CFT[c.type];if(t.kind==='p'){const it=S.props&&S.props.m[t.mid];if(it)it.s.forEach(x=>{if(x.ok===-2&&isK(x.why2,'prop.why2.busy')&&t.x.ids.includes(x.a)){x.ok=0;delete x.why2}})}}
 export function fixConf(P,c,keep){
   const its=c.refs.map(r=>refIt(P,r)).filter(t=>t&&t.x.ok!==-2&&t.x.ok!==1);
   if(c.type==='overlap'||c.type==='offer'){const k=keep!=null?refIt(P,c.refs[keep]):its.slice().sort((a,b)=>itScore(b)-itScore(a))[0];for(const t of its)if(!k||t.x!==k.x)dropIt(t,c)}
@@ -90,7 +90,7 @@ export function passAll(P,force){
   for(const t of itemsOf(P)){if(t.x.ok)continue;
     const m=mById(t.mid),b=m&&mBoss(m),solved=(t.x.cf||[]).map(id=>P.c.find(c=>c.id===id)).filter(c=>c&&c.by).pop();
     const by=solved?solved.by:b?b.name:(S.autoAppr!==false?'tự duyệt':force||null);if(!by)continue;
-    approveIt(P,t,by);if(t.x.ok===1){if(by==='tự duyệt')P.st.auto++;else if(by!=='Giám đốc')P.st.boss[by]=(P.st.boss[by]||0)+1}}
+    approveIt(P,t,by);if(t.x.ok===1){if(isK(by,'prop.self'))P.st.auto++;else if(!isK(by,'prop.ceo'))P.st.boss[by]=(P.st.boss[by]||0)+1}}
 }
 export function cfPick(cid,keep){const P=S.props;if(!P)return;const c=P.c.find(x=>x.id===cid);if(!c||!c.pend)return;
   if(keep==='as'){c.pend=0;c.done=1}else fixConf(P,c,keep==null?null:keep);c.by='Giám đốc';
@@ -107,21 +107,21 @@ export function propOk(mid,kind,i,quiet){const it=S.props&&S.props.m[mid];if(!it
   if(!quiet)act()}
 export function propOkAll(mid){const it=S.props&&S.props.m[mid];if(!it)return;it.p.forEach((x,i)=>propOk(mid,'p',i,1));it.s.forEach((x,i)=>propOk(mid,'s',i,1));act()}
 export function propAll(){const P=buildProps();for(const k in P.m)propOkAll(+k)}
-export const stTag=x=>x.ok===1?`<span class="tag m">✓ ${esc(x.by||t('prop.approved'))}</span>`:x.ok===-2?`<span class="tag">✖ ${t('prop.drop')} · ${esc(x.why2||'')}</span>`:x.ok===-1?`<span class="tag">${t('prop.expired')}</span>`:(x.cf||[]).some(id=>S.props.c.find(c=>c.id===id&&c.pend))?`<span class="tag r">${t('prop.conflict')}</span>`:'';
+export const stTag=x=>x.ok===1?`<span class="tag m">✓ ${esc(x.by?tx(x.by):t('prop.approved'))}</span>`:x.ok===-2?`<span class="tag">✖ ${t('prop.drop')} · ${esc(tx(x.why2))}</span>`:x.ok===-1?`<span class="tag">${t('prop.expired')}</span>`:(x.cf||[]).some(id=>S.props.c.find(c=>c.id===id&&c.pend))?`<span class="tag r">${t('prop.conflict')}</span>`:'';
 const fixK=ty=>ty==='tired'||ty==='enemy'||ty==='scandal'?ty:'keep';
 export function viewProps(){
   const P=buildProps(),ms=S.managers.filter(m=>P.m[m.id]);
-  const pc=P.c.filter(c=>c.pend),dc=P.c.filter(c=>c.done&&c.by&&c.by!=='Giám đốc');
+  const pc=P.c.filter(c=>c.pend),dc=P.c.filter(c=>c.done&&c.by&&!isK(c.by,'prop.ceo'));
   const cfHTML=pc.map(c=>{const its=c.refs.map(r=>refIt(P,r)).filter(Boolean);const two=c.type==='overlap'||c.type==='offer';
-    return`<div class="card" style="border-color:var(--red)"><b>⚠️ ${t(`prop.cf.${c.type}`)}</b><div class="small">${esc(c.txt)}</div><div class="small muted">${t('prop.passed',{p:c.path.map(esc).join(' → ')})}${c.path.length>1?t('prop.passedLow'):t('prop.passedNone')}</div>
+    return`<div class="card" style="border-color:var(--red)"><b>⚠️ ${t(`prop.cf.${c.type}`)}</b><div class="small">${esc(tx(c.txt))}</div><div class="small muted">${t('prop.passed',{p:c.path.map(p=>esc(tx(p))).join(' → ')})}${c.path.length>1?t('prop.passedLow'):t('prop.passedNone')}</div>
     ${two?its.map((u,i)=>`<div class="prow"><span class="small">${esc(itDesc(u))}</span><span class="sp"></span><button class="btn sm" onclick="cfPick(${c.id},${c.refs.findIndex(r=>r.mid===u.mid&&r.k===u.kind&&r.i===u.i)})">${t('prop.keepThis')}</button></div>`).join(''):`<div class="small" style="margin:4px 0">${its.map(t=>esc(itDesc(t))).join('<br>')}</div>`}
     <div class="row" style="margin-top:6px"><button class="btn sm pri" onclick="cfPick(${c.id})">${t('prop.pick')}${t(`prop.pickSfx.${fixK(c.type)}`)}</button>${two?'':`<button class="btn sm" onclick="cfPick(${c.id},'as')">${t('prop.stillOk')}</button>`}</div></div>`}).join('');
   const body=ms.map(m=>{const it=P.m[m.id];
-    const sl=it.s.map((x,i)=>{const a=byId(x.a);if(!a)return'';return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">🗓️ <b>${esc(a.name)}</b> <span class="dmini">${x.days.map(k=>TIC[k]).join('')}</span><span class="small muted">${esc(x.why)}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm" onclick="propOk(${m.id},'s',${i})">${t('prop.approve')}</button>`:''}</div>`}).join('');
+    const sl=it.s.map((x,i)=>{const a=byId(x.a);if(!a)return'';return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">🗓️ <b>${esc(a.name)}</b> <span class="dmini">${x.days.map(k=>TIC[k]).join('')}</span><span class="small muted">${esc(tx(x.why))}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm" onclick="propOk(${m.id},'s',${i})">${t('prop.approve')}</button>`:''}</div>`}).join('');
     const pl=it.p.map((x,i)=>{const of=S.offers.find(o=>o.id===x.of);if(!of&&x.ok!==1&&x.ok!==-2)return'';const nm=x.ids.map(byId).filter(Boolean),O=OFFER[(of||{}).type]||{ic:'🎬'};
       const pay=of?nm.reduce((t,a)=>t+effPay(of,a),0):0;
       return`<div class="prow" style="${x.ok===-2?'opacity:.55':''}">${O.ic} <b>«${esc(of?of.title:t('prop.project'))}»</b><span class="small muted">${esc(nm.map(a=>a.name).join(', '))}${of?t('prop.pLine',{w:of.weeks,m:money(pay)}):''}</span><span class="sp"></span>${stTag(x)}${!x.ok&&!(x.cf||[]).length?`<button class="btn sm pri" onclick="propOk(${m.id},'p',${i})">${t('offerCard.take')}</button>`:''}</div>`}).join('');
-    const dl=it.d.map(x=>{const a=byId(x.a);if(!a||a.status!=='trainee')return'';return`<div class="prow">🎯 <b>${esc(a.name)}</b><span class="small">${esc(x.txt)}</span><span class="sp"></span><button class="btn sm" onclick="openRoom('lobby')">${t('prop.view')}</button></div>`}).join('');
+    const dl=it.d.map(x=>{const a=byId(x.a);if(!a||a.status!=='trainee')return'';return`<div class="prow">🎯 <b>${esc(a.name)}</b><span class="small">${esc(tx(x.txt))}</span><span class="sp"></span><button class="btn sm" onclick="openRoom('lobby')">${t('prop.view')}</button></div>`}).join('');
     if(!sl&&!pl&&!dl)return'';
     const pend=it.s.filter(x=>!x.ok).length+it.p.filter(x=>!x.ok).length,b=mBoss(m);
     return det('pr-'+m.id,`📋 ${mNameH(m)} <span class="small muted" style="font-weight:500">${t('prop.rep',{b:b?mNameH(b):t('prop.ceo'),s:pend?t('prop.pend',{n:pend}):t('prop.done')})}</span>`,`${pend&&!b?`<div class="row"><span class="sp"></span><button class="btn sm" onclick="propOkAll(${m.id})">${t('prop.approveAll')}</button></div>`:''}${pl}${sl}${dl}`,pend>0)}).join('');
@@ -131,7 +131,7 @@ export function viewProps(){
   <div class="card small">📨 ${nb.length?nb.map(([n,v])=>t('prop.byBoss',{n:esc(n),v})).join(' · '):t('prop.noBoss')}${P.st.auto?t('prop.auto',{n:P.st.auto}):''}${dc.length?t('prop.solvedN',{n:dc.length}):''}${pc.length?t('prop.waitYou',{n:pc.length}):''}</div>
   ${pc.length?`<h3>${t('prop.needCeo',{n:pc.length})}</h3>${cfHTML}`:''}
   ${(()=>{const L=secPlans(),r=L.filter(p=>!p.wait&&!p.plan);return r.length?`<div class="card small row">🗒️ <span style="flex:1"><b>${t('prop.sec')}</b> ${t('prop.secReady',{l:r.map(p=>esc(p.n.slice(2).trim())+' ('+conceptName(p.ck)+')').join(', ')})}</span><button class="btn sm" onclick="view(viewSec)">${t('prop.view')}</button></div>`:''})()}
-  ${dc.length?det('pr-solved',t('prop.solvedH',{n:dc.length}),dc.map(c=>`<div class="small">• <b>${esc(c.by)}</b>: ${esc(c.txt)} → ${t(`prop.fix.${fixK(c.type)}`)}</div>`).join(''),false):''}
+  ${dc.length?det('pr-solved',t('prop.solvedH',{n:dc.length}),dc.map(c=>`<div class="small">• <b>${esc(tx(c.by))}</b>: ${esc(tx(c.txt))} → ${t(`prop.fix.${fixK(c.type)}`)}</div>`).join(''),false):''}
   ${body||`<div class="card small muted">${t('prop.none')}</div>`}
   <label class="small row" style="margin-top:8px"><input type="checkbox" ${S.autoAppr!==false?'checked':''} onchange="S.autoAppr=this.checked;save()"> ${t('prop.autoAppr')}</label>
   <div class="row" style="margin-top:8px">${propCount()-pc.length>0?`<button class="btn" onclick="propAll()">${t('prop.approveRest')}</button>`:''}<span class="sp"></span><button class="btn pri" onclick="${go?'propGo()':'closeM()'}">${go?t('prop.next'):t('btn.close')}</button></div>`);

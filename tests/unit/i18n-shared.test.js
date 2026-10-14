@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
-// Task 3: dual-use helpers keep producing Vietnamese by default (they feed S); UI call sites pass t.
+// Phase 3: shared helpers return Txt (language-independent); UI renders it with tx(), sinks with txVi().
 import { describe, it, expect, beforeAll, afterEach } from 'vitest';
 import { noToggle } from './helpers.js';
 import { S, setState } from '../../src/state.js';
-import { t, tVi, setLang } from '../../src/i18n/index.js';
+import { setLang, tx, txVi } from '../../src/i18n/index.js';
 import { targetName, hireMgr } from '../../src/systems/managers.js';
 import { wkLabel } from '../../src/systems/secretary.js';
 import { renderTop } from '../../src/ui/building.js';
@@ -16,7 +16,7 @@ beforeAll(() => { base = richState(42, 0); });
 afterEach(() => setLang('vi'));
 
 describe('dual-use helpers', () => {
-  it('targetName: default (tVi) is identical under en, and t gives English', () => {
+  it('targetName: language-independent Txt; txVi is Vietnamese, tx gives English', () => {
     setState(structuredClone(base));
     hireMgr(S.mgrPool[0].id);
     const m = S.managers[0], a = S.artists[0];
@@ -24,26 +24,29 @@ describe('dual-use helpers', () => {
     for (const as of cases) {
       m.as = as;
       setLang('vi');
-      const vi = targetName(m);
+      const vi = targetName(m), viTxt = txVi(vi);
       setLang('en');
-      expect(targetName(m)).toBe(vi);
-      expect(targetName(m, tVi)).toBe(vi);
-      if (as && as.t !== 'b') expect(VI.test(targetName(m, t).split(a.name).join('')), JSON.stringify(as)).toBe(false); // names are data
+      expect(JSON.stringify(targetName(m))).toBe(JSON.stringify(vi));
+      expect(txVi(targetName(m))).toBe(viTxt);
+      if (as && as.t !== 'b') expect(VI.test(tx(targetName(m)).split(a.name).join('')), JSON.stringify(as)).toBe(false); // names are data
     }
   });
-  it('wkLabel: default (tVi) is identical under en, and t gives English', () => {
+  it('wkLabel: language-independent Txt; txVi is Vietnamese, tx gives English', () => {
     setState(structuredClone(base));
     for (const w of [5, 52, 53, 60]) {
       setLang('vi');
-      const vi = wkLabel(w);
+      const vi = wkLabel(w), viTxt = txVi(vi);
       setLang('en');
-      expect(wkLabel(w)).toBe(vi);
-      expect(wkLabel(w, tVi)).toBe(vi);
-      expect(VI.test(wkLabel(w, t))).toBe(false);
+      expect(JSON.stringify(wkLabel(w))).toBe(JSON.stringify(vi));
+      expect(txVi(wkLabel(w))).toBe(viTxt);
+      expect(VI.test(tx(wkLabel(w)))).toBe(false);
     }
+    setLang('vi');
+    expect(txVi(wkLabel(5))).toBe('T5');
+    expect(txVi(wkLabel(53))).toBe('T1 N2');
     setLang('en');
-    expect(wkLabel(5, t)).toBe('W5');
-    expect(wkLabel(53, t)).toBe('W1 Y2');
+    expect(tx(wkLabel(5))).toBe('W5');
+    expect(tx(wkLabel(53))).toBe('W1 Y2');
   });
   it('#outside manager chip is translated', () => {
     setState(structuredClone(base));

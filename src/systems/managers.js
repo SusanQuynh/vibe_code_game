@@ -1,5 +1,5 @@
 import { R, pick } from '../core/rng.js';
-import { t, t as tl, tVi } from '../i18n/index.js';
+import { Lk, t, t as tl, txVi } from '../i18n/index.js';
 import { domName } from '../i18n/labels.js';
 import { clamp, fmt } from '../core/util.js';
 import { LNM, MGN } from '../data/names.js';
@@ -34,7 +34,7 @@ export function setBoss(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return
   if(!v){const g=gmOf();m.boss=g?g.id:null;addLog(g?`📋 ${m.name} báo cáo cho quản lý tổng ${g.name}.`:`📋 ${m.name} báo cáo trực tiếp Giám đốc.`)}
   else{const b=S.managers.find(x=>x.id===+v);if(!b||b===m||inSub(m,b))return toast(t('mgr.toast.loop'));if(mKids(b).length>=mCap(b))return toast(t('mgr.toast.cap',{n:b.name,c:mCap(b)}));m.boss=b.id;addLog(`📋 ${m.name} giờ báo cáo cho ${b.name}.`)}
   act()}
-export function targetName(m,tr=tVi){if(!m.as)return tr('target.none');if(m.as.t==='t')return tr('target.allTts');if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?tr('target.batch',{n:b.n}):tr('target.batchGone')}if(m.as.t==='s')return tr('target.allSolo');if(m.as.t==='d')return tr('target.allActors');if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?tr('target.list',{n:ts.length,names:ts.slice(0,2).map(a=>a.name).join(', ')+(ts.length>2?'…':'')}):tr('target.empty')}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?tr('target.group',{n:g.name}):'—'}const a=byId(m.as.id);return a?a.name:'—'}
+export function targetName(m){if(!m.as)return Lk('target.none');if(m.as.t==='t')return Lk('target.allTts');if(m.as.t==='b'){const b=(S.batches||[]).find(x=>x.id===m.as.id);return b?Lk('target.batch',{n:b.n}):Lk('target.batchGone')}if(m.as.t==='s')return Lk('target.allSolo');if(m.as.t==='d')return Lk('target.allActors');if(m.as.t==='l'){const ts=mgrTargets(m);return ts.length?Lk('target.list',{n:ts.length,names:ts.slice(0,2).map(a=>a.name).join(', ')+(ts.length>2?'…':'')}):Lk('target.empty')}if(m.as.t==='g'){const g=S.groups.find(x=>x.id===m.as.id);return g?Lk('target.group',{n:g.name}):'—'}const a=byId(m.as.id);return a?a.name:'—'}
 export function mgrExp(m,n=1){const b=mBoss(m);if(b&&n>=.25)mgrExp(b,n*.5);m.exp=+(m.exp+n).toFixed(2);while(m.exp>=m.lv*4){m.exp-=m.lv*4;m.lv++;const ks=Object.keys(MSK).filter(k=>m.sk[k]<10),k=ks.length?pick(ks):null;if(k)m.sk[k]++;m.salary+=1e6;addLog(`📈 Quản lý ${m.name} lên cấp ${m.lv}${k?' ('+MSK[k]+' +1)':''}.`,'good')}}
 export function mgrAuto(){for(const m of S.managers){if(m.auto==='off'||!m.as)continue;
   const free=()=>mgrTargets(m).filter(a=>!a.busy);
@@ -55,7 +55,7 @@ export function setDom(id,dom){const m=S.managers.find(x=>x.id===id);if(!m||!MDO
 export function mgrDomTick(){for(const m of S.managers){if(m.rt&&m.rt<=abs()+1){delete m.rt;addLog(`🎓 ${m.name} đã sẵn sàng nhận việc ở mảng ${MDOM[m.dom]}.`)}
   if(!m.dom||!m.as)continue;
   if(m.as.t==='l'){const keep=m.as.ids.filter(i=>{const a=byId(i);return a&&artDom(a,m.dom)});if(keep.length!==m.as.ids.length){addLog(`📋 ${m.name} không còn phụ trách ${m.as.ids.length-keep.length} nghệ sĩ ngoài mảng ${MDOM[m.dom]}.`);m.as.ids=keep;S.props=null}}
-  else if(m.as.t==='a'&&!domOk(m,m.as)){addLog(`📋 ${m.name} không còn phụ trách ${targetName(m)} (ngoài mảng ${MDOM[m.dom]}).`);m.as=null;S.props=null}}}
+  else if(m.as.t==='a'&&!domOk(m,m.as)){addLog(`📋 ${m.name} không còn phụ trách ${txVi(targetName(m))} (ngoài mảng ${MDOM[m.dom]}).`);m.as=null;S.props=null}}}
 /* old saves: infer the domain from the current assignment (tie order solo > actor > group > trainee) */
 /* legacy as.t t/s/d is rewritten by migrateV2: map it to a domain first (call before migrateV2) */
 export function legacyDom(){for(const m of S.managers)if(!m.dom&&m.as&&'tsd'.includes(m.as.t))m.dom=AS_DOM[m.as.t]}
@@ -66,7 +66,7 @@ export function migrateDom(){const ORD=['solo','actor','group','trainee'];
     if(!d){d=pick(DOM_KEYS);if(as&&(as.t==='a'||as.t==='l'))m.as=null}
     m.dom=d}
   (S.mgrPool||[]).forEach(m=>{if(!m.dom)m.dom=pick(DOM_KEYS)})}
-export function assignMgr(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return;if(m.gm)return toast(t('mgr.toast.gmNoAssign'));if(retrain(m))return toast(t('mgr.toast.retraining',{n:m.name,w:t('common.weeks',{n:retrain(m)})}));S.props=null;if(!v)m.as=null;else{const t=v[0],tid=+v.slice(1);if(t!=='l'&&S.managers.some(x=>x!==m&&x.as&&x.as.t===t&&x.as.id===tid))return toast(tl('mgr.toast.taken'));if(!domOk(m,{t,id:tid}))return toast(tl('mgr.toast.domain',{d:domName(m.dom)}));m.as=t==='l'?{t,id:0,ids:(m.as&&m.as.t==='l'?m.as.ids:[])}:{t,id:tid};addLog(`📋 ${m.name} phụ trách ${targetName(m)}.`)}act()}
+export function assignMgr(id,v){const m=S.managers.find(x=>x.id===id);if(!m)return;if(m.gm)return toast(t('mgr.toast.gmNoAssign'));if(retrain(m))return toast(t('mgr.toast.retraining',{n:m.name,w:t('common.weeks',{n:retrain(m)})}));S.props=null;if(!v)m.as=null;else{const t=v[0],tid=+v.slice(1);if(t!=='l'&&S.managers.some(x=>x!==m&&x.as&&x.as.t===t&&x.as.id===tid))return toast(tl('mgr.toast.taken'));if(!domOk(m,{t,id:tid}))return toast(tl('mgr.toast.domain',{d:domName(m.dom)}));m.as=t==='l'?{t,id:0,ids:(m.as&&m.as.t==='l'?m.as.ids:[])}:{t,id:tid};addLog(`📋 ${m.name} phụ trách ${txVi(targetName(m))}.`)}act()}
 export const mCapA=m=>MAX_SA;
 export function toggleMA(mid,aid,on){const m=S.managers.find(x=>x.id===mid);if(!m||!m.as||m.as.t!=='l')return;S.props=null;const L=m.as.ids;
   if(on){if(L.includes(aid))return;{const a=byId(aid);if(m.dom&&a&&!artDom(a,m.dom)){toast(t('mgr.toast.domainArt',{d:domName(m.dom),n:a.name}));return act()}}if(L.length>=mCapA(m)){toast(t('mgr.toast.listCap',{n:m.name,l:m.lv,c:mCapA(m)}));return act()}

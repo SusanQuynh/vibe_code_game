@@ -1,6 +1,6 @@
 import { R, pick } from '../core/rng.js';
 import { esc, fmt } from '../core/util.js';
-import { money, t } from '../i18n/index.js';
+import { money, t, tx } from '../i18n/index.js';
 import { LNM, MGN } from '../data/names.js';
 import { S, addLog, uid } from '../state.js';
 import { signCore } from './artists.js';
@@ -56,7 +56,7 @@ export function recHTML(){const r=S.rec||REC0,cap=recCap();
   ${r.staff.map(c=>`<div class="prow">🧑‍💼 <b>${esc(c.name)}</b> <span class="small muted">${t('rec.eyeStaff',{s:'★'.repeat(Math.ceil(c.eye/2)),e:c.eye,h:1+Math.floor(c.eye/4),w:money(c.sal)})}</span><span class="sp"></span><button class="btn sm warn" onclick="recFire(${c.id},this)">${t('rec.fire')}</button></div>`).join('')||`<div class="small muted">${t('rec.noStaff')}</div>`}
   ${r.staff.length?`<div class="row" style="margin-top:6px"><span class="small">${t('rec.mode')}</span>${sel('mode',Object.keys(MODES).map(k=>[k,t(`rec.mode.${k}`)]),r.mode)}<span class="small">${t('rec.perBatch')}</span>${sel('quota',Array.from({length:12},(_,i)=>[i+1,t('common.trainees',{n:i+1})]),r.quota)}<span class="small">${t('rec.reserve')}</span>${sel('reserve',RESERVES.map(v=>[v,v?money(v*1e6):t('rec.none')]),r.reserve/1e6)}</div>
   <div class="small muted" style="margin-top:4px">${r.mode==='auto'?t('rec.desc.auto',{cap,q:r.quota,m:money(r.reserve)}):r.mode==='suggest'?t('rec.desc.suggest',{cap}):t('rec.desc.off')}</div>`:''}
-  ${r.log.length?`<div class="small" style="margin-top:6px">${r.log.slice(0,5).map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
+  ${r.log.length?`<div class="small" style="margin-top:6px">${r.log.slice(0,5).map(x=>`<div>${esc(tx(x))}</div>`).join('')}</div>`:''}
   <h3 style="margin-top:8px">${t('rec.candTitle')}</h3>
   ${r.cand.map(c=>`<div class="prow">🧑‍💼 <b>${esc(c.name)}</b> <span class="small muted">${t('rec.eyeCand',{e:c.eye,w:money(c.sal)})}</span><span class="sp"></span><button class="btn sm pri" onclick="recHire(${c.id})" ${r.staff.length>=REC_MAX?'disabled':''}>${t('rec.hire',{m:money(c.fee)})}</button></div>`).join('')||`<div class="small muted">${t('rec.noCand')}</div>`}
   <button class="btn" onclick="recHunt()" style="margin-top:6px">${t('rec.hunt',{x:huntCost()?money(huntCost()):t('rec.huntFree')})}</button>`}

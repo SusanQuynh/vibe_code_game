@@ -7,7 +7,7 @@ src/systems/ext2.js: addLog(`✍️ ${ws.map(a=>a.name).join(', ')} vào phòng 
 src/systems/ext2.js: addLog(`🌟 ${c.name} được ${m.name} phát hiện, ký hợp đồng TTS vào ${(S.batches.find(b=>b.id===c.batch)||{n:''}).n}.`,'gold')
 src/systems/ext2.js: addLog(`🌱 Tự mở ${b.n} cho thực tập sinh mới.`,'good')
 src/systems/ext2.js: addLog(`🎉 Nhóm ${g.name} kết thúc thời gian tạm ngừng, sẵn sàng hoạt động trở lại.`,'good')
-src/systems/ext2.js: addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${r.short}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')
+src/systems/ext2.js: addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${txVi(r.short)}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')
 src/systems/ext2.js: addLog(`🎧 Doanh thu nhạc số tuần này: ${fmt(t)}.`,'good')
 src/systems/ext2.js: addLog(`🎼 Demo «${s.t}» hoàn thành, chờ GĐ Âm nhạc duyệt tại Phòng Thu âm.`,'good')
 src/systems/ext2.js: addLog(`👋 Cho trợ lý ${x.name} nghỉ việc.`)

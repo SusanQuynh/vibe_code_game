@@ -50,7 +50,7 @@ export function canTake(of,a){
   if(a.status!=='debuted'&&!O.trainee)return t('offerCard.notDebuted');
   if(of.target&&of.target!==a.id&&slotsOf(of)<2)return t('offerCard.other');
   if(a.scandal&&a.scandal.sev>=2)return t('offerCard.scandal');
-  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return t('offerCard.cbHold',{w:wkLabel(h.w,t)})}
+  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return t('offerCard.cbHold',{w:wkLabel(h.w)})}
   const d=disc(of,a);if(fame(a)<Math.round(of.fame*(1-d)))return t('offerCard.noFame');
   const r=effReq(of,a);for(const k in r)if(a.st[k]<r[k])return t('offerCard.lack',{s:statName(k)});
   return'';

@@ -2,7 +2,7 @@
 // Extra Vietnamese display baselines for branches the main snapshots do not reach (recorded BEFORE the area was translated).
 // Files under __snapshots__/ui-vi-extra/ are never regenerated: a diff means the vi output drifted.
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { noToggle, seed } from './helpers.js';
+import { noToggle, seed, viT } from './helpers.js';
 import { S, setState } from '../../src/state.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { closeM } from '../../src/ui/modal.js';
@@ -71,7 +71,7 @@ describe('contests', () => {
       }
       out[kinds.join('+') + ':prev'] = pv;
     }
-    for (const c of S.comps) for (const r of [1, 2, 3, 4]) out['bonus' + c.id + '-' + r] = bonusTxt(c, r);
+    for (const c of S.comps) for (const r of [1, 2, 3, 4]) out['bonus' + c.id + '-' + r] = viT(bonusTxt(c, r));
     await snap('contests.json', out);
   });
 });
@@ -108,7 +108,7 @@ describe('debut', () => {
     const out = {};
     for (const [n, b] of [['base', base], ['early', early], ['boosted', early]]) {
       fresh(b); if (n === 'boosted') boost();
-      out[n] = { rec: S.artists.map(a => debutRec(a)), line: S.artists.filter(a => a.status === 'trainee').map(a => recLine(a)), banner: dqBanner(), opts: S.artists.map(a => { const o = dOpts(a); return o && { t: o.r.t, why: o.r.why, short: o.r.short, soloOK: o.soloOK, grpOK: o.grpOK, actOK: o.actOK, both: o.both }; }) };
+      out[n] = { rec: S.artists.map(a => { const r = debutRec(a); return { ...r, why: viT(r.why), short: viT(r.short) }; }), line: S.artists.filter(a => a.status === 'trainee').map(a => recLine(a)), banner: dqBanner(), opts: S.artists.map(a => { const o = dOpts(a); return o && { t: o.r.t, why: viT(o.r.why), short: viT(o.r.short), soloOK: o.soloOK, grpOK: o.grpOK, actOK: o.actOK, both: o.both }; }) };
       viewDebutQ(); out[n].dq = sheet();
     }
     await snap('debut.json', out);

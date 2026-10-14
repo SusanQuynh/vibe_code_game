@@ -3,5 +3,5 @@ src/systems/contests.js: .lessons.unshift({t:`Cuộc thi «${c.n}»`,l:r.rank<=3
 src/systems/contests.js: S.comps.push({id:uid(),k:T.k,n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,3),fee:R(8,20)*1e6*T.t[0],prize:rp(p1),exp:abs()+R(3,5)})
 src/systems/contests.js: S.comps.push({id:uid(),n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,2),fee:R(2,6)*1e6*T.t[0],prize:[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6],exp:abs()+R(3,5)})
 src/systems/contests.js: addLog(`🏅 ${g?'Nhóm '+g.name:ms.map(a=>a.name).join(', ')} lên đường dự thi «${c.n}» (${c.wk} tuần, lệ phí ${fmt(c.fee)}).`,'good')
-src/systems/contests.js: addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${bonusTxt(c,rank)}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'')
+src/systems/contests.js: addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${txVi(bonusTxt(c,rank))}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'')
 src/systems/contests.js: busy={kind:'comp',title:'Cuộc thi «'+c.n+'»',left:c.wk,total:c.wk,run:run.id}

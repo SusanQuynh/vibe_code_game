@@ -50,7 +50,7 @@ export function viewCamp(k){const x=actByKey(k);if(!x)return closeM();const c=S.
     <div class="card small">${t('camp.secRec')} ${rec.length?rec.map(id=>t(`promo.post.${id}`)).join(', ')+t('camp.keepE'):t('camp.tired')} ${rec.length?`<button class="btn sm pri" onclick="postAuto('${k}')">${t('camp.follow')}</button>`:''}</div>
     <label class="small row"><input type="checkbox" ${S.autoPromo!==false?'checked':''} onchange="S.autoPromo=this.checked;save()"> ${t('camp.auto')}</label>`}
   else{const rec=free?preRec(k):[],h=c?c.hype:0;
-    body=`<div class="card small">${t('camp.hype',{h})}${pl?t('camp.planned',{w:wkLabel(pl.w,t)}):''}</div>
+    body=`<div class="card small">${t('camp.hype',{h})}${pl?t('camp.planned',{w:wkLabel(pl.w)}):''}</div>
     <div class="bar" style="margin:6px 0"><i style="width:${h/.8}%;background:var(--pink)"></i></div>${eRow}
     <h3>${t('camp.preH')}</h3>${free?`<div class="card">${Object.keys(PRE).map(id=>{const P=PRE[id],dn=c&&c.done[id];return`<div class="prow" style="${dn?'opacity:.55':''}">${P.ic} <b>${t(`promo.pre.${id}`)}</b><span class="small muted">${t('camp.preInfo',{d:t(`promo.preD.${id}`),h:P.h,c:P.c?money(P.c):t('camp.free')})}${P.e?' · −'+P.e+'⚡':''}</span><span class="sp"></span>${dn?'<span class="tag m">✓</span>':`<button class="btn sm${rec.includes(id)?' pri':''}" onclick="preDo('${k}','${id}')">${t('camp.do')}</button>`}</div>`}).join('')}</div>
     <div class="card small">${t('camp.secRec')} ${rec.length?rec.map(id=>t(`promo.pre.${id}`)).join(', '):t('camp.notYet')}. ${rec.length?`<button class="btn sm pri" onclick="preAuto('${k}')">${t('camp.follow')}</button>`:''}</div>

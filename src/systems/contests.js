@@ -1,7 +1,7 @@
 import { R, pick, rnd } from '../core/rng.js';
 import { $, clamp, esc, fmt } from '../core/util.js';
 import { CB } from '../data/rules.js';
-import { money, t, tVi } from '../i18n/index.js';
+import { isK, money, t, tx, txVi } from '../i18n/index.js';
 import { statName } from '../i18n/labels.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit } from './artists.js';
@@ -37,10 +37,10 @@ export const DCOMP=[
 ];
 const rp=p1=>[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6];
 export function genComp(kind='tts'){
-  if(kind!=='tts'){const T=pick(DCOMP.filter(c=>c.k===kind&&!(S.comps||[]).some(x=>x.n===c.n)));if(!T)return;
+  if(kind!=='tts'){const T=pick(DCOMP.filter(c=>c.k===kind&&!(S.comps||[]).some(x=>isK(x.n,`comp.name.d${DCOMP.indexOf(c)}`))));if(!T)return;
     const lvl=clamp(R(40,58)+(S.year-1)*6+Math.floor(S.week/13)*2,30,95),p1=Math.round(R(80,160)*(1+lvl/40))*1e6;
     S.comps.push({id:uid(),k:T.k,n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,3),fee:R(8,20)*1e6*T.t[0],prize:rp(p1),exp:abs()+R(3,5)});return}
-  const T=pick(COMP.filter(c=>!(S.comps||[]).some(x=>x.n===c.n)));if(!T)return;
+  const T=pick(COMP.filter(c=>!(S.comps||[]).some(x=>isK(x.n,`comp.name.t${COMP.indexOf(c)}`))));if(!T)return;
   const lvl=clamp(R(18,36)+(S.year-1)*6+Math.floor(S.week/13)*2,12,85),p1=Math.round(R(30,70)*(1+lvl/40))*1e6;
   S.comps.push({id:uid(),n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,2),fee:R(2,6)*1e6*T.t[0],prize:[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6],exp:abs()+R(3,5)})}
 /* contest kind table: tts (trainees) | grp (debuted groups) | solo | act. grp units are groups, the rest artists */
@@ -62,9 +62,9 @@ const needTxt=c=>KIND[kindOf(c)].grp?t('comp.need.group'):t(`comp.kind.${kindOf(
 const pmOf=(c,ms)=>KIND[kindOf(c)].pm&&ms.length?1+ms.reduce((t,a)=>t+fame(a),0)/ms.length/60:0;
 const prizeOf=(c,rank,pm)=>pm?Math.round(c.prize[rank-1]*pm/1e6)*1e6:c.prize[rank-1];
 const bonusOf=(c,rank)=>rank<=3?Object.keys(c.w).map(k=>[k,+(CB[rank-1]*c.w[k]).toFixed(1)]):[];
-export const bonusTxt=(c,rank,tr=tVi)=>bonusOf(c,rank).map(([k,g])=>`${tr(`stat.${k}`)} +${g}`).join(', ');
+export const bonusTxt=(c,rank)=>({$g:Object.fromEntries(bonusOf(c,rank).map(([k,g])=>[k,String(g)]))});
 /* top-3 stat bonus (no RNG); returns the text */
-export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return bonusTxt(c,rank)}
+export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return txVi(bonusTxt(c,rank))}
 export function compTick(){S.comps=(S.comps||[]).filter(c=>c.exp>abs());const n=S.comps.filter(c=>kindOf(c)==='tts').length;if(n<2||(n<4&&Math.random()<.35))genComp();
   if(S.artists.some(a=>a.status==='debuted')){const ks=['grp','solo','act'].filter(k=>k==='grp'?S.groups.length:k==='solo'?S.artists.some(a=>a.solo):S.artists.some(a=>a.actor)),d=S.comps.filter(c=>kindOf(c)!=='tts');if(ks.length&&(d.length<2||(d.length<3&&Math.random()<.3)))genComp(pick(ks))}}
 const compScore=(ms,ids,c)=>ms.reduce((t,a)=>t+fit(a,c.w),0)/Math.max(ms.length,1)*(1+(ms.length>1?chem(ids):0));
@@ -83,7 +83,7 @@ export function enterComp(cid){const c=S.comps.find(x=>x.id===cid);if(!c)return;
   if(K.grp){g=S.groups.find(x=>x.id===sel[0]);if(!g)return toast(t('comp.toast.pickGroup'));if(!K.elig(g))return toast(t('comp.toast.groupBusy',{n:g.name}));ms=g.members.map(byId).filter(Boolean)}
   else ms=sel.map(byId).filter(a=>a&&K.elig(a));
   {const h=ms.find(dHold);if(h)return toast(t('comp.toast.debutHold',{n:h.name}))}
-  {const h=ms.find(a=>{const p=cbHold(a);return p&&abs()+c.wk>p.w});if(h)return toast(t('comp.toast.cbHold',{n:h.name,w:wkLabel(cbHold(h).w,t)}))}
+  {const h=ms.find(a=>{const p=cbHold(a);return p&&abs()+c.wk>p.w});if(h)return toast(t('comp.toast.cbHold',{n:h.name,w:wkLabel(cbHold(h).w)}))}
   if(ms.length<c.t[0]||ms.length>c.t[1])return toast(t('comp.toast.need',{x:needTxt(c)}));
   if(S.money<c.fee)return toast(t('comp.toast.noFee'));S.money-=c.fee;
   const run={id:uid(),c,ids:ms.map(a=>a.id),res:null};if(g)run.g=g.id;const pm=pmOf(c,ms);if(pm)run.pm=pm;S.compRuns=S.compRuns||[];S.compRuns.push(run);
@@ -93,7 +93,7 @@ export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);i
   if(!run.res){const ms=run.ids.map(byId).filter(Boolean),f=compScore(ms,run.ids,c),sc=f+rnd(-8,8);
     const rank=compRank(c,sc),prize=rank<=3?prizeOf(c,rank,run.pm):0;S.money+=prize;run.res={rank,prize};
     const gr=run.g&&S.groups.find(x=>x.id===run.g),who=gr?'Nhóm '+gr.name:ms.map(x=>x.name).join(', ');
-    addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${bonusTxt(c,rank)}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'');
+    addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${txVi(bonusTxt(c,rank))}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'');
     {const m=ms.map(mgrOf).find(Boolean);if(m)mgrExp(m,rank===1?2:1)}}
   const r=run.res,q=r.rank===1?1.4:r.rank<=3?1.15:.9,fg=Math.round((r.rank===1?R(3000,7000):r.rank<=3?R(1000,3000):R(200,800))*K.fanMul(a));a.fans+=fg;a.yr.fans+=fg;
   const les={};for(const k in c.w)les[k]=c.w[k]*3;const ls=applyLesson(a,les,q),bt=compBonus(a,c,r.rank);
@@ -106,8 +106,8 @@ export function compHTML(kinds=['tts']){const dbt=!kinds.includes('tts'),inK=c=>
   (S.comps.filter(inK).map(c=>{const K=KIND[kindOf(c)],U=unitsOf(c),multi=c.t[1]>1&&!K.grp,
     sc=u=>K.grp?compScore(u.members.map(byId).filter(Boolean),u.members,c):fit(u,c.w),L=U.slice().sort((x,y)=>sc(y)-sc(x));
     const list=x=>x.map(u=>{if(K.grp)return`<label><input type="radio" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${t('common.members',{n:u.members.length})} · ${t('comp.skill',{n:Math.round(sc(u))})}</span></span></label>`;
-      const bt=batchOf(u);return`<label><input type="${multi?'checkbox':'radio'}" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${bt&&S.batches.length>1&&u.status==='trainee'?esc(bt.n)+' · ':''}${t('comp.skill',{n:Math.round(sc(u))})}${K.pm?' · '+t('comp.fame',{n:fame(u)}):''}</span></span></label>`}).join('');
-    return`<div class="card"><div class="row"><b>${c.ic} ${esc(c.n)}</b><span class="sp"></span><span class="small muted">${t('comp.deadline',{w:t('common.weeks',{n:c.exp-abs()})})}</span></div>
+      const bt=batchOf(u);return`<label><input type="${multi?'checkbox':'radio'}" name="cp${c.id}" class="cp${c.id}" value="${u.id}" onchange="compPrev(${c.id})"> <span style="flex:1"><b>${esc(u.name)}</b> <span class="small muted">${bt&&S.batches.length>1&&u.status==='trainee'?esc(tx(bt.n))+' · ':''}${t('comp.skill',{n:Math.round(sc(u))})}${K.pm?' · '+t('comp.fame',{n:fame(u)}):''}</span></span></label>`}).join('');
+    return`<div class="card"><div class="row"><b>${c.ic} ${esc(tx(c.n))}</b><span class="sp"></span><span class="small muted">${t('comp.deadline',{w:t('common.weeks',{n:c.exp-abs()})})}</span></div>
     <div class="small">${teamTxt(c)} · ${t('common.weeks',{n:c.wk})} · ${t('comp.fee',{m:money(c.fee)})} · ${t('comp.rivals',{n:c.lvl})}<br>🥇 ${money(c.prize[0])} · 🥈 ${money(c.prize[1])} · 🥉 ${money(c.prize[2])}${K.pm?` <span class="muted">${t('comp.pmNote')}</span>`:''}</div>
     <div class="req">${t('comp.scoring')} ${Object.keys(c.w).map(k=>statName(k)).join(', ')}</div>
     ${L.length?det('cp-l'+c.id,t('comp.pickSum',{k:kLbl(c),n:L.length,g:!!K.grp}),`<div class="list">${list(L)}</div>`,true)+`<div class="row" style="margin-top:6px"><span class="small muted" id="cpo${c.id}" style="flex:1">${t('comp.choose',{x:needTxt(c)})}</span><button class="btn sm" onclick="compPick(${c.id})">${t('comp.hint')}</button><button class="btn sm pri" onclick="enterComp(${c.id})">${t('comp.enter')}</button></div>`:`<div class="small muted">${t('comp.noneFree',{k:kLbl(c)})}</div>`}</div>`}).join('')||`<div class="small muted">${t('comp.empty')}</div>`)}
