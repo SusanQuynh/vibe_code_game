@@ -73,13 +73,25 @@
   "k": "busy.injury"
  },
  {
+  "k": "busy.injuryWorse"
+ },
+ {
   "k": "busy.leave"
  },
  {
   "k": "busy.promo"
  },
  {
+  "k": "busy.recover"
+ },
+ {
   "k": "busy.showcase"
+ },
+ {
+  "k": "busy.therapy"
+ },
+ {
+  "k": "busy.write"
  },
  {
   "k": "common.gain"
@@ -183,7 +195,37 @@
   "k": "ev.r.stay"
  },
  {
+  "k": "ev.why.disband.0"
+ },
+ {
+  "k": "ev.why.disband.1"
+ },
+ {
+  "k": "ev.why.disband.2"
+ },
+ {
+  "k": "ev.why.disband.3"
+ },
+ {
   "k": "ev.why.fire"
+ },
+ {
+  "k": "ev.why.scout.0"
+ },
+ {
+  "k": "ev.why.scout.1"
+ },
+ {
+  "k": "ev.why.scout.2"
+ },
+ {
+  "k": "ev.why.scout.3"
+ },
+ {
+  "k": "ev.why.scout.4"
+ },
+ {
+  "k": "ev.why.scout.5"
  },
  {
   "k": "film.st.out"
@@ -854,7 +896,247 @@
   "k": "log.wk.wantAct"
  },
  {
+  "k": "log.x2.apply"
+ },
+ {
+  "k": "log.x2.asstNo"
+ },
+ {
+  "k": "log.x2.batGone"
+ },
+ {
+  "k": "log.x2.brandNegN"
+ },
+ {
+  "k": "log.x2.brandNegY"
+ },
+ {
+  "k": "log.x2.brandNo"
+ },
+ {
+  "k": "log.x2.brandTake"
+ },
+ {
+  "k": "log.x2.burnN"
+ },
+ {
+  "k": "log.x2.burnOk"
+ },
+ {
+  "k": "log.x2.burnRaise"
+ },
+ {
+  "k": "log.x2.burnSk"
+ },
+ {
+  "k": "log.x2.clashArt"
+ },
+ {
+  "k": "log.x2.clashMgr"
+ },
+ {
+  "k": "log.x2.clashMixN"
+ },
+ {
+  "k": "log.x2.clashMixY"
+ },
+ {
+  "k": "log.x2.cryMgrN"
+ },
+ {
+  "k": "log.x2.cryMgrY"
+ },
+ {
+  "k": "log.x2.cryNo"
+ },
+ {
+  "k": "log.x2.cryRest"
+ },
+ {
+  "k": "log.x2.crySr"
+ },
+ {
+  "k": "log.x2.crySrNone"
+ },
+ {
+  "k": "log.x2.ct8"
+ },
+ {
+  "k": "log.x2.demoDone"
+ },
+ {
+  "k": "log.x2.demoSent"
+ },
+ {
+  "k": "log.x2.dig"
+ },
+ {
   "k": "log.x2.disband"
+ },
+ {
+  "k": "log.x2.drop"
+ },
+ {
+  "k": "log.x2.fanGuard"
+ },
+ {
+  "k": "log.x2.fanMgrN"
+ },
+ {
+  "k": "log.x2.fanMgrY"
+ },
+ {
+  "k": "log.x2.fanNo"
+ },
+ {
+  "k": "log.x2.fanPolN"
+ },
+ {
+  "k": "log.x2.fanPolY"
+ },
+ {
+  "k": "log.x2.fightBoth"
+ },
+ {
+  "k": "log.x2.fightN"
+ },
+ {
+  "k": "log.x2.fightNo"
+ },
+ {
+  "k": "log.x2.fightY"
+ },
+ {
+  "k": "log.x2.fire"
+ },
+ {
+  "k": "log.x2.fixY"
+ },
+ {
+  "k": "log.x2.hiatusEnd"
+ },
+ {
+  "k": "log.x2.hire"
+ },
+ {
+  "k": "log.x2.holdOff"
+ },
+ {
+  "k": "log.x2.holdOn"
+ },
+ {
+  "k": "log.x2.injPushN"
+ },
+ {
+  "k": "log.x2.injPushY"
+ },
+ {
+  "k": "log.x2.injTreat"
+ },
+ {
+  "k": "log.x2.injVip"
+ },
+ {
+  "k": "log.x2.lateAN"
+ },
+ {
+  "k": "log.x2.lateANp"
+ },
+ {
+  "k": "log.x2.lateAY"
+ },
+ {
+  "k": "log.x2.lateFine"
+ },
+ {
+  "k": "log.x2.lateNo"
+ },
+ {
+  "k": "log.x2.lateTN"
+ },
+ {
+  "k": "log.x2.lateTY"
+ },
+ {
+  "k": "log.x2.lateTkN"
+ },
+ {
+  "k": "log.x2.lateTkY"
+ },
+ {
+  "k": "log.x2.leakCtN"
+ },
+ {
+  "k": "log.x2.leakCtY"
+ },
+ {
+  "k": "log.x2.leakPrN"
+ },
+ {
+  "k": "log.x2.leakPrY"
+ },
+ {
+  "k": "log.x2.leakSil"
+ },
+ {
+  "k": "log.x2.md"
+ },
+ {
+  "k": "log.x2.mentor"
+ },
+ {
+  "k": "log.x2.mentorFr"
+ },
+ {
+  "k": "log.x2.mgrIdle"
+ },
+ {
+  "k": "log.x2.mig1"
+ },
+ {
+  "k": "log.x2.mig1b"
+ },
+ {
+  "k": "log.x2.mig1w"
+ },
+ {
+  "k": "log.x2.mig2"
+ },
+ {
+  "k": "log.x2.pause"
+ },
+ {
+  "k": "log.x2.ready"
+ },
+ {
+  "k": "log.x2.redo"
+ },
+ {
+  "k": "log.x2.renew"
+ },
+ {
+  "k": "log.x2.renewEnd"
+ },
+ {
+  "k": "log.x2.renewNo"
+ },
+ {
+  "k": "log.x2.renewNo2"
+ },
+ {
+  "k": "log.x2.risk"
+ },
+ {
+  "k": "log.x2.scout"
+ },
+ {
+  "k": "log.x2.songNo"
+ },
+ {
+  "k": "log.x2.unmentor"
+ },
+ {
+  "k": "log.x2.write"
  },
  {
   "k": "log.x3.rest"
@@ -1055,6 +1337,9 @@
   "k": "rv.term"
  },
  {
+  "k": "scandal.bts"
+ },
+ {
   "k": "scandal.dating"
  },
  {
@@ -1083,5 +1368,23 @@
  },
  {
   "k": "target.*"
+ },
+ {
+  "k": "x2.f"
+ },
+ {
+  "k": "x2.m"
+ },
+ {
+  "k": "x2.r.expired"
+ },
+ {
+  "k": "x2.r.failed"
+ },
+ {
+  "k": "x2.r.quit"
+ },
+ {
+  "k": "x2.senior"
  }
 ]

@@ -85,26 +85,6 @@
   "why": "dWish text stored in a.dw.why (phase 3)"
  },
  {
-  "file": "src/systems/ext2.js",
-  "text": "mâu thuẫn nội bộ kéo dài",
-  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "các thành viên kiệt sức, tâm trạng sa sút",
-  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "các thành viên muốn theo đuổi con đường riêng",
-  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "bất đồng về định hướng âm nhạc",
-  "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
- },
- {
   "file": "src/systems/ext3.js",
   "text": "tập",
   "why": "part of hsRisk() text stored in a.hsF.why (phase 3)"
