@@ -1,7 +1,8 @@
 // Stored-text primitives: Lk/tx/txVi/isK/wkTok, tags, nested params, no RNG use.
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { Lk, tx, txVi, isK, wkTok, t, tVi, setLang } from '../../src/i18n/index.js';
-import { fmt } from '../../src/core/util.js';
+import { fmt as fmtU } from '../../src/core/util.js';
+const fmt = x => fmtU(x, { b: ' tỷ', m: ' tr', k: 'k' });
 import { pickI, pick } from '../../src/core/rng.js';
 import { seed } from './helpers.js';
 

@@ -47,7 +47,7 @@ export function qLabel(q){return Lk(q>=1.25?'q.ex':q>=1?'q.good':q>=.8?'q.ok':'q
 export function addPg(a,k,d){d=+d.toFixed(1);if(d){a.pg=a.pg||{};a.pg[k]=+((a.pg[k]||0)+d).toFixed(1)}}
 export function applyLesson(a,lesson,q){const out={};for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out[k]=g.toFixed(1)}return{$g:out}}
 /* deterministic project lesson (no RNG); consecutive livestreams merge into one entry */
-export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=Lk(`les.lt.${key}.${abs()%P.lt.length}`),b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
+export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=Lk(`les.lt.${key}.${abs()%P.ltN}`),b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
   if(key==='live'){const d={};for(const k in P.l)d[k]=+(a.st[k]-b0[k]).toFixed(1);   // real applied delta (clamp/rounding), matches a.pg
     const txt=g=>{const o={};for(const k of Object.keys(g))o[k]=g[k].toFixed(1);return{$g:o}};
     if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=Lk('les.rep',{t:title,n:L.n});L.s=txt(L.g);L.y=S.year;return L.s}
@@ -61,7 +61,7 @@ export function completeBusy(a){
     const mates=(b.mates||[]).filter(i=>i!==a.id).map(byId).filter(Boolean);for(const m of mates)setRel(a,m,getRel(a,m)+R(2,5));
     const fg=Math.round(R(O.fans[0],O.fans[1])*.4*q*(1+fame(a)/150));
     a.fans+=fg;a.yr.fans+=fg;S.money+=b.pay;book('job',b.pay,[a]);
-    const ls=applyLesson(a,O.lesson,q),lt=Lk(`offer.lt.${b.type}.${pickI(O.lt.length)}`);
+    const ls=applyLesson(a,O.lesson,q),lt=Lk(`offer.lt.${b.type}.${pickI(O.ltN)}`);
     a.lessons.unshift({t:Lk('les.offer',{o:Lk(`offer.${b.type}`),t:b.title,m:mates.length?Lk('les.with',{n:mates.map(x=>x.name).join(', ')}):''}),l:lt,s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
     S.partners[b.partner]=clamp(Math.round((S.partners[b.partner]||0)+R(6,12)*q),0,100);
     a.pw[b.partner]=(a.pw[b.partner]||0)+1;
@@ -98,8 +98,7 @@ export function releaseFilm(f){
   for(const a of cast){const g=Math.round(rev/1e6*R(15,30));a.fans+=g;a.yr.fans+=g}
   addLog(Lk('log.wk.film',{t:f.title,r:{$:rev},x:f.mult,i:{$:inc},o:f.own?'':Lk('log.wk.filmShare')}),mult>=1?'gold':'bad');
 }
-export const DAYS=['T2','T3','T4','T5','T6','T7','CN'];
-export const DAYN=['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'];
+export const DAYS=[0,1,2,3,4,5,6];
 export const defaultDays=k=>k==='rest'?Array(7).fill('rest'):[k,k,k,k,k,'rest','rest'];
 export function ensureDays(a){if(!Array.isArray(a.days)||a.days.length!==7)a.days=defaultDays(a.sched||'vocal');a.days=a.days.map(k=>TRAIN[k]?k:'rest')}
 export const daysMini=a=>a.days.map(k=>TIC[k]).join('');

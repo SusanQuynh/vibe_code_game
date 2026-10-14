@@ -47,8 +47,6 @@ export function debutAnalysis(){
   if(ty==='solo')return`<b>${t('da.soloTitle',{n:esc(a.name)})}</b>${fitRows(bestOf(a,CONCEPTS),conceptName)}<div class="small">${t('da.soloBest',{c:conceptName(bestOf(a,CONCEPTS)[0].k)})}</div>`;
   return`<b>${t('da.actTitle',{n:esc(a.name)})}</b> · ${statName('acting')} ${Math.round(a.st.acting)}${fitRows(bestOf(a,GENRES),genreName)}<div class="small">${t('da.actBestW',{g:genreName(bestOf(a,GENRES)[0].k),w:a.st.acting<25?t('da.actWeak'):''})}.</div>`;
 }
-export const DR={group:'👥 Nhóm nhạc',solo:'🎤 Solo',actor:'🎬 Diễn viên'};
-export const DRT={group:'nhóm nhạc',solo:'solo',actor:'diễn viên'};
 export function lineupWith(a,pool,w){const others=pool.filter(x=>x!==a);if(!others.length)return null;let best=null;
   for(let n=2;n<=Math.min(5,others.length+1);n++){const pk=[a];while(pk.length<n){let bc=null,bs=-1e9;for(const c of others){if(pk.includes(c))continue;const sc=fit(c,w)+pk.reduce((t,p)=>t+tagScore(p,c),0)*3;if(sc>bs){bs=sc;bc=c}}pk.push(bc)}
     const ids=pk.map(x=>x.id),f=avgFit(pk,w),hm=harmony(ids),sc=f+hm*1.5+n*2;if(!best||sc>best.sc)best={ids,f,hm,sc}}return best}

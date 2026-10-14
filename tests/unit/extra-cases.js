@@ -587,8 +587,8 @@ add('t10-prgo', ctx => { // prGo stores a language-independent Msg in S.prHist (
 import { OFFER, PARTNERS } from '../../src/data/offers.js';
 import { GENRES } from '../../src/data/rules.js';
 import { canTake, acceptCast, acceptSel, ocPrev, ocPick, investOffer } from '../../src/systems/offers.js';
-import { buildProps, viewProps, itDesc, stTag, propOk, cfPick, CFT } from '../../src/systems/proposals.js';
-import { secPlan, secPlans, secSchedRec, viewSec, cbNow, cbSched, cbSchedRec, BUDN } from '../../src/systems/secretary.js';
+import { buildProps, viewProps, itDesc, stTag, propOk, cfPick } from '../../src/systems/proposals.js';
+import { secPlan, secPlans, secSchedRec, viewSec, cbNow, cbSched, cbSchedRec } from '../../src/systems/secretary.js';
 const mkOffer = (o = {}) => { const type = o.type || 'drama', O = OFFER[type], genre = O.film ? (o.genre || 'romance') : null;
   const of = { id: uid(), type, partner: PARTNERS[type][0], genre, w: genre ? GENRES[genre].w : O.req, req: O.film ? { acting: 20, visual: 10 } : { ...O.req }, L: 20, fame: 0, weeks: 3, pay: 50e6, costar: null, exp: abs() + 3, title: 'Dự án thử ' + type, target: null, invest: null, invested: false, slots: 1, ...o };
   Object.keys(of.req).forEach(k => { of.req[k] = Math.min(of.req[k], 20); }); S.offers.push(of); return of; };

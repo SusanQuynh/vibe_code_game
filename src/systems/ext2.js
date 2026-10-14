@@ -31,8 +31,8 @@ export const asstOf=m=>(S.assts||[]).filter(x=>x.mid===m.id);
 export const asstB=(m,k)=>asstOf(m).filter(x=>x.k===k).reduce((t,x)=>t+x.v,0);
 export const otherMgr=(a,m)=>S.managers.find(x=>x!==m&&x.as&&mgrTargets(x).includes(a));
 /* ---- Income & expense ledger ---- */
-export const FIN_I={dig:'🎧 Nhạc số',sgl:'💿 Bán single',job:'📨 Thù lao dự án',con:'🏟️ Concert & fan meeting',film:'🎞️ Phim',live:'📱 Livestream & quảng bá',biz:'📈 Đầu tư',oth:'➕ Khác'};
-export const FIN_X={sal:'💵 Lương nghệ sĩ',mgr:'📋 Lương quản lý & trợ lý',trn:'🏫 Đào tạo',prod:'🎬 Sản xuất & debut',hr:'🗂️ Hợp đồng & tuyển dụng',oth:'➖ Khác'};
+export const FIN_I={dig:1,sgl:1,job:1,con:1,film:1,live:1,biz:1,oth:1};
+export const FIN_X={sal:1,mgr:1,trn:1,prod:1,hr:1,oth:1};
 export function fcEnsure(){if(!S.fc)S.fc={w:abs(),m0:S.money,i:{},x:{}};return S.fc}
 export function book(c,v,arts){const f=fcEnsure();v=Math.round(v);if(!v)return;if(v>0)f.i[c]=(f.i[c]||0)+v;else f.x[c]=(f.x[c]||0)-v;
   if(arts&&arts.length&&v>0){const p=v/arts.length;arts.forEach(a=>{if(a){a.earn=(a.earn||0)+p;a.earnC=(a.earnC||0)+p}})}}
@@ -85,7 +85,7 @@ export function fireAsst(id){const x=(S.assts||[]).find(z=>z.id===id);if(!x)retu
 /* ---- Manager & artist situations ---- */
 export const mxP=(m,k,b)=>clamp(b+(m?effSk(m,k):0)*.06,.05,.95);
 export const lowK=a=>focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);
-export const SCOUT_W=['ở quán cà phê gần phim trường','trong buổi fan meeting','ở một lễ hội âm nhạc trường học','tại cuộc thi hát karaoke khu phố','trên chuyến tàu đi quay ngoại cảnh','khi xem một buổi diễn đường phố'];
+export const SCOUT_N=6; // ids only: texts are ev.why.scout.<i>
 export const MXS={
  fan:{who:'d',ic:'🕵️',t:(a,m)=>t('mx.fan.t',{a:a.name}),d:(a,m)=>t('mx.fan.d',{m:m.name,a:a.name}),
   o:(a,m)=>[{k:'guard',l:t('mx.fan.o.guard',{m:money(20e6)})},{k:'mgr',l:t('mx.fan.o.mgr',{p:pct(mxP(m,'care',.35))})},{k:'police',l:t('mx.fan.o.police',{p:pct(mxP(m,'pr',.4))})},{k:'no',l:t('mx.fan.o.no')}],
@@ -146,7 +146,7 @@ export function mxTick(){for(const m of S.managers){if(!m.as)continue;const ts=m
   if(Math.random()<.07){const a=pick(ts);if(!S.events.some(e=>e.a===a.id)){const ks=Object.keys(MXS).filter(k=>{const D=MXS[k],w=D.who;return(w==='x'||(w==='d'&&a.status==='debuted')||(w==='t'&&a.status==='trainee'))&&(!D.ok||D.ok(a,m))});
     if(ks.length){const k=pick(ks),D=MXS[k],ex=D.pre?D.pre(a,m):{};if(ex)pushEv({kind:'mx',mx:k,a:a.id,m:m.id,...ex})}}}
   if(Math.random()<.045&&asstOf(m).length<2&&!S.events.some(e=>e.kind==='mp'&&e.m===m.id)){const k=Object.keys(MSK).reduce((x,y)=>m.sk[y]<m.sk[x]?y:x),v=R(1,3);pushEv({kind:'mp',t:'asst',m:m.id,k,v,name:pick(LNM)+' '+pick(FN.concat(MN)),fee:v*8e6,sal:v*1e6})}
-  else if(Math.random()<.035&&!S.events.some(e=>e.kind==='mp'&&e.t==='scout')){const a=pick(ts),c=genArtist();c.talent=+rnd(1.05,1.3).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(8,15),0,80);pushEv({kind:'mp',t:'scout',m:m.id,a:a.id,cand:c,where:Lk(`ev.why.scout.${pickI(SCOUT_W.length)}`)})}}}
+  else if(Math.random()<.035&&!S.events.some(e=>e.kind==='mp'&&e.t==='scout')){const a=pick(ts),c=genArtist();c.talent=+rnd(1.05,1.3).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(8,15),0,80);pushEv({kind:'mp',t:'scout',m:m.id,a:a.id,cand:c,where:Lk(`ev.why.scout.${pickI(SCOUT_N)}`)})}}}
 export function candBlock(c){return`<div class="card" style="background:var(--bg)"><div class="row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small"><b>${esc(c.name)}</b> · ${t('lobby.cand',{g:c.g==='F'?t('lobby.female'):t('lobby.male'),a:c.age,s:statName(c.spec),t:c.talent})}</div></div>${bars(c)}</div>`}
 /* ---- Group disbanding ---- */
 export const gMgr=g=>S.managers.find(m=>m.as&&m.as.t==='g'&&m.as.id===g.id);

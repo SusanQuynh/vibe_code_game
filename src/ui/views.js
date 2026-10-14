@@ -16,7 +16,7 @@ import { groupsOf } from '../systems/relations.js';
 import { liveEst } from '../systems/releases.js';
 import { EV_ART, EV_PCT, EV_TTS, evNext, evalBrief, stSum } from '../systems/review.js';
 import { wkLabel } from '../systems/secretary.js';
-import { DAYN, DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/week.js';
+import { DAYS, TIC, daysMini, mgrSchedules, trainDays } from '../systems/week.js';
 import { blinkD, campKeyOf, chibiHTML } from './building.js';
 import { closeM, modal } from './modal.js';
 import { money, t, tx } from '../i18n/index.js';

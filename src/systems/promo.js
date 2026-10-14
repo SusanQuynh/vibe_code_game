@@ -12,24 +12,24 @@ import { toast } from '../ui/modal.js';
 /* ---- Promotion campaigns before & after a comeback ---- */
 export const PROMO_WK=3;
 export const PRE={
-  sched:{n:'Lịch trình comeback',ic:'🗓️',c:3e6,h:4,e:0,d:'Công bố ngày ra mắt'},
-  photo:{n:'Ảnh teaser',ic:'📸',c:10e6,h:6,e:3,d:'Bộ ảnh concept'},
-  medley:{n:'Highlight medley',ic:'🎧',c:15e6,h:8,e:2,d:'Nghe thử các bài'},
-  mvt:{n:'MV teaser',ic:'🎬',c:30e6,h:12,e:6,d:'Đoạn MV 30 giây'},
-  pre:{n:'Pre-release',ic:'🎵',c:40e6,h:14,e:8,d:'Tung trước 1 bài, thêm fan'},
-  vpre:{n:'Tạp kỹ quảng bá',ic:'📺',c:0,h:10,e:10,d:'Lên show, tăng Tạp kỹ'},
-  showcase:{n:'Showcase báo chí',ic:'🎤',c:50e6,h:15,e:12,d:'Ra mắt trước truyền thông'}
+  sched:{ic:'🗓️',c:3e6,h:4,e:0},
+  photo:{ic:'📸',c:10e6,h:6,e:3},
+  medley:{ic:'🎧',c:15e6,h:8,e:2},
+  mvt:{ic:'🎬',c:30e6,h:12,e:6},
+  pre:{ic:'🎵',c:40e6,h:14,e:8},
+  vpre:{ic:'📺',c:0,h:10,e:10},
+  showcase:{ic:'🎤',c:50e6,h:15,e:12}
 };
 export const POST={
-  s1:{n:'Sân khấu Music Weekly',ic:'🎤',stage:1,e:8},
-  s2:{n:'Sân khấu Sân Khấu Sao',ic:'🎤',stage:1,e:8},
-  s3:{n:'Sân khấu Đài Âm Nhạc',ic:'🎤',stage:1,e:8},
-  s4:{n:'Bảng Xếp Hạng Tuần',ic:'🎤',stage:1,e:8},
-  radio:{n:'Radio',ic:'📻',e:3},
-  variety:{n:'Tạp kỹ',ic:'📺',e:8},
-  fansign:{n:'Ký tặng (fansign)',ic:'✍️',e:6},
-  challenge:{n:'Dance challenge',ic:'🕺',e:4},
-  live:{n:'Livestream cùng fan',ic:'📱',e:3}
+  s1:{ic:'🎤',stage:1,e:8},
+  s2:{ic:'🎤',stage:1,e:8},
+  s3:{ic:'🎤',stage:1,e:8},
+  s4:{ic:'🎤',stage:1,e:8},
+  radio:{ic:'📻',e:3},
+  variety:{ic:'📺',e:8},
+  fansign:{ic:'✍️',e:6},
+  challenge:{ic:'🕺',e:4},
+  live:{ic:'📱',e:3}
 };
 export const campMem=k=>{const x=actByKey(k);return x?x.m.map(byId).filter(Boolean):[]};
 export const avgE=ms=>ms.length?ms.reduce((t,a)=>t+a.energy,0)/ms.length:0;

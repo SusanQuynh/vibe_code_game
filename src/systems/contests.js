@@ -17,23 +17,23 @@ import { det } from '../ui/views.js';
 
 /* ---- Trainee competitions ---- */
 export const COMP=[
-  {n:'Giọng hát Tân binh',ic:'🎙️',w:{vocal:1},t:[1,1]},
-  {n:'Đấu trường Rap Trẻ',ic:'🎤',w:{rap:1,variety:.3},t:[1,1]},
-  {n:'Liên hoan Nhảy đường phố',ic:'🕺',w:{dance:1,stamina:.5},t:[2,5]},
-  {n:'Cover Dance Idol',ic:'💃',w:{dance:.8,vocal:.4,visual:.4},t:[3,6]},
-  {n:'Gương mặt Teen',ic:'📸',w:{visual:1,variety:.4},t:[1,1]},
-  {n:'Tài năng Diễn xuất Trẻ',ic:'🎭',w:{acting:1,visual:.3},t:[1,2]},
-  {n:'Ban nhạc Học đường',ic:'🎸',w:{vocal:.8,rap:.4,dance:.4},t:[2,4]}
+  {ic:'🎙️',w:{vocal:1},t:[1,1]},
+  {ic:'🎤',w:{rap:1,variety:.3},t:[1,1]},
+  {ic:'🕺',w:{dance:1,stamina:.5},t:[2,5]},
+  {ic:'💃',w:{dance:.8,vocal:.4,visual:.4},t:[3,6]},
+  {ic:'📸',w:{visual:1,variety:.4},t:[1,1]},
+  {ic:'🎭',w:{acting:1,visual:.3},t:[1,2]},
+  {ic:'🎸',w:{vocal:.8,rap:.4,dance:.4},t:[2,4]}
 ];
 /* debuted-artist templates: k = kind, t = team size (group: member count) */
 export const DCOMP=[
-  {k:'grp',n:'Đại chiến Idol Group',ic:'👥',w:{vocal:.6,dance:.8,visual:.4},t:[2,9]},
-  {k:'grp',n:'Sân khấu Huyền thoại',ic:'🌟',w:{vocal:1,dance:.5},t:[2,9]},
-  {k:'solo',n:'Giọng ca Vàng',ic:'🎙️',w:{vocal:1,variety:.3},t:[1,1]},
-  {k:'solo',n:'Vũ điệu Solo',ic:'💃',w:{dance:1,visual:.4},t:[1,1]},
-  {k:'solo',n:'Rap Battle Pro',ic:'🎤',w:{rap:1,variety:.4},t:[1,1]},
-  {k:'act',n:'Liên hoan Diễn xuất',ic:'🎬',w:{acting:1,visual:.3},t:[1,1]},
-  {k:'act',n:'Thử thách Độc thoại',ic:'🎭',w:{acting:1,variety:.4},t:[1,1]}
+  {k:'grp',ic:'👥',w:{vocal:.6,dance:.8,visual:.4},t:[2,9]},
+  {k:'grp',ic:'🌟',w:{vocal:1,dance:.5},t:[2,9]},
+  {k:'solo',ic:'🎙️',w:{vocal:1,variety:.3},t:[1,1]},
+  {k:'solo',ic:'💃',w:{dance:1,visual:.4},t:[1,1]},
+  {k:'solo',ic:'🎤',w:{rap:1,variety:.4},t:[1,1]},
+  {k:'act',ic:'🎬',w:{acting:1,visual:.3},t:[1,1]},
+  {k:'act',ic:'🎭',w:{acting:1,variety:.4},t:[1,1]}
 ];
 const rp=p1=>[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6];
 export function genComp(kind='tts'){

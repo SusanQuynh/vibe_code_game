@@ -15,11 +15,6 @@
   "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
  },
  {
-  "file": "src/core/util.js",
-  "text": "tỷ",
-  "why": "FMT_VI default units: fmt() feeds the log sinks, so S stays language-independent"
- },
- {
   "file": "src/save/transfer.js",
   "text": "Mã không hợp lệ hoặc bị cắt cụt",
   "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed"

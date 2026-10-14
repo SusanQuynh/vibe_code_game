@@ -34,7 +34,6 @@ export function buildProps(){
   S.props=P;routeProps(P);return P;
 }
 /* ---- approval flow: manager → boss → … → Director ---- */
-export const CFT={overlap:'Trùng người',offer:'Tranh cùng lời mời',tired:'Quá sức',enemy:'Bạn diễn mâu thuẫn',scandal:'Đang dính scandal'};
 export const mById=id=>S.managers.find(m=>m.id===id);
 export const chainUp=m=>{const r=[];let b=mBoss(m);while(b&&!r.includes(b)){r.push(b);b=mBoss(b)}return r};
 export const canSolve=(r,c)=>effSk(r,'plan')+r.lv>=c.sev*3;

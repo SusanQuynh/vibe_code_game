@@ -87,14 +87,14 @@ export function sxResolve(e,k){
 }
 /* ---- business investments ---- */
 export const BIZ={
-  cafe:{n:'Cà phê thần tượng',ic:'☕',cost:150e6,base:5e6,syn:.8,vol:.3,d:'Fan càng đông càng đắt khách.'},
-  food:{n:'Chuỗi nhà hàng',ic:'🍜',cost:350e6,base:11e6,syn:.2,vol:.25,d:'Ổn định, ít phụ thuộc fan.'},
-  media:{n:'Studio nội dung số',ic:'📹',cost:250e6,base:5e6,syn:.6,vol:.4,d:'Mỗi cấp giúp nghệ sĩ đã ra mắt tăng fan nhanh hơn.'},
-  academy:{n:'Học viện đào tạo',ic:'🏫',cost:500e6,base:8e6,syn:.1,vol:.2,d:'Mỗi cấp tăng 6% hiệu quả luyện tập.'},
-  fashion:{n:'Thương hiệu thời trang',ic:'👗',cost:450e6,base:13e6,syn:1,vol:.45,d:'Bán chạy khi nghệ sĩ nổi tiếng.'},
-  beauty:{n:'Dòng mỹ phẩm',ic:'💄',cost:700e6,base:19e6,syn:1,vol:.5,d:'Lãi cao, phụ thuộc danh tiếng.'},
-  game:{n:'Studio game',ic:'🎮',cost:900e6,base:26e6,syn:.5,vol:1.1,d:'Rủi ro cao: có tuần lãi lớn, có tuần lỗ.'},
-  estate:{n:'Bất động sản',ic:'🏢',cost:1200e6,base:22e6,syn:0,vol:.1,d:'Rất ổn định, vốn lớn.'}
+  cafe:{ic:'☕',cost:150e6,base:5e6,syn:.8,vol:.3},
+  food:{ic:'🍜',cost:350e6,base:11e6,syn:.2,vol:.25},
+  media:{ic:'📹',cost:250e6,base:5e6,syn:.6,vol:.4},
+  academy:{ic:'🏫',cost:500e6,base:8e6,syn:.1,vol:.2},
+  fashion:{ic:'👗',cost:450e6,base:13e6,syn:1,vol:.45},
+  beauty:{ic:'💄',cost:700e6,base:19e6,syn:1,vol:.5},
+  game:{ic:'🎮',cost:900e6,base:26e6,syn:.5,vol:1.1},
+  estate:{ic:'🏢',cost:1200e6,base:22e6,syn:0,vol:.1}
 };
 export const bizLv=k=>{const b=(S.biz||[]).find(x=>x.k===k);return b?b.lv:0};
 export const upCost=b=>Math.round(BIZ[b.k].cost*.7*b.lv);

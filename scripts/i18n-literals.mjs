@@ -8,8 +8,7 @@ import path from 'node:path';
 import { spans, walk, skipBal, SINK_STARTS } from './lib/js-spans.mjs';
 
 const VI = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
-const KEEP_CONSTS = ['STATS', 'TRAIN', 'MSK', 'MSKD', 'MDOM', 'GENRES', 'CONCEPTS', 'OFFER', 'PLESSON', 'PARTNERS', 'TT', 'RIVALS',
-  'FN', 'MN', 'LNM', 'MGN', 'GNAMES', 'COSTARS', 'FT1', 'FT2', 'SONGS', 'SONGW', 'EXTN', 'SCOUT_W', 'COMP', 'DCOMP', 'DAYS', 'DAYN', 'DR', 'DRT', 'BIZ', 'PRE', 'POST', 'FIN_I', 'FIN_X', 'LEADS', 'BUDN', 'CFT', 'MXS'];
+const KEEP_CONSTS = ['PARTNERS', 'TT', 'RIVALS', 'FN', 'MN', 'LNM', 'MGN', 'GNAMES', 'COSTARS', 'FT1', 'FT2', 'SONGS', 'SONGW', 'EXTN'];
 const ALLOW_FILE = 'scripts/i18n-literal-allow.json';
 const blank = (s, a, b) => s.slice(0, a) + s.slice(a, b).replace(/[^\n]/g, ' ') + s.slice(b);
 

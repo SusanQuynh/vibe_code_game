@@ -22,14 +22,14 @@ export function makeScandal(a){
   addLog(Lk('log.ev.scandal',{n:a.name,t}),'bad');
 }
 export const LEADS={
-  photo:{n:'Ảnh/video gốc',ic:'📷',r:.85,T:'File gốc có dữ liệu ngày giờ khớp, không bị chỉnh sửa.',F:'Phân tích điểm ảnh cho thấy ảnh đã bị ghép.'},
-  witness:{n:'Nhân chứng',ic:'🧑‍🤝‍🧑',r:.7,T:'Hai nhân chứng độc lập xác nhận sự việc.',F:'Lời khai mâu thuẫn, có dấu hiệu được trả tiền.'},
-  chat:{n:'Tin nhắn',ic:'💬',r:.8,T:'Lịch sử tin nhắn trùng khớp nội dung tin đồn.',F:'Ảnh chụp tin nhắn dùng giao diện giả.'},
-  schedule:{n:'Lịch trình',ic:'🗓️',r:.75,T:'Lịch trình có khoảng trống đúng giờ được nhắc tới.',F:'Hôm đó nghệ sĩ đang tập, có camera phòng tập làm chứng.'},
-  source:{n:'Nguồn tung tin',ic:'🕵️',r:.65,T:'Nguồn tin là phóng viên uy tín, từng đưa tin chính xác.',F:'Tài khoản tung tin mới lập, liên quan công ty đối thủ.'},
-  talk:{n:'Nói chuyện riêng',ic:'🗣️',r:.6,T:'Nghệ sĩ lúng túng và thừa nhận một phần.',F:'Nghệ sĩ bình tĩnh đưa ra lời giải thích hợp lý.'},
-  social:{n:'Mạng xã hội',ic:'📱',r:.55,T:'Nhiều tài khoản cũ từng nhắc chuyện tương tự.',F:'Tin đồn chỉ lan từ một cụm tài khoản ảo.'},
-  staff:{n:'Nhân viên hậu trường',ic:'🎬',r:.7,T:'Staff xác nhận có chuyện xảy ra.',F:'Staff khẳng định không có chuyện đó.'}
+  photo:{ic:'📷',r:.85},
+  witness:{ic:'🧑‍🤝‍🧑',r:.7},
+  chat:{ic:'💬',r:.8},
+  schedule:{ic:'🗓️',r:.75},
+  source:{ic:'🕵️',r:.65},
+  talk:{ic:'🗣️',r:.6},
+  social:{ic:'📱',r:.55},
+  staff:{ic:'🎬',r:.7}
 };
 export function invFix(sc){if(sc&&sc.inv&&!sc.inv.leads)sc.inv=null}
 export function invStart(aId){
