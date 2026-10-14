@@ -57,8 +57,14 @@
   "k": "biz.*"
  },
  {
+  "k": "busy.concert"
+ },
+ {
   "k": "busy.fanmeet",
   "logic": true
+ },
+ {
+  "k": "busy.promo"
  },
  {
   "k": "common.gain"
@@ -197,10 +203,19 @@
   "k": "hist.offer"
  },
  {
+  "k": "hist.single"
+ },
+ {
+  "k": "hist.write"
+ },
+ {
   "k": "les.film"
  },
  {
   "k": "les.filmLt"
+ },
+ {
+  "k": "les.live"
  },
  {
   "k": "les.lt.collab.0"
@@ -291,6 +306,81 @@
  },
  {
   "k": "log.ev.leftGrp"
+ },
+ {
+  "k": "log.pro.auto"
+ },
+ {
+  "k": "log.pro.chal"
+ },
+ {
+  "k": "log.pro.cup"
+ },
+ {
+  "k": "log.pro.end"
+ },
+ {
+  "k": "log.pro.live"
+ },
+ {
+  "k": "log.pro.perf"
+ },
+ {
+  "k": "log.pro.pre"
+ },
+ {
+  "k": "log.pro.radio"
+ },
+ {
+  "k": "log.pro.sign"
+ },
+ {
+  "k": "log.pro.var"
+ },
+ {
+  "k": "log.pro.viral"
+ },
+ {
+  "k": "log.pro.win"
+ },
+ {
+  "k": "log.rel.concert"
+ },
+ {
+  "k": "log.rel.discord"
+ },
+ {
+  "k": "log.rel.film"
+ },
+ {
+  "k": "log.rel.fm"
+ },
+ {
+  "k": "log.rel.hype"
+ },
+ {
+  "k": "log.rel.live"
+ },
+ {
+  "k": "log.rel.ppl"
+ },
+ {
+  "k": "log.rel.rival"
+ },
+ {
+  "k": "log.rel.single"
+ },
+ {
+  "k": "log.rel.slip"
+ },
+ {
+  "k": "log.rel.songw"
+ },
+ {
+  "k": "log.rel.trendDn"
+ },
+ {
+  "k": "log.rel.trendUp"
  },
  {
   "k": "log.st.office"
@@ -428,6 +518,24 @@
   "k": "offer.lt.web.1"
  },
  {
+  "k": "pro.stage.s1"
+ },
+ {
+  "k": "pro.stage.s2"
+ },
+ {
+  "k": "pro.stage.s3"
+ },
+ {
+  "k": "pro.stage.s4"
+ },
+ {
+  "k": "promo.post.*"
+ },
+ {
+  "k": "promo.pre.*"
+ },
+ {
   "k": "prop.ceo",
   "logic": true
  },
@@ -456,6 +564,9 @@
  },
  {
   "k": "q.ok"
+ },
+ {
+  "k": "scandal.live"
  },
  {
   "k": "stat.*"

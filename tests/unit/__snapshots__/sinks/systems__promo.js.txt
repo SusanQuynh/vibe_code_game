@@ -1,5 +1,0 @@
-src/systems/promo.js: addLog(`${msg} (${nm}, cúp thứ ${c.wins})`,'gold')
-src/systems/promo.js: addLog(`📣 ${x.n.slice(2).trim()}: ${P.ic} ${P.n} (+${h} hype, tổng ${c.hype}).`)
-src/systems/promo.js: addLog(`📣 Kết thúc quảng bá «${c.t}» (${x.n.slice(2).trim()}): ${c.stages} sân khấu, ${c.wins} cúp, hạng cao nhất #${c.best}, thu thêm ${fmt(c.inc)}.`,c.wins?'gold':'good')
-src/systems/promo.js: addLog(`🗒️ Thư ký tự xếp ${n} hoạt động quảng bá cho ${x.n.slice(2).trim()}.`)
-src/systems/promo.js: addLog(msg)

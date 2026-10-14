@@ -105,56 +105,6 @@
   "why": "compDone: 'Nhóm <name>' is interpolated into addLog (stored in S.log, phase 3)"
  },
  {
-  "file": "src/systems/promo.js",
-  "text": "» giành cúp #1 tại",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "Sân khấu",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "biểu diễn",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "lên radio.",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "quảng bá trên tạp kỹ.",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "✍️ Fansign của",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": ": bán thêm album, +",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "🕺 Dance challenge của «",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "» viral! Bài hát leo hạng mạnh.",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
-  "file": "src/systems/promo.js",
-  "text": "livestream giao lưu fan sau sân khấu, thu",
-  "why": "postDo msg text is written to the log via addLog (phase 3)"
- },
- {
   "file": "src/systems/review.js",
   "text": "Xuất sắc",
   "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
