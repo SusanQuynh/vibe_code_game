@@ -851,7 +851,7 @@ import { makeScandal } from '../../src/systems/events.js';
 import { awards } from '../../src/systems/awards.js';
 import { nextWeek } from '../../src/systems/week.js';
 import { setTag } from '../../src/systems/relations.js';
-const vt = v => (I18N.txVi ? I18N.txVi(v) : v);          // stored value as Vietnamese text (strings pass through)
+const vt = v => (v == null ? v : I18N.txVi ? I18N.txVi(v) : v);          // stored value as Vietnamese text (strings pass through)
 const logTop = (n = 4) => { render(); return [...document.querySelectorAll('#log > div')].slice(0, n).map(x => x.outerHTML).join('\n'); };
 const SAFE = f => { try { return f(); } catch (e) { return 'THROW ' + e.message; } };
 const J = v => JSON.stringify(v);

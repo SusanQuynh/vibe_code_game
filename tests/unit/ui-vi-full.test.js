@@ -21,6 +21,7 @@ describe('vi display golden (rich state)', () => {
     it(s.name, async () => {
       const html = renderSurface(s.name, base);
       if (html == null) return;
+      expect(html).not.toContain('[object Object]');
       await expect(html).toMatchFileSnapshot(`__snapshots__/ui-vi/${s.name}.html`);
     });
   }
@@ -36,7 +37,7 @@ describe('vi display golden (week 1)', () => {
 });
 
 describe('vi company log', () => {
-  it('log', async () => { await expect(renderLog(base)).toMatchFileSnapshot('__snapshots__/ui-vi/log.html'); });
+  it('log', async () => { expect(renderLog(base)).not.toContain('[object Object]'); await expect(renderLog(base)).toMatchFileSnapshot('__snapshots__/ui-vi/log.html'); });
   it('early-log', async () => { await expect(renderLog(early)).toMatchFileSnapshot('__snapshots__/ui-vi/early-log.html'); });
 });
 

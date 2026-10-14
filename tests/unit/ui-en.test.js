@@ -37,6 +37,7 @@ describe('en render has no Vietnamese', () => {
     const base_ = early_ ? early : base;
     const html = renderSurface(early_ ? name.slice(6) : name, base_);
     if (html == null) return;
+    expect(html).not.toContain('[object Object]');
     let root = document.getElementById('sheet');
     if (name === 'top' || name === 'early-top') { root = document.body.cloneNode(true); root.querySelector('#log')?.remove(); } // the log is stored text
     const off = offenders(visibleText(root), S);

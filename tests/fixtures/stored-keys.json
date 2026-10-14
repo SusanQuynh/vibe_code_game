@@ -1,0 +1,175 @@
+[
+ {
+  "k": "batch.n"
+ },
+ {
+  "k": "biz.*"
+ },
+ {
+  "k": "busy.fanmeet",
+  "logic": true
+ },
+ {
+  "k": "common.gain"
+ },
+ {
+  "k": "common.wkLbl"
+ },
+ {
+  "k": "common.wkShort"
+ },
+ {
+  "k": "common.wkYear"
+ },
+ {
+  "k": "common.wkYearSfx"
+ },
+ {
+  "k": "comp.name.d0",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d1",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d2",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d3",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d4",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d5",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d6",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t0",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t1",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t2",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t3",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t4",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t5",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t6",
+  "logic": true
+ },
+ {
+  "k": "concept.*"
+ },
+ {
+  "k": "debut.short"
+ },
+ {
+  "k": "debut.short.*"
+ },
+ {
+  "k": "debut.typeShort.*"
+ },
+ {
+  "k": "debut.why.*"
+ },
+ {
+  "k": "dom.*"
+ },
+ {
+  "k": "film.st.out"
+ },
+ {
+  "k": "film.st.post"
+ },
+ {
+  "k": "film.st.shoot",
+  "logic": true
+ },
+ {
+  "k": "film.st.soon"
+ },
+ {
+  "k": "genre.*"
+ },
+ {
+  "k": "grade.ex",
+  "logic": true
+ },
+ {
+  "k": "grade.fail",
+  "logic": true
+ },
+ {
+  "k": "grade.good",
+  "logic": true
+ },
+ {
+  "k": "grade.pass",
+  "logic": true
+ },
+ {
+  "k": "msk.*"
+ },
+ {
+  "k": "offer.*"
+ },
+ {
+  "k": "prop.ceo",
+  "logic": true
+ },
+ {
+  "k": "prop.cf.*"
+ },
+ {
+  "k": "prop.self",
+  "logic": true
+ },
+ {
+  "k": "prop.why.lighter"
+ },
+ {
+  "k": "prop.why2.busy",
+  "logic": true
+ },
+ {
+  "k": "q.ex"
+ },
+ {
+  "k": "q.good"
+ },
+ {
+  "k": "q.low"
+ },
+ {
+  "k": "q.ok"
+ },
+ {
+  "k": "stat.*"
+ },
+ {
+  "k": "target.*"
+ }
+]

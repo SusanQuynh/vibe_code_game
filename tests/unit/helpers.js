@@ -1,3 +1,4 @@
+import { txVi } from '../../src/i18n/index.js';
 // Mulberry32 — same algorithm as tests/e2e/seed.js
 export function seed(n = 1) {
   let a = n >>> 0;
@@ -8,6 +9,9 @@ export function seed(n = 1) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+// stored text (Txt) rendered in Vietnamese, for assertions on S
+export const viT = v => txVi(v);
 
 export const SHELL = `<div class="wrap"><b id="date"></b><small id="yearL"></small><b id="money"></b>
 <span id="artN"></span><span id="fansP"></span><b id="evn"></b><small id="roofInfo"></small>
