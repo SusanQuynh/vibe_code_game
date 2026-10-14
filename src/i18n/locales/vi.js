@@ -21,9 +21,10 @@ import stMgr from './vi/st-mgr.js';
 import stMeet from './vi/st-meet.js';
 import stReview from './vi/st-review.js';
 import stEvents from './vi/st-events.js';
+import stMarket from './vi/st-market.js';
 
 // Dictionary parts per area; the merged dict is what t() reads. check:i18n reports keys defined in two parts.
-export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr], ['market', market], ['events', events], ['meet', meet], ['save', save], ['st-common', stCommon], ['st-core', stCore], ['st-week', stWeek], ['st-studio', stStudio], ['st-lobby', stLobby], ['st-mgr', stMgr], ['st-meet', stMeet], ['st-review', stReview], ['st-events', stEvents]];
+export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr], ['market', market], ['events', events], ['meet', meet], ['save', save], ['st-common', stCommon], ['st-core', stCore], ['st-week', stWeek], ['st-studio', stStudio], ['st-lobby', stLobby], ['st-mgr', stMgr], ['st-meet', stMeet], ['st-review', stReview], ['st-events', stEvents], ['st-market', stMarket]];
 export default {
   meta: { code: 'vi', name: 'Tiếng Việt', htmlLang: 'vi' },
   parts,

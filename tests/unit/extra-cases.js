@@ -497,7 +497,7 @@ add('t10-invest', ctx => {
   for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('invest'); }
   ctx.fresh(ctx.base);
   S.biz = [{ k: 'cafe', lv: 2, inv: 150e6, tot: 12e6, last: 3e6, y: 1, own: .7, rw: abs() - 1 }, { k: 'game', lv: 5, inv: 900e6, tot: -5e6, last: -4e6, y: 1 }, { k: 'estate', lv: 1, inv: 1200e6, tot: 0, last: 0, y: 1, own: .9, rw: abs() - 20 }];
-  S.loan = { pay: 5e6, left: 12, n: 'Quỹ Sao Mai' }; setMod('econ', .7, 6, 'Suy thoái: kinh doanh −30%');
+  S.loan = { pay: 5e6, left: 12, n: Lk('fund.0') }; setMod('econ', .7, 6, Lk('mod.econ'));
   out.rich = room('invest');
   S.biz = Object.keys(BIZ).map(k => ({ k, lv: 1, inv: BIZ[k].cost, tot: 1, last: 1e6, y: 1 })); S.loan = null; S.mods = {}; out.all = room('invest');
   S.biz = []; out.none = room('invest');
@@ -734,7 +734,7 @@ add('t12-basic', ctx => {
 }, ['Tin đồn thái độ', 'Moonlight Ent.']);
 add('t12-sx', ctx => {
   ctx.fresh(ctx.base); const out = {}, P = acts()[0];
-  evAll(out, { fire: { kind: 'sx', sx: 'fire' }, sponsor: { kind: 'sx', sx: 'sponsor', p: 'Hãng Tài Trợ', v: 60e6 }, tax: { kind: 'sx', sx: 'tax' }, festival: { kind: 'sx', sx: 'festival', act: P.k, n: P.n.slice(2) }, leak: { kind: 'sx', sx: 'leak' }, investor: { kind: 'sx', sx: 'investor', p: 'Quỹ Sao Mai', v: 300e6 }, unknown: { kind: 'sx', sx: 'zzz' } });
+  evAll(out, { fire: { kind: 'sx', sx: 'fire' }, sponsor: { kind: 'sx', sx: 'sponsor', p: 'Hãng Tài Trợ', v: 60e6 }, tax: { kind: 'sx', sx: 'tax' }, festival: { kind: 'sx', sx: 'festival', act: P.k, n: P.n.slice(2) }, leak: { kind: 'sx', sx: 'leak' }, investor: { kind: 'sx', sx: 'investor', p: Lk('fund.0'), v: 300e6 }, unknown: { kind: 'sx', sx: 'zzz' } });
   out.keys = Object.keys(SXD);
   S.events = []; for (const k of ['sponsor', 'investor']) pushEv({ kind: 'sx', sx: k, p: 'Hãng Tài Trợ', v: 60e6 }, true); viewEvents(); out.sheet = sheet();
   return out;
@@ -879,11 +879,11 @@ const evSheet = i => { viewEvents(); for (const e of S.events) if (e.cand && e.c
 
 add('p3-loan', ctx => {
   ctx.fresh(ctx.base); const out = {}; S.events = []; S.loan = null;
-  pushEv({ kind: 'sx', sx: 'investor', p: 'Quỹ Sao Mai', v: 300e6 }, true);
+  pushEv({ kind: 'sx', sx: 'investor', p: Lk('fund.0'), v: 300e6 }, true);
   out['~res'] = SAFE(() => { resolveEv(S.events[0].id, 'yes'); return 'ok'; });
   out['~log1'] = logTop(2); out.invest = room('invest'); out['~loan1'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
   if (S.loan) S.loan.left = 1; bizTick(); out['~log2'] = logTop(2); out.invest2 = room('invest'); out['~loan2'] = J(S.loan);
-  S.events = []; pushEv({ kind: 'sx', sx: 'investor', p: 'Quỹ Rồng Vàng', v: 200e6 }, true); resolveEv(S.events[0].id, 'yes'); out.invest3 = room('invest'); out['~loan3'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
+  S.events = []; pushEv({ kind: 'sx', sx: 'investor', p: Lk('fund.2'), v: 200e6 }, true); resolveEv(S.events[0].id, 'yes'); out.invest3 = room('invest'); out['~loan3'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
   return out;
 }, ['Quỹ Sao Mai', 'Quỹ Rồng Vàng']);
 

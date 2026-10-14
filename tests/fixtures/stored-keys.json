@@ -67,6 +67,12 @@
   "logic": true
  },
  {
+  "k": "busy.festival"
+ },
+ {
+  "k": "busy.injury"
+ },
+ {
   "k": "busy.leave"
  },
  {
@@ -191,6 +197,15 @@
  },
  {
   "k": "film.st.soon"
+ },
+ {
+  "k": "fund.0"
+ },
+ {
+  "k": "fund.1"
+ },
+ {
+  "k": "fund.2"
  },
  {
   "k": "genre.*"
@@ -518,6 +533,96 @@
   "k": "log.mgr.take"
  },
  {
+  "k": "log.mk.boom"
+ },
+ {
+  "k": "log.mk.buyback"
+ },
+ {
+  "k": "log.mk.cb"
+ },
+ {
+  "k": "log.mk.chal"
+ },
+ {
+  "k": "log.mk.cheap"
+ },
+ {
+  "k": "log.mk.crisis"
+ },
+ {
+  "k": "log.mk.fest"
+ },
+ {
+  "k": "log.mk.festNo"
+ },
+ {
+  "k": "log.mk.fixed"
+ },
+ {
+  "k": "log.mk.gift"
+ },
+ {
+  "k": "log.mk.injury"
+ },
+ {
+  "k": "log.mk.inv"
+ },
+ {
+  "k": "log.mk.leakIgn"
+ },
+ {
+  "k": "log.mk.leakNo"
+ },
+ {
+  "k": "log.mk.leakOk"
+ },
+ {
+  "k": "log.mk.leakSue"
+ },
+ {
+  "k": "log.mk.loanDone"
+ },
+ {
+  "k": "log.mk.open"
+ },
+ {
+  "k": "log.mk.raise"
+ },
+ {
+  "k": "log.mk.rscan"
+ },
+ {
+  "k": "log.mk.sell"
+ },
+ {
+  "k": "log.mk.spon"
+ },
+ {
+  "k": "log.mk.sponNo"
+ },
+ {
+  "k": "log.mk.stole"
+ },
+ {
+  "k": "log.mk.taxFine"
+ },
+ {
+  "k": "log.mk.taxPay"
+ },
+ {
+  "k": "log.mk.taxWin"
+ },
+ {
+  "k": "log.mk.trend"
+ },
+ {
+  "k": "log.mk.up"
+ },
+ {
+  "k": "log.mk.viral"
+ },
+ {
   "k": "log.off.acc"
  },
  {
@@ -755,6 +860,18 @@
   "k": "log.x3.rest"
  },
  {
+  "k": "mod.econ"
+ },
+ {
+  "k": "mod.pay"
+ },
+ {
+  "k": "mod.train"
+ },
+ {
+  "k": "mod.wave"
+ },
+ {
   "k": "msk.*"
  },
  {
@@ -918,6 +1035,15 @@
  },
  {
   "k": "q.ok"
+ },
+ {
+  "k": "riv.cb"
+ },
+ {
+  "k": "riv.scandal"
+ },
+ {
+  "k": "riv.stole"
  },
  {
   "k": "rv.allTts"
