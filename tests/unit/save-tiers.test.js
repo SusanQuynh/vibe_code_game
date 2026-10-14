@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
-import { noToggle, seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL, viT } from './helpers.js';
 import { S, newGame, setState } from '../../src/state.js';
 import { sign } from '../../src/systems/artists.js';
 import { debutIds } from '../../src/systems/debut.js';
@@ -90,7 +90,7 @@ describe('save hai tầng', () => {
     expect(load()).toBe(true);
     expect(S.week).toBe(w);
     expect(lastLoadSource()).toBe('full');
-    expect(S.log[0].t).toContain('🛟');
+    expect(viT(S.log[0].t)).toContain('🛟');
     localStorage.clear();
     expect(load()).toBe(false);
   });

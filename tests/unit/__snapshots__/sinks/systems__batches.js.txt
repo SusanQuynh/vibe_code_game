@@ -1,4 +1,0 @@
-src/systems/batches.js: S.batches=[{id:uid(),n:'Lứa 1',w:abs()}]
-src/systems/batches.js: addLog(`🌱 Mở ${n}. Thực tập sinh ký mới sẽ vào lứa này.`,'good')
-src/systems/batches.js: addLog(`🔀 Chuyển ${a.name} sang ${b.n}.`)
-src/systems/batches.js: b={id:uid(),n

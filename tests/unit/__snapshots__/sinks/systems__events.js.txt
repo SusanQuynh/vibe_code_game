@@ -1,3 +1,4 @@
+src/systems/events.js: addLog(Lk('log.ev.left',{n:a.name,w:why,g:gone.length?Lk('log.ev.leftGrp',{g:gone.map(g=>g.name).join(', ')}):''}),'bad')
 src/systems/events.js: addLog(`Không đủ tiền cho ${a.name} ra solo.`,'bad')
 src/systems/events.js: addLog(`⚖️ Thua kiện, hình ảnh ${a.name} bị ảnh hưởng.`,'bad')
 src/systems/events.js: addLog(`⚖️ Thắng kiện! Fan càng ủng hộ ${a.name}.`,'good')
@@ -5,7 +6,6 @@ src/systems/events.js: addLog(`⚡ ${a.name} và ${b.name} trở thành đối t
 src/systems/events.js: addLog(`🌴 ${a.name} đi nghỉ phép 2 tuần.`)
 src/systems/events.js: addLog(`🎤 ${a.name} chính thức ra mắt solo!`,'gold')
 src/systems/events.js: addLog(`🎭 Bạn hứa tìm vai cho ${a.name} trong 10 tuần.`)
-src/systems/events.js: addLog(`👋 ${a.name} ${why}.`+(gone.length?` Nhóm ${gone.map(g=>g.name).join(', ')} tan rã.`:''),'bad')
 src/systems/events.js: addLog(`💌 ${a.name} công khai hẹn hò. Một phần fan rời đi, nhưng không còn rủi ro bị "khui".`)
 src/systems/events.js: addLog(`💔 ${a.name} và ${b.name} bị cấm hẹn hò.`,'bad')
 src/systems/events.js: addLog(`💞 ${a.name} và ${b.name} bí mật hẹn hò.`)

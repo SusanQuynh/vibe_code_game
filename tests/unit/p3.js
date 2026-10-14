@@ -79,8 +79,8 @@ export function census(S) {
 }
 
 // grown by the writer tasks
-export const P3_DONE = [];
-export const P3_FIELDS = [];
+export const P3_DONE = ['state.js', 'save/storage.js', 'ui/saveView.js', 'systems/artists.js', 'systems/batches.js', 'systems/awards.js'];
+export const P3_FIELDS = ['batches', 'awards'];
 
 // Replace every stored-text field of a state by a structured entry (mirrors TXT_PATHS). Used to prove that no reader prints a raw object.
 export function msgify(S, M = { k: 'batch.n', p: { i: 9 } }) {

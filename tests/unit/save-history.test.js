@@ -28,7 +28,7 @@ describe('lịch sử đầy đủ qua các lần tải lại', () => {
     save({ full: true });
     const f = JSON.parse(localStorage.getItem(KEY_FULL));
     const lt = f.log.map(l => l.t);
-    for (const t of logBefore.slice(0, 60)) expect(lt).toContain(t);
+    for (const t of logBefore.slice(0, 60)) expect(lt).toContainEqual(t);
     expect(f.artists[0].hist).toHaveLength(20);
     expect(f.artists[0].lessons.length).toBeGreaterThanOrEqual(10);
     expect(f.prHist).toEqual(expect.arrayContaining(['pr24', 'pr20']));

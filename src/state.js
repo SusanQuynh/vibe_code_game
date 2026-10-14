@@ -1,5 +1,5 @@
 import { genArtist, genPool } from './systems/artists.js';
-import { t } from './i18n/index.js';
+import { Lk, t } from './i18n/index.js';
 import { genComp } from './systems/contests.js';
 import { initBatches } from './systems/batches.js';
 import { genMgrPool } from './systems/managers.js';
@@ -15,6 +15,7 @@ export let S;
 export const abs=()=>(S.year-1)*52+S.week;
 export const uid=()=>S.nid++;
 export const byId=id=>S.artists.find(a=>a.id===id);
+// t: Txt (Msg, tag or a legacy/proper-noun string)
 export function addLog(t,c=''){S.log.unshift({t,c,w:`N${S.year}·T${S.week}`});if(S.log.length>80)S.log.length=80}
 export function newGame(){
   markFresh();
@@ -25,8 +26,8 @@ export function newGame(){
   S.artists[1].days=defaultDays('dance');
   initBatches();S.comps=[];S.compRuns=[];genComp();genComp();
   genOffers(3);genOffers(2,1);initWorld();
-  addLog('🎉 Chào mừng giám đốc! Starlight Ent. bắt đầu với vốn 600 triệu và 2 thực tập sinh.','gold');
-  addLog('Mẹo: chạm vào từng phòng để dùng chức năng, chạm vào nhân vật để xem chi tiết.');
+  addLog(Lk('log.st.welcome'),'gold');
+  addLog(Lk('log.st.tip'));
 }
 export function resetGame(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgainReset');return}newGame();closeM();act()}
 export const setState=v=>{S=v};

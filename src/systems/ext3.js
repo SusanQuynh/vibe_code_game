@@ -1,5 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { money, t, t as tl, tx } from '../i18n/index.js';
+import { Lk, money, t, t as tl, tx, txVi } from '../i18n/index.js';
 import { conceptName, mskDesc, mskName, offerName, statName } from '../i18n/labels.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
@@ -73,7 +73,7 @@ export function hsFire(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textCo
 export const restN=a=>a.days.filter(k=>k==='rest').length;
 export function hsRisk(a){const td=trainDays(a),r=[];ensureDays(a);if(a.energy<35)r.push(`năng lượng chỉ còn ${Math.round(a.energy)}`);if(a.mood<30)r.push(`tâm trạng xuống ${Math.round(a.mood)}`);if(td>=6&&a.energy<65)r.push(`tập ${td}/7 ngày khi thể lực chưa hồi`);if(a.status==='trainee'&&(a.ttsFail||0)>=2&&a.mood<55)r.push('áp lực vì trượt đánh giá liên tiếp');const pe=projEnergy(a);if(pe[6]<20&&td>=4)r.push('dự báo cạn sức cuối tuần');return r}
 export function applyRest(a,n){if(a.busy)return;ensureDays(a);const d=a.days.slice();let c=d.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<n;i--)if(d[i]!=='rest'){d[i]='rest';c++}a.days=d}
-export function restDo(a,n,by){applyRest(a,n);a.restRec=abs()+2;a.restN=n;if(a.hsF)a.hsF.st='ok';MOOD(a,4);addLog(`🛌 ${by} cho ${a.name} nghỉ ${n} ngày/tuần trong 2 tuần theo khuyến nghị sức khỏe.`,'good')}
+export function restDo(a,n,by){applyRest(a,n);a.restRec=abs()+2;a.restN=n;if(a.hsF)a.hsF.st='ok';MOOD(a,4);addLog(Lk('log.x3.rest',{b:by,n:a.name,d:n}),'good')}
 export function hsApply(id){const a=byId(id);if(!a||!a.hsF)return;restDo(a,a.hsF.n,'Giám đốc');S.events=S.events.filter(e=>!(e.kind==='v3'&&e.t==='hs'&&e.a===id));act()}
 export function hsTick(){if(!S.hs)return;let n=0;const ch=.4+S.hs.sk*.12;
   const L=S.artists.filter(a=>!a.busy&&!(a.hsF&&a.hsF.w>abs()-3)&&!(a.restRec>abs())).map(a=>({a,r:hsRisk(a)})).filter(x=>x.r.length).sort((x,y)=>y.r.length-x.r.length);
@@ -191,7 +191,7 @@ export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):
   case'mtjob':{const of=S.offers.find(o=>o.id===e.of);if(!a||!b||!of)return;if(k!=='yes'){addLog(`🙅 Từ chối dự án ${a.name} giới thiệu cho ${b.name}.`);return}
     const old=of.target;of.target=b.id;const why=canTake(of,b);if(why){of.target=old;toast(b.name+': '+why);return}acceptCast(of.id,[b.id],true);
     if(!S.offers.includes(of)){S.partners[of.partner]=(S.partners[of.partner]||0)+2;setRel(a,b,getRel(a,b)+5);MOOD(a,4);MOOD(b,5);addLog(`🤝 Nhờ tiền bối ${a.name} giới thiệu, ${b.name} nhận «${of.title}».`,'good')}return}
-  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(`💌 ${c.name} được ${a.name} giới thiệu, ký hợp đồng TTS vào ${(S.batches.find(x=>x.id===c.batch)||{n:''}).n}.`,'gold');return}
+  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(`💌 ${c.name} được ${a.name} giới thiệu, ký hợp đồng TTS vào ${txVi((S.batches.find(x=>x.id===c.batch)||{n:''}).n)}.`,'gold');return}
   case'paask':if(!a)return;if(k==='yes')setTimeout(()=>paOpen(a.id),0);else MOOD(a,-3);return;
   case'hs':{if(!a)return;const m=e.m?S.managers.find(x=>x.id===e.m):null;if(k==='yes')restDo(a,e.n,'Giám đốc');
     else if(k==='mgr'&&m){if(Math.random()<mxP(m,'care',.45)){restDo(a,e.n,'QL '+m.name);mgrExp(m,.5)}else{if(a.hsF)a.hsF.st='kept';MOOD(a,-2);addLog(`📋 QL ${m.name} cân nhắc và giữ lịch hiện tại cho ${a.name} vì lịch trình đang quan trọng.`)}}

@@ -1,11 +1,12 @@
-src/systems/ext2.js: .hist.unshift(`N${S.year}: Nhóm ${g.name} giải tán`)
+src/systems/ext2.js: .hist.unshift(Lk('hist.disband',{y:S.year,g:g.name}))
+src/systems/ext2.js: addLog(Lk('log.bat.auto',{b:b.n}),'good')
+src/systems/ext2.js: addLog(Lk('log.x2.disband',{g:g.name,w:why}),'bad')
 src/systems/ext2.js: addLog(`⏸️ Nhóm ${g.name} tạm ngừng hoạt động 8 tuần để các thành viên nghỉ ngơi.`)
 src/systems/ext2.js: addLog(`⚠️ Nhóm ${g.name} có nguy cơ tan rã: ${why}.`,'bad')
 src/systems/ext2.js: addLog(`✅ GĐ Âm nhạc duyệt «${s.t}» (hạng ${r.g}, điểm thị trường ${r.mk}).`,'good')
 src/systems/ext2.js: addLog(`✍️ ${a.name} tái ký ${y} năm: lương ${fmt(a.salary)}/tuần, phí ký ${fmt(bonus)}.`,'good')
 src/systems/ext2.js: addLog(`✍️ ${ws.map(a=>a.name).join(', ')} vào phòng thu sáng tác «${s.t}» (${CONCEPTS[ck].n}). Demo xong sau 1 tuần.`)
-src/systems/ext2.js: addLog(`🌟 ${c.name} được ${m.name} phát hiện, ký hợp đồng TTS vào ${(S.batches.find(b=>b.id===c.batch)||{n:''}).n}.`,'gold')
-src/systems/ext2.js: addLog(`🌱 Tự mở ${b.n} cho thực tập sinh mới.`,'good')
+src/systems/ext2.js: addLog(`🌟 ${c.name} được ${m.name} phát hiện, ký hợp đồng TTS vào ${txVi((S.batches.find(b=>b.id===c.batch)||{n:''}).n)}.`,'gold')
 src/systems/ext2.js: addLog(`🎉 Nhóm ${g.name} kết thúc thời gian tạm ngừng, sẵn sàng hoạt động trở lại.`,'good')
 src/systems/ext2.js: addLog(`🎊 TTS ${a.name} đủ điều kiện debut (${txVi(r.short)}). Công ty chừa lịch, không nhận dự án ngoài để ưu tiên debut.`,'gold')
 src/systems/ext2.js: addLog(`🎧 Doanh thu nhạc số tuần này: ${fmt(t)}.`,'good')
@@ -13,7 +14,6 @@ src/systems/ext2.js: addLog(`🎼 Demo «${s.t}» hoàn thành, chờ GĐ Âm nh
 src/systems/ext2.js: addLog(`👋 Cho trợ lý ${x.name} nghỉ việc.`)
 src/systems/ext2.js: addLog(`👩‍🏫 ${m.name} nhận dẫn dắt thực tập sinh ${a.name}.`,'good')
 src/systems/ext2.js: addLog(`👩‍🏫 ${o?o.name:'Tiền bối'} thôi dẫn dắt ${a.name}.`)
-src/systems/ext2.js: addLog(`💔 Nhóm ${g.name} chính thức giải tán (${why}). Các thành viên vẫn ở lại công ty, có thể ra solo, làm diễn viên hoặc vào nhóm mới.`,'bad')
 src/systems/ext2.js: addLog(`📄 Công ty quyết định không tái ký với ${a.name}. ${a.name} sẽ rời đi khi hết hạn (${a.ce-abs()} tuần nữa).`)
 src/systems/ext2.js: addLog(`📄 Hợp đồng của ${a.name} còn 8 tuần. Xem đánh giá tái ký ở Phòng Nhân sự.`)
 src/systems/ext2.js: addLog(`📋 ${m.name} giờ quản lý danh sách tối đa ${MAX_SA} nghệ sĩ solo/diễn viên.`)
@@ -31,7 +31,7 @@ src/systems/ext2.js: addLog(`🤝 ${a.name} và tiền bối ${m.name} trở nê
 src/systems/ext2.js: addLog(`🧑‍💻 Tuyển trợ lý ${name} cho QL ${m.name}: ${MSK[k]} +${v}.`,'good')
 src/systems/ext2.js: addLog(a.noHold?`📅 Mở lịch cho ${a.name} nhận dự án dù đã đủ điều kiện debut.`:`📅 Chừa lịch debut cho ${a.name}.`)
 src/systems/ext2.js: addLog(r[0],r[1]||'')
-src/systems/ext2.js: b={id:uid(),n:'Lứa '+(++S.bno)
+src/systems/ext2.js: b={id:uid(),n:Lk('batch.n',{i:++S.bno})
 src/systems/ext2.js: busy={kind:'leave',title:'Chấn thương nặng hơn',left:3,total:3}
 src/systems/ext2.js: busy={kind:'leave',title:'Nghỉ lấy lại tinh thần',left:1,total:1}
 src/systems/ext2.js: busy={kind:'leave',title:'Trị liệu chấn thương',left:1,total:1}

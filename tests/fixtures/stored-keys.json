@@ -1,5 +1,56 @@
 [
  {
+  "k": "aw.cat.actorF"
+ },
+ {
+  "k": "aw.cat.actorM"
+ },
+ {
+  "k": "aw.cat.artist"
+ },
+ {
+  "k": "aw.cat.concert"
+ },
+ {
+  "k": "aw.cat.film"
+ },
+ {
+  "k": "aw.cat.rookie"
+ },
+ {
+  "k": "aw.cat.song"
+ },
+ {
+  "k": "aw.cat.variety"
+ },
+ {
+  "k": "aw.me"
+ },
+ {
+  "k": "aw.note.actQ"
+ },
+ {
+  "k": "aw.note.aud"
+ },
+ {
+  "k": "aw.note.bestRank"
+ },
+ {
+  "k": "aw.note.fans"
+ },
+ {
+  "k": "aw.note.fansYr"
+ },
+ {
+  "k": "aw.note.film"
+ },
+ {
+  "k": "aw.note.shows"
+ },
+ {
+  "k": "batch.fresh"
+ },
+ {
   "k": "batch.n"
  },
  {
@@ -99,6 +150,9 @@
   "k": "dom.*"
  },
  {
+  "k": "ev.why.fire"
+ },
+ {
   "k": "film.st.out"
  },
  {
@@ -129,6 +183,57 @@
  {
   "k": "grade.pass",
   "logic": true
+ },
+ {
+  "k": "hist.award"
+ },
+ {
+  "k": "hist.disband"
+ },
+ {
+  "k": "log.art.sign"
+ },
+ {
+  "k": "log.art.signBy"
+ },
+ {
+  "k": "log.aw.ceremony"
+ },
+ {
+  "k": "log.bat.auto"
+ },
+ {
+  "k": "log.bat.move"
+ },
+ {
+  "k": "log.bat.open"
+ },
+ {
+  "k": "log.ev.left"
+ },
+ {
+  "k": "log.ev.leftGrp"
+ },
+ {
+  "k": "log.st.office"
+ },
+ {
+  "k": "log.st.restore"
+ },
+ {
+  "k": "log.st.tip"
+ },
+ {
+  "k": "log.st.welcome"
+ },
+ {
+  "k": "log.sv.load"
+ },
+ {
+  "k": "log.x2.disband"
+ },
+ {
+  "k": "log.x3.rest"
  },
  {
   "k": "msk.*"

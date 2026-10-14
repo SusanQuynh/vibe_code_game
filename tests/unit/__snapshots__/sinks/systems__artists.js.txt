@@ -1,3 +1,0 @@
-src/systems/artists.js: addLog(by?`🧑‍💼 NV tuyển dụng ${by} ký thực tập sinh ${a.name} vào ${bn}.`:`✍️ Ký hợp đồng thực tập sinh ${a.name} vào ${bn}.`,'good')
-src/systems/artists.js: removeArtist(a,'đã chấm dứt hợp đồng')
-src/systems/artists.js: status:'trainee'

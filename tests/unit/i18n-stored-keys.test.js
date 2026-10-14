@@ -23,7 +23,7 @@ const text = v => (typeof v === 'function' ? v(proxy()) : typeof v === 'string' 
 describe('stored key registry', () => {
   it('every stored key used in src/ is registered', () => {
     for (const k of used.exact) expect(covers(k), `unregistered key ${k}`).toBe(true);
-    for (const p of used.prefix) expect(REG.some(e => e.k.endsWith('*') && (p.startsWith(e.k.slice(0, -1)) || e.k.slice(0, -1).startsWith(p))), `unregistered prefix ${p}`).toBe(true);
+    for (const p of used.prefix) expect(REG.some(e => (e.k.endsWith('*') ? p.startsWith(e.k.slice(0, -1)) || e.k.slice(0, -1).startsWith(p) : e.k.startsWith(p))), `unregistered prefix ${p}`).toBe(true);
   });
   for (const [code, L] of [['vi', vi], ['en', en]]) {
     it(`every registry entry resolves in ${code}`, () => {
@@ -43,6 +43,9 @@ describe('stored key registry', () => {
     const logic = REG.filter(e => e.logic).map(e => e.k).sort();
     expect(Object.keys(ENUMS).sort()).toEqual(logic);
     for (const k of logic) expect(vi.dict[k], k).toBe(ENUMS[k]);
+  });
+  it('every key of a stored-text locale part (st-*) is registered', () => {
+    for (const [name, d] of vi.parts) if (name.startsWith('st-')) for (const k of Object.keys(d)) expect(REG.some(e => e.k === k), `${name}: ${k} is not in stored-keys.json`).toBe(true);
   });
   it('registry has no duplicates', () => { expect(new Set(REG.map(e => e.k)).size).toBe(REG.length); });
 });

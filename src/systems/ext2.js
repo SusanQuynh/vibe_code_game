@@ -15,7 +15,7 @@ import { getRel, harmony, setRel, setTag } from './relations.js';
 import { actByKey } from './releases.js';
 import { actFree, acts } from './secretary.js';
 import { focusKeys } from './week.js';
-import { isK, money, roomName, t, t as tl, tx, txVi } from '../i18n/index.js';
+import { isK, Lk, money, roomName, t, t as tl, tx, txVi } from '../i18n/index.js';
 import { conceptName, mskName, statName } from '../i18n/labels.js';
 import { NPC, act, chibiHTML } from '../ui/building.js';
 import { closeM, modal, setCurRC, toast, view } from '../ui/modal.js';
@@ -59,7 +59,7 @@ export function cleanBatches(){if(!Array.isArray(S.batches))return;for(const b o
   S.batches=S.batches.filter(b=>!gone.includes(b));
   for(const b of gone){addLog(`🗑️ ${b.n} không còn thực tập sinh nên đã tự xoá.`);for(const m of S.managers)if(m.as&&m.as.t==='b'&&m.as.id===b.id){m.as=null;addLog(`📋 ${m.name} rảnh việc vì ${b.n} đã giải thể, hãy giao lứa khác.`)}}
   if(!S.batches.some(b=>b.id===S.curBatch))S.curBatch=S.batches.length?S.batches[S.batches.length-1].id:0;S.props=null}
-export function ensureCurBatch(){if(!S.batches.some(b=>b.id===S.curBatch)){const b={id:uid(),n:'Lứa '+(++S.bno),w:abs()};S.batches.push(b);S.curBatch=b.id;addLog(`🌱 Tự mở ${b.n} cho thực tập sinh mới.`,'good')}return S.curBatch}
+export function ensureCurBatch(){if(!S.batches.some(b=>b.id===S.curBatch)){const b={id:uid(),n:Lk('batch.n',{i:++S.bno}),w:abs()};S.batches.push(b);S.curBatch=b.id;addLog(Lk('log.bat.auto',{b:b.n}),'good')}return S.curBatch}
 /* ---- Hold schedule for debut ---- */
 export const dHold=a=>a.status==='trainee'&&a.dReady&&!a.noHold;
 export function debutHoldTick(){for(const a of S.artists){if(a.status!=='trainee')continue;const r=debutRec(a),ok=r.t!=='wait';
@@ -159,8 +159,8 @@ export function disbandTick(){for(const g of S.groups){if(g.hiatus){if(g.hiatus<
 export function disbandGroup(g,why){const ms=g.members.map(byId).filter(Boolean);S.groups=S.groups.filter(x=>x!==g);
   for(const m of S.managers)if(m.as&&m.as.t==='g'&&m.as.id===g.id)m.as=null;
   if(S.camp)delete S.camp['g'+g.id];S.cbPlan=(S.cbPlan||[]).filter(p=>p.k!=='g'+g.id);
-  ms.forEach(a=>{a.fans=Math.round(a.fans*.88);MOOD(a,-8);a.hist.unshift(`N${S.year}: Nhóm ${g.name} giải tán`)});
-  S.props=null;addLog(`💔 Nhóm ${g.name} chính thức giải tán (${why}). Các thành viên vẫn ở lại công ty, có thể ra solo, làm diễn viên hoặc vào nhóm mới.`,'bad')}
+  ms.forEach(a=>{a.fans=Math.round(a.fans*.88);MOOD(a,-8);a.hist.unshift(Lk('hist.disband',{y:S.year,g:g.name}))});
+  S.props=null;addLog(Lk('log.x2.disband',{g:g.name,w:why}),'bad')}
 export const fixP=g=>{const m=gMgr(g);return clamp(.35+(m?effSk(m,'care')*.05:0)+(harmony(g.members)>=0?.15:0),.1,.92)};
 /* ---- Contracts & renewals ---- */
 export function ctInit(a){if(a.status==='debuted'&&!a.ce){a.ce=abs()+R(10,40);a.cs0=abs()-R(5,30);a.earnC=a.earnC||0;if(a.cf0==null)a.cf0=Math.round(a.fans*.7)}}
@@ -275,7 +275,7 @@ export function xResolve(e,k){
   if(e.kind==='mx'){const D=MXS[e.mx],a=byId(e.a),m=S.managers.find(x=>x.id===e.m);if(!D||!a||!m||!D.r[k])return;const r=D.r[k](a,m,e);if(r)addLog(r[0],r[1]||'');return}
   if(e.kind==='mp'){const m=S.managers.find(x=>x.id===e.m);if(!m)return;
     if(e.t==='asst'){if(k==='yes'){if(!hireAsst(m.id,e.k,e.v,e.name,e.fee,e.sal))S.events.push(e)}else addLog(`🙅 Từ chối đề xuất tuyển trợ lý của ${m.name}.`);return}
-    if(e.t==='scout'){if(k==='yes'){if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}S.money-=10e6;book('hr',-10e6);const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;c.batch=ensureCurBatch();S.artists.push(c);mgrExp(m,1);addLog(`🌟 ${c.name} được ${m.name} phát hiện, ký hợp đồng TTS vào ${(S.batches.find(b=>b.id===c.batch)||{n:''}).n}.`,'gold')}return}}
+    if(e.t==='scout'){if(k==='yes'){if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}S.money-=10e6;book('hr',-10e6);const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;c.batch=ensureCurBatch();S.artists.push(c);mgrExp(m,1);addLog(`🌟 ${c.name} được ${m.name} phát hiện, ký hợp đồng TTS vào ${txVi((S.batches.find(b=>b.id===c.batch)||{n:''}).n)}.`,'gold')}return}}
   if(e.kind==='disband'){const g=S.groups.find(x=>x.id===e.g);if(!g)return;const ms=g.members.map(byId).filter(Boolean);
     if(k==='fix'){S.money-=50e6;if(Math.random()<fixP(g)){for(const a of ms)for(const b of ms)if(a!==b){if(a.tag[b.id]==='enemy')setTag(a,b,null);if(getRel(a,b)<10)setRel(a,b,10)}ms.forEach(a=>MOOD(a,10));const m=gMgr(g);if(m)mgrExp(m,2);addLog(`🕊️ Buổi hòa giải thành công, nhóm ${g.name} đoàn kết trở lại!`,'good')}else disbandGroup(g,'hòa giải thất bại')}
     else if(k==='split')disbandGroup(g,e.why);

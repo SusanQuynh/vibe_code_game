@@ -20,46 +20,6 @@
   "why": "FMT_VI default units: fmt() feeds the log sinks, so S stays language-independent"
  },
  {
-  "file": "src/systems/ext2.js",
-  "text": "Lứa ",
-  "why": "ensureCurBatch default batch name is stored in S.batches[].n (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": ") – hạng",
-  "why": "stored in S.rivals[].last (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Dính scandal, mất 10% fan",
-  "why": "stored in S.rivals[].last (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Giành lời mời «",
-  "why": "stored in S.rivals[].last (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Làn sóng K-pop: fan tăng nhanh",
-  "why": "market modifier name stored in S.mods[].n (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Suy thoái: thù lao −20%",
-  "why": "market modifier name stored in S.mods[].n (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Suy thoái: kinh doanh −30%",
-  "why": "market modifier name stored in S.mods[].n (phase 3)"
- },
- {
-  "file": "src/systems/market.js",
-  "text": "Phòng tập sửa tạm: luyện tập −20%",
-  "why": "market modifier name stored in S.mods[].n (phase 3)"
- },
- {
   "file": "src/systems/proposals.js",
   "text": "năng lượng thấp, nghỉ trước",
   "why": "shortWhy text stored in S.props[].why (phase 3)"
@@ -140,16 +100,6 @@
   "why": "dWish text stored in a.dw.why (phase 3)"
  },
  {
-  "file": "src/systems/batches.js",
-  "text": "Lứa 1",
-  "why": "initBatches default batch name is stored in S.batches[].n (phase 3)"
- },
- {
-  "file": "src/systems/batches.js",
-  "text": "Lứa",
-  "why": "openBatch default batch name ('Lứa N') is stored in S.batches[].n (phase 3)"
- },
- {
   "file": "src/systems/contests.js",
   "text": "Nhóm",
   "why": "compDone: 'Nhóm <name>' is interpolated into addLog (stored in S.log, phase 3)"
@@ -173,21 +123,6 @@
   "file": "src/systems/week.js",
   "text": "Chưa tốt",
   "why": "qLabel() result is only used inside addLog/hist/lessons sinks (stored in S, phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Hậu kỳ",
-  "why": "stored film status in S.films[].status (phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Đã chiếu",
-  "why": "stored film status in S.films[].status (phase 3)"
- },
- {
-  "file": "src/systems/week.js",
-  "text": "Đang quay",
-  "why": "stored film status in S.films[].status (phase 3)"
  },
  {
   "file": "src/systems/promo.js",
@@ -240,16 +175,6 @@
   "why": "postDo msg text is written to the log via addLog (phase 3)"
  },
  {
-  "file": "src/systems/releases.js",
-  "text": "Lỡ lời khi livestream",
-  "why": "stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/releases.js",
-  "text": "Đang quay",
-  "why": "stored film status in S.films[].status (phase 3)"
- },
- {
   "file": "src/systems/review.js",
   "text": "Xuất sắc",
   "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
@@ -268,21 +193,6 @@
   "file": "src/systems/review.js",
   "text": "Không đạt",
   "why": "grade id stored in S.lastEval and a.evG: compared as logic and shown verbatim (phase 3)"
- },
- {
-  "file": "src/systems/review.js",
-  "text": "bị loại khỏi chương trình đào tạo sau",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/review.js",
-  "text": "lần đánh giá không đạt liên tiếp",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/review.js",
-  "text": "bị chấm dứt hợp đồng sau",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
  },
  {
   "file": "src/systems/review.js",
@@ -330,23 +240,8 @@
   "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
  },
  {
-  "file": "src/systems/offers.js",
-  "text": "Sắp chiếu",
-  "why": "stored film status in S.films[].status (phase 3)"
- },
- {
   "file": "src/systems/proposals.js",
   "text": "bù",
-  "why": "stored in S.props items (x.why / x.why2) and compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "đã giảm tải",
-  "why": "stored in S.props items (x.why / x.why2) and compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "đã có dự án",
   "why": "stored in S.props items (x.why / x.why2) and compared as logic (phase 3)"
  },
  {
@@ -465,26 +360,6 @@
   "why": "scandal text stored in a.scandal.t (phase 3)"
  },
  {
-  "file": "src/systems/events.js",
-  "text": "vẫn quyết định rời công ty",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "đã rời công ty",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "chuyển sang",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "(phí",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
   "file": "src/systems/ext2.js",
   "text": "mâu thuẫn nội bộ kéo dài",
   "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
@@ -505,113 +380,13 @@
   "why": "disband reason stored in the event (e.why) and in the log (phase 3)"
  },
  {
-  "file": "src/systems/ext2.js",
-  "text": "Xuất sắc",
-  "why": "grade id stored in a.evG: compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "Không đạt",
-  "why": "grade id stored in a.evG: compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "đã hết hạn hợp đồng và rời công ty",
-  "why": "reason text passed to removeArtist()/disbandGroup(), which write it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/ext2.js",
-  "text": "hòa giải thất bại",
-  "why": "reason text passed to removeArtist()/disbandGroup(), which write it into S.log (phase 3)"
- },
- {
   "file": "src/systems/ext3.js",
   "text": "tập",
   "why": "part of hsRisk() text stored in a.hsF.why (phase 3)"
  },
  {
-  "file": "src/systems/ext3.js",
-  "text": "Giám đốc",
-  "why": "approver name passed to restDo(), which writes it into S.hist/S.log (phase 3)"
- },
- {
   "file": "src/save/transfer.js",
   "text": "Mã không hợp lệ hoặc bị cắt cụt",
   "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed"
- },
- {
-  "file": "src/systems/artists.js",
-  "text": "lứa mới",
-  "why": "fallback batch name written into the S.log line of signCore (phase 3)"
- },
- {
-  "file": "src/systems/artists.js",
-  "text": "đã chấm dứt hợp đồng",
-  "why": "reason text passed to removeArtist(), which writes it into S.log (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Nghệ sĩ của năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "fan trong năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Tân binh của năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Bài hát của năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "hạng cao nhất",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Nữ",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "diễn viên xuất sắc",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "điểm diễn",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Ngôi sao tạp kỹ",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Phim của năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "Concert của năm",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "khán giả",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
- },
- {
-  "file": "src/systems/awards.js",
-  "text": "⭐ Starlight Ent. (bạn)",
-  "why": "award category, note and board row stored in S.awards (phase 3)"
  }
 ]

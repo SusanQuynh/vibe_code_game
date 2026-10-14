@@ -1,6 +1,6 @@
 import { R, pick } from '../core/rng.js';
 import { clamp, esc, fmt } from '../core/util.js';
-import { money, t, tx } from '../i18n/index.js';
+import { Lk, money, t, tx } from '../i18n/index.js';
 import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { XK, pct, xInfo, xResolve } from './ext2.js';
@@ -126,7 +126,7 @@ export function removeArtist(a,why){
   for(const x of S.artists){delete x.rel[a.id];delete x.tag[a.id]}
   S.events=S.events.filter(e=>e.a!==a.id&&e.b!==a.id);
   for(const m of S.managers)if(m.as&&((m.as.t==='a'&&m.as.id===a.id)||(m.as.t==='g'&&!S.groups.find(g=>g.id===m.as.id))))m.as=null;
-  addLog(`👋 ${a.name} ${why}.`+(gone.length?` Nhóm ${gone.map(g=>g.name).join(', ')} tan rã.`:''),'bad');
+  addLog(Lk('log.ev.left',{n:a.name,w:why,g:gone.length?Lk('log.ev.leftGrp',{g:gone.map(g=>g.name).join(', ')}):''}),'bad');
 }
 export function resolveEv(id,k,silent){
   const e=S.events.find(x=>x.id===id);if(!e)return;S.events=S.events.filter(x=>x!==e);

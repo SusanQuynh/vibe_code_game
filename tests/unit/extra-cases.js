@@ -3,6 +3,7 @@
 // Read the DOM synchronously: building.js's interval mutates it between awaits.
 import { S, abs, byId, setState, uid } from '../../src/state.js';
 import { seed } from './helpers.js';
+import { Lk } from '../../src/i18n/index.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { closeM } from '../../src/ui/modal.js';
 import { genManager, gmOf, hireMgr, setBoss, setDom, assignMgr, toggleMA, rehuntMgr, retrain } from '../../src/systems/managers.js';
@@ -29,7 +30,7 @@ add('t5-mgr-nogm', ctx => { ctx.fresh(ctx.base); demoteGM(null); openRoom('mgr')
 add('t5-mgr-variants', ctx => {
   ctx.fresh(ctx.base);
   const ms = nonGm(), tr = S.artists.find(a => a.status === 'trainee'), ds = S.artists.filter(a => a.status !== 'trainee');
-  if (tr) tr.batch = 9999; S.batches.push({ id: 9999, n: 'Lứa 9', w: 1 });
+  if (tr) tr.batch = 9999; S.batches.push({ id: 9999, n: Lk('batch.n', { i: 9 }), w: 1 });
   if (ds[0]) ds[0].pm = { id: -1, name: 'PM Test', sk: { nego: 5, care: 5, pr: 5, plan: 5 }, lv: 1, ps: 1, boss: null };
   const kinds = [{ t: 'l', id: 0, ids: ds.slice(1, 3).map(a => a.id) }, { t: 'b', id: S.batches[0].id }, S.groups[0] && { t: 'g', id: S.groups[0].id }, ds[2] && { t: 'a', id: ds[2].id }, { t: 't', id: 0 }, { t: 's', id: 0 }, { t: 'd', id: 0 }];
   ms.forEach((m, i) => { m.as = kinds[i % kinds.length] || null; m.auto = ['off', 'short', 'all'][i % 3]; m.ps = i % 3; });

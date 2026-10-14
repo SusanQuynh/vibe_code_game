@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { noToggle, seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL, viT } from './helpers.js';
 import { S, abs, newGame } from '../../src/state.js';
 import { demoteGM, gmOf, hireGM, promoteGM } from '../../src/systems/gm.js';
 import { assignMgr, effSk, fireMgr, genManager, hireMgr, mCap, setBoss } from '../../src/systems/managers.js';
@@ -103,7 +103,7 @@ describe('Quản lý tổng', () => {
     const g = hire();
     promoteGM(g.id);
     let found = false;
-    for (let i = 0; i < 4; i++) { nextWeek(true, true); if (S.log.some(l => l.t.startsWith('📊 QL tổng'))) found = true; expect(S.gmRep.w).toBe(abs() - 1); }
+    for (let i = 0; i < 4; i++) { nextWeek(true, true); if (S.log.some(l => viT(l.t).startsWith('📊 QL tổng'))) found = true; expect(S.gmRep.w).toBe(abs() - 1); }
     expect(found).toBe(true);
     expect(S.gmRep.teams.length).toBe(S.managers.filter(m => m.boss === g.id).length);
   });
