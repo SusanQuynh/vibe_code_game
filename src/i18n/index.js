@@ -23,7 +23,14 @@ const isTxt = v => {
 };
 // copies p only when a value is a Txt (no allocation on the hot path)
 const mapTxt = (p, look) => { let q = null; for (const k in p) if (isTxt(p[k])) { q = q || { ...p }; q[k] = rv(p[k], look); } return q || p; };
-const fmtv = (v, p, look = lookCur) => { const q = p && mapTxt(p, look); return typeof v === 'function' ? v(q || {}) : q ? v.replace(/\{(\w+)\}/g, (m, n) => (n in q ? q[n] : m)) : v; };
+// Placeholders: {x} = param, {x:ns} = param holds an id and renders the label key `ns.<id>` (keeps stored refs short).
+// lenient (stored Msg): a param Lk() left out (empty string) renders as ''; otherwise a missing one stays visible as {x}.
+const fmtv = (v, p, look = lookCur, lenient = false) => {
+  const q = p && mapTxt(p, look);
+  if (typeof v === 'function') return v(lenient ? new Proxy(q || {}, { get: (o, k) => (k in o || typeof k === 'symbol' ? o[k] : '') }) : q || {});
+  if (!q && !lenient) return v;
+  return v.replace(/\{(\w+)(?::([\w.]+))?\}/g, (m, n, ns) => (q && n in q ? (ns ? look(`${ns}.${q[n]}`) ?? q[n] : q[n]) : lenient ? '' : m));
+};
 function rv(v, look) {
   if (typeof v === 'string') return v;
   if (v == null) return '';
@@ -32,7 +39,7 @@ function rv(v, look) {
   if ('$g' in v) return Object.entries(v.$g).map(([s, x]) => fmtv(look('common.gain'), { s: look(`stat.${s}`), v: x }, look)).join(', ');
   if ('$l' in v) return v.$l.map(i => rv(i, look)).join(v.j ?? ', ');
   const d = look(v.k);
-  return d == null ? v.k : fmtv(d, v.p, look);
+  return d == null ? v.k : fmtv(d, v.p, look, true);
 }
 export function t(k, p) {
   const v = lookCur(k);
@@ -41,7 +48,13 @@ export function t(k, p) {
 // Pinned to Vietnamese: for helpers whose output also goes into S (log, hist, lessons…), so S stays language-independent.
 export function tVi(k, p) { const v = lookVi(k); return v == null ? k : fmtv(v, p, lookVi); }
 // Structured stored text: Lk builds a Msg; tx renders a Txt in the current language, txVi in Vietnamese.
-export const Lk = (k, p) => (p ? { k, p } : { k });
+// Params equal to '' are not stored (optional suffixes); rendering treats a missing param as ''.
+export const Lk = (k, p) => {
+  if (!p) return { k };
+  let q = null;
+  for (const n in p) if (p[n] !== '' && p[n] !== undefined) (q ||= {})[n] = p[n];
+  return q ? { k, p: q } : { k };
+};
 export const tx = v => rv(v, lookCur);
 export const txVi = v => rv(v, lookVi);
 // compare a stored value with a key; a legacy (pre-phase-3) string is compared with the key's Vietnamese text

@@ -44,8 +44,8 @@ const TABLES = [
   ['fin.in', Object.keys(FIN_I)],
   ['fin.out', Object.keys(FIN_X)],
   ['comp.name', [...COMP.map((_, i) => 't' + i), ...DCOMP.map((_, i) => 'd' + i)]],
-  ...Object.keys(OFFER).map(k => ['offer.lt.' + k, Array.from({ length: OFFER[k].ltN }, (_, i) => i)]),
-  ...Object.keys(PLESSON).map(k => ['les.lt.' + k, Array.from({ length: PLESSON[k].ltN }, (_, i) => i)]),
+  ...Object.keys(OFFER).map(k => ['ol.' + k, Array.from({ length: OFFER[k].ltN }, (_, i) => i)]),
+  ...Object.keys(PLESSON).map(k => ['ll.' + k, Array.from({ length: PLESSON[k].ltN }, (_, i) => i)]),
   ['ev.why.scout', Array.from({ length: SCOUT_N }, (_, i) => i)],
 ];
 

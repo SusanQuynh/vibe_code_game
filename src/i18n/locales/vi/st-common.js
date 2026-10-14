@@ -18,7 +18,7 @@ export default {
   'prop.self': 'tự duyệt',
   'prop.why2.busy': 'đã có dự án',
   'prop.why.lighter': 'đã giảm tải',
-  'busy.fanmeet': 'Fan meeting',
+  'b.fanmeet': 'Fan meeting',
   'batch.n': 'Lứa {i}',
   'comp.name.t0': 'Giọng hát Tân binh',
   'comp.name.t1': 'Đấu trường Rap Trẻ',

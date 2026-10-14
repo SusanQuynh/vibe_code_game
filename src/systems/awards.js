@@ -9,7 +9,7 @@ export let awardToShow=null;
 export function awards(){
   const y=S.year,A=S.artists,res=[],gr=1+.35*(y-1);
   const best=(arr,f)=>arr.reduce((m,a)=>!m||f(a)>f(m)?a:m,null);
-  const give=(cat,names,ok,ids,note)=>{res.push({cat,names,ok,note});if(ok)for(const id of ids){const a=byId(id);if(a){a.fans=Math.round(a.fans*1.15)+5000;a.mood=clamp(a.mood+15,0,100);a.hist.unshift(Lk('hist.award',{y,c:cat}))}};if(ok)S.money+=30e6};
+  const give=(cat,names,ok,ids,note)=>{res.push({cat,names,ok,note});if(ok)for(const id of ids){const a=byId(id);if(a){a.fans=Math.round(a.fans*1.15)+5000;a.mood=clamp(a.mood+15,0,100);a.hist.unshift(Lk('h.award',{y,c:cat}))}};if(ok)S.money+=30e6};
   let c=best(A.filter(a=>a.status==='debuted'),a=>a.yr.fans);
   if(c)give(Lk('aw.cat.artist'),c.name,c.yr.fans>=120000*gr*rnd(.7,1.2),[c.id],Lk('aw.note.fansYr',{n:fmtN(c.yr.fans)}));
   c=best(A.filter(a=>a.debutYear===y),a=>a.yr.fans);

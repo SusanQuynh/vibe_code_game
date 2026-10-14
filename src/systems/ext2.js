@@ -102,7 +102,7 @@ export const MXS={
    no:(a,m)=>{if(a.status!=='trainee'){const p=Object.keys(a.pw)[0];if(p)S.partners[p]=clamp((S.partners[p]||0)-4,0,100)}return[Lk('log.x2.lateNo',{n:a.name})]}}},
  cry:{who:'t',ic:'😢',t:(a,m)=>t('mx.cry.t',{a:a.name}),d:(a,m)=>t('mx.cry.d',{m:m.name,a:a.name}),
   o:(a,m)=>{const s=a.mt?byId(a.mt):S.artists.find(x=>x.status==='debuted'&&!x.busy);return[{k:'rest',l:t('mx.cry.o.rest')},{k:'mgr',l:t('mx.cry.o.mgr',{p:pct(mxP(m,'care',.4))})},...(s?[{k:'senior',l:t('mx.cry.o.senior',{n:s.name})}]:[]),{k:'no',l:t('mx.cry.o.no')}]},
-  r:{rest:(a,m)=>{if(!a.busy)a.busy={kind:'leave',title:Lk('busy.recover'),left:1,total:1};a.energy=100;MOOD(a,15);return[Lk('log.x2.cryRest',{n:a.name})]},
+  r:{rest:(a,m)=>{if(!a.busy)a.busy={kind:'leave',title:Lk('b.recover'),left:1,total:1};a.energy=100;MOOD(a,15);return[Lk('log.x2.cryRest',{n:a.name})]},
    mgr:(a,m)=>Math.random()<mxP(m,'care',.4)?(MOOD(a,22),mgrExp(m,1),[Lk('log.x2.cryMgrY',{m:m.name,n:a.name}),'good']):(MOOD(a,-5),[Lk('log.x2.cryMgrN',{n:a.name}),'bad']),
    senior:(a,m)=>{const s=a.mt?byId(a.mt):S.artists.find(x=>x.status==='debuted'&&!x.busy);if(!s)return[Lk('log.x2.crySrNone')];MOOD(a,18);setRel(a,s,getRel(a,s)+15);s.energy=clamp(s.energy-8,0,100);return[Lk('log.x2.crySr',{s:s.name,n:a.name}),'good']},
    no:(a,m)=>{MOOD(a,-15);if(a.mood<12){removeArtist(a,Lk('x2.r.quit'));return null}return[Lk('log.x2.cryNo',{n:a.name}),'bad']}}},
@@ -113,9 +113,9 @@ export const MXS={
    art:(a,m)=>{MOOD(a,10);a.energy=clamp(a.energy+10,0,100);return[Lk('log.x2.clashArt',{n:a.name})]}}},
  injury:{who:'x',ic:'🩹',t:(a,m)=>t('mx.injury.t',{a:a.name}),d:(a,m)=>t('mx.injury.d',{m:m.name,a:a.name}),
   o:(a,m)=>[{k:'vip',l:t('mx.injury.o.vip',{m:money(30e6)})},{k:'push',l:t('mx.injury.o.push',{p:pct(mxP(m,'care',.4))})},{k:'treat',l:t('mx.injury.o.treat',{m:money(10e6)})}],
-  r:{vip:(a,m)=>{S.money-=30e6;if(!a.busy)a.busy={kind:'leave',title:Lk('busy.therapy'),left:1,total:1};a.energy=100;return[Lk('log.x2.injVip',{n:a.name}),'good']},
-   push:(a,m)=>{if(Math.random()<mxP(m,'care',.4)){a.energy=clamp(a.energy-10,0,100);return[Lk('log.x2.injPushY',{n:a.name})]}if(!a.busy)a.busy={kind:'leave',title:Lk('busy.injuryWorse'),left:3,total:3};MOOD(a,-15);return[Lk('log.x2.injPushN',{n:a.name}),'bad']},
-   treat:(a,m)=>{S.money-=10e6;if(!a.busy)a.busy={kind:'leave',title:Lk('busy.injury'),left:2,total:2};a.energy=100;return[Lk('log.x2.injTreat',{n:a.name})]}}},
+  r:{vip:(a,m)=>{S.money-=30e6;if(!a.busy)a.busy={kind:'leave',title:Lk('b.therapy'),left:1,total:1};a.energy=100;return[Lk('log.x2.injVip',{n:a.name}),'good']},
+   push:(a,m)=>{if(Math.random()<mxP(m,'care',.4)){a.energy=clamp(a.energy-10,0,100);return[Lk('log.x2.injPushY',{n:a.name})]}if(!a.busy)a.busy={kind:'leave',title:Lk('b.injuryWorse'),left:3,total:3};MOOD(a,-15);return[Lk('log.x2.injPushN',{n:a.name}),'bad']},
+   treat:(a,m)=>{S.money-=10e6;if(!a.busy)a.busy={kind:'leave',title:Lk('b.injury'),left:2,total:2};a.energy=100;return[Lk('log.x2.injTreat',{n:a.name})]}}},
  leak:{who:'d',ic:'📸',t:(a,m)=>t('mx.leak.t',{a:a.name}),d:(a,m)=>t('mx.leak.d',{a:a.name}),
   o:(a,m)=>[{k:'pr',l:t('mx.leak.o.pr',{p:pct(mxP(m,'pr',.4))})},{k:'content',l:t('mx.leak.o.content',{p:pct(clamp(.2+a.st.variety/100,.1,.9))})},{k:'silent',l:t('mx.leak.o.silent')}],
   r:{pr:(a,m)=>{if(Math.random()<mxP(m,'pr',.4)){a.fans=Math.round(a.fans*1.03)+500;mgrExp(m,1);return[Lk('log.x2.leakPrY',{m:m.name,n:a.name}),'good']}if(!a.scandal){a.scandal={t:Lk('scandal.bts'),sev:1,left:3,truth:true,dating:false,other:0};pushEv({kind:'scandal',a:a.id},true)}return[Lk('log.x2.leakPrN'),'bad']},
@@ -159,7 +159,7 @@ export function disbandTick(){for(const g of S.groups){if(g.hiatus){if(g.hiatus<
 export function disbandGroup(g,why){const ms=g.members.map(byId).filter(Boolean);S.groups=S.groups.filter(x=>x!==g);
   for(const m of S.managers)if(m.as&&m.as.t==='g'&&m.as.id===g.id)m.as=null;
   if(S.camp)delete S.camp['g'+g.id];S.cbPlan=(S.cbPlan||[]).filter(p=>p.k!=='g'+g.id);
-  ms.forEach(a=>{a.fans=Math.round(a.fans*.88);MOOD(a,-8);a.hist.unshift(Lk('hist.disband',{y:S.year,g:g.name}))});
+  ms.forEach(a=>{a.fans=Math.round(a.fans*.88);MOOD(a,-8);a.hist.unshift(Lk('h.disband',{y:S.year,g:g.name}))});
   S.props=null;addLog(Lk('log.x2.disband',{g:g.name,w:why}),'bad')}
 export const fixP=g=>{const m=gMgr(g);return clamp(.35+(m?effSk(m,'care')*.05:0)+(harmony(g.members)>=0?.15:0),.1,.92)};
 /* ---- Contracts & renewals ---- */
@@ -221,7 +221,7 @@ export function writeSong(){const main=+$('#wMain').value,co=[...document.queryS
   if(!main)return toast(tl('song.toast.main'));if(co.length>2)return toast(tl('song.toast.max'));
   const ids=[main,...co],ws=ids.map(byId);if(ws.some(a=>!a||a.busy))return toast(tl('song.toast.busy'));
   if(S.money<5e6)return toast(tl('toast.noMoney'));S.money-=5e6;book('prod',-5e6);
-  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:Lk('busy.write',{t:s.t}),left:1,total:1,lk:'write'});
+  const s=mkSong(ids,ck,t,true);ws.forEach(a=>a.busy={kind:'write',title:Lk('b.write',{t:s.t}),left:1,total:1,lk:'write'});
   addLog(Lk('log.x2.write',{n:ws.map(a=>a.name).join(', '),t:s.t,c:Lk(`concept.${ck}`)}));act()}
 export function wPrev(){const el=$('#wPrev');if(!el)return;const main=byId(+$('#wMain').value);if(!main){el.textContent='';return}
   const co=[...document.querySelectorAll('.wco:checked')].map(x=>+x.value).filter(i=>i!==main.id);if(co.length>2){el.innerHTML=`<span class="bad">${t('song.toast.max')}</span>`;return}

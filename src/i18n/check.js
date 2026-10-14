@@ -1,5 +1,5 @@
 // Compare key sets between the reference locale (vi) and another locale. Pure; shared by tests and scripts/check-i18n.mjs.
-const params = s => [...new Set([...s.matchAll(/\{(\w+)\}/g)].map(m => m[1]))].sort().join(',');
+const params = s => [...new Set([...s.matchAll(/\{(\w+)(?::[\w.]+)?\}/g)].map(m => m[1]))].sort().join(',');
 export function diffLocales(base, other) {
   const bk = Object.keys(base), ok = Object.keys(other);
   const missing = bk.filter(k => !(k in other)), extra = ok.filter(k => !(k in base));

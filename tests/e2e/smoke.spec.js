@@ -158,3 +158,25 @@ test('every room in English at 375px: no error, no horizontal scroll, no Vietnam
   }
   expect(errors).toEqual([]);
 });
+
+test('English log after 3 weeks: no Vietnamese outside names and titles', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.addInitScript(() => { localStorage.setItem('starlight_lang', 'en'); });
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
+  await page.evaluate(() => window.closeM());
+  const r = await page.evaluate(() => {
+    const VI = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
+    // short Vietnamese strings in the state are proper nouns (artist names, project titles): their words may appear
+    const names = new Set();
+    const walk = (v) => { if (typeof v === 'string') { if (VI.test(v) && v.length <= 40) for (const w of v.match(/\p{L}+/gu) || []) names.add(w); } else if (v && typeof v === 'object') for (const x of Object.values(v)) walk(x); };
+    walk(window.__game.state());
+    const log = document.querySelector('#log');
+    const txt = log ? log.textContent : '';
+    return { n: log ? log.children.length : 0, left: (txt.match(/\p{L}+/gu) || []).filter((w) => VI.test(w) && !names.has(w)) };
+  });
+  expect(r.n, 'log rows').toBeGreaterThan(0);
+  expect(r.left, 'Vietnamese words in #log').toEqual([]);
+  expect(errors).toEqual([]);
+});

@@ -48,6 +48,46 @@
   "k": "aw.note.shows"
  },
  {
+  "k": "b.collab"
+ },
+ {
+  "k": "b.comp"
+ },
+ {
+  "k": "b.concert"
+ },
+ {
+  "k": "b.fanmeet",
+  "logic": true
+ },
+ {
+  "k": "b.festival"
+ },
+ {
+  "k": "b.injury"
+ },
+ {
+  "k": "b.injuryWorse"
+ },
+ {
+  "k": "b.leave"
+ },
+ {
+  "k": "b.promo"
+ },
+ {
+  "k": "b.recover"
+ },
+ {
+  "k": "b.showcase"
+ },
+ {
+  "k": "b.therapy"
+ },
+ {
+  "k": "b.write"
+ },
+ {
   "k": "batch.fresh"
  },
  {
@@ -55,46 +95,6 @@
  },
  {
   "k": "biz.*"
- },
- {
-  "k": "busy.collab"
- },
- {
-  "k": "busy.comp"
- },
- {
-  "k": "busy.concert"
- },
- {
-  "k": "busy.fanmeet",
-  "logic": true
- },
- {
-  "k": "busy.festival"
- },
- {
-  "k": "busy.injury"
- },
- {
-  "k": "busy.injuryWorse"
- },
- {
-  "k": "busy.leave"
- },
- {
-  "k": "busy.promo"
- },
- {
-  "k": "busy.recover"
- },
- {
-  "k": "busy.showcase"
- },
- {
-  "k": "busy.therapy"
- },
- {
-  "k": "busy.write"
  },
  {
   "k": "common.gain"
@@ -332,31 +332,31 @@
   "logic": true
  },
  {
-  "k": "hist.award"
+  "k": "h.award"
  },
  {
-  "k": "hist.collab"
+  "k": "h.collab"
  },
  {
-  "k": "hist.comp"
+  "k": "h.comp"
  },
  {
-  "k": "hist.compBonus"
+  "k": "h.compBonus"
  },
  {
-  "k": "hist.disband"
+  "k": "h.disband"
  },
  {
-  "k": "hist.film"
+  "k": "h.film"
  },
  {
-  "k": "hist.offer"
+  "k": "h.offer"
  },
  {
-  "k": "hist.single"
+  "k": "h.single"
  },
  {
-  "k": "hist.write"
+  "k": "h.write"
  },
  {
   "k": "hsr.days"
@@ -374,88 +374,88 @@
   "k": "hsr.mood"
  },
  {
-  "k": "les.comp"
+  "k": "l.comp"
  },
  {
-  "k": "les.compLose"
+  "k": "l.compLose"
  },
  {
-  "k": "les.compWin"
+  "k": "l.compWin"
  },
  {
-  "k": "les.film"
+  "k": "l.film"
  },
  {
-  "k": "les.filmLt"
+  "k": "l.filmLt"
  },
  {
-  "k": "les.live"
+  "k": "l.live"
  },
  {
-  "k": "les.lt.collab.0"
+  "k": "l.offer"
  },
  {
-  "k": "les.lt.collab.1"
+  "k": "l.rep"
  },
  {
-  "k": "les.lt.collab.2"
+  "k": "l.with"
  },
  {
-  "k": "les.lt.concert.0"
+  "k": "ll.collab.0"
  },
  {
-  "k": "les.lt.concert.1"
+  "k": "ll.collab.1"
  },
  {
-  "k": "les.lt.concert.2"
+  "k": "ll.collab.2"
  },
  {
-  "k": "les.lt.fanmeet.0"
+  "k": "ll.concert.0"
  },
  {
-  "k": "les.lt.fanmeet.1"
+  "k": "ll.concert.1"
  },
  {
-  "k": "les.lt.fanmeet.2"
+  "k": "ll.concert.2"
  },
  {
-  "k": "les.lt.live.0"
+  "k": "ll.fanmeet.0"
  },
  {
-  "k": "les.lt.live.1"
+  "k": "ll.fanmeet.1"
  },
  {
-  "k": "les.lt.promo.0"
+  "k": "ll.fanmeet.2"
  },
  {
-  "k": "les.lt.promo.1"
+  "k": "ll.live.0"
  },
  {
-  "k": "les.lt.promo.2"
+  "k": "ll.live.1"
  },
  {
-  "k": "les.lt.showcase.0"
+  "k": "ll.promo.0"
  },
  {
-  "k": "les.lt.showcase.1"
+  "k": "ll.promo.1"
  },
  {
-  "k": "les.lt.showcase.2"
+  "k": "ll.promo.2"
  },
  {
-  "k": "les.lt.write.0"
+  "k": "ll.showcase.0"
  },
  {
-  "k": "les.lt.write.1"
+  "k": "ll.showcase.1"
  },
  {
-  "k": "les.offer"
+  "k": "ll.showcase.2"
  },
  {
-  "k": "les.rep"
+  "k": "ll.write.0"
  },
  {
-  "k": "les.with"
+  "k": "ll.write.1"
  },
  {
   "k": "log.art.sign"
@@ -1340,82 +1340,82 @@
   "k": "offer.*"
  },
  {
-  "k": "offer.lt.ad.0"
+  "k": "ol.ad.0"
  },
  {
-  "k": "offer.lt.ad.1"
+  "k": "ol.ad.1"
  },
  {
-  "k": "offer.lt.backup.0"
+  "k": "ol.backup.0"
  },
  {
-  "k": "offer.lt.backup.1"
+  "k": "ol.backup.1"
  },
  {
-  "k": "offer.lt.drama.0"
+  "k": "ol.drama.0"
  },
  {
-  "k": "offer.lt.drama.1"
+  "k": "ol.drama.1"
  },
  {
-  "k": "offer.lt.drama.2"
+  "k": "ol.drama.2"
  },
  {
-  "k": "offer.lt.extra.0"
+  "k": "ol.extra.0"
  },
  {
-  "k": "offer.lt.extra.1"
+  "k": "ol.extra.1"
  },
  {
-  "k": "offer.lt.guide.0"
+  "k": "ol.guide.0"
  },
  {
-  "k": "offer.lt.guide.1"
+  "k": "ol.guide.1"
  },
  {
-  "k": "offer.lt.magazine.0"
+  "k": "ol.magazine.0"
  },
  {
-  "k": "offer.lt.magazine.1"
+  "k": "ol.magazine.1"
  },
  {
-  "k": "offer.lt.model.0"
+  "k": "ol.model.0"
  },
  {
-  "k": "offer.lt.model.1"
+  "k": "ol.model.1"
  },
  {
-  "k": "offer.lt.movie.0"
+  "k": "ol.movie.0"
  },
  {
-  "k": "offer.lt.movie.1"
+  "k": "ol.movie.1"
  },
  {
-  "k": "offer.lt.movie.2"
+  "k": "ol.movie.2"
  },
  {
-  "k": "offer.lt.music.0"
+  "k": "ol.music.0"
  },
  {
-  "k": "offer.lt.music.1"
+  "k": "ol.music.1"
  },
  {
-  "k": "offer.lt.survival.0"
+  "k": "ol.survival.0"
  },
  {
-  "k": "offer.lt.survival.1"
+  "k": "ol.survival.1"
  },
  {
-  "k": "offer.lt.variety.0"
+  "k": "ol.variety.0"
  },
  {
-  "k": "offer.lt.variety.1"
+  "k": "ol.variety.1"
  },
  {
-  "k": "offer.lt.web.0"
+  "k": "ol.web.0"
  },
  {
-  "k": "offer.lt.web.1"
+  "k": "ol.web.1"
  },
  {
   "k": "pr.hist"

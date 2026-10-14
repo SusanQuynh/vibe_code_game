@@ -29,12 +29,14 @@ describe('p3 legacy vi-view snapshots', () => {
     const g = JSON.parse(fs.readFileSync('tests/golden/actions110.json', 'utf8'));
     await expect(J({ state: g.state, errs: g.errs })).toMatchFileSnapshot('__snapshots__/p3/golden-actions110.json');
   });
-  it('size (baseline recorded once; later tasks only log the ratio, task 16 asserts the budget)', () => {
+  it('save size stays within +10% of the task 1 baseline', () => {
     const cur = { compact: JSON.stringify(compactOf(rich, 1)).length, full: JSON.stringify(rich).length };
     const f = 'tests/unit/__snapshots__/p3/size.json';
     if (!fs.existsSync(f)) fs.writeFileSync(f, JSON.stringify(cur, null, 1));
     const base = JSON.parse(fs.readFileSync(f, 'utf8'));
     console.info('[p3] save size', cur, 'ratio', { compact: cur.compact / base.compact, full: cur.full / base.full });
     expect(cur.compact).toBeGreaterThan(0);
+    expect(cur.compact / base.compact, 'compact save size').toBeLessThanOrEqual(1.1);
+    expect(cur.full / base.full, 'full save size').toBeLessThanOrEqual(1.1);
   });
 });

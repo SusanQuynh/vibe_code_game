@@ -6,7 +6,7 @@ export default {
   'scandal.t.2': 'Tin đồn chèn ép đồng nghiệp',
   'scandal.t.3': 'Lộ ảnh quá khứ gây tranh cãi',
   'scandal.t.4': 'Tin đồn đạo nhái vũ đạo',
-  'busy.leave': 'Nghỉ phép',
+  'b.leave': 'Nghỉ phép',
   'ev.r.stay': 'vẫn quyết định rời công ty',
   'ev.r.left': 'đã rời công ty',
   'ev.r.poach': 'chuyển sang {r}',

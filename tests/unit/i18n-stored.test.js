@@ -25,7 +25,7 @@ beforeAll(async () => {
 
 describe('stored text census', () => {
   it('prints the per-category counts', () => { console.info('[p3 census] Vietnamese strings left:', JSON.stringify(total)); });
-  it('every category has a census path', () => { expect(TXT_PATHS.map(p => p.cat).sort()).toEqual([...new Set(TXT_PATHS.map(p => p.cat))].sort()); });
+  it('every stored-text category is converted (P3_FIELDS == TXT_PATHS)', () => { expect(P3_FIELDS.slice().sort()).toEqual([...new Set(TXT_PATHS.map(p => p.cat))].sort()); expect(P3_FIELDS.length).toBe(TXT_PATHS.length); });
   it('converted categories hold no Vietnamese string', () => {
     for (const cat of P3_FIELDS) expect(total[cat], 'category ' + cat).toBe(0);
   });

@@ -186,7 +186,7 @@ const fab = () => {
   S.managers.forEach(m => { m.as = null; });
   ms.forEach((m, i) => { m.dom = null; m.as = { t: 'l', id: 0, ids: arts.filter((_, j) => j % Math.max(ms.length, 1) === i).map(a => a.id) }; });
   const mk = (e, mo) => Array.from({ length: 7 }, (_, k) => [['vocal', 'dance', 'rest', 'gym', 'rap', 'acting', 'variety'][k], k === 2 ? 0 : 1.2, e, mo]);
-  arts.forEach((a, i) => { const v = i % 6; if (v === 5) delete S.lastRep.a[a.id]; else S.lastRep.a[a.id] = v === 0 ? { d: mk(70, 70), f: 12 } : v === 1 ? { d: mk(10, 70), f: -3 } : v === 2 ? { d: mk(70, 10), f: 0, done: 'Phim test' } : v === 3 ? { b: 'Việc ngoài test', f: 5 } : { d: mk(70, 70), f: 1, dec: 1.5, done: 'Phim test' }; });
+  arts.forEach((a, i) => { const v = i % 6; if (v === 5) delete S.lastRep.a[a.id]; else S.lastRep.a[a.id] = v === 0 ? { d: mk(70, 70), f: 12 } : v === 1 ? { d: mk(10, 70), f: -3 } : v === 2 ? { d: mk(70, 10), f: 0, done: 'Phim test' } : v === 3 ? { b: { $l: ['Việc ngoài test'], j: '' }, f: 5 } : { d: mk(70, 70), f: 1, dec: 1.5, done: 'Phim test' }; });
 };
 const full = d => (setRepDay(d), viewReportFull(), sheet());
 add('t7-report', ctx => {
@@ -194,7 +194,7 @@ add('t7-report', ctx => {
   ctx.fresh(ctx.early); out.none = rep(); out.noneFull = full(0);
   ctx.fresh(ctx.base); out.base = rep();
   S.lastRep.m1 = null; S.lastRep.biz = -5e6; out.nullMoney = rep();
-  ctx.fresh(ctx.base); S.lastRep.biz = 0; S.lastRep.evl = 0; S.lastRep.m1 = S.lastRep.m0 - 3e6; S.lastRep.ev = ['dòng 1', 'dòng 2', 'dòng 3', 'dòng 4', 'dòng 5', 'dòng 6', 'dòng 7']; out.neg = rep();
+  ctx.fresh(ctx.base); S.lastRep.biz = 0; S.lastRep.evl = 0; S.lastRep.m1 = S.lastRep.m0 - 3e6; S.lastRep.ev = [1, 2, 3, 4, 5, 6, 7].map(i => ({ $l: ['dòng ' + i], j: '' })); out.neg = rep();
   S.lastRep.ev = []; S.lastRep.evl = 1; out.noEv = rep();
   ctx.fresh(ctx.base);
   fab();
@@ -224,7 +224,7 @@ add('t7-brief', ctx => {
   tr.forEach((a, i) => { S.lastRep.a[a.id] = { d: Array.from({ length: 7 }, (_, k) => ['vocal', i % 2 ? 1.5 : 0, 70 - i * 20, 60]), f: 10, dec: i ? 0.5 : 0 }; });
   out.ok = briefCard('<b>T</b>', tr);
   S.lastRep.a[tr[0].id].d[6][2] = 5; out.warn = briefCard('<b>T</b>', tr);
-  S.lastRep.a[tr[0].id] = { b: 'Việc test' }; delete S.lastRep.a[tr[1].id]; out.out = briefCard('<b>T</b>', tr);
+  S.lastRep.a[tr[0].id] = { b: { $l: ['Việc test'], j: '' } }; delete S.lastRep.a[tr[1].id]; out.out = briefCard('<b>T</b>', tr);
   S.lastRep.a[tr[0].id] = { done: 'Phim test' }; out.done = briefCard('<b>T</b>', tr);
   ctx.fresh(ctx.base); out.empty = briefCard('<b>E</b>', []);
   return out;
@@ -314,9 +314,9 @@ add('t8-acting', ctx => {
   ctx.fresh(ctx.base);
   const d = S.artists.find(a => a.status === 'debuted');
   S.films = [
-    { id: 901, title: 'Phim A', genre: 'romance', own: true, budget: 3e8, share: 1, cost: 3e8, cast: [d.id], status: 'Đang quay', releaseAt: 0, done: false, y: 2 },
-    { id: 902, title: 'Phim B', genre: 'action', own: false, budget: 8e8, share: .3, cost: 2.4e8, cast: [], status: 'Hậu kỳ', releaseAt: abs() + 2, done: false, y: 2 },
-    { id: 903, title: 'Phim C', genre: 'horror', own: true, budget: 2e9, share: 1, cost: 2e9, cast: [d.id, 999999], status: 'Đã chiếu', releaseAt: 0, done: true, rev: 5e9, mult: 1.5, inc: 5e9, y: 2 }];
+    { id: 901, title: 'Phim A', genre: 'romance', own: true, budget: 3e8, share: 1, cost: 3e8, cast: [d.id], status: Lk('film.st.shoot'), releaseAt: 0, done: false, y: 2 },
+    { id: 902, title: 'Phim B', genre: 'action', own: false, budget: 8e8, share: .3, cost: 2.4e8, cast: [], status: Lk('film.st.post'), releaseAt: abs() + 2, done: false, y: 2 },
+    { id: 903, title: 'Phim C', genre: 'horror', own: true, budget: 2e9, share: 1, cost: 2e9, cast: [d.id, 999999], status: Lk('film.st.out'), releaseAt: 0, done: true, rev: 5e9, mult: 1.5, inc: 5e9, y: 2 }];
   out.films = room('acting');
   const sel = document.getElementById('fGen'); const fits = {}; for (const k of ['romance', 'horror', 'musical']) { sel.value = k; sel.onchange(); fits[k] = [...document.querySelectorAll('[data-f]')].map(e => e.textContent); } out.fits = fits;
   S.artists.forEach(a => { a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; }); out.noCands = room('acting');

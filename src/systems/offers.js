@@ -79,7 +79,7 @@ export function acceptCast(ofId,ids,silent){
   for(const a of ms)a.busy={kind:'offer',type:of.type,title:of.title,partner:of.partner,costar:of.costar,left:of.weeks,total:of.weeks,pay:effPay(of,a),genre:of.genre,w:of.w,L:of.L,offerId:of.id,mates:ids,chem:c};
   S.offers=S.offers.filter(o=>o!==of);
   const f=S.films.find(x=>x.offerId===of.id);if(f)ids.forEach(i=>f.cast.push(i));
-  addLog(Lk('log.off.acc',{i:O.ic,n:ms.map(a=>a.name).join(', '),o:Lk(`offer.${of.type}`),t:of.title,p:of.partner,w:of.weeks,x:ids.length>1?Lk('log.off.mates',{k:ids.length,c:c?Lk(c>0?'log.off.chemPos':'log.off.chemNeg',{p:Math.round(Math.abs(c)*100)+'%'}):''}):''}));
+  addLog(Lk('log.off.acc',{i:O.ic,n:ms.map(a=>a.name).join(', '),o:of.type,t:of.title,p:of.partner,w:of.weeks,x:ids.length>1?Lk('log.off.mates',{k:ids.length,c:c?Lk(c>0?'log.off.chemPos':'log.off.chemNeg',{p:Math.round(Math.abs(c)*100)+'%'}):''}):''}));
   if(!silent)act();
 }
 export function acceptSel(ofId){const ids=[...document.querySelectorAll('.oc'+ofId+':checked')].map(x=>+x.value);acceptCast(ofId,ids)}

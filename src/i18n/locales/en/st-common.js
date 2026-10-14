@@ -18,7 +18,7 @@ export default {
   'prop.self': 'auto-approved',
   'prop.why2.busy': 'already has a project',
   'prop.why.lighter': 'workload lightened',
-  'busy.fanmeet': 'Fan meeting',
+  'b.fanmeet': 'Fan meeting',
   'batch.n': 'Batch {i}',
   'comp.name.t0': 'Rookie Vocal Contest',
   'comp.name.t1': 'Young Rap Arena',

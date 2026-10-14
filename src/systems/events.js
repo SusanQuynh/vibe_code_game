@@ -135,7 +135,7 @@ export function resolveEv(id,k,silent){
   const a=byId(e.a),b=e.b?byId(e.b):null;if(!a||(e.b&&!b)){if(!silent)act();return}
   const M=(x,d)=>x.mood=clamp(x.mood+d,0,100);
   switch(e.kind+':'+k){
-    case'req_rest:yes':if(!a.busy)a.busy={kind:'leave',title:Lk('busy.leave'),left:2,total:2};a.energy=100;M(a,20);addLog(Lk('log.ev.leave',{n:a.name}));break;
+    case'req_rest:yes':if(!a.busy)a.busy={kind:'leave',title:Lk('b.leave'),left:2,total:2};a.energy=100;M(a,20);addLog(Lk('log.ev.leave',{n:a.name}));break;
     case'req_rest:no':M(a,-15);break;
     case'req_raise:yes':a.salary+=3e6;M(a,20);addLog(Lk('log.ev.raise',{n:a.name,m:{$:a.salary}}));break;
     case'req_raise:no':M(a,-15);break;

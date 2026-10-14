@@ -1,6 +1,6 @@
 // Stored-text keys (phase 3, task 9): offer, proposal and secretary texts. Append only.
 export default {
-  'log.off.acc': '{i} {n} nhận {o} «{t}» ({p}), {w} tuần{x}.',
+  'log.off.acc': '{i} {n} nhận {o:offer} «{t}» ({p}), {w} tuần{x}.',
   'log.off.mates': ' · {k} người{c}',
   'log.off.chemPos': ', ăn ý +{p}',
   'log.off.chemNeg': ', lục đục {p}',

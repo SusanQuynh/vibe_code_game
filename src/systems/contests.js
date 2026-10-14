@@ -87,7 +87,7 @@ export function enterComp(cid){const c=S.comps.find(x=>x.id===cid);if(!c)return;
   if(ms.length<c.t[0]||ms.length>c.t[1])return toast(t('comp.toast.need',{x:needTxt(c)}));
   if(S.money<c.fee)return toast(t('comp.toast.noFee'));S.money-=c.fee;
   const run={id:uid(),c,ids:ms.map(a=>a.id),res:null};if(g)run.g=g.id;const pm=pmOf(c,ms);if(pm)run.pm=pm;S.compRuns=S.compRuns||[];S.compRuns.push(run);
-  ms.forEach(a=>a.busy={kind:'comp',title:Lk('busy.comp',{n:c.n}),left:c.wk,total:c.wk,run:run.id});
+  ms.forEach(a=>a.busy={kind:'comp',title:Lk('b.comp',{n:c.n}),left:c.wk,total:c.wk,run:run.id});
   S.comps=S.comps.filter(x=>x!==c);addLog(Lk('log.cmp.go',{n:g?Lk('log.cmp.grp',{n:g.name}):ms.map(a=>a.name).join(', '),c:c.n,w:c.wk,m:{$:c.fee}}),'good');act()}
 export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);if(!run)return;const c=run.c,K=KIND[kindOf(c)];
   if(!run.res){const ms=run.ids.map(byId).filter(Boolean),f=compScore(ms,run.ids,c),sc=f+rnd(-8,8);
@@ -97,8 +97,8 @@ export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);i
     {const m=ms.map(mgrOf).find(Boolean);if(m)mgrExp(m,rank===1?2:1)}}
   const r=run.res,q=r.rank===1?1.4:r.rank<=3?1.15:.9,fg=Math.round((r.rank===1?R(3000,7000):r.rank<=3?R(1000,3000):R(200,800))*K.fanMul(a));a.fans+=fg;a.yr.fans+=fg;
   const les={};for(const k in c.w)les[k]=c.w[k]*3;const ls=applyLesson(a,les,q),bt=compBonus(a,c,r.rank);
-  a.lessons.unshift({t:Lk('les.comp',{n:c.n}),l:Lk(r.rank<=3?'les.compWin':'les.compLose'),s:ls,y:S.year,...(bt?{b:bt}:{})});if(a.lessons.length>12)a.lessons.length=12;
-  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(Lk('hist.comp',{y:S.year,c:c.n,r:r.rank,x:bt?Lk('hist.compBonus',{b:bt}):''}));a.wc=(a.wc||0)+1;
+  a.lessons.unshift({t:Lk('l.comp',{n:c.n}),l:Lk(r.rank<=3?'l.compWin':'l.compLose'),s:ls,y:S.year,...(bt?{b:bt}:{})});if(a.lessons.length>12)a.lessons.length=12;
+  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(Lk('h.comp',{y:S.year,c:c.n,r:r.rank,x:bt?Lk('h.compBonus',{b:bt}):''}));a.wc=(a.wc||0)+1;
   if(!S.artists.some(x=>x.busy&&x.busy.run===run.id))S.compRuns=S.compRuns.filter(x=>x!==run)}
 export function compHTML(kinds=['tts']){const dbt=!kinds.includes('tts'),inK=c=>kinds.includes(kindOf(c)),
   going=S.artists.filter(a=>{if(!a.busy||a.busy.kind!=='comp')return false;const r=(S.compRuns||[]).find(x=>x.id===a.busy.run);return r?inK(r.c):!dbt});

@@ -6,7 +6,7 @@ export default {
   'scandal.t.2': 'Rumours of bullying colleagues',
   'scandal.t.3': 'Controversial old photos leaked',
   'scandal.t.4': 'Rumours of copying choreography',
-  'busy.leave': 'Time off',
+  'b.leave': 'Time off',
   'ev.r.stay': 'still decided to leave the company',
   'ev.r.left': 'left the company',
   'ev.r.poach': 'moved to {r}',

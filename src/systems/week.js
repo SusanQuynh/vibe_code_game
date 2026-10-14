@@ -42,15 +42,15 @@ export function trainDay(a,k){
   if(a.energy<20)a.mood=clamp(a.mood-1.2,0,100);
   return +gs.toFixed(2);
 }
-export function qLabel(q){return Lk(q>=1.25?'q.ex':q>=1?'q.good':q>=.8?'q.ok':'q.low')}
+export function qId(q){return q>=1.25?'ex':q>=1?'good':q>=.8?'ok':'low'} // stored as an id, rendered by {q:q}
 /* a.pg: cumulative skill points from projects (lazy, real applied delta) */
 export function addPg(a,k,d){d=+d.toFixed(1);if(d){a.pg=a.pg||{};a.pg[k]=+((a.pg[k]||0)+d).toFixed(1)}}
 export function applyLesson(a,lesson,q){const out={};for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out[k]=g.toFixed(1)}return{$g:out}}
 /* deterministic project lesson (no RNG); consecutive livestreams merge into one entry */
-export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=Lk(`les.lt.${key}.${abs()%P.ltN}`),b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
+export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=Lk(`ll.${key}.${abs()%P.ltN}`),b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
   if(key==='live'){const d={};for(const k in P.l)d[k]=+(a.st[k]-b0[k]).toFixed(1);   // real applied delta (clamp/rounding), matches a.pg
     const txt=g=>{const o={};for(const k of Object.keys(g))o[k]=g[k].toFixed(1);return{$g:o}};
-    if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=Lk('les.rep',{t:title,n:L.n});L.s=txt(L.g);L.y=S.year;return L.s}
+    if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=Lk('l.rep',{t:title,n:L.n});L.s=txt(L.g);L.y=S.year;return L.s}
     a.lessons.unshift({t:title,l:lt,s:txt(d),g:d,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return txt(d)}
   const s=s0;
   a.lessons.unshift({t:title,l:lt,s,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return s}
@@ -61,8 +61,8 @@ export function completeBusy(a){
     const mates=(b.mates||[]).filter(i=>i!==a.id).map(byId).filter(Boolean);for(const m of mates)setRel(a,m,getRel(a,m)+R(2,5));
     const fg=Math.round(R(O.fans[0],O.fans[1])*.4*q*(1+fame(a)/150));
     a.fans+=fg;a.yr.fans+=fg;S.money+=b.pay;book('job',b.pay,[a]);
-    const ls=applyLesson(a,O.lesson,q),lt=Lk(`offer.lt.${b.type}.${pickI(O.ltN)}`);
-    a.lessons.unshift({t:Lk('les.offer',{o:Lk(`offer.${b.type}`),t:b.title,m:mates.length?Lk('les.with',{n:mates.map(x=>x.name).join(', ')}):''}),l:lt,s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
+    const ls=applyLesson(a,O.lesson,q),lt=Lk(`ol.${b.type}.${pickI(O.ltN)}`);
+    a.lessons.unshift({t:Lk('l.offer',{o:b.type,t:b.title,m:mates.length?Lk('l.with',{n:mates.map(x=>x.name).join(', ')}):''}),l:lt,s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
     S.partners[b.partner]=clamp(Math.round((S.partners[b.partner]||0)+R(6,12)*q),0,100);
     a.pw[b.partner]=(a.pw[b.partner]||0)+1;
     if(b.costar)a.co[b.costar]=clamp((a.co[b.costar]||0)+R(10,20),0,100);
@@ -71,18 +71,18 @@ export function completeBusy(a){
     a.wc=(a.wc||0)+1;
     {const m=mgrOf(a);if(m)mgrExp(m)}
     a.mood=clamp(a.mood+6,0,100);a.energy=clamp(a.energy-10,0,100);
-    a.hist.unshift(Lk('hist.offer',{y:S.year,o:Lk(`offer.${b.type}`),t:b.title,q:qLabel(q)}));
-    addLog(Lk('log.wk.done',{n:a.name,t:b.title,q:qLabel(q),m:{$:b.pay},f:fmtN(fg),l:lt,s:ls}),'good');
+    a.hist.unshift(Lk('h.offer',{y:S.year,o:b.type,t:b.title,q:qId(q)}));
+    addLog(Lk('log.wk.done',{n:a.name,t:b.title,q:qId(q),m:{$:b.pay},f:fmtN(fg),l:lt,s:ls}),'good');
   }else if(b.kind==='shoot'){
     const film=S.films.find(x=>x.id===b.filmId);
     const q=rnd(.9,1.25),ls=applyLesson(a,{acting:5,stamina:1},q);
-    a.lessons.unshift({t:Lk('les.film',{t:b.title}),l:Lk('les.filmLt'),s:ls,y:S.year});
+    a.lessons.unshift({t:Lk('l.film',{t:b.title}),l:Lk('l.filmLt'),s:ls,y:S.year});
     if(film){a.yr.actQ=Math.max(a.yr.actQ,Math.round(fit(a,GENRES[film.genre].w)*q));
       if(!S.artists.some(x=>x.busy&&x.busy.filmId===film.id)){film.status=Lk('film.st.post');film.releaseAt=abs()+2}}
-    a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(Lk('hist.film',{y:S.year,t:b.title}));
+    a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(Lk('h.film',{y:S.year,t:b.title}));
     addLog(Lk('log.wk.shoot',{n:a.name,t:b.title,s:ls}),'good');
   }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(Lk('log.wk.promo',{n:a.name,s}))}
-  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(isK(b.title,'busy.fanmeet')?'fanmeet':'concert'),b.title);addLog(Lk('log.wk.concert',{n:a.name,s}))}
+  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(isK(b.title,'b.fanmeet')?'fanmeet':'concert'),b.title);addLog(Lk('log.wk.concert',{n:a.name,s}))}
   else if(b.kind==='write')projLesson(a,'write',b.title);
   else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(Lk('log.wk.leave',{n:a.name}))}
   else if(b.kind==='comp')compDone(a,b);

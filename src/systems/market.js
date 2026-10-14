@@ -61,7 +61,7 @@ export function surprise(){
   else if(k==='crisis'){setMod('pay',.8,6,Lk('mod.pay'));setMod('econ',.7,6,Lk('mod.econ'));addLog(Lk('log.mk.crisis'),'bad')}
   else if(k==='gift'){S.artists.forEach(a=>a.mood=clamp(a.mood+8,0,100));addLog(Lk('log.mk.gift'),'good')}
   else if(k==='challenge'){const c=pick(Object.keys(CONCEPTS));newTrend(c);addLog(Lk('log.mk.chal',{c:Lk(`concept.${c}`)}),'gold')}
-  else if(k==='injury'){const c=deb.filter(a=>!a.busy);if(!c.length)return;const a=pick(c);a.busy={kind:'leave',title:Lk('busy.injury'),left:2,total:2};a.mood=clamp(a.mood-10,0,100);addLog(Lk('log.mk.injury',{n:a.name}),'bad')}
+  else if(k==='injury'){const c=deb.filter(a=>!a.busy);if(!c.length)return;const a=pick(c);a.busy={kind:'leave',title:Lk('b.injury'),left:2,total:2};a.mood=clamp(a.mood-10,0,100);addLog(Lk('log.mk.injury',{n:a.name}),'bad')}
   else if(k==='sponsor')pushEv({kind:'sx',sx:k,p:pick(PARTNERS.ad),v:Math.round(R(40,150)*(1+S.year*.3))*1e6},true);
   else if(k==='investor')pushEv({kind:'sx',sx:k,p:Lk(`fund.${pickI(3)}`),v:Math.round(R(200,500)*(1+S.year*.2))*1e6},true);
   else if(k==='festival'){const x=pick(free);pushEv({kind:'sx',sx:k,act:x.k,n:x.n.slice(2)},true)}
@@ -77,7 +77,7 @@ export function sxResolve(e,k){
     case'sponsor:no':S.artists.forEach(a=>a.mood=clamp(a.mood+3,0,100));addLog(Lk('log.mk.sponNo'));break;
     case'tax:law':S.money-=40e6;if(Math.random()<.6)addLog(Lk('log.mk.taxWin'),'good');else{const f=clamp(Math.round(Math.abs(S.money)*.05/1e6)*1e6,30e6,300e6);S.money-=f;addLog(Lk('log.mk.taxFine',{m:{$:f}}),'bad')}break;
     case'tax:pay':{const f=clamp(Math.round(Math.abs(S.money)*.04/1e6)*1e6,20e6,250e6);S.money-=f;addLog(Lk('log.mk.taxPay',{m:{$:f}}),'bad');break}
-    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog(Lk('log.mk.festNo'),'bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:Lk('busy.festival'),left:1,total:1,lk:'concert'}}addLog(Lk('log.mk.fest',{n:e.n}),'gold');break}
+    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog(Lk('log.mk.festNo'),'bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:Lk('b.festival'),left:1,total:1,lk:'concert'}}addLog(Lk('log.mk.fest',{n:e.n}),'gold');break}
     case'festival:no':break;
     case'leak:embrace':if(Math.random()<.6){S.artists.filter(a=>a.status==='debuted').forEach(a=>a.fans+=R(500,2500));addLog(Lk('log.mk.leakOk'),'good')}else addLog(Lk('log.mk.leakNo'));break;
     case'leak:sue':S.money-=20e6;addLog(Lk('log.mk.leakSue'));break;

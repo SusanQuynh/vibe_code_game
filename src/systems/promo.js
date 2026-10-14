@@ -52,7 +52,7 @@ export function postDo(k,id,quiet){const c=S.camp[k],P=POST[id],x=actByKey(k);if
   if(P.stage){c.stages++;gF(R(400,1200));c.rank=Math.max(1,c.rank-R(0,3));
     const pw=clamp(((101-c.rank)*.75+c.hype*.3+fm*.3-62)/40,.02,.85);
     if(Math.random()<pw){c.wins++;gF(R(2500,6000));ms.forEach(a=>a.mood=clamp(a.mood+10,0,100));const sg=S.singles.find(z=>z.k===k&&z.title===c.t);if(sg)sg.wins=(sg.wins||0)+1;win=1;msg=Lk('log.pro.cup',{t:c.t,s:Lk(`pro.stage.${id}`)});addLog(Lk('log.pro.win',{m:msg,n:nm,w:c.wins}),'gold')}
-    else msg=Lk('log.pro.perf',{i:P.ic,n:nm,p:Lk(`promo.post.${id}`)})}
+    else msg=Lk('log.pro.perf',{i:P.ic,n:nm,p:id})}
   else if(id==='radio'){gF(R(200,600));ms.forEach(a=>a.st.variety=clamp(+(a.st.variety+.5).toFixed(1),0,100));msg=Lk('log.pro.radio',{n:nm})}
   else if(id==='variety'){gF(R(600,1800));ms.forEach(a=>a.st.variety=clamp(+(a.st.variety+1.5).toFixed(1),0,100));c.rank=Math.max(1,c.rank-R(0,2));msg=Lk('log.pro.var',{n:nm})}
   else if(id==='fansign'){const tf=ms.reduce((t,a)=>t+a.fans,0),v=Math.round(Math.min(tf*.01,4000)*R(150,250))*1e3;S.money+=v;book('live',v,ms);c.inc+=v;ms.forEach(a=>a.mood=clamp(a.mood+6,0,100));gF(R(200,500));msg=Lk('log.pro.sign',{n:nm,m:{$:v}})}
