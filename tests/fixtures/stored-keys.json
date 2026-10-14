@@ -181,6 +181,24 @@
   "k": "genre.*"
  },
  {
+  "k": "gmp.event"
+ },
+ {
+  "k": "gmp.mood"
+ },
+ {
+  "k": "gmp.retrain"
+ },
+ {
+  "k": "gmp.scandal"
+ },
+ {
+  "k": "gmp.tired"
+ },
+ {
+  "k": "gmp.unassigned"
+ },
+ {
   "k": "grade.ex",
   "logic": true
  },
@@ -348,6 +366,72 @@
  },
  {
   "k": "log.ev.leftGrp"
+ },
+ {
+  "k": "log.gm.demote"
+ },
+ {
+  "k": "log.gm.hire"
+ },
+ {
+  "k": "log.gm.rep"
+ },
+ {
+  "k": "log.gm.set"
+ },
+ {
+  "k": "log.mgr.auto"
+ },
+ {
+  "k": "log.mgr.autoPri"
+ },
+ {
+  "k": "log.mgr.dropA"
+ },
+ {
+  "k": "log.mgr.dropN"
+ },
+ {
+  "k": "log.mgr.fire"
+ },
+ {
+  "k": "log.mgr.gm"
+ },
+ {
+  "k": "log.mgr.hire"
+ },
+ {
+  "k": "log.mgr.lv"
+ },
+ {
+  "k": "log.mgr.lvSk"
+ },
+ {
+  "k": "log.mgr.mgr"
+ },
+ {
+  "k": "log.mgr.migDrop"
+ },
+ {
+  "k": "log.mgr.ready"
+ },
+ {
+  "k": "log.mgr.retrain"
+ },
+ {
+  "k": "log.mgr.rpt"
+ },
+ {
+  "k": "log.mgr.rptCeo"
+ },
+ {
+  "k": "log.mgr.rptGm"
+ },
+ {
+  "k": "log.mgr.split"
+ },
+ {
+  "k": "log.mgr.take"
  },
  {
   "k": "log.pro.auto"

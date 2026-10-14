@@ -1,5 +1,5 @@
-import { esc, fmt, fmtN } from '../core/util.js';
-import { money, t, tx } from '../i18n/index.js';
+import { esc, fmtN } from '../core/util.js';
+import { Lk, money, t, tx } from '../i18n/index.js';
 import { S, abs, addLog } from '../state.js';
 import { book } from './ext2.js';
 import { gmOf, mKids } from './managers.js';
@@ -13,27 +13,27 @@ export const gmFee=m=>20e6+5e6*m.lv;
 function setGM(m){const old=gmOf();if(old&&old!==m)unGM(old);
   m.gm=1;m.as=null;m.boss=null;m.gmRaise=Math.round(m.salary*.5/1e6)*1e6;m.salary+=m.gmRaise;
   for(const x of S.managers)if(x!==m&&!x.boss)x.boss=m.id;
-  S.props=null;addLog(`⭐ ${m.name} được bổ nhiệm Quản lý tổng: quản lý mọi quản lý và báo cáo trực tiếp Giám đốc.`,'gold')}
+  S.props=null;addLog(Lk('log.gm.set',{n:m.name}),'gold')}
 function unGM(g){g.gm=0;g.salary-=g.gmRaise||0;delete g.gmRaise;mKids(g).forEach(k=>k.boss=null);S.props=null}
 export function promoteGM(id){const m=S.managers.find(x=>x.id===id);if(!m||m.gm)return;const fee=gmFee(m);if(S.money<fee)return toast(t('toast.noMoney'));
   S.money-=fee;book('mgr',-fee);setGM(m);act()}
 export function hireGM(id){const m=(S.mgrPool||[]).find(x=>x.id===id);if(!m)return;const fee=m.fee*2;if(S.money<fee)return toast(t('toast.noMoney'));
-  S.money-=fee;book('mgr',-fee);S.mgrPool=S.mgrPool.filter(x=>x!==m);S.managers.push(m);addLog(`🧑‍💼 Tuyển ${m.name} làm quản lý tổng.`,'good');setGM(m);act()}
+  S.money-=fee;book('mgr',-fee);S.mgrPool=S.mgrPool.filter(x=>x!==m);S.managers.push(m);addLog(Lk('log.gm.hire',{n:m.name}),'good');setGM(m);act()}
 export function demoteGM(btn){const g=gmOf();if(!g)return;if(btn&&btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('mgr.demoteAgain');return}
-  unGM(g);addLog(`📋 ${g.name} thôi chức Quản lý tổng, các quản lý cấp dưới báo cáo trực tiếp Giám đốc.`);act()}
+  unGM(g);addLog(Lk('log.gm.demote',{n:g.name}));act()}
 /* weekly GM report; lv0/e0 are locals captured at the start of the week. No-op (and no S writes) without a GM */
 export function gmReport(rep,lv0,e0){const g=gmOf();if(!g)return;const w=abs()-1,up=[],prob=[];
   for(const m of S.managers)if(m!==g&&lv0[m.id]&&m.lv>lv0[m.id])up.push(m.name);
-  for(const m of S.managers){if(m===g)continue;if(m.rt>abs())prob.push(`${m.name} đang đào tạo lại`);else if(!m.as)prob.push(`${m.name} chưa được phân công`)}
+  for(const m of S.managers){if(m===g)continue;if(m.rt>abs())prob.push(Lk('gmp.retrain',{n:m.name}));else if(!m.as)prob.push(Lk('gmp.unassigned',{n:m.name}))}
   const teams=mKids(g).map(k=>{const ts=teamOf(k);let fans=0,earn=0,warn=0;
     for(const a of ts){const r=rep.a[a.id]||{};fans+=r.f||0;earn+=Math.round((a.earn||0)-(e0[a.id]||0));
-      if(a.energy<30||a.mood<30){warn++;prob.push(`${a.name} ${a.energy<30?'kiệt sức':'tâm trạng xấu'}`)}
-      if(a.scandal)prob.push(`${a.name} đang dính scandal`)}
+      if(a.energy<30||a.mood<30){warn++;prob.push(Lk(a.energy<30?'gmp.tired':'gmp.mood',{n:a.name}))}
+      if(a.scandal)prob.push(Lk('gmp.scandal',{n:a.name}))}
     return{mid:k.id,n:ts.length,fans,earn,warn}});
-  for(const e of S.events)if(e.m)prob.push('có tình huống quản lý báo lên');
+  for(const e of S.events)if(e.m)prob.push(Lk('gmp.event'));
   S.gmRep={w,y:rep.y,up,prob:prob.slice(0,12),teams};
   if(w%4===0){const f=teams.reduce((t,x)=>t+x.fans,0),e=teams.reduce((t,x)=>t+x.earn,0);
-    addLog(`📊 QL tổng ${g.name}: ${up.length} QL lên cấp · ${f>=0?'+':''}${fmtN(f)} fan · ${e>=0?'+':''}${fmt(e)} doanh thu · ${prob.length} vấn đề`)}}
+    addLog(Lk('log.gm.rep',{n:g.name,u:up.length,f:(f>=0?'+':'')+fmtN(f),s:e>=0?'+':'',e:{$:e},p:prob.length}))}}
 export function gmCardHTML(){const R=S.gmRep,g=gmOf();if(!g||!R)return'';
   const nm=id=>(S.managers.find(m=>m.id===id)||{name:'?'}).name;
   return`<div class="card rep" style="margin:0 0 8px"><b>${t('gm.title',{n:esc(g.name)})}</b>
