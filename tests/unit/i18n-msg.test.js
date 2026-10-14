@@ -96,3 +96,15 @@ describe('no RNG use, pickI', () => {
     }
   });
 });
+
+describe('crafted stored keys from an imported save', () => {
+  it('never resolves Object.prototype members and never throws', () => {
+    for (const k of ['__proto__', 'valueOf', 'constructor', 'toString', 'hasOwnProperty']) {
+      expect(tx({ k })).toBe(k);
+      expect(txVi({ k })).toBe(k);
+      expect(t(k)).toBe(k);
+    }
+    // a non-object p is not a Msg: rendered as plain text instead of crashing
+    expect(() => tx({ k: 'common.none', p: 'x' })).not.toThrow();
+  });
+});

@@ -97,7 +97,7 @@ export function renderTop(){
   $('#roofInfo').textContent=t('top.roof',{g:S.groups.length,s:S.artists.filter(a=>a.solo).length,a:S.artists.filter(a=>a.actor).length});
   const out=S.artists.filter(a=>a.busy),mo=S.managers.filter(m=>m.as&&!mgrRoom(m));
   $('#outside').innerHTML=out.length?`<span class="lbl">${t('top.outside')}</span>`+mo.map(m=>`<button class="chip" onclick="openRoom('mgr')"><span class="dot" style="background:${m.look.out}">📋</span>${t('top.mgrWith',{m:mNameH(m),n:esc(tx(targetName(m)))})}</button>`).join('')+out.map(a=>`<button class="chip" onclick="${a.busy.kind==='promo'&&campKeyOf(a)?`view(()=>viewCamp('${campKeyOf(a)}'))`:`view(()=>viewArtist(${a.id}))`}"><span class="dot" style="background:${a.look.out}">${a.busy.kind==='offer'?OFFER[a.busy.type].ic:a.busy.kind==='shoot'?'🎬':a.busy.kind==='leave'?'🌴':a.busy.kind==='write'?'✍️':'🎤'}</span>${esc(a.name)} · ${esc(tx(a.busy.title))} ${t('top.busyLeft',{n:a.busy.left})}</button>`).join(''):'';
-  $('#log').innerHTML=S.log.map(l=>`<div class="${l.c}"><span class="w">${wkTok(l.w)}</span>${esc(tx(l.t))}</div>`).join('');
+  $('#log').innerHTML=S.log.map(l=>`<div class="${l.c}"><span class="w">${esc(wkTok(l.w))}</span>${esc(tx(l.t))}</div>`).join('');
 }
 export const campKeyOf=a=>Object.keys(S.camp||{}).find(k=>S.camp[k].ph==='post'&&campMem(k).includes(a));
 export let lastRoom='ceo';

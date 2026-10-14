@@ -11,14 +11,16 @@ export const getMeta = () => DICTS[cur].meta;
 export function setLang(c) { if (!has(c)) return false; cur = c; try { localStorage.setItem(LANG_KEY, c); } catch {} return true; }
 export function initLang() { let c = null; try { c = localStorage.getItem(LANG_KEY); } catch {} cur = has(c) ? c : 'vi'; return cur; }
 // Values: strings with {x}, or functions (p) => string. Dictionaries are trusted HTML; callers esc() parameters.
-const lookCur = k => DICTS[cur]?.dict[k] ?? DICTS.vi.dict[k];
-const lookVi = k => DICTS.vi.dict[k];
+// own keys only: a stored {k:'__proto__'} from an imported save must not resolve to Object.prototype members
+const own = (d, k) => (d && Object.hasOwn(d, k) ? d[k] : undefined);
+const lookCur = k => own(DICTS[cur]?.dict, k) ?? own(DICTS.vi.dict, k);
+const lookVi = k => own(DICTS.vi.dict, k);
 // Txt (stored text): string (legacy / proper noun) | Msg {k,p?} | tag {$: money} {$g: stat gains} {$l: [Txt…], j}
 const OKP = new Set(['k', 'p']);
 const isTxt = v => {
   if (v == null || typeof v !== 'object' || Array.isArray(v)) return false;
   const ks = Object.keys(v);
-  if (typeof v.k === 'string') return ks.every(x => OKP.has(x));
+  if (typeof v.k === 'string') return ks.every(x => OKP.has(x)) && (v.p == null || (typeof v.p === 'object' && !Array.isArray(v.p)));
   return ks.length === 1 ? ks[0] === '$' || ks[0] === '$g' || ks[0] === '$l' : ks.length === 2 && '$l' in v && 'j' in v;
 };
 // copies p only when a value is a Txt (no allocation on the hot path)
