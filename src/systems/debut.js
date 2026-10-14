@@ -91,11 +91,11 @@ export function debutIds(type,ids,name){
   for(const a of mem){
     if(a.status==='trainee'){a.status='debuted';a.debutYear=S.year;a.salary=Math.max(a.salary,4e6);a.ce=abs()+CT_WK;a.cs0=abs();a.earnC=0;a.dReady=0}
     const g=R(2000,7000)*(type==='actor'?.5:1);a.fans+=g;a.yr.fans+=g;a.mood=clamp(a.mood+15,0,100);if(a.cf0==null||a.cs0===abs())a.cf0=a.fans;
-    if(a.mt){const mt=byId(a.mt);if(mt){const b=Math.round(g*.3)+500;mt.fans+=b;MOOD(mt,10);setRel(a,mt,getRel(a,mt)+10);addLog(`👩‍🏫 Tiền bối ${mt.name} tự hào khi đàn em ${a.name} debut (+${fmtN(b)} fan).`,'good')}a.mtd=a.mt;a.mt=0}
+    if(a.mt){const mt=byId(a.mt);if(mt){const b=Math.round(g*.3)+500;mt.fans+=b;MOOD(mt,10);setRel(a,mt,getRel(a,mt)+10);addLog(Lk('log.deb.mt',{m:mt.name,n:a.name,f:fmtN(b)}),'good')}a.mtd=a.mt;a.mt=0}
     if(type==='solo'){if(groupsOf(a).length)givePM(a);a.solo=true}if(type==='actor')a.actor=true;
-    if(type!=='actor')a.busy={kind:'promo',title:'Showcase debut',left:2,total:2,lk:'showcase'};
+    if(type!=='actor')a.busy={kind:'promo',title:Lk('busy.showcase'),left:2,total:2,lk:'showcase'};
   }
-  if(type==='group'){const ck=Object.keys(CONCEPTS).sort((x,y)=>avgFit(mem,CONCEPTS[y].w)-avgFit(mem,CONCEPTS[x].w))[0];S.groups.push({id:uid(),name,members:ids,y:S.year,concept:ck});addLog(`🎊 Nhóm ${name} chính thức debut với ${ids.length} thành viên, hợp nhất concept ${CONCEPTS[ck].n}!`,'gold')}
-  else addLog(`🎊 ${mem[0].name} debut ${type==='solo'?'solo':'diễn viên'}!`,'gold');
+  if(type==='group'){const ck=Object.keys(CONCEPTS).sort((x,y)=>avgFit(mem,CONCEPTS[y].w)-avgFit(mem,CONCEPTS[x].w))[0];S.groups.push({id:uid(),name,members:ids,y:S.year,concept:ck});addLog(Lk('log.deb.grp',{n:name,k:ids.length,c:Lk(`concept.${ck}`)}),'gold')}
+  else addLog(Lk('log.deb.one',{n:mem[0].name,t:Lk(`debut.typeShort.${type==='solo'?'solo':'actor'}`)}),'gold');
   act();return true;
 }

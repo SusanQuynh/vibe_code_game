@@ -1,7 +1,7 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { $, clamp, esc, fmt } from '../core/util.js';
+import { $, clamp, esc } from '../core/util.js';
 import { CB } from '../data/rules.js';
-import { isK, money, t, tx, txVi } from '../i18n/index.js';
+import { Lk, isK, money, t, tx } from '../i18n/index.js';
 import { statName } from '../i18n/labels.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, fit } from './artists.js';
@@ -39,10 +39,10 @@ const rp=p1=>[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6];
 export function genComp(kind='tts'){
   if(kind!=='tts'){const T=pick(DCOMP.filter(c=>c.k===kind&&!(S.comps||[]).some(x=>isK(x.n,`comp.name.d${DCOMP.indexOf(c)}`))));if(!T)return;
     const lvl=clamp(R(40,58)+(S.year-1)*6+Math.floor(S.week/13)*2,30,95),p1=Math.round(R(80,160)*(1+lvl/40))*1e6;
-    S.comps.push({id:uid(),k:T.k,n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,3),fee:R(8,20)*1e6*T.t[0],prize:rp(p1),exp:abs()+R(3,5)});return}
+    S.comps.push({id:uid(),k:T.k,n:Lk(`comp.name.d${DCOMP.indexOf(T)}`),ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,3),fee:R(8,20)*1e6*T.t[0],prize:rp(p1),exp:abs()+R(3,5)});return}
   const T=pick(COMP.filter(c=>!(S.comps||[]).some(x=>isK(x.n,`comp.name.t${COMP.indexOf(c)}`))));if(!T)return;
   const lvl=clamp(R(18,36)+(S.year-1)*6+Math.floor(S.week/13)*2,12,85),p1=Math.round(R(30,70)*(1+lvl/40))*1e6;
-  S.comps.push({id:uid(),n:T.n,ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,2),fee:R(2,6)*1e6*T.t[0],prize:[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6],exp:abs()+R(3,5)})}
+  S.comps.push({id:uid(),n:Lk(`comp.name.t${COMP.indexOf(T)}`),ic:T.ic,w:T.w,t:T.t,lvl,wk:R(1,2),fee:R(2,6)*1e6*T.t[0],prize:[p1,Math.round(p1*.45/1e6)*1e6,Math.round(p1*.2/1e6)*1e6],exp:abs()+R(3,5)})}
 /* contest kind table: tts (trainees) | grp (debuted groups) | solo | act. grp units are groups, the rest artists */
 export const kindOf=c=>c.k||'tts';
 const okD=a=>!a.busy&&!(a.scandal&&a.scandal.sev>=2);
@@ -64,7 +64,7 @@ const prizeOf=(c,rank,pm)=>pm?Math.round(c.prize[rank-1]*pm/1e6)*1e6:c.prize[ran
 const bonusOf=(c,rank)=>rank<=3?Object.keys(c.w).map(k=>[k,+(CB[rank-1]*c.w[k]).toFixed(1)]):[];
 export const bonusTxt=(c,rank)=>({$g:Object.fromEntries(bonusOf(c,rank).map(([k,g])=>[k,String(g)]))});
 /* top-3 stat bonus (no RNG); returns the text */
-export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return txVi(bonusTxt(c,rank))}
+export function compBonus(a,c,rank){const L=bonusOf(c,rank);L.forEach(([k,g])=>{const b=a.st[k];a.st[k]=clamp(+(b+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b)});return rank<=3?bonusTxt(c,rank):''}
 export function compTick(){S.comps=(S.comps||[]).filter(c=>c.exp>abs());const n=S.comps.filter(c=>kindOf(c)==='tts').length;if(n<2||(n<4&&Math.random()<.35))genComp();
   if(S.artists.some(a=>a.status==='debuted')){const ks=['grp','solo','act'].filter(k=>k==='grp'?S.groups.length:k==='solo'?S.artists.some(a=>a.solo):S.artists.some(a=>a.actor)),d=S.comps.filter(c=>kindOf(c)!=='tts');if(ks.length&&(d.length<2||(d.length<3&&Math.random()<.3)))genComp(pick(ks))}}
 const compScore=(ms,ids,c)=>ms.reduce((t,a)=>t+fit(a,c.w),0)/Math.max(ms.length,1)*(1+(ms.length>1?chem(ids):0));
@@ -87,18 +87,18 @@ export function enterComp(cid){const c=S.comps.find(x=>x.id===cid);if(!c)return;
   if(ms.length<c.t[0]||ms.length>c.t[1])return toast(t('comp.toast.need',{x:needTxt(c)}));
   if(S.money<c.fee)return toast(t('comp.toast.noFee'));S.money-=c.fee;
   const run={id:uid(),c,ids:ms.map(a=>a.id),res:null};if(g)run.g=g.id;const pm=pmOf(c,ms);if(pm)run.pm=pm;S.compRuns=S.compRuns||[];S.compRuns.push(run);
-  ms.forEach(a=>a.busy={kind:'comp',title:'Cuộc thi «'+c.n+'»',left:c.wk,total:c.wk,run:run.id});
-  S.comps=S.comps.filter(x=>x!==c);addLog(`🏅 ${g?'Nhóm '+g.name:ms.map(a=>a.name).join(', ')} lên đường dự thi «${c.n}» (${c.wk} tuần, lệ phí ${fmt(c.fee)}).`,'good');act()}
+  ms.forEach(a=>a.busy={kind:'comp',title:Lk('busy.comp',{n:c.n}),left:c.wk,total:c.wk,run:run.id});
+  S.comps=S.comps.filter(x=>x!==c);addLog(Lk('log.cmp.go',{n:g?Lk('log.cmp.grp',{n:g.name}):ms.map(a=>a.name).join(', '),c:c.n,w:c.wk,m:{$:c.fee}}),'good');act()}
 export function compDone(a,b){const run=(S.compRuns||[]).find(r=>r.id===b.run);if(!run)return;const c=run.c,K=KIND[kindOf(c)];
   if(!run.res){const ms=run.ids.map(byId).filter(Boolean),f=compScore(ms,run.ids,c),sc=f+rnd(-8,8);
     const rank=compRank(c,sc),prize=rank<=3?prizeOf(c,rank,run.pm):0;S.money+=prize;run.res={rank,prize};
-    const gr=run.g&&S.groups.find(x=>x.id===run.g),who=gr?'Nhóm '+gr.name:ms.map(x=>x.name).join(', ');
-    addLog(rank<=3?`🏅 ${c.ic} ${who} giành hạng ${rank} tại «${c.n}», nhận ${fmt(prize)}! Thưởng chỉ số mỗi người: ${txVi(bonusTxt(c,rank))}.`:`${c.ic} ${who} dừng ở hạng ${rank}/8 tại «${c.n}». Kinh nghiệm quý cho lần sau.`,rank<=3?'gold':'');
+    const gr=run.g&&S.groups.find(x=>x.id===run.g),who=gr?Lk('log.cmp.grp',{n:gr.name}):ms.map(x=>x.name).join(', ');
+    addLog(rank<=3?Lk('log.cmp.win',{i:c.ic,w:who,r:rank,n:c.n,m:{$:prize},b:bonusTxt(c,rank)}):Lk('log.cmp.res',{i:c.ic,w:who,r:rank,n:c.n}),rank<=3?'gold':'');
     {const m=ms.map(mgrOf).find(Boolean);if(m)mgrExp(m,rank===1?2:1)}}
   const r=run.res,q=r.rank===1?1.4:r.rank<=3?1.15:.9,fg=Math.round((r.rank===1?R(3000,7000):r.rank<=3?R(1000,3000):R(200,800))*K.fanMul(a));a.fans+=fg;a.yr.fans+=fg;
   const les={};for(const k in c.w)les[k]=c.w[k]*3;const ls=applyLesson(a,les,q),bt=compBonus(a,c,r.rank);
-  a.lessons.unshift({t:`Cuộc thi «${c.n}»`,l:r.rank<=3?'Tự tin hơn khi thi đấu':'Học được nhiều từ đối thủ',s:ls,y:S.year,...(bt?{b:bt}:{})});if(a.lessons.length>12)a.lessons.length=12;
-  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(`N${S.year}: Cuộc thi «${c.n}» – hạng ${r.rank}${bt?` · 🏅 ${bt}`:''}`);a.wc=(a.wc||0)+1;
+  a.lessons.unshift({t:Lk('les.comp',{n:c.n}),l:Lk(r.rank<=3?'les.compWin':'les.compLose'),s:ls,y:S.year,...(bt?{b:bt}:{})});if(a.lessons.length>12)a.lessons.length=12;
+  a.mood=clamp(a.mood+(r.rank<=3?12:-4),0,100);a.hist.unshift(Lk('hist.comp',{y:S.year,c:c.n,r:r.rank,x:bt?Lk('hist.compBonus',{b:bt}):''}));a.wc=(a.wc||0)+1;
   if(!S.artists.some(x=>x.busy&&x.busy.run===run.id))S.compRuns=S.compRuns.filter(x=>x!==run)}
 export function compHTML(kinds=['tts']){const dbt=!kinds.includes('tts'),inK=c=>kinds.includes(kindOf(c)),
   going=S.artists.filter(a=>{if(!a.busy||a.busy.kind!=='comp')return false;const r=(S.compRuns||[]).find(x=>x.id===a.busy.run);return r?inK(r.c):!dbt});

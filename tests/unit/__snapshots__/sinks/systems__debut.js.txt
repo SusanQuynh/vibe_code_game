@@ -1,9 +1,0 @@
-src/systems/debut.js: .why=Lk('debut.why.actor',{n:Math.round(a.st.acting),c:lbl,f:Math.round(ac.f)})
-src/systems/debut.js: .why=Lk('debut.why.group',{m:mates.join(', '),c:lbl,f:Math.round(grp.f),h:grp.hm>0?Lk('debut.why.harm'):''})
-src/systems/debut.js: .why=Lk('debut.why.solo',{s:Lk(`stat.${['vocal','dance','rap'].reduce((m,k)=>a.st[k]>a.st[m]?k:m,'vocal')}`),n:Math.round(music),c:lbl,f:Math.round(so.f)})
-src/systems/debut.js: .why=Lk('debut.why.wait',{f:Math.round(r.f),m:DEBUT_MIN,s:Lk(`stat.${k}`),d:Lk(`debut.typeShort.${t}`),c:lbl})
-src/systems/debut.js: addLog(`🎊 ${mem[0].name} debut ${type==='solo'?'solo':'diễn viên'}!`,'gold')
-src/systems/debut.js: addLog(`🎊 Nhóm ${name} chính thức debut với ${ids.length} thành viên, hợp nhất concept ${CONCEPTS[ck].n}!`,'gold')
-src/systems/debut.js: addLog(`👩‍🏫 Tiền bối ${mt.name} tự hào khi đàn em ${a.name} debut (+${fmtN(b)} fan).`,'good')
-src/systems/debut.js: busy={kind:'promo',title:'Showcase debut',left:2,total:2,lk:'showcase'}
-src/systems/debut.js: concept:ck

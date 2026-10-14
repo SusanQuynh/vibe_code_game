@@ -1,8 +1,0 @@
-src/systems/recruit.js: addLog(`👋 Cho nghỉ nhân viên tuyển dụng ${c.name}.`)
-src/systems/recruit.js: addLog(`🧑‍💼 Tuyển nhân viên tuyển dụng ${c.name} (mắt nhìn ${c.eye}/10).`,'good')
-src/systems/recruit.js: addLog(t)
-src/systems/recruit.js: recLog('🧑‍💼 NV tuyển dụng: danh sách casting đang trống.')
-src/systems/recruit.js: recLog(`🧑‍💼 NV tuyển dụng ${by} ký ${a.name} (ước tính ${ev}).`,1)
-src/systems/recruit.js: recLog(`🧑‍💼 NV tuyển dụng ${by} mở ${b.n} (lứa trước đủ ${r.quota} TTS).`)
-src/systems/recruit.js: recLog(`🧑‍💼 NV tuyển dụng dừng ký vì tiền gần chạm mức dự trữ ${fmt(r.reserve)}.`)
-src/systems/recruit.js: recLog(top.length?`🧑‍💼 NV tuyển dụng ${by} đề xuất: ${top.map(a=>`${a.name} (~${Math.round(est(a,eye))})`).join(', ')}.`:'🧑‍💼 NV tuyển dụng: danh sách casting đang trống.')

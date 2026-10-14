@@ -57,6 +57,9 @@
   "k": "biz.*"
  },
  {
+  "k": "busy.comp"
+ },
+ {
   "k": "busy.concert"
  },
  {
@@ -65,6 +68,9 @@
  },
  {
   "k": "busy.promo"
+ },
+ {
+  "k": "busy.showcase"
  },
  {
   "k": "common.gain"
@@ -194,6 +200,12 @@
   "k": "hist.award"
  },
  {
+  "k": "hist.comp"
+ },
+ {
+  "k": "hist.compBonus"
+ },
+ {
   "k": "hist.disband"
  },
  {
@@ -207,6 +219,15 @@
  },
  {
   "k": "hist.write"
+ },
+ {
+  "k": "les.comp"
+ },
+ {
+  "k": "les.compLose"
+ },
+ {
+  "k": "les.compWin"
  },
  {
   "k": "les.film"
@@ -302,6 +323,27 @@
   "k": "log.bat.open"
  },
  {
+  "k": "log.cmp.go"
+ },
+ {
+  "k": "log.cmp.grp"
+ },
+ {
+  "k": "log.cmp.res"
+ },
+ {
+  "k": "log.cmp.win"
+ },
+ {
+  "k": "log.deb.grp"
+ },
+ {
+  "k": "log.deb.mt"
+ },
+ {
+  "k": "log.deb.one"
+ },
+ {
   "k": "log.ev.left"
  },
  {
@@ -342,6 +384,27 @@
  },
  {
   "k": "log.pro.win"
+ },
+ {
+  "k": "log.rec.empty"
+ },
+ {
+  "k": "log.rec.fire"
+ },
+ {
+  "k": "log.rec.hire"
+ },
+ {
+  "k": "log.rec.open"
+ },
+ {
+  "k": "log.rec.sign"
+ },
+ {
+  "k": "log.rec.stop"
+ },
+ {
+  "k": "log.rec.sug"
  },
  {
   "k": "log.rel.concert"
