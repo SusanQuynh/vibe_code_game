@@ -79,8 +79,8 @@ export function census(S) {
 }
 
 // grown by the writer tasks
-export const P3_DONE = ['state.js', 'save/storage.js', 'ui/saveView.js', 'systems/artists.js', 'systems/batches.js', 'systems/awards.js', 'systems/week.js', 'systems/releases.js', 'systems/promo.js', 'systems/contests.js', 'systems/debut.js', 'systems/recruit.js', 'systems/managers.js', 'systems/gm.js', 'systems/offers.js', 'systems/proposals.js', 'systems/secretary.js', 'systems/review.js', 'systems/events.js', 'systems/market.js', 'systems/ext2.js'];
-export const P3_FIELDS = ['batches', 'awards', 'singles', 'comps', 'rec', 'gmRep', 'props', 'evG', 'lastEval', 'prHist', 'scandal', 'rivals', 'mods', 'loan', 'busy'];
+export const P3_DONE = ['state.js', 'save/storage.js', 'ui/saveView.js', 'systems/artists.js', 'systems/batches.js', 'systems/awards.js', 'systems/week.js', 'systems/releases.js', 'systems/promo.js', 'systems/contests.js', 'systems/debut.js', 'systems/recruit.js', 'systems/managers.js', 'systems/gm.js', 'systems/offers.js', 'systems/proposals.js', 'systems/secretary.js', 'systems/review.js', 'systems/events.js', 'systems/market.js', 'systems/ext2.js', 'systems/ext3.js'];
+export const P3_FIELDS = ['batches', 'awards', 'singles', 'comps', 'rec', 'gmRep', 'props', 'evG', 'lastEval', 'prHist', 'scandal', 'rivals', 'mods', 'loan', 'busy', 'hsF', 'dw', 'events'];
 
 // Replace every stored-text field of a state by a structured entry (mirrors TXT_PATHS). Used to prove that no reader prints a raw object.
 export function msgify(S, M = { k: 'batch.n', p: { i: 9 } }) {

@@ -57,6 +57,9 @@
   "k": "biz.*"
  },
  {
+  "k": "busy.collab"
+ },
+ {
   "k": "busy.comp"
  },
  {
@@ -183,6 +186,18 @@
   "k": "dom.*"
  },
  {
+  "k": "dw.enemy"
+ },
+ {
+  "k": "dw.friends"
+ },
+ {
+  "k": "dw.group"
+ },
+ {
+  "k": "dw.solo"
+ },
+ {
   "k": "ev.r.left"
  },
  {
@@ -208,6 +223,36 @@
  },
  {
   "k": "ev.why.fire"
+ },
+ {
+  "k": "ev.why.how.0"
+ },
+ {
+  "k": "ev.why.how.1"
+ },
+ {
+  "k": "ev.why.how.2"
+ },
+ {
+  "k": "ev.why.how.3"
+ },
+ {
+  "k": "ev.why.how.4"
+ },
+ {
+  "k": "ev.why.how.5"
+ },
+ {
+  "k": "ev.why.mm.0"
+ },
+ {
+  "k": "ev.why.mm.1"
+ },
+ {
+  "k": "ev.why.mm.2"
+ },
+ {
+  "k": "ev.why.mm.3"
  },
  {
   "k": "ev.why.scout.0"
@@ -290,6 +335,9 @@
   "k": "hist.award"
  },
  {
+  "k": "hist.collab"
+ },
+ {
   "k": "hist.comp"
  },
  {
@@ -309,6 +357,21 @@
  },
  {
   "k": "hist.write"
+ },
+ {
+  "k": "hsr.days"
+ },
+ {
+  "k": "hsr.energy"
+ },
+ {
+  "k": "hsr.fails"
+ },
+ {
+  "k": "hsr.forecast"
+ },
+ {
+  "k": "hsr.mood"
  },
  {
   "k": "les.comp"
@@ -1139,7 +1202,124 @@
   "k": "log.x2.write"
  },
  {
+  "k": "log.x3.admit"
+ },
+ {
+  "k": "log.x3.amgrSide"
+ },
+ {
+  "k": "log.x3.bff"
+ },
+ {
+  "k": "log.x3.coffee"
+ },
+ {
+  "k": "log.x3.collab"
+ },
+ {
+  "k": "log.x3.denyN"
+ },
+ {
+  "k": "log.x3.denyY"
+ },
+ {
+  "k": "log.x3.dqKeep"
+ },
+ {
+  "k": "log.x3.dqNo"
+ },
+ {
+  "k": "log.x3.dqYes"
+ },
+ {
+  "k": "log.x3.gift"
+ },
+ {
+  "k": "log.x3.hsFire"
+ },
+ {
+  "k": "log.x3.hsHire"
+ },
+ {
+  "k": "log.x3.hsWatch"
+ },
+ {
+  "k": "log.x3.intro"
+ },
+ {
+  "k": "log.x3.jobNo"
+ },
+ {
+  "k": "log.x3.jobYes"
+ },
+ {
+  "k": "log.x3.keep"
+ },
+ {
+  "k": "log.x3.mdGive"
+ },
+ {
+  "k": "log.x3.mdNo"
+ },
+ {
+  "k": "log.x3.mdStore"
+ },
+ {
+  "k": "log.x3.meet"
+ },
+ {
+  "k": "log.x3.meetClose"
+ },
+ {
+  "k": "log.x3.mgrKeep"
+ },
+ {
+  "k": "log.x3.mmCoach"
+ },
+ {
+  "k": "log.x3.mmMeet"
+ },
+ {
+  "k": "log.x3.mmSelf"
+ },
+ {
+  "k": "log.x3.mmSide"
+ },
+ {
+  "k": "log.x3.mtNo"
+ },
+ {
+  "k": "log.x3.mtYes"
+ },
+ {
+  "k": "log.x3.paCo"
+ },
+ {
+  "k": "log.x3.paFire"
+ },
+ {
+  "k": "log.x3.paSelf"
+ },
+ {
+  "k": "log.x3.quietN"
+ },
+ {
+  "k": "log.x3.quietY"
+ },
+ {
   "k": "log.x3.rest"
+ },
+ {
+  "k": "log.x3.share"
+ },
+ {
+  "k": "log.x3.snub"
+ },
+ {
+  "k": "log.x3.tip"
+ },
+ {
+  "k": "log.x3.train"
  },
  {
   "k": "mod.econ"
@@ -1386,5 +1566,8 @@
  },
  {
   "k": "x2.senior"
+ },
+ {
+  "k": "x3.byMgr"
  }
 ]
