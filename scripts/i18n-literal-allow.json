@@ -85,36 +85,6 @@
   "why": "dWish text stored in a.dw.why (phase 3)"
  },
  {
-  "file": "src/systems/events.js",
-  "text": "Bị chụp ảnh hẹn hò với",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "Tin đồn thái độ với nhân viên",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "Bị đào lại phát ngôn cũ",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "Tin đồn chèn ép đồng nghiệp",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "Lộ ảnh quá khứ gây tranh cãi",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
-  "file": "src/systems/events.js",
-  "text": "Tin đồn đạo nhái vũ đạo",
-  "why": "scandal text stored in a.scandal.t (phase 3)"
- },
- {
   "file": "src/systems/ext2.js",
   "text": "mâu thuẫn nội bộ kéo dài",
   "why": "disband reason stored in the event (e.why) and in the log (phase 3)"

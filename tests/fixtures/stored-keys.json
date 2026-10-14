@@ -67,6 +67,9 @@
   "logic": true
  },
  {
+  "k": "busy.leave"
+ },
+ {
   "k": "busy.promo"
  },
  {
@@ -160,6 +163,18 @@
  },
  {
   "k": "dom.*"
+ },
+ {
+  "k": "ev.r.left"
+ },
+ {
+  "k": "ev.r.poach"
+ },
+ {
+  "k": "ev.r.poachFee"
+ },
+ {
+  "k": "ev.r.stay"
  },
  {
   "k": "ev.why.fire"
@@ -362,10 +377,79 @@
   "k": "log.deb.one"
  },
  {
+  "k": "log.ev.date"
+ },
+ {
+  "k": "log.ev.denyF"
+ },
+ {
+  "k": "log.ev.denyOk"
+ },
+ {
+  "k": "log.ev.friend"
+ },
+ {
+  "k": "log.ev.inv"
+ },
+ {
+  "k": "log.ev.keep"
+ },
+ {
+  "k": "log.ev.leave"
+ },
+ {
   "k": "log.ev.left"
  },
  {
   "k": "log.ev.leftGrp"
+ },
+ {
+  "k": "log.ev.lose"
+ },
+ {
+  "k": "log.ev.noDate"
+ },
+ {
+  "k": "log.ev.peace"
+ },
+ {
+  "k": "log.ev.promise"
+ },
+ {
+  "k": "log.ev.public"
+ },
+ {
+  "k": "log.ev.raise"
+ },
+ {
+  "k": "log.ev.refuse"
+ },
+ {
+  "k": "log.ev.rival"
+ },
+ {
+  "k": "log.ev.scandal"
+ },
+ {
+  "k": "log.ev.silent"
+ },
+ {
+  "k": "log.ev.solo"
+ },
+ {
+  "k": "log.ev.soloNo"
+ },
+ {
+  "k": "log.ev.sorry"
+ },
+ {
+  "k": "log.ev.stay"
+ },
+ {
+  "k": "log.ev.stayRaise"
+ },
+ {
+  "k": "log.ev.win"
  },
  {
   "k": "log.gm.demote"
@@ -845,7 +929,25 @@
   "k": "rv.term"
  },
  {
+  "k": "scandal.dating"
+ },
+ {
   "k": "scandal.live"
+ },
+ {
+  "k": "scandal.t.0"
+ },
+ {
+  "k": "scandal.t.1"
+ },
+ {
+  "k": "scandal.t.2"
+ },
+ {
+  "k": "scandal.t.3"
+ },
+ {
+  "k": "scandal.t.4"
  },
  {
   "k": "sec.q"

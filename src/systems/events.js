@@ -1,5 +1,5 @@
-import { R, pick } from '../core/rng.js';
-import { clamp, esc, fmt } from '../core/util.js';
+import { R, pick, pickI } from '../core/rng.js';
+import { clamp, esc } from '../core/util.js';
 import { Lk, money, t, tx } from '../i18n/index.js';
 import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
@@ -15,11 +15,11 @@ export const hasEv=(id,k)=>S.events.some(e=>e.a===id&&e.kind===k);
 export function pushEv(e,force){if(S.events.length>=7&&!force)return;e.id=uid();S.events.push(e)}
 export function makeScandal(a){
   const dp=datingPartner(a),dating=dp&&a.tag[dp.id]==='dating'&&Math.random()<.6;
-  const t=dating?`Bị chụp ảnh hẹn hò với ${dp.name}`:pick(['Tin đồn thái độ với nhân viên','Bị đào lại phát ngôn cũ','Tin đồn chèn ép đồng nghiệp','Lộ ảnh quá khứ gây tranh cãi','Tin đồn đạo nhái vũ đạo']);
+  const t=dating?Lk('scandal.dating',{n:dp.name}):Lk(`scandal.t.${pickI(5)}`);
   a.scandal={t,sev:R(1,3),left:6,truth:dating||Math.random()<.4,dating:!!dating,other:dating?dp.id:0};
   a.fans=Math.round(a.fans*.95);
   pushEv({kind:'scandal',a:a.id},true);
-  addLog(`🚨 Scandal: ${a.name} – ${t}!`,'bad');
+  addLog(Lk('log.ev.scandal',{n:a.name,t}),'bad');
 }
 export const LEADS={
   photo:{n:'Ảnh/video gốc',ic:'📷',r:.85,T:'File gốc có dữ liệu ngày giờ khớp, không bị chỉnh sửa.',F:'Phân tích điểm ảnh cho thấy ảnh đã bị ghép.'},
@@ -39,7 +39,7 @@ export function invStart(aId){
     S.money-=10e6;const pr=msk(a,'pr');
     const ks=Object.keys(LEADS).sort(()=>Math.random()-.5).slice(0,6);
     sc.inv={leads:ks.map(k=>{const r=Math.min(.95,LEADS[k].r+pr*.02);return{k,r:+r.toFixed(2),says:Math.random()<r?sc.truth:!sc.truth,open:false}}),ap:3+Math.floor(pr/3),p:.5};
-    addLog(`🕵️ Mở hồ sơ điều tra scandal của ${a.name}.`);save();render();
+    addLog(Lk('log.ev.inv',{n:a.name}));save();render();
   }
   setCurRC('var(--r-pr)');setCurView(()=>viewInv(aId));curView();
 }
@@ -93,7 +93,7 @@ export function randomEvents(){
       const same=sameGroup(x,y)||(!x.busy&&!y.busy&&roomOf(x)===roomOf(y));
       setRel(x,y,getRel(x,y)+R(-7,8)+(same?3:0));
       const r=getRel(x,y),t=x.tag[y.id];
-      if(!t&&r>=60){setTag(x,y,'friend');addLog(`🤝 ${x.name} và ${y.name} trở thành bạn thân.`,'good')}
+      if(!t&&r>=60){setTag(x,y,'friend');addLog(Lk('log.ev.friend',{a:x.name,b:y.name}),'good')}
       else if(t==='friend'&&r>=85&&Math.random()<.35&&!datingPartner(x)&&!datingPartner(y)&&!S.events.some(e=>e.kind==='rel_dating'))pushEv({kind:'rel_dating',a:x.id,b:y.id});
       else if(t!=='enemy'&&r<=-40&&!S.events.some(e=>e.kind==='rel_conflict'&&(e.a===x.id||e.a===y.id)))pushEv({kind:'rel_conflict',a:x.id,b:y.id});
     }
@@ -135,29 +135,29 @@ export function resolveEv(id,k,silent){
   const a=byId(e.a),b=e.b?byId(e.b):null;if(!a||(e.b&&!b)){if(!silent)act();return}
   const M=(x,d)=>x.mood=clamp(x.mood+d,0,100);
   switch(e.kind+':'+k){
-    case'req_rest:yes':if(!a.busy)a.busy={kind:'leave',title:'Nghỉ phép',left:2,total:2};a.energy=100;M(a,20);addLog(`🌴 ${a.name} đi nghỉ phép 2 tuần.`);break;
+    case'req_rest:yes':if(!a.busy)a.busy={kind:'leave',title:Lk('busy.leave'),left:2,total:2};a.energy=100;M(a,20);addLog(Lk('log.ev.leave',{n:a.name}));break;
     case'req_rest:no':M(a,-15);break;
-    case'req_raise:yes':a.salary+=3e6;M(a,20);addLog(`💸 Lương ${a.name} tăng lên ${fmt(a.salary)}/tuần.`);break;
+    case'req_raise:yes':a.salary+=3e6;M(a,20);addLog(Lk('log.ev.raise',{n:a.name,m:{$:a.salary}}));break;
     case'req_raise:no':M(a,-15);break;
-    case'req_acting:yes':a.wantAct=abs()+10;M(a,10);addLog(`🎭 Bạn hứa tìm vai cho ${a.name} trong 10 tuần.`);break;
+    case'req_acting:yes':a.wantAct=abs()+10;M(a,10);addLog(Lk('log.ev.promise',{n:a.name}));break;
     case'req_acting:no':M(a,-12);break;
-    case'req_solo:yes':if(S.money<80e6){M(a,-10);addLog(`Không đủ tiền cho ${a.name} ra solo.`,'bad');break}S.money-=80e6;a.solo=true;givePM(a);M(a,25);a.fans+=R(3000,8000);addLog(`🎤 ${a.name} chính thức ra mắt solo!`,'gold');break;
+    case'req_solo:yes':if(S.money<80e6){M(a,-10);addLog(Lk('log.ev.soloNo',{n:a.name}),'bad');break}S.money-=80e6;a.solo=true;givePM(a);M(a,25);a.fans+=R(3000,8000);addLog(Lk('log.ev.solo',{n:a.name}),'gold');break;
     case'req_solo:no':M(a,-15);break;
-    case'req_leave:talk':S.money-=30e6;if(Math.random()<.35+a.mood/100){a.mood=50;addLog(`🤝 ${a.name} đồng ý ở lại sau buổi nói chuyện.`,'good')}else removeArtist(a,'vẫn quyết định rời công ty');break;
-    case'req_leave:raise':a.salary+=10e6;a.mood=60;addLog(`💸 ${a.name} ở lại với mức lương ${fmt(a.salary)}/tuần.`);break;
-    case'req_leave:go':removeArtist(a,'đã rời công ty');break;
-    case'poach:raise':a.salary+=Math.max(5e6,Math.round(a.salary*.5/1e6)*1e6);M(a,15);addLog(`💸 Giữ chân ${a.name} trước lời mời của ${e.r}.`,'good');break;
-    case'poach:talk':S.money-=40e6;if(Math.random()<.3+a.mood/120+msk(a,'care')*.04){M(a,10);addLog(`🤝 ${a.name} từ chối ${e.r}, ở lại công ty.`,'good')}else{S.money+=e.fee;const r=S.rivals.find(x=>x.n===e.r);if(r)r.fans+=Math.round(a.fans*.5);removeArtist(a,`chuyển sang ${e.r}`)}break;
-    case'poach:go':{S.money+=e.fee;const r=S.rivals.find(x=>x.n===e.r);if(r)r.fans+=Math.round(a.fans*.5);removeArtist(a,`chuyển sang ${e.r} (phí ${fmt(e.fee)})`);break}
-    case'rel_conflict:fix':S.money-=10e6;setRel(a,b,0);if(a.tag[b.id]==='enemy')setTag(a,b,null);M(a,-3);M(b,-3);addLog(`🕊️ ${a.name} và ${b.name} đã làm hòa.`,'good');break;
-    case'rel_conflict:no':setTag(a,b,'enemy');addLog(`⚡ ${a.name} và ${b.name} trở thành đối thủ.`,'bad');break;
-    case'rel_dating:yes':setTag(a,b,'dating');M(a,15);M(b,15);addLog(`💞 ${a.name} và ${b.name} bí mật hẹn hò.`);break;
-    case'rel_dating:no':setRel(a,b,getRel(a,b)-20);M(a,-20);M(b,-20);addLog(`💔 ${a.name} và ${b.name} bị cấm hẹn hò.`,'bad');break;
-    case'scandal:deny':if(a.scandal.truth&&Math.random()<.6-msk(a,'pr')*.04){a.fans=Math.round(a.fans*.85);a.scandal.sev=Math.min(3,a.scandal.sev+1);a.scandal.left=4;addLog(`📉 Phủ nhận thất bại! Bằng chứng mới khiến scandal của ${a.name} nặng hơn.`,'bad')}else{a.fans=Math.round(a.fans*.98);a.scandal=null;addLog(`🛡️ Phủ nhận thành công, ${a.name} thoát scandal.`,'good')}break;
-    case'scandal:sorry':a.fans=Math.round(a.fans*(a.scandal.truth?.96:.91));M(a,-10);a.scandal=null;addLog(`🙇 ${a.name} xin lỗi công khai, dư luận dần dịu lại.`);break;
-    case'scandal:sue':S.money-=30e6;if(!a.scandal.truth&&Math.random()<.8+msk(a,'pr')*.015){a.fans=Math.round(a.fans*1.03);a.scandal=null;addLog(`⚖️ Thắng kiện! Fan càng ủng hộ ${a.name}.`,'good')}else{a.fans=Math.round(a.fans*.9);a.scandal=null;addLog(`⚖️ Thua kiện, hình ảnh ${a.name} bị ảnh hưởng.`,'bad')}break;
-    case'scandal:public':{const o=byId(a.scandal.other);a.fans=Math.round(a.fans*.92);if(o){setTag(a,o,'public');o.fans=Math.round(o.fans*.95)}a.scandal=null;M(a,10);addLog(`💌 ${a.name} công khai hẹn hò. Một phần fan rời đi, nhưng không còn rủi ro bị "khui".`);break}
-    case'scandal:silent':addLog(`🤐 Công ty im lặng về scandal của ${a.name}.`);break;
+    case'req_leave:talk':S.money-=30e6;if(Math.random()<.35+a.mood/100){a.mood=50;addLog(Lk('log.ev.stay',{n:a.name}),'good')}else removeArtist(a,Lk('ev.r.stay'));break;
+    case'req_leave:raise':a.salary+=10e6;a.mood=60;addLog(Lk('log.ev.stayRaise',{n:a.name,m:{$:a.salary}}));break;
+    case'req_leave:go':removeArtist(a,Lk('ev.r.left'));break;
+    case'poach:raise':a.salary+=Math.max(5e6,Math.round(a.salary*.5/1e6)*1e6);M(a,15);addLog(Lk('log.ev.keep',{n:a.name,r:e.r}),'good');break;
+    case'poach:talk':S.money-=40e6;if(Math.random()<.3+a.mood/120+msk(a,'care')*.04){M(a,10);addLog(Lk('log.ev.refuse',{n:a.name,r:e.r}),'good')}else{S.money+=e.fee;const r=S.rivals.find(x=>x.n===e.r);if(r)r.fans+=Math.round(a.fans*.5);removeArtist(a,Lk('ev.r.poach',{r:e.r}))}break;
+    case'poach:go':{S.money+=e.fee;const r=S.rivals.find(x=>x.n===e.r);if(r)r.fans+=Math.round(a.fans*.5);removeArtist(a,Lk('ev.r.poachFee',{r:e.r,m:{$:e.fee}}));break}
+    case'rel_conflict:fix':S.money-=10e6;setRel(a,b,0);if(a.tag[b.id]==='enemy')setTag(a,b,null);M(a,-3);M(b,-3);addLog(Lk('log.ev.peace',{a:a.name,b:b.name}),'good');break;
+    case'rel_conflict:no':setTag(a,b,'enemy');addLog(Lk('log.ev.rival',{a:a.name,b:b.name}),'bad');break;
+    case'rel_dating:yes':setTag(a,b,'dating');M(a,15);M(b,15);addLog(Lk('log.ev.date',{a:a.name,b:b.name}));break;
+    case'rel_dating:no':setRel(a,b,getRel(a,b)-20);M(a,-20);M(b,-20);addLog(Lk('log.ev.noDate',{a:a.name,b:b.name}),'bad');break;
+    case'scandal:deny':if(a.scandal.truth&&Math.random()<.6-msk(a,'pr')*.04){a.fans=Math.round(a.fans*.85);a.scandal.sev=Math.min(3,a.scandal.sev+1);a.scandal.left=4;addLog(Lk('log.ev.denyF',{n:a.name}),'bad')}else{a.fans=Math.round(a.fans*.98);a.scandal=null;addLog(Lk('log.ev.denyOk',{n:a.name}),'good')}break;
+    case'scandal:sorry':a.fans=Math.round(a.fans*(a.scandal.truth?.96:.91));M(a,-10);a.scandal=null;addLog(Lk('log.ev.sorry',{n:a.name}));break;
+    case'scandal:sue':S.money-=30e6;if(!a.scandal.truth&&Math.random()<.8+msk(a,'pr')*.015){a.fans=Math.round(a.fans*1.03);a.scandal=null;addLog(Lk('log.ev.win',{n:a.name}),'good')}else{a.fans=Math.round(a.fans*.9);a.scandal=null;addLog(Lk('log.ev.lose',{n:a.name}),'bad')}break;
+    case'scandal:public':{const o=byId(a.scandal.other);a.fans=Math.round(a.fans*.92);if(o){setTag(a,o,'public');o.fans=Math.round(o.fans*.95)}a.scandal=null;M(a,10);addLog(Lk('log.ev.public',{n:a.name}));break}
+    case'scandal:silent':addLog(Lk('log.ev.silent',{n:a.name}));break;
   }
   if(!silent)act();
 }

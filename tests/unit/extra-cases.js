@@ -106,7 +106,7 @@ add('t6-art-variants', ctx => {
   const deb = S.artists.filter(a => a.status === 'debuted'), tr = S.artists.filter(a => a.status === 'trainee');
   const d0 = deb[0], d1 = deb[1];
   if (d0) { d0.pm = { id: -d0.id, name: 'PM Test', sk: { nego: 5, care: 4, pr: 3, plan: 2 }, lv: 1, ps: 1, boss: null }; out.pm = view(d0); d0.pm = null; }
-  if (d0) { d0.scandal = { t: 'Tin đồn test', sev: 2, left: 3, truth: false, dating: false, other: 0 }; d0.wantAct = abs() + 4; d0.ceNo = 1; d0.ce = abs() + 9; d0.cs = 3; d0.busy = { kind: 'x', title: 'Việc test', left: 2, total: 3 }; out.scandalBusy = view(d0); }
+  if (d0) { d0.scandal = { t: { $l: ['Tin đồn test'], j: '' }, sev: 2, left: 3, truth: false, dating: false, other: 0 }; d0.wantAct = abs() + 4; d0.ceNo = 1; d0.ce = abs() + 9; d0.cs = 3; d0.busy = { kind: 'x', title: 'Việc test', left: 2, total: 3 }; out.scandalBusy = view(d0); }
   if (d1) { d1.lessons = [{ t: 'Bài học test', y: 1, l: 'Nội dung', s: '+3 fan', b: 'Huy hiệu' }]; d1.pg = { vocal: 2.5, dance: 1 }; d1.hist = []; d1.ev = undefined; d1.evG = 'A'; d1.evFail = 4; out.lessons = view(d1); d1.pg = {}; d1.evG = ''; d1.ce = 0; d1.cs = 0; out.bare = view(d1); }
   if (tr[0] && d0) { tr[0].mt = d0.id; tr[0].dReady = 1; tr[0].noHold = false; tr[0].ev = { st: 100 }; tr[0].ttsFail = 3; out.mentored = view(tr[0]); tr[0].noHold = true; tr[0].ev = undefined; out.mentoredOpen = view(tr[0]); }
   if (tr[0] && d0) { tr[0].dReady = 0; tr[0].mt = 0; d0.mt = 0; S.artists.filter(x => x.status === 'trainee').forEach(x => { x.mt = d0.id; }); out.mentorFull = view(d0); S.artists.forEach(x => { x.mt = 0; }); }
@@ -272,7 +272,7 @@ add('t7-plan', ctx => {
   out.lowEnergy = setup(() => { a.energy = 20; });
   out.lowMood = setup(() => { a.energy = 90; a.mood = 10; });
   out.wantAct = setup(() => { a.mood = 90; a.wantAct = abs() + 3; });
-  out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: 'Tin đồn test', sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
+  out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: { $l: ['Tin đồn test'], j: '' }, sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
   out.plain = setup(() => { a.scandal = null; });
   if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: { $l: ['Lý do test'], j: '' }, ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
   startPlanOne(a.id); out.single = sheet(); planSel(2); out.singleD2 = sheet();
@@ -491,7 +491,7 @@ add('t9-toasts', ctx => {
 import { BIZ, setMod, buyBiz, upBiz, raiseBiz, buybackBiz } from '../../src/systems/market.js';
 import { prPlans, prHTML, prGo, prDo, evalTable } from '../../src/systems/review.js';
 import { invStart, invOpen, invBuy, viewInv, invBlock, invVerdict, invRec, LEADS, pushEv } from '../../src/systems/events.js';
-const scand = (a, o = {}) => { a.scandal = { t: 'Tin đồn thái độ', sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; if (!S.events.some(e => e.kind === 'scandal' && e.a === a.id)) pushEv({ kind: 'scandal', a: a.id }, true); return a; };
+const scand = (a, o = {}) => { a.scandal = { t: { $l: ['Tin đồn thái độ'], j: '' }, sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; if (!S.events.some(e => e.kind === 'scandal' && e.a === a.id)) pushEv({ kind: 'scandal', a: a.id }, true); return a; };
 add('t10-invest', ctx => {
   const out = {};
   for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('invest'); }
@@ -540,7 +540,7 @@ add('t10-pr', ctx => {
   S.cbPlan = [{ k: x.k, w: abs() + 2 }]; snap('cbplan');
   S.cbPlan = []; S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 20, inc: 0 }; snap('pre');
   S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài X', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 0, inc: 0 }; snap('post');
-  S.camp = {}; byId(x.m[0]).scandal = { t: 'Tin đồn', sev: 1, left: 3, truth: false, dating: false, other: 0 }; snap('press');
+  S.camp = {}; byId(x.m[0]).scandal = { t: { $l: ['Tin đồn'], j: '' }, sev: 1, left: 3, truth: false, dating: false, other: 0 }; snap('press');
   byId(x.m[0]).scandal = null; S.singles = [{ k: x.k, act: x.n, w: abs() - 6, t: 'Bài Y', rank: 5 }]; S.artists.forEach(a => { a.st.visual = 80; }); snap('mag');
   S.artists.forEach(a => { if (a.status !== 'trainee') a.actor = 1; a.wantAct = 1; }); snap('actor');
   S.prUsed = { 'sns:g1': abs() }; S.prHist = ['T3: Chạy quảng cáo SNS cho Test']; out.hist = room('pr');
@@ -719,7 +719,7 @@ import { SXD } from '../../src/systems/market.js';
 const evOut = e => { const i = evInfo(e); return i === null ? null : i === undefined ? 'undef' : { ic: i.ic, t: i.t, d: i.d, o: i.o.map(o => o.k + '|' + o.l) }; };
 const evAll = (out, E) => { for (const [k, e] of Object.entries(E)) out[k] = evOut(e); };
 const trs = () => S.artists.filter(a => a.status === 'trainee');
-const sc0 = (a, o = {}) => { a.scandal = { t: 'Tin đồn thái độ', sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; return a; };
+const sc0 = (a, o = {}) => { a.scandal = { t: { $l: ['Tin đồn thái độ'], j: '' }, sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; return a; };
 add('t12-basic', ctx => {
   ctx.fresh(ctx.base); const out = {}, [a, b, c] = deb();
   sc0(a); sc0(b, { dating: true, other: a.id });
