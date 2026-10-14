@@ -1,9 +1,0 @@
-src/systems/proposals.js: .why='đã giảm tải'
-src/systems/proposals.js: addLog(`⚖️ Giám đốc xử lý xung đột: ${c.txt}.`)
-src/systems/proposals.js: addLog(`📨 Đề xuất tuần: ${parts.join(' · ')}.`,pend?'bad':'')
-src/systems/proposals.js: c.by='Giám đốc'
-src/systems/proposals.js: c.by=res.name
-src/systems/proposals.js: path.push('Giám đốc')
-src/systems/proposals.js: path.push(r.name)
-src/systems/proposals.js: why2='đã có dự án'
-src/systems/proposals.js: why2=CFT[c.type]

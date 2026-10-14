@@ -2,7 +2,7 @@ import { rnd } from '../core/rng.js';
 import { clamp, esc, fmt } from '../core/util.js';
 import { OFFER } from '../data/offers.js';
 import { CONCEPTS, STATS, TRAIN } from '../data/rules.js';
-import { isK, money, t, tx, txVi } from '../i18n/index.js';
+import { Lk, isK, money, t, tx } from '../i18n/index.js';
 import { conceptName } from '../i18n/labels.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fit } from './artists.js';
@@ -18,7 +18,7 @@ import { propNext, setPropNext } from '../ui/planning.js';
 import { det } from '../ui/views.js';
 
 /* ---- manager proposals ---- */
-export function shortWhy(a){if(a.energy<40)return'năng lượng thấp, nghỉ trước';if(a.mood<28)return'tâm trạng xấu, cho nghỉ';if(a.wantAct)return'muốn đóng phim, tập diễn';const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return'bù '+STATS[k]+' ('+Math.round(a.st[k])+')'}
+export function shortWhy(a){if(a.energy<40)return Lk('pwhy.energy');if(a.mood<28)return Lk('pwhy.mood');if(a.wantAct)return Lk('pwhy.act');const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return Lk('pwhy.focus',{s:Lk(`stat.${k}`),v:Math.round(a.st[k])})}
 export function buildProps(){
   if(S.props&&S.props.w===abs()&&S.props.c)return S.props;
   const P={w:abs(),m:{},c:[],st:{auto:0,boss:{},res:0}};
@@ -29,7 +29,7 @@ export function buildProps(){
       const tg=o=>o.target&&free.some(a=>a.id===o.target)?1:0;for(const of of S.offers.slice().sort((x,y)=>(tg(y)-tg(x))||(y.pay*rnd(.6,1.4)-x.pay*rnd(.6,1.4)))){if(it.p.length>=2)break;
         const c=bestCast(of,free.filter(a=>!used.has(a.id)&&a.energy>=35));if(!c)continue;
         c.forEach(i=>used.add(i));it.p.push({of:of.id,ids:c,ok:0})}}
-    for(const a of free)if(a.status==='trainee'){const r=debutRec(a);if(r.t!=='wait')it.d.push({a:a.id,t:r.t,txt:txVi(r.short)})}
+    for(const a of free)if(a.status==='trainee'){const r=debutRec(a);if(r.t!=='wait')it.d.push({a:a.id,t:r.t,txt:r.short})}
     if(it.s.length||it.p.length||it.d.length)P.m[m.id]=it}
   S.props=P;routeProps(P);return P;
 }
@@ -43,11 +43,11 @@ export const refIt=(P,r)=>{const x=P.m[r.mid]&&P.m[r.mid][r.k][r.i];return x?{mi
 export function itDesc(it){const m=mById(it.mid),who=m?m.name:'?';if(it.kind==='s'){const a=byId(it.x.a);return t('prop.itS',{w:who,a:a?a.name:'',d:it.x.days.map(k=>TIC[k]).join('')})}
   const of=S.offers.find(o=>o.id===it.x.of);return`${t('prop.itP',{w:who,t:of?of.title:'?',n:it.x.ids.map(byId).filter(Boolean).map(a=>a.name).join(', ')})}${of?' (+'+money(it.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0))+')':''}`}
 export function itScore(t){if(t.kind==='p'){const of=S.offers.find(o=>o.id===t.x.of);return 1e13+(of?t.x.ids.reduce((s,i)=>s+(byId(i)?effPay(of,byId(i)):0),0):0)}const a=byId(t.x.a),m=a&&mgrOf(a);return m&&m.id===t.mid?2:1}
-export function dropIt(t,c){t.x.ok=-2;t.x.why2=CFT[c.type];if(t.kind==='p'){const it=S.props&&S.props.m[t.mid];if(it)it.s.forEach(x=>{if(x.ok===-2&&isK(x.why2,'prop.why2.busy')&&t.x.ids.includes(x.a)){x.ok=0;delete x.why2}})}}
+export function dropIt(t,c){t.x.ok=-2;t.x.why2=Lk(`prop.cf.${c.type}`);if(t.kind==='p'){const it=S.props&&S.props.m[t.mid];if(it)it.s.forEach(x=>{if(x.ok===-2&&isK(x.why2,'prop.why2.busy')&&t.x.ids.includes(x.a)){x.ok=0;delete x.why2}})}}
 export function fixConf(P,c,keep){
   const its=c.refs.map(r=>refIt(P,r)).filter(t=>t&&t.x.ok!==-2&&t.x.ok!==1);
   if(c.type==='overlap'||c.type==='offer'){const k=keep!=null?refIt(P,c.refs[keep]):its.slice().sort((a,b)=>itScore(b)-itScore(a))[0];for(const t of its)if(!k||t.x!==k.x)dropIt(t,c)}
-  else if(c.type==='tired'){for(const t of its){if(t.kind==='p')dropIt(t,c);else{const a=byId(t.x.a);if(a){t.x.days=planWeek(a,10);t.x.why='đã giảm tải'}}}}
+  else if(c.type==='tired'){for(const t of its){if(t.kind==='p')dropIt(t,c);else{const a=byId(t.x.a);if(a){t.x.days=planWeek(a,10);t.x.why=Lk('prop.why.lighter')}}}}
   else if(c.type==='enemy'){const t=its[0];if(t){const of=S.offers.find(o=>o.id===t.x.of),ms=t.x.ids.map(byId).filter(Boolean);
     for(let i=0;i<ms.length;i++)for(let j=i+1;j<ms.length;j++)if(ms[i].tag[ms[j].id]==='enemy'){const out=[ms[i],ms[j]].filter(a=>a.id!==(of&&of.target)).sort((x,y)=>(of?fit(x,of.w)-fit(y,of.w):0))[0];if(out)t.x.ids=t.x.ids.filter(id=>id!==out.id)}
     if(!t.x.ids.length)dropIt(t,c)}}
@@ -58,52 +58,52 @@ export function approveIt(P,t,by){if(t.x.ok)return;const pend=(t.x.cf||[]).some(
   propOk(t.mid,t.kind,t.i,1);if(t.x.ok===1)t.x.by=by}
 export function routeProps(P){
   const L=itemsOf(P);
-  for(const t of L)if(t.kind==='s'&&L.some(u=>u.kind==='p'&&u.mid===t.mid&&u.arts.includes(t.x.a)))t.x.ok=-2,t.x.why2='đã có dự án';
+  for(const t of L)if(t.kind==='s'&&L.some(u=>u.kind==='p'&&u.mid===t.mid&&u.arts.includes(t.x.a)))t.x.ok=-2,t.x.why2=Lk('prop.why2.busy');
   const live=L.filter(t=>!t.x.ok);let cid=1;
   const add=(type,sev,ts,txt)=>{const c={id:cid++,type,sev,txt,refs:ts.map(t=>({mid:t.mid,k:t.kind,i:t.i})),path:[]};P.c.push(c);ts.forEach(t=>(t.x.cf=t.x.cf||[]).push(c.id));c._t=ts};
   const byA={};live.forEach(t=>t.arts.forEach(a=>(byA[a]=byA[a]||[]).push(t)));
-  for(const a in byA){const ts=byA[a];if(new Set(ts.map(t=>t.mid)).size>1)add('overlap',2,ts,`${byId(+a).name} được ${new Set(ts.map(t=>t.mid)).size} quản lý xếp việc khác nhau`)}
+  for(const a in byA){const ts=byA[a];if(new Set(ts.map(t=>t.mid)).size>1)add('overlap',2,ts,Lk('prop.ctxt.overlap',{n:byId(+a).name,k:new Set(ts.map(t=>t.mid)).size}))}
   const byO={};live.filter(t=>t.kind==='p').forEach(t=>(byO[t.x.of]=byO[t.x.of]||[]).push(t));
-  for(const o in byO)if(byO[o].length>1){const of=S.offers.find(x=>x.id===+o);add('offer',1,byO[o],`${byO[o].length} quản lý cùng muốn nhận «${of?of.title:'?'}»`)}
+  for(const o in byO)if(byO[o].length>1){const of=S.offers.find(x=>x.id===+o);add('offer',1,byO[o],Lk('prop.ctxt.offer',{k:byO[o].length,t:of?of.title:'?'}))}
   for(const t of live){
     if(t.kind==='p'){const ms=t.arts.map(byId).filter(Boolean),of=S.offers.find(o=>o.id===t.x.of);
-      const sc=ms.filter(a=>a.scandal);if(sc.length)add('scandal',3,[t],`${sc[0].name} đang dính scandal mà vẫn được xếp «${of?of.title:''}»`);
-      const ti=ms.filter(a=>a.energy<45);if(ti.length)add('tired',1,[t],`${ti.map(a=>a.name).join(', ')} năng lượng thấp (⚡${Math.round(ti[0].energy)}) mà vẫn nhận «${of?of.title:''}»`);
-      if(ms.length>1&&chem(t.arts)<0)add('enemy',1,[t],`Đội hình «${of?of.title:''}» có hai người đang mâu thuẫn`)}
+      const sc=ms.filter(a=>a.scandal);if(sc.length)add('scandal',3,[t],Lk('prop.ctxt.scandal',{n:sc[0].name,t:of?of.title:''}));
+      const ti=ms.filter(a=>a.energy<45);if(ti.length)add('tired',1,[t],Lk('prop.ctxt.tired',{n:ti.map(a=>a.name).join(', '),e:Math.round(ti[0].energy),t:of?of.title:''}));
+      if(ms.length>1&&chem(t.arts)<0)add('enemy',1,[t],Lk('prop.ctxt.enemy',{t:of?of.title:''}))}
     else{const a=byId(t.x.a);let e=a.energy,lo=0;for(const k of t.x.days){e=clamp(e+(k==='rest'?12:TRAIN[k].e*.3),0,100);if(e<20)lo=1}
-      if(lo)add('tired',1,[t],`Lịch của ${a.name} quá dày, năng lượng sẽ xuống dưới 20`)}
+      if(lo)add('tired',1,[t],Lk('prop.ctxt.sched',{n:a.name}))}
   }
   for(const c of P.c){
     const ms=[...new Set(c._t.map(t=>t.mid))].map(mById).filter(Boolean),ch=ms.map(chainUp);
     const cand=(ch[0]||[]).filter(r=>ch.every(x=>x.includes(r)));let res=null;
     for(const r of cand){c.path.push(r.name);if(canSolve(r,c)){res=r;break}}
-    if(res){fixConf(P,c);c.by=res.name;mgrExp(res,.2);P.st.res++}else{c.pend=1;c.path.push('Giám đốc')}
+    if(res){fixConf(P,c);c.by=res.name;mgrExp(res,.2);P.st.res++}else{c.pend=1;c.path.push(Lk('prop.ceo'))}
     delete c._t;
   }
   passAll(P);
   const nb=Object.values(P.st.boss).reduce((a,b)=>a+b,0),pend=P.c.filter(c=>c.pend).length,parts=[];
-  if(nb)parts.push(`cấp trên duyệt ${nb} mục (${Object.keys(P.st.boss).join(', ')})`);if(P.st.auto)parts.push(`${P.st.auto} mục tự duyệt`);
-  if(P.st.res)parts.push(`${P.st.res} xung đột được quản lý cấp cao xử lý`);if(pend)parts.push(`⚠️ ${pend} xung đột chuyển lên Giám đốc`);
-  if(parts.length)addLog(`📨 Đề xuất tuần: ${parts.join(' · ')}.`,pend?'bad':'');
+  if(nb)parts.push(Lk('log.prop.boss',{n:nb,l:Object.keys(P.st.boss).join(', ')}));if(P.st.auto)parts.push(Lk('log.prop.auto',{n:P.st.auto}));
+  if(P.st.res)parts.push(Lk('log.prop.res',{n:P.st.res}));if(pend)parts.push(Lk('log.prop.pend',{n:pend}));
+  if(parts.length)addLog(Lk('log.prop.sum',{p:{$l:parts,j:' · '}}),pend?'bad':'');
 }
 export function passAll(P,force){
   for(const t of itemsOf(P)){if(t.x.ok)continue;
     const m=mById(t.mid),b=m&&mBoss(m),solved=(t.x.cf||[]).map(id=>P.c.find(c=>c.id===id)).filter(c=>c&&c.by).pop();
-    const by=solved?solved.by:b?b.name:(S.autoAppr!==false?'tự duyệt':force||null);if(!by)continue;
+    const by=solved?solved.by:b?b.name:(S.autoAppr!==false?Lk('prop.self'):force||null);if(!by)continue;
     approveIt(P,t,by);if(t.x.ok===1){if(isK(by,'prop.self'))P.st.auto++;else if(!isK(by,'prop.ceo'))P.st.boss[by]=(P.st.boss[by]||0)+1}}
 }
 export function cfPick(cid,keep){const P=S.props;if(!P)return;const c=P.c.find(x=>x.id===cid);if(!c||!c.pend)return;
-  if(keep==='as'){c.pend=0;c.done=1}else fixConf(P,c,keep==null?null:keep);c.by='Giám đốc';
-  for(const r of c.refs){const t=refIt(P,r);if(t)approveIt(P,t,'Giám đốc')}
+  if(keep==='as'){c.pend=0;c.done=1}else fixConf(P,c,keep==null?null:keep);c.by=Lk('prop.ceo');
+  for(const r of c.refs){const t=refIt(P,r);if(t)approveIt(P,t,Lk('prop.ceo'))}
   passAll(P);
-  addLog(`⚖️ Giám đốc xử lý xung đột: ${c.txt}.`);act()}
+  addLog(Lk('log.prop.ceo',{t:c.txt}));act()}
 export const propCount=()=>{const P=buildProps();let n=P.c.filter(c=>c.pend).length;for(const k in P.m){const it=P.m[k];n+=it.s.filter(x=>!x.ok&&!(x.cf||[]).length&&byId(x.a)&&!byId(x.a).busy).length+it.p.filter(x=>!x.ok&&!(x.cf||[]).length&&S.offers.some(o=>o.id===x.of)).length}return n};
 export function propOk(mid,kind,i,quiet){const it=S.props&&S.props.m[mid];if(!it)return;const x=it[kind][i];if(!x||x.ok)return;
   if((x.cf||[]).some(id=>{const c=S.props.c.find(z=>z.id===id);return c&&c.pend})){if(!quiet)toast(t('prop.toast.conflict'));return}
-  if(kind==='s'){const a=byId(x.a);if(!a||a.busy)return;a.days=x.days.slice();a.appr=abs();x.ok=1;if(!x.by)x.by='Giám đốc'}
+  if(kind==='s'){const a=byId(x.a);if(!a||a.busy)return;a.days=x.days.slice();a.appr=abs();x.ok=1;if(!x.by)x.by=Lk('prop.ceo')}
   else if(kind==='p'){const of=S.offers.find(o=>o.id===x.of);if(!of){x.ok=-1;if(!quiet)toast(t('prop.toast.gone'));return}
     if(x.ids.some(id=>{const a=byId(id);return !a||canTake(of,a)})){x.ok=-1;if(!quiet)toast(t('prop.toast.bad'));return}
-    acceptCast(of.id,x.ids,true);x.ok=1;if(!x.by)x.by='Giám đốc';const mg=S.managers.find(m=>m.id===mid);if(mg)mgrExp(mg,.3)}
+    acceptCast(of.id,x.ids,true);x.ok=1;if(!x.by)x.by=Lk('prop.ceo');const mg=S.managers.find(m=>m.id===mid);if(mg)mgrExp(mg,.3)}
   if(!quiet)act()}
 export function propOkAll(mid){const it=S.props&&S.props.m[mid];if(!it)return;it.p.forEach((x,i)=>propOk(mid,'p',i,1));it.s.forEach((x,i)=>propOk(mid,'s',i,1));act()}
 export function propAll(){const P=buildProps();for(const k in P.m)propOkAll(+k)}

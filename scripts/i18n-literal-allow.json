@@ -20,21 +20,6 @@
   "why": "FMT_VI default units: fmt() feeds the log sinks, so S stays language-independent"
  },
  {
-  "file": "src/systems/proposals.js",
-  "text": "năng lượng thấp, nghỉ trước",
-  "why": "shortWhy text stored in S.props[].why (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "tâm trạng xấu, cho nghỉ",
-  "why": "shortWhy text stored in S.props[].why (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "muốn đóng phim, tập diễn",
-  "why": "shortWhy text stored in S.props[].why (phase 3)"
- },
- {
   "file": "src/systems/ext3.js",
   "text": "năng lượng chỉ còn",
   "why": "hsRisk text stored in a.hsF.why (phase 3)"
@@ -163,96 +148,6 @@
   "file": "src/systems/review.js",
   "text": "fan, Diễn xuất +0.5.",
   "why": "prDo msg and prName text go to addLog (S.log, phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "bù",
-  "why": "stored in S.props items (x.why / x.why2) and compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "được",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "quản lý xếp việc khác nhau",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "quản lý cùng muốn nhận «",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "đang dính scandal mà vẫn được xếp «",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "năng lượng thấp (⚡",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": ") mà vẫn nhận «",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "Đội hình «",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "» có hai người đang mâu thuẫn",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "Lịch của",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "quá dày, năng lượng sẽ xuống dưới 20",
-  "why": "conflict text stored in S.props.c[].txt (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "Giám đốc",
-  "why": "approver names stored in S.props (c.by, c.path, x.by) and compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "tự duyệt",
-  "why": "approver names stored in S.props (c.by, c.path, x.by) and compared as logic (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "cấp trên duyệt",
-  "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "mục (",
-  "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "mục tự duyệt",
-  "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "xung đột được quản lý cấp cao xử lý",
-  "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
- },
- {
-  "file": "src/systems/proposals.js",
-  "text": "xung đột chuyển lên Giám đốc",
-  "why": "parts of the weekly proposal summary written to S.log by addLog (phase 3)"
  },
  {
   "file": "src/systems/events.js",

@@ -274,7 +274,7 @@ add('t7-plan', ctx => {
   out.wantAct = setup(() => { a.mood = 90; a.wantAct = abs() + 3; });
   out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: 'Tin đồn test', sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
   out.plain = setup(() => { a.scandal = null; });
-  if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: 'Lý do test', ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
+  if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: { $l: ['Lý do test'], j: '' }, ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
   startPlanOne(a.id); out.single = sheet(); planSel(2); out.singleD2 = sheet();
   out.why = [20, 90].map(e => { a.energy = e; a.mood = e < 50 ? 90 : 10; return planWhy(a); });
   a.energy = 90; a.mood = 90; a.wantAct = abs() + 1; out.why.push(planWhy(a)); a.wantAct = 0; out.why.push(planWhy(a));

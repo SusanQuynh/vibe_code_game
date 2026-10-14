@@ -434,6 +434,21 @@
   "k": "log.mgr.take"
  },
  {
+  "k": "log.off.acc"
+ },
+ {
+  "k": "log.off.chemNeg"
+ },
+ {
+  "k": "log.off.chemPos"
+ },
+ {
+  "k": "log.off.invest"
+ },
+ {
+  "k": "log.off.mates"
+ },
+ {
   "k": "log.pro.auto"
  },
  {
@@ -468,6 +483,24 @@
  },
  {
   "k": "log.pro.win"
+ },
+ {
+  "k": "log.prop.auto"
+ },
+ {
+  "k": "log.prop.boss"
+ },
+ {
+  "k": "log.prop.ceo"
+ },
+ {
+  "k": "log.prop.pend"
+ },
+ {
+  "k": "log.prop.res"
+ },
+ {
+  "k": "log.prop.sum"
  },
  {
   "k": "log.rec.empty"
@@ -528,6 +561,30 @@
  },
  {
   "k": "log.rel.trendUp"
+ },
+ {
+  "k": "log.sec.cancel"
+ },
+ {
+  "k": "log.sec.delayBusy"
+ },
+ {
+  "k": "log.sec.delayMoney"
+ },
+ {
+  "k": "log.sec.go"
+ },
+ {
+  "k": "log.sec.late"
+ },
+ {
+  "k": "log.sec.now"
+ },
+ {
+  "k": "log.sec.rec"
+ },
+ {
+  "k": "log.sec.sched"
  },
  {
   "k": "log.st.office"
@@ -690,6 +747,24 @@
   "k": "prop.cf.*"
  },
  {
+  "k": "prop.ctxt.enemy"
+ },
+ {
+  "k": "prop.ctxt.offer"
+ },
+ {
+  "k": "prop.ctxt.overlap"
+ },
+ {
+  "k": "prop.ctxt.scandal"
+ },
+ {
+  "k": "prop.ctxt.sched"
+ },
+ {
+  "k": "prop.ctxt.tired"
+ },
+ {
   "k": "prop.self",
   "logic": true
  },
@@ -699,6 +774,18 @@
  {
   "k": "prop.why2.busy",
   "logic": true
+ },
+ {
+  "k": "pwhy.act"
+ },
+ {
+  "k": "pwhy.energy"
+ },
+ {
+  "k": "pwhy.focus"
+ },
+ {
+  "k": "pwhy.mood"
  },
  {
   "k": "q.ex"
@@ -714,6 +801,9 @@
  },
  {
   "k": "scandal.live"
+ },
+ {
+  "k": "sec.q"
  },
  {
   "k": "stat.*"

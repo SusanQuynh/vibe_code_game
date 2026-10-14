@@ -43,18 +43,18 @@ export function secPlan(x){
 }
 export function secPlans(){return acts().map(secPlan).filter(Boolean).sort((a,b)=>(a.plan?1:0)-(b.plan?1:0)||a.wait-b.wait||a.rank-b.rank)}
 export function secSchedRec(){return secPlans().filter(p=>!p.plan&&!(S.camp[p.k]&&S.camp[p.k].ph==='post')&&p.wait>=1&&p.wait<=6&&S.money>=p.bud).sort((a,b)=>a.rank-b.rank||a.wait-b.wait).slice(0,3).map(p=>(p.recWhy=t('sec.recWhy',{r:p.rank,w:p.wait,why:p.why[0]}),p))}
-export function cbSchedRec(){const L=secSchedRec();if(!L.length)return;L.forEach(p=>cbSched(p.k));addLog(`🗒️ Thư ký hẹn comeback theo khuyến nghị cho: ${L.map(p=>p.n.slice(2).trim()).join(', ')}.`);act()}
-export function cbNow(k){const p=secPlan(actByKey(k));if(!p)return;if(doSingle(k,p.ck,p.bud,null,true)){addLog(`🗒️ Thư ký triển khai comeback theo kế hoạch.`);act()}else toast(t('sec.toast.cant'))}
+export function cbSchedRec(){const L=secSchedRec();if(!L.length)return;L.forEach(p=>cbSched(p.k));addLog(Lk('log.sec.rec',{l:L.map(p=>p.n.slice(2).trim()).join(', ')}));act()}
+export function cbNow(k){const p=secPlan(actByKey(k));if(!p)return;if(doSingle(k,p.ck,p.bud,null,true)){addLog(Lk('log.sec.now'));act()}else toast(t('sec.toast.cant'))}
 export function cbSched(k){const x=actByKey(k),p=secPlan(x);if(!p)return;S.cbPlan=(S.cbPlan||[]).filter(z=>z.k!==k);const w=abs()+Math.max(1,p.wait);S.cbPlan.push({k,n:p.n,w,ck:p.ck,bud:p.bud,tries:0});
-  addLog(`🗒️ Hẹn comeback cho ${p.n.slice(2).trim()} vào tuần ${((w-1)%52)+1}. Đã tự chừa lịch: thành viên không nhận dự án hay cuộc thi kéo dài qua tuần này.`);
-  const late=x.m.map(byId).filter(a=>a&&a.busy&&abs()+a.busy.left>w);if(late.length)addLog(`⚠️ ${late.map(a=>a.name).join(', ')} đang bận ${late.map(a=>'«'+a.busy.title+'»').join(', ')} quá tuần comeback, có thể phải lùi lịch.`,'bad');act()}
+  addLog(Lk('log.sec.sched',{n:p.n.slice(2).trim(),w:((w-1)%52)+1}));
+  const late=x.m.map(byId).filter(a=>a&&a.busy&&abs()+a.busy.left>w);if(late.length)addLog(Lk('log.sec.late',{n:late.map(a=>a.name).join(', '),l:{$l:late.map(a=>Lk('sec.q',{t:a.busy.title})),j:', '}}),'bad');act()}
 export function cbCancel(k){S.cbPlan=(S.cbPlan||[]).filter(x=>x.k!==k);act()}
 export const wkLabel=w=>Lk('common.wkLbl',{w:Lk('common.wkShort',{w:((w-1)%52)+1}),y:Math.ceil(w/52)!==S.year?Lk('common.wkYearSfx',{y:Math.ceil(w/52)}):''});
 export function runCbPlans(){if(!S.cbPlan||!S.cbPlan.length)return;const now=abs();
   for(const p of [...S.cbPlan]){if(p.w>now)continue;const x=actByKey(p.k);if(!x){S.cbPlan=S.cbPlan.filter(z=>z!==p);continue}
     const q=secPlan(x),ck=q?q.ck:p.ck;
-    if(actFree(x)&&S.money>=p.bud&&doSingle(p.k,ck,p.bud,null,true))addLog(`🗒️ Thư ký triển khai comeback đã hẹn cho ${p.n.slice(2).trim()} (${CONCEPTS[ck].n}).`,'good');
-    else{p.tries++;p.w=now+1;if(p.tries>3){S.cbPlan=S.cbPlan.filter(z=>z!==p);addLog(`🗒️ Hủy lịch comeback của ${p.n.slice(2).trim()} vì hoãn quá 3 lần.`,'bad')}else addLog(`🗒️ Lùi comeback của ${p.n.slice(2).trim()} 1 tuần (${actFree(x)?'thiếu tiền':'thành viên đang bận'}).`)}}}
+    if(actFree(x)&&S.money>=p.bud&&doSingle(p.k,ck,p.bud,null,true))addLog(Lk('log.sec.go',{n:p.n.slice(2).trim(),c:Lk(`concept.${ck}`)}),'good');
+    else{p.tries++;p.w=now+1;if(p.tries>3){S.cbPlan=S.cbPlan.filter(z=>z!==p);addLog(Lk('log.sec.cancel',{n:p.n.slice(2).trim()}),'bad')}else addLog(Lk(actFree(x)?'log.sec.delayMoney':'log.sec.delayBusy',{n:p.n.slice(2).trim()}))}}}
 export function secCard(p,rec){const name=esc(p.n);
   const st=p.plan?`<span class="tag v">${t('sec.planned',{w:wkLabel(p.plan.w)})}</span>`:p.wait?`<span class="tag">${t('sec.waitTag',{w:p.wait})}</span>`:`<span class="tag m">${t('sec.readyTag')}</span>`;
   const body=`<div class="small">${t('sec.line',{c:conceptName(p.ck)+trendTag(p.ck),f:Math.round(p.fit),b:t(`sec.bud.${p.bud/1e6}`),m:money(p.bud),r:p.rank})}</div>

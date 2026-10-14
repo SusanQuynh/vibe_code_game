@@ -1,4 +1,0 @@
-src/systems/offers.js: addLog(`${O.ic} ${ms.map(a=>a.name).join(', ')} nhận ${O.n} «${of.title}» (${of.partner}), ${of.weeks} tuần${ids.length>1?` · ${ids.length} người${c?(c>0?', ăn ý +':', lục đục ')+Math.round(Math.abs(c)*100)+'%':''}`:''}.`)
-src/systems/offers.js: addLog(`💰 Góp vốn ${fmt(cost)} (${of.invest.share*100}%) vào phim «${of.title}».`)
-src/systems/offers.js: busy={kind:'offer',type:of.type,title:of.title,partner:of.partner,costar:of.costar,left:of.weeks,total:of.weeks,pay:effPay(of,a),genre:of.genre,w:of.w,L:of.L,offerId:of.id,mates:ids,chem:c}
-src/systems/offers.js: status:'Sắp chiếu'
