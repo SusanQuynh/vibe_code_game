@@ -455,9 +455,9 @@ add('t9-renew', ctx => {
   out.plain = [renewEval(a), renewEval(a, 1.3)].map(e => ({ ...e }));
   out.block = renewBlock(a); out.block13 = renewBlock(a, 1.3); out.none = renewBlock(null);
   const var1 = (k, f) => { f(); out[k] = { ev: renewEval(a), blk: renewBlock(a), opts: renewOpts(a) }; };
-  var1('great', () => { a.earnC = 5e9; a.fans = a.fans * 3 + 1e5; a.evG = 'Xuất sắc'; a.evFail = 0; });
-  var1('good-evFail', () => { a.evG = 'Đạt'; a.evFail = 2; });
-  var1('bad', () => { a.earnC = 0; a.cf0 = a.fans * 2 + 1e5; a.evG = 'Không đạt'; a.evFail = 3; a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.mood = 20; });
+  var1('great', () => { a.earnC = 5e9; a.fans = a.fans * 3 + 1e5; a.evG = Lk('grade.ex'); a.evFail = 0; });
+  var1('good-evFail', () => { a.evG = Lk('grade.pass'); a.evFail = 2; });
+  var1('bad', () => { a.earnC = 0; a.cf0 = a.fans * 2 + 1e5; a.evG = Lk('grade.fail'); a.evFail = 3; a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.mood = 20; });
   out.optsSix = renewOpts(a, 1.3);
   a.scandal = null; a.mood = 70; a.ce = abs() + 6; a.ceNo = 0;
   S.events = []; out.view = (viewRenew(a.id), sheet());
@@ -575,11 +575,11 @@ add('t10-toasts', ctx => {
   T('buyback.money', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1, own: .7 }]; S.money = 0; buybackBiz('cafe'); });
   return out;
 }, ['Tin đồn thái độ']);
-add('t10-prgo', ctx => { // prGo stores the Vietnamese data-t in S.prHist whatever the language
+add('t10-prgo', ctx => { // prGo stores a language-independent Msg in S.prHist (viewed through vt)
   ctx.fresh(ctx.base); const x = acts()[0]; x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; }); S.camp = {}; S.singles = []; S.prHist = [];
   const L = prPlans(), out = { dataT: L.map(p => p.t) };
   const d = document.createElement('div'); d.innerHTML = prHTML(L); const b = d.querySelector('button[data-t]');
-  Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.slice(); out.sheetAfter = null;
+  Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.map(vt); out.sheetAfter = null;
   return out;
 }, [], ['dataT', 'btnT', 'hist']);
 

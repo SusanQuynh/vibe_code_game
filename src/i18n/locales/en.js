@@ -19,9 +19,10 @@ import stStudio from './en/st-studio.js';
 import stLobby from './en/st-lobby.js';
 import stMgr from './en/st-mgr.js';
 import stMeet from './en/st-meet.js';
+import stReview from './en/st-review.js';
 
 // Dictionary parts per area; the merged dict is what t() reads. check:i18n reports keys defined in two parts.
-export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr], ['market', market], ['events', events], ['meet', meet], ['save', save], ['st-common', stCommon], ['st-core', stCore], ['st-week', stWeek], ['st-studio', stStudio], ['st-lobby', stLobby], ['st-mgr', stMgr], ['st-meet', stMeet]];
+export const parts = [['core', core], ['common', common], ['labels', labels], ['shared', shared], ['lobby', lobby], ['mgr', mgr], ['artist', artist], ['report', report], ['studio', studio], ['hr', hr], ['market', market], ['events', events], ['meet', meet], ['save', save], ['st-common', stCommon], ['st-core', stCore], ['st-week', stWeek], ['st-studio', stStudio], ['st-lobby', stLobby], ['st-mgr', stMgr], ['st-meet', stMeet], ['st-review', stReview]];
 export default {
   meta: { code: 'en', name: 'English (beta)', htmlLang: 'en' },
   parts,

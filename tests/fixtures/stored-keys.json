@@ -563,6 +563,39 @@
   "k": "log.rel.trendUp"
  },
  {
+  "k": "log.rv.actor"
+ },
+ {
+  "k": "log.rv.bonus"
+ },
+ {
+  "k": "log.rv.cut"
+ },
+ {
+  "k": "log.rv.hype"
+ },
+ {
+  "k": "log.rv.mag"
+ },
+ {
+  "k": "log.rv.press"
+ },
+ {
+  "k": "log.rv.sns"
+ },
+ {
+  "k": "log.rv.sum"
+ },
+ {
+  "k": "log.rv.tts"
+ },
+ {
+  "k": "log.rv.warnA"
+ },
+ {
+  "k": "log.rv.warnT"
+ },
+ {
   "k": "log.sec.cancel"
  },
  {
@@ -722,6 +755,9 @@
   "k": "offer.lt.web.1"
  },
  {
+  "k": "pr.hist"
+ },
+ {
   "k": "pro.stage.s1"
  },
  {
@@ -798,6 +834,15 @@
  },
  {
   "k": "q.ok"
+ },
+ {
+  "k": "rv.allTts"
+ },
+ {
+  "k": "rv.cut"
+ },
+ {
+  "k": "rv.term"
  },
  {
   "k": "scandal.live"

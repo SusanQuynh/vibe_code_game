@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 // en guard for the scenarios in extra-cases.js (the vi output of the same scenarios is frozen in ui-vi-extra2.test.js).
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
-import { noToggle, seed } from './helpers.js';
+import { noToggle, seed, viT } from './helpers.js';
 import { S, setState } from '../../src/state.js';
-import { setLang } from '../../src/i18n/index.js';
+import { setLang, tx } from '../../src/i18n/index.js';
 import { closeM } from '../../src/ui/modal.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { richState, visibleText, offenders } from './sim.js';
@@ -59,11 +59,14 @@ describe('en keeps <option> values and onclick targets identical to vi', () => {
 describe('data-t stays Vietnamese: S.prHist is language-independent', () => {
   it('t10-prgo gives identical output in vi and en', () => {
     const c = CASES.find(x => x.name === 't10-prgo');
-    setLang('vi'); const a = c.run(ctx);
-    setLang('en'); const b = c.run(ctx);
+    setLang('vi'); const a = c.run(ctx); const sv = JSON.stringify(S.prHist[0]);
+    setLang('en'); const b = c.run(ctx); const se = JSON.stringify(S.prHist[0]);
     expect(a.dataT.length).toBeGreaterThan(3);
     expect(b).toEqual(a);
-    expect(b.hist[0]).toMatch(/^T\d+: .*[ạảãàáâấầẩẫậăắằẳẵặđêếềểễệôốồổỗộơớờởỡợưứừửữự]/);
+    expect(se).toBe(sv);
+    expect(S.prHist[0].k).toBe('pr.hist');
+    expect(viT(S.prHist[0])).toMatch(/^T\d+: .*[ạảãàáâấầẩẫậăắằẳẵặđêếềểễệôốồổỗộơớờởỡợưứừửữự]/);
+    expect(offenders(tx(S.prHist[0]), { S, base: ctx.base, early: ctx.early })).toEqual([]);
   });
 });
 
