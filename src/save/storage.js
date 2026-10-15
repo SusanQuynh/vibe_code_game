@@ -1,10 +1,14 @@
 import { Lk } from '../i18n/index.js';
 import { S, abs, addLog, setState } from '../state.js';
-import { ensureLook } from '../systems/artists.js';
+import { R } from '../core/rng.js';
+import { OFFER } from '../data/offers.js';
+import { ensureLook, genPool } from '../systems/artists.js';
 import { fixBatch, initBatches } from '../systems/batches.js';
-import { genComp } from '../systems/contests.js';
-import { migrateV2 } from '../systems/ext2.js';
+import { compTick, genComp } from '../systems/contests.js';
+import { migrateV2, poolSize } from '../systems/ext2.js';
 import { genMgrPool, givePM, legacyDom, migrateDom } from '../systems/managers.js';
+import { genHSC } from '../systems/ext3.js';
+import { genOffers } from '../systems/offers.js';
 import { initWorld } from '../systems/market.js';
 import { groupsOf } from '../systems/relations.js';
 import { ensureDays } from '../systems/week.js';
@@ -56,6 +60,14 @@ export function shortOf(s){const c=compactOf(s,2);c.__short=1;
     for(const a of s.artists||[])if(a.busy&&a.busy.offerId!=null)ref.add(a.busy.offerId);
     c.offers=s.offers.filter(o=>o.invested||ref.has(o.id))}
   return c}
+/* After an SL2 import: refill the lists shortOf dropped (same generators and arguments as the week loop; import time only) */
+export function regenAfterShort(){
+  genPool(poolSize());genMgrPool();
+  genOffers(R(2,4)+(S.artists.length>6?1:0)+(S.artists.length>12?1:0));
+  {const nt=S.artists.filter(a=>a.status==='trainee').length,ho=S.offers.filter(o=>OFFER[o.type].tj).length;if(nt&&ho<Math.min(5,1+Math.ceil(nt/3)))genOffers(R(1,2),1)}
+  if(S.offers.length>22)S.offers=S.offers.slice(-22);
+  compTick();genHSC();
+  addLog(Lk('log.sys.shortImport'),'gold')}
 /* Put back what compactOf trimmed, from the backup of the same game (so the next full backup keeps full history) */
 const kj=x=>JSON.stringify(x);
 function nf(a,b,cap){const ks=new Set((a||[]).map(kj));return(a||[]).concat((b||[]).filter(x=>!ks.has(kj(x)))).slice(0,cap)}   // newest-first lists
@@ -88,6 +100,7 @@ export function save(opt={}){const m=saveMeta(),now=Date.now(),a=abs(),y=S.year,
   onSaved(ok,!ok?'fail':lvl>1?(dropped?'noBackup':'lite'):bad?'noBackup':'ok');return ok}
 // Overwrite both slots with d (compact main copy, quota-safe), then reload through load() (so migrations run). Returns false if d is invalid or storage is full (see lastSaveError).
 export function replaceSave(d){saveErr='';if(!d||!Array.isArray(d.artists)){saveErr='invalid';return false}
+  const sh=d.__short;if(sh){d={...d};delete d.__short}   // SL2 import: flag never reaches storage; lists are refilled after load()
   try{const t=JSON.stringify(d),put=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){if(!isQuota(e))throw e;localStorage.removeItem(k);localStorage.setItem(k,v)}};
     let ct=JSON.stringify(compactOf(d,1));
     try{put(KEY,ct)}catch(e){if(!isQuota(e))throw e;ct=JSON.stringify(compactOf(d,2));localStorage.removeItem(KEY_FULL);put(KEY,ct)}
@@ -95,7 +108,7 @@ export function replaceSave(d){saveErr='';if(!d||!Array.isArray(d.artists)){save
     if(!hasFull)try{put(KEY_FULL,t);hasFull=true}catch(e){if(!isQuota(e))throw e;localStorage.removeItem(KEY_FULL)}
     const o={at:Date.now(),abs:absOf(d),y:d.year,w:d.week},g=newGid();putMeta(hasFull?{gid:g,c:{...o,len:ct.length,lvl:1,fl:1,gid:g},f:{...o,len:t.length,gid:g}}:{gid:g,c:{...o,len:ct.length,lvl:1,fl:0,gid:g}})}
   catch(e){saveErr=isQuota(e)?'quota':'invalid';return false}
-  return load()}
+  const ok=load();if(ok&&sh){regenAfterShort();save({full:true})}return ok}
 export function restoreBackup(){try{const t=localStorage.getItem(KEY_FULL);return t?replaceSave(JSON.parse(t)):false}catch(e){return false}}
 const readSlot=k=>{try{const t=localStorage.getItem(k);if(!t)return null;const d=JSON.parse(t);return d&&d.artists?d:null}catch(e){return null}};
 export function load(){try{return loadImpl(false)}catch(e){console.error(e);

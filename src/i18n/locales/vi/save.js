@@ -40,6 +40,10 @@ export default {
   'save.msg.quota': '❌ Hết dung lượng lưu trữ của trình duyệt, không nạp được',
   'save.msg.bad': '❌ Dữ liệu trong mã bị lỗi',
   'save.msg.ok': '✅ Đã nạp game.',
+  'save.short.title': 'Mã ngắn (chuyển máy)',
+  'save.short.lens': 'Mã đầy đủ {a} ký tự · mã ngắn {b} ký tự',
+  'save.short.note': 'Mã ngắn bỏ nhật ký, lịch sử, lời mời hiện tại và danh sách ứng viên / quản lý; các danh sách này được tạo lại khi nạp mã.',
+  'save.short.copy': 'Sao chép mã ngắn',
   // errors thrown by save/transfer.js (their Vietnamese message is kept for the tests, the view shows these)
   'save.err.notSave': 'Dữ liệu không phải save Starlight',
   'save.err.invalid': 'Mã không hợp lệ',

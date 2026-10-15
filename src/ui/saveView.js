@@ -1,7 +1,7 @@
 import { $, esc } from '../core/util.js';
 import { Lk, money, t } from '../i18n/index.js';
-import { KEY, KEY_FULL, lastLoadSource, lastSaveError, replaceSave, save, saveMeta, slotInfo } from '../save/storage.js';
-import { exportCode, exportFile, importFile, parseSaveText } from '../save/transfer.js';
+import { KEY, KEY_FULL, lastLoadSource, lastSaveError, replaceSave, save, saveMeta, shortOf, slotInfo } from '../save/storage.js';
+import { exportCode, exportFile, exportShortCode, importFile, parseSaveText } from '../save/transfer.js';
 import { S, addLog } from '../state.js';
 import { act, setPos } from './building.js';
 import { curView, modal, toast } from './modal.js';
@@ -45,11 +45,30 @@ export function viewCode() {
     <button class="btn pri" onclick="saveImportApply()">${t('save.overwrite')}</button>` : ''}
   </div>
   ${ioMsg ? `<div class="card small">${ioHtml(ioMsg)}</div>` : ''}`);
-  exportCode(S).then((c) => { const el = $('#codeShow'); if (el) el.value = c; }, () => {});
+  const full = exportCode(S);
+  full.then((c) => { const el = $('#codeShow'); if (el) el.value = c; }, () => {});
+  // the short-code card is added once both codes exist (kept out of the sheet markup so the first paint is unchanged)
+  Promise.all([full, exportShortCode(shortOf(S))]).then(([a, b]) => {
+    const el = $('#codeShow'), card = el && el.closest('.card');
+    if (!card || $('#codeShort')) return;
+    card.insertAdjacentHTML('afterend', `<div class="card" id="shortCard"><b>${t('save.short.title')}</b>
+    <div class="small" style="margin:4px 0">${t('save.short.lens', { a: a.length, b: b.length })}</div>
+    <textarea id="codeShort" readonly rows="2" style="width:100%;font:12px 'JetBrains Mono',monospace"></textarea>
+    <div class="small muted" style="margin:4px 0">${t('save.short.note')}</div>
+    <button class="btn pri" onclick="saveCopyShort()">${t('save.short.copy')}</button></div>`);
+    $('#codeShort').value = b;
+  }, () => {});
 }
 
 export async function saveCopyCode() {
   const el = $('#codeShow');
+  if (!el || !el.value) return toast(t('save.toast.notReady'));
+  try { await navigator.clipboard.writeText(el.value); toast(t('save.toast.copied')); }
+  catch { el.select(); toast(t('save.toast.copySel')); }
+}
+
+export async function saveCopyShort() {
+  const el = $('#codeShort');
   if (!el || !el.value) return toast(t('save.toast.notReady'));
   try { await navigator.clipboard.writeText(el.value); toast(t('save.toast.copied')); }
   catch { el.select(); toast(t('save.toast.copySel')); }

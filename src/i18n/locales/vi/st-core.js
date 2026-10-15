@@ -5,6 +5,7 @@ export default {
   'log.st.office': '📋 Văn phòng Quản lý vừa mở ở tầng 6: tuyển quản lý để chia nhau phụ trách nhóm và nghệ sĩ.',
   'log.st.restore': '🛟 Bản lưu chính bị lỗi, đã khôi phục từ bản sao lưu đầy đủ.',
   'log.sv.load': '🔑 Đã nạp game từ mã / file lưu.',
+  'log.sys.shortImport': '📲 Đã nạp game từ mã ngắn: ứng viên, quản lý, lời mời và cuộc thi được tạo mới.',
   'log.art.sign': '✍️ Ký hợp đồng thực tập sinh {n} vào {b}.',
   'log.art.signBy': '🧑‍💼 NV tuyển dụng {r} ký thực tập sinh {n} vào {b}.',
   'batch.fresh': 'lứa mới',
