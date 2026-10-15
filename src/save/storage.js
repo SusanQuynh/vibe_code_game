@@ -42,6 +42,20 @@ export function compactOf(s,lvl=1){const t=lvl>1,c={...s},cut=(a,n,m)=>a.slice(0
   if(s.rec&&Array.isArray(s.rec.log))c.rec={...s.rec,log:cut(s.rec.log,5,0)};
   if(t)delete c.gmRep;
   return c}
+/* SL2 short code payload: compactOf(s,2) minus history and lists the game rebuilds (see regenAfterShort). Pure; keeps every offer something still points at. */
+export function shortOf(s){const c=compactOf(s,2);c.__short=1;
+  c.log=[];c.fin=[];c.prHist=[];delete c.lastRep;delete c.lastEval;delete c.hsC;
+  if(c.rec&&typeof c.rec==='object')c.rec={...c.rec,log:[],sug:[]};
+  const wipe=a=>({...a,hist:[],lessons:[]});
+  if(Array.isArray(c.artists))c.artists=c.artists.map(wipe);
+  c.pool=[];c.mgrPool=[];c.comps=[];
+  if(Array.isArray(s.offers)){const ref=new Set();   // offer ids read elsewhere: pending events (mtjob.of), films (offerId), this week's proposals, busy copies
+    for(const e of s.events||[])if(e&&e.of!=null)ref.add(e.of);
+    for(const f of s.films||[])if(f&&f.offerId!=null)ref.add(f.offerId);
+    if(s.props&&s.props.m)for(const k in s.props.m)for(const x of s.props.m[k].p||[])ref.add(x.of);
+    for(const a of s.artists||[])if(a.busy&&a.busy.offerId!=null)ref.add(a.busy.offerId);
+    c.offers=s.offers.filter(o=>o.invested||ref.has(o.id))}
+  return c}
 /* Put back what compactOf trimmed, from the backup of the same game (so the next full backup keeps full history) */
 const kj=x=>JSON.stringify(x);
 function nf(a,b,cap){const ks=new Set((a||[]).map(kj));return(a||[]).concat((b||[]).filter(x=>!ks.has(kj(x)))).slice(0,cap)}   // newest-first lists
