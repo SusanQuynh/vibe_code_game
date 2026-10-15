@@ -25,7 +25,7 @@ import { chooseLang, viewLang } from '../ui/lang.js';
 import { closeM, view } from '../ui/modal.js';
 import { planBack, planFill, planGo, planMgr, planNext, planRec, planSel, planSet, planSkip, setPropNext, startPlanOne } from '../ui/planning.js';
 import { RV, openRoom, setSchedTTS } from '../ui/rooms.js';
-import { saveBackupNow, saveCopyCode, saveDownload, saveExportSlot, saveImportApply, saveImportFile, saveImportText, saveRestorePreview, viewCode } from '../ui/saveView.js';
+import { saveBackupNow, saveCopyCode, saveCopyShort, saveDownload, saveExportSlot, saveImportApply, saveImportFile, saveImportText, saveRestorePreview, viewCode } from '../ui/saveView.js';
 import { tutEnd, tutGo, tutStart } from '../ui/tutorial.js';
 import { setAllD, setRepDay, togD, viewArtist, viewEvents, viewReport, viewReportFull } from '../ui/views.js';
 
@@ -146,6 +146,7 @@ Object.assign(window, {
   viewCamp,
   saveBackupNow,
   saveCopyCode,
+  saveCopyShort,
   saveDownload,
   saveExportSlot,
   saveImportApply,

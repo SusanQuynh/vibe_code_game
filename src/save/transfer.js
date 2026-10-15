@@ -1,5 +1,6 @@
-// Serverless save export / import: JSON → gzip → base64url, prefixed "SL1.".
+// Serverless save export / import: JSON → gzip → base64url, prefixed "SL1.". "SL2." = short code (deflate-raw, payload from shortOf).
 const PREFIX = 'SL1.';
+const PREFIX2 = 'SL2.';
 const MAX_CODE = 30 * 1024 * 1024;
 
 // Errors keep their Vietnamese message (transfer.test.js) and carry a key that the save view translates.
@@ -17,30 +18,38 @@ export function checkSave(d) {
   return d;
 }
 
-export async function exportCode(state) {
-  const gz = new Blob([JSON.stringify(state)]).stream().pipeThrough(new CompressionStream('gzip'));
-  return PREFIX + toB64u(new Uint8Array(await new Response(gz).arrayBuffer()));
+async function pack(obj, fmt, prefix) {
+  const z = new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream(fmt));
+  return prefix + toB64u(new Uint8Array(await new Response(z).arrayBuffer()));
 }
 
+export const exportCode = (state) => pack(state, 'gzip', PREFIX);
+// state is already the shortOf() payload; the flag tells the loader to refill the dropped lists
+export const exportShortCode = (state) => pack({ ...state, __short: 1 }, 'deflate-raw', PREFIX2);
+
+// SL1 and SL2 differ only by prefix and compression format
 export async function importCode(code) {
   code = String(code ?? '').trim().replace(/\s+/g, '');
-  if (!code.startsWith(PREFIX) || code.length > MAX_CODE) throw err('Mã không hợp lệ', 'save.err.invalid');
+  const short = code.startsWith(PREFIX2);
+  if ((!short && !code.startsWith(PREFIX)) || code.length > MAX_CODE) throw err('Mã không hợp lệ', 'save.err.invalid');
   let txt;
   try {
     const bin = fromB64u(code.slice(PREFIX.length));
-    txt = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+    txt = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream(short ? 'deflate-raw' : 'gzip'))).text();
   } catch {
     throw err('Mã không hợp lệ hoặc bị cắt cụt', 'save.err.truncated');
   }
   let d;
   try { d = JSON.parse(txt); } catch { throw err('Mã không hợp lệ', 'save.err.invalid'); }
-  return checkSave(d);
+  checkSave(d);
+  if (short) d.__short = 1;
+  return d;
 }
 
 // Accepts both SL1.… codes and .json file contents
 export async function parseSaveText(text) {
   const t = String(text ?? '').trim();
-  if (t.startsWith(PREFIX)) return importCode(t);
+  if (t.startsWith(PREFIX) || t.startsWith(PREFIX2)) return importCode(t);
   if (t.startsWith('{')) {
     let d;
     try { d = JSON.parse(t); } catch { throw err('File không phải JSON hợp lệ', 'save.err.json'); }

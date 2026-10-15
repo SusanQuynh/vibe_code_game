@@ -5,6 +5,7 @@ export default {
   'log.st.office': '📋 The Management Office just opened on floor 6: hire managers to share the groups and artists.',
   'log.st.restore': '🛟 The main save was corrupted and has been restored from the full backup.',
   'log.sv.load': '🔑 Game loaded from a code / file.',
+  'log.sys.shortImport': '📲 Game loaded from a short code: candidates, managers, offers and contests were generated again.',
   'log.art.sign': '✍️ Signed trainee {n} into {b}.',
   'log.art.signBy': '🧑‍💼 Recruiter {r} signed trainee {n} into {b}.',
   'batch.fresh': 'the new batch',

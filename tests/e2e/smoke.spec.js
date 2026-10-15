@@ -111,6 +111,34 @@ test('xuất mã → xoá dữ liệu → nhập lại mã khôi phục đúng t
   expect(errors).toEqual([]);
 });
 
+test('mã ngắn SL2: xuất → máy mới nhập → tuần và tiền khớp, ứng viên được tạo lại', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('./');
+  await page.evaluate(() => { for (let i = 0; i < 3; i++) window.__game.nextWeek(true, true); });
+  await page.evaluate(() => { window.closeM(); });
+  const before = await page.evaluate(() => ({ w: __game.state().week, m: __game.state().money, a: __game.state().artists.length }));
+
+  await page.locator('.hbtns .r1').click();
+  await expect.poll(async () => page.locator('#codeShort').inputValue()).toMatch(/^SL2\./);
+  const code = await page.locator('#codeShort').inputValue();
+  const full = await page.locator('#codeShow').inputValue();
+  expect(code.length).toBeLessThan(full.length * 0.8);
+
+  await page.evaluate(() => { localStorage.clear(); localStorage.setItem('__golden', '1'); });
+  await page.reload();
+  await page.locator('.hbtns .r1').click();
+  await page.locator('#codeIn').fill(code);
+  await page.getByRole('button', { name: 'Xem trước' }).click();
+  await expect(page.locator('#sheet')).toContainText('Tuần 4');
+  await page.getByRole('button', { name: 'Ghi đè game hiện tại' }).click();
+  const after = await page.evaluate(() => { const s = __game.state(); return { w: s.week, m: s.money, a: s.artists.length, pool: s.pool.length, off: s.offers.length, mg: s.mgrPool.length }; });
+  expect({ w: after.w, m: after.m, a: after.a }).toEqual(before);
+  expect(after.pool).toBeGreaterThan(0);
+  expect(after.off).toBeGreaterThan(0);
+  expect(after.mg).toBeGreaterThan(0);
+  expect(errors).toEqual([]);
+});
+
 test('sao lưu đầy đủ → làm hỏng bản chính → tải lại khôi phục từ bản sao lưu', async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto('./');

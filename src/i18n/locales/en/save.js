@@ -40,6 +40,10 @@ export default {
   'save.msg.quota': '❌ Browser storage is full, could not load',
   'save.msg.bad': '❌ The data in the code is corrupted',
   'save.msg.ok': '✅ Game loaded.',
+  'save.short.title': 'Short code (device transfer)',
+  'save.short.lens': 'Full code {a} characters · short code {b} characters',
+  'save.short.note': 'The short code leaves out the log, history, current offers and the casting / manager candidate lists; they are generated again when the code is loaded.',
+  'save.short.copy': 'Copy short code',
   // errors thrown by save/transfer.js (their Vietnamese message is kept for the tests, the view shows these)
   'save.err.notSave': 'This data is not a Starlight save',
   'save.err.invalid': 'Invalid code',
