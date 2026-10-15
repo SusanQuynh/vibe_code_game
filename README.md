@@ -94,6 +94,8 @@ Sizes and times live in a separate `starlight_save_meta` key, never inside the g
 
 The 🔑 button exports your game as an `SL1.…` code (gzipped JSON, base64url) or a `.json` file, and imports either one in another browser after a preview. Older saves are migrated on load.
 
+For a quick move between devices there is also a **short code** (`SL2.…`, deflate-raw + base64url, about half the length of `SL1.`). It keeps all progress (artists, money, groups, songs, films, awards, batches, managers, pending events and proposals) but leaves out the log, history and lessons, the ledger, and the lists the game can rebuild (casting and manager candidates, open offers and contests). Offers that an event, film or proposal still points at are kept. After a short import the game rebuilds those lists once and logs that the game came from a short code. The import box accepts both codes.
+
 ## Architecture
 
 ```
@@ -109,7 +111,7 @@ src/
 │   ├── offers, releases, promo, secretary, proposals, managers
 │   ├── market, events, awards
 │   └── ext2.js, ext3.js   Features added in later versions of the original (ledger, contracts, mentors, songwriting, health specialist, outside contacts…)
-├── save/         storage.js (localStorage + migrations), transfer.js (SL1 code / .json)
+├── save/         storage.js (localStorage + migrations), transfer.js (SL1 / short SL2 codes, .json)
 ├── i18n/         t(), tVi(), setLang, locale registry (locales/*.js + parts), labels.js
 ├── ui/           building, rooms, views, planning, tutorial, saveView, modal, lang
 │   └── globals.js     The only place handlers are attached to window
@@ -163,7 +165,7 @@ npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 Vietnamese (`vi`) is the default and the source of truth; English (`en`) is in beta. Players switch with the 🌐 button and the game re-renders in place without touching game state. The choice is stored in `localStorage['starlight_lang']`, separately from the save.
 
 > [!NOTE]
-> Phases 1, 2 and 3 are done. Every screen the player reads is translated (phases 1 and 2), and **text stored in the save is language-aware** (phase 3): the log, artist history and lessons, `busy` titles, award categories, rival news, market modifiers, proposal and event reasons, health-check reasons and debut wishes are stored as keys plus parameters and rendered in the current language, so the history re-renders when you switch language. Saves made before phase 3 keep their Vietnamese lines (no migration): only new entries follow the language. Names and generated titles (artists, managers, offers, songs, partners, rivals) are proper nouns and stay as generated. The plans are in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md), [`docs/plans/2026-10-13-i18n-phase-2.md`](docs/plans/2026-10-13-i18n-phase-2.md) and [`docs/plans/2026-10-14-i18n-phase-3.md`](docs/plans/2026-10-14-i18n-phase-3.md).
+> Phases 1, 2 and 3 are done. Every screen the player reads is translated (phases 1 and 2), and **text stored in the save is language-aware** (phase 3): the log, artist history and lessons, `busy` titles, award categories, rival news, market modifiers, proposal and event reasons, health-check reasons and debut wishes are stored as keys plus parameters and rendered in the current language, so the history re-renders when you switch language. Saves made before phase 3 keep their Vietnamese lines (no migration): only new entries follow the language. Names and generated titles (artists, managers, offers, songs, partners, rivals) are proper nouns and stay as generated. The phase 1 plan is in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md); the completed phase 2 and 3 plans were removed and remain in git history.
 
 **Adding a language**
 
