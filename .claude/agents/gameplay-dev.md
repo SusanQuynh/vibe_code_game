@@ -34,7 +34,8 @@ One commit per task, with an English message in the style `feat(save): …`, `fi
 
 ## When the plan is completed
 - A plan is **completed** only when every task in it is done and committed, and the checks above are green on the last commit. If anything remains (blocked task, red test, scope question), keep the plan file.
-- Once completed, delete the plan with `git rm docs/plans/<plan>.md` in its own final commit: `chore(plans): remove completed <slug> plan`. Git history keeps it.
+- Before deleting, `grep -rn "<plan-filename>" --exclude-dir=node_modules --exclude-dir=.git .` and fix every reference (README, other plans, comments): drop the link or keep the text without it. If the plan holds content still needed later (e.g. a hand-off list for a next phase), move that content into README or the next plan first.
+- Then delete the plan with `git rm docs/plans/<plan>.md`, in the same final commit as the reference fixes: `chore(plans): remove completed <slug> plan`. Git history keeps it.
 - **Never delete** `docs/plans/2026-10-09-starlight-web-game.md`: `planner` uses it as the style reference. Only delete the plan you just executed, never other plans.
 
 ## Report
