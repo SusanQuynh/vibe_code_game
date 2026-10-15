@@ -1,0 +1,67 @@
+{
+ "fire": {
+  "ic": "🔥",
+  "t": "Sự cố chập điện phòng tập",
+  "d": "Phòng tập hư hỏng. Sửa tạm thì 4 tuần tới luyện tập kém hiệu quả.",
+  "o": [
+   "fix|Sửa ngay (60 tr)",
+   "cheap|Sửa tạm (15 tr)"
+  ]
+ },
+ "sponsor": {
+  "ic": "🤝",
+  "t": "Nhà tài trợ bất ngờ",
+  "d": "Hãng Tài Trợ muốn tài trợ 60 tr để gắn logo vào hoạt động của công ty. Một số fan có thể chê \"thương mại hóa\".",
+  "o": [
+   "yes|Nhận tài trợ",
+   "no|Từ chối"
+  ]
+ },
+ "tax": {
+  "ic": "🧾",
+  "t": "Thanh tra thuế",
+  "d": "Cơ quan thuế kiểm tra sổ sách. Luật sư giỏi có thể giúp thoát phạt.",
+  "o": [
+   "law|Thuê luật sư (40 tr)",
+   "pay|Nộp phạt luôn"
+  ]
+ },
+ "festival": {
+  "ic": "🌏",
+  "t": "Lời mời lễ hội quốc tế",
+  "d": "Lễ hội âm nhạc châu Á mời  Test Group biểu diễn 1 tuần. Chi phí 50 tr, đổi lại nhiều fan quốc tế.",
+  "o": [
+   "yes|Nhận lời (50 tr)",
+   "no|Từ chối"
+  ]
+ },
+ "leak": {
+  "ic": "💧",
+  "t": "Bản demo bị rò rỉ",
+  "d": "Một bài hát chưa phát hành lan truyền trên mạng.",
+  "o": [
+   "embrace|Biến thành teaser",
+   "sue|Kiện người phát tán (20 tr)",
+   "ignore|Lờ đi"
+  ]
+ },
+ "investor": {
+  "ic": "💼",
+  "t": "Quỹ đầu tư muốn rót vốn",
+  "d": "Quỹ Sao Mai rót 300 tr ngay. Công ty trả lại 15 tr/tuần trong 26 tuần.",
+  "o": [
+   "yes|Nhận vốn",
+   "no|Từ chối"
+  ]
+ },
+ "unknown": null,
+ "keys": [
+  "fire",
+  "sponsor",
+  "tax",
+  "festival",
+  "leak",
+  "investor"
+ ],
+ "sheet": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card\"><b>🤝 Nhà tài trợ bất ngờ</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hãng Tài Trợ muốn tài trợ 60 tr để gắn logo vào hoạt động của công ty. Một số fan có thể chê \"thương mại hóa\".</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(526,'yes')\">Nhận tài trợ</button><button class=\"btn sm \" onclick=\"resolveEv(526,'no')\">Từ chối</button></div></div><div class=\"card\"><b>💼 Quỹ đầu tư muốn rót vốn</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hãng Tài Trợ rót 60 tr ngay. Công ty trả lại 3 tr/tuần trong 26 tuần.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(527,'yes')\">Nhận vốn</button><button class=\"btn sm \" onclick=\"resolveEv(527,'no')\">Từ chối</button></div></div></div>"
+}

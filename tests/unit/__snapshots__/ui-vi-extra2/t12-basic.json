@@ -1,0 +1,104 @@
+{
+ "rest": {
+  "ic": "😮‍💨",
+  "t": "Việt Hoàng xin nghỉ phép",
+  "d": "Lịch trình dày khiến cậu ấy kiệt sức và muốn nghỉ 2 tuần.",
+  "o": [
+   "yes|Cho nghỉ 2 tuần",
+   "no|Từ chối"
+  ]
+ },
+ "raise": {
+  "ic": "💸",
+  "t": "Việt Hoàng muốn tăng lương",
+  "d": "Lương hiện tại 4 tr/tuần.",
+  "o": [
+   "yes|Tăng 3 tr/tuần",
+   "no|Từ chối"
+  ]
+ },
+ "acting": {
+  "ic": "🎭",
+  "t": "Việt Hoàng muốn thử sức diễn xuất",
+  "d": "Cậu ấy mong được nhận vai trong 10 tuần tới.",
+  "o": [
+   "yes|Hứa sẽ tìm vai",
+   "no|Từ chối"
+  ]
+ },
+ "solo": {
+  "ic": "🎤",
+  "t": "Việt Hoàng muốn ra mắt solo",
+  "d": "Hoạt động solo song song với nhóm. Chi phí 80 tr.",
+  "o": [
+   "yes|Cho ra solo (80 tr)",
+   "no|Để sau"
+  ]
+ },
+ "leave": {
+  "ic": "🚪",
+  "t": "Việt Hoàng đòi rời công ty!",
+  "d": "Tâm trạng chỉ còn 97. Nếu không giữ chân, cậu ấy sẽ đi.",
+  "o": [
+   "talk|Thuyết phục (30 tr)",
+   "raise|Tăng lương 10 tr/tuần",
+   "go|Để rời đi"
+  ]
+ },
+ "conflict": {
+  "ic": "⚡",
+  "t": "Việt Hoàng và Hà Linh mâu thuẫn",
+  "d": "Không khí trong công ty căng thẳng. Mâu thuẫn trong nhóm làm giảm chất lượng single.",
+  "o": [
+   "fix|Hòa giải (10 tr)",
+   "no|Mặc kệ"
+  ]
+ },
+ "dating": {
+  "ic": "💞",
+  "t": "Việt Hoàng và Hà Linh muốn hẹn hò",
+  "d": "Hai người đã rất thân. Hẹn hò làm họ vui hơn nhưng có nguy cơ bị lộ.",
+  "o": [
+   "yes|Cho phép (bí mật)",
+   "no|Cấm"
+  ]
+ },
+ "poach": {
+  "ic": "🕵️",
+  "t": "Moonlight Ent. muốn chiêu mộ Minh Thư",
+  "d": "Họ đề nghị lương gấp đôi. Tâm trạng hiện tại 94. Để đi thì nhận phí chuyển nhượng 90 tr.",
+  "o": [
+   "raise|Giữ chân: tăng lương 5 tr/tuần",
+   "talk|Nói chuyện (40 tr)",
+   "go|Để đi (+90 tr)"
+  ]
+ },
+ "scandal": {
+  "ic": "🚨",
+  "t": "Scandal: Việt Hoàng",
+  "d": "Tin đồn thái độ. Mức độ 🔥🔥. Fan giảm mỗi tuần cho đến khi được xử lý.",
+  "o": [
+   "deny|Phủ nhận",
+   "sorry|Xin lỗi công khai",
+   "sue|Kiện tụng (30 tr)",
+   "silent|Im lặng chờ lắng"
+  ]
+ },
+ "scandalD": {
+  "ic": "🚨",
+  "t": "Scandal: Hà Linh",
+  "d": "Tin đồn thái độ. Mức độ 🔥🔥. Fan giảm mỗi tuần cho đến khi được xử lý.",
+  "o": [
+   "deny|Phủ nhận",
+   "sorry|Xin lỗi công khai",
+   "sue|Kiện tụng (30 tr)",
+   "public|Công khai hẹn hò",
+   "silent|Im lặng chờ lắng"
+  ]
+ },
+ "gone": null,
+ "goneB": null,
+ "unknown": null,
+ "sheet": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card\"><b>😮‍💨 Việt Hoàng xin nghỉ phép</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Lịch trình dày khiến cậu ấy kiệt sức và muốn nghỉ 2 tuần.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(526,'yes')\">Cho nghỉ 2 tuần</button><button class=\"btn sm \" onclick=\"resolveEv(526,'no')\">Từ chối</button></div></div><div class=\"card\"><b>💸 Việt Hoàng muốn tăng lương</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Lương hiện tại 4 tr/tuần.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(527,'yes')\">Tăng 3 tr/tuần</button><button class=\"btn sm \" onclick=\"resolveEv(527,'no')\">Từ chối</button></div></div><div class=\"card\"><b>🎭 Việt Hoàng muốn thử sức diễn xuất</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Cậu ấy mong được nhận vai trong 10 tuần tới.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(528,'yes')\">Hứa sẽ tìm vai</button><button class=\"btn sm \" onclick=\"resolveEv(528,'no')\">Từ chối</button></div></div><div class=\"card\"><b>🎤 Việt Hoàng muốn ra mắt solo</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hoạt động solo song song với nhóm. Chi phí 80 tr.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(529,'yes')\">Cho ra solo (80 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(529,'no')\">Để sau</button></div></div><div class=\"card\"><b>🚪 Việt Hoàng đòi rời công ty!</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Tâm trạng chỉ còn 97. Nếu không giữ chân, cậu ấy sẽ đi.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(530,'talk')\">Thuyết phục (30 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(530,'raise')\">Tăng lương 10 tr/tuần</button><button class=\"btn sm \" onclick=\"resolveEv(530,'go')\">Để rời đi</button></div></div><div class=\"card\"><b>⚡ Việt Hoàng và Hà Linh mâu thuẫn</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Không khí trong công ty căng thẳng. Mâu thuẫn trong nhóm làm giảm chất lượng single.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(531,'fix')\">Hòa giải (10 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(531,'no')\">Mặc kệ</button></div></div><div class=\"card\"><b>💞 Việt Hoàng và Hà Linh muốn hẹn hò</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hai người đã rất thân. Hẹn hò làm họ vui hơn nhưng có nguy cơ bị lộ.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(532,'yes')\">Cho phép (bí mật)</button><button class=\"btn sm \" onclick=\"resolveEv(532,'no')\">Cấm</button></div></div><div class=\"card\"><b>🕵️ Moonlight Ent. muốn chiêu mộ Minh Thư</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Họ đề nghị lương gấp đôi. Tâm trạng hiện tại 94. Để đi thì nhận phí chuyển nhượng 90 tr.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(533,'raise')\">Giữ chân: tăng lương 5 tr/tuần</button><button class=\"btn sm pri\" onclick=\"resolveEv(533,'talk')\">Nói chuyện (40 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(533,'go')\">Để đi (+90 tr)</button></div></div><div class=\"card\"><b>🚨 Scandal: Việt Hoàng</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Tin đồn thái độ. Mức độ 🔥🔥. Fan giảm mỗi tuần cho đến khi được xử lý.</div><div class=\"row\" style=\"margin:6px 0\"><button class=\"btn sm pri\" onclick=\"invStart(8)\">🕵️ Mở hồ sơ điều tra (10 tr)</button><span class=\"small muted\">Tìm manh mối trước khi chọn cách xử lý</span></div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(534,'deny')\">Phủ nhận</button><button class=\"btn sm \" onclick=\"resolveEv(534,'sorry')\">Xin lỗi công khai</button><button class=\"btn sm \" onclick=\"resolveEv(534,'sue')\">Kiện tụng (30 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(534,'silent')\">Im lặng chờ lắng</button></div></div><div class=\"card\"><b>🚨 Scandal: Hà Linh</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Tin đồn thái độ. Mức độ 🔥🔥. Fan giảm mỗi tuần cho đến khi được xử lý.</div><div class=\"row\" style=\"margin:6px 0\"><button class=\"btn sm pri\" onclick=\"invStart(9)\">🕵️ Mở hồ sơ điều tra (10 tr)</button><span class=\"small muted\">Tìm manh mối trước khi chọn cách xử lý</span></div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(535,'deny')\">Phủ nhận</button><button class=\"btn sm \" onclick=\"resolveEv(535,'sorry')\">Xin lỗi công khai</button><button class=\"btn sm \" onclick=\"resolveEv(535,'sue')\">Kiện tụng (30 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(535,'public')\">Công khai hẹn hò</button><button class=\"btn sm \" onclick=\"resolveEv(535,'silent')\">Im lặng chờ lắng</button></div></div></div>",
+ "empty": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card muted\">Không có sự kiện nào. Mọi thứ đang yên bình.</div></div>"
+}

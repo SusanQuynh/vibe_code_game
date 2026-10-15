@@ -1,0 +1,22 @@
+[
+ {
+  "file": "src/save/transfer.js",
+  "text": "Dữ liệu không phải save Starlight",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "Mã không hợp lệ",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "File không phải JSON hợp lệ",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed (task 13)"
+ },
+ {
+  "file": "src/save/transfer.js",
+  "text": "Mã không hợp lệ hoặc bị cắt cụt",
+  "why": "Error message kept Vietnamese for transfer.test.js; e.key is displayed"
+ }
+]

@@ -1,0 +1,118 @@
+{
+ "mtreq": {
+  "ic": "🙋",
+  "t": "Việt Hoàng muốn dẫn dắt TTS An Khang",
+  "d": "Việt Hoàng tự đề xuất làm tiền bối cho An Khang: \"Em thấy An Khang còn yếu Nhảy (17 so với 43 của em), em muốn kèm thêm.\" Hai người vốn thân thiết. Tập nhanh hơn tối đa +40%, tiền bối tốn chút năng lượng mỗi tuần. Đang dẫn dắt 0/2.",
+  "o": [
+   "yes|Đồng ý",
+   "no|Từ chối"
+  ]
+ },
+ "mtjob": {
+  "ic": "🤝",
+  "t": "Việt Hoàng giới thiệu đàn em An Khang vào dự án",
+  "d": "Tiền bối Việt Hoàng quen Sân Khấu Sao và tiến cử An Khang cho Vũ công phụ họa «Dự án thử backup» (3 tuần, thù lao gốc 50 tr). Nhờ được giới thiệu, đối tác mời đích danh nên yêu cầu giảm 20% và quan hệ đối tác tăng.",
+  "o": [
+   "yes|Nhận dự án",
+   "no|Từ chối"
+  ]
+ },
+ "intro": {
+  "ic": "💌",
+  "t": "Việt Hoàng giới thiệu một gương mặt mới",
+  "d": "Việt Hoàng giới thiệu Ứng Viên Test (bạn thời cấp ba), năng khiếu Tạp kỹ, tố chất x1: \"Bạn ấy rất chăm chỉ, em tin sẽ hợp với công ty.\" Ký hợp đồng TTS 10 tr.",
+  "o": [
+   "yes|Mời làm TTS (10 tr)",
+   "no|Bỏ qua"
+  ]
+ },
+ "paask": {
+  "ic": "🧑‍💻",
+  "t": "Việt Hoàng muốn tự chọn trợ lý cá nhân",
+  "d": "Việt Hoàng đang được quản lý theo nhóm và muốn có trợ lý riêng để lo việc cá nhân. Việt Hoàng sẽ tự chọn trong 3 ứng viên, bạn duyệt chi phí.",
+  "o": [
+   "yes|Cho tự chọn",
+   "no|Để sau"
+  ]
+ },
+ "hsM": {
+  "ic": "🩺",
+  "t": "Chuyên gia: Việt Hoàng cần nghỉ nhiều hơn",
+  "d": "BS. Test phát hiện nghệ sĩ Việt Hoàng: năng lượng chỉ còn 20, tâm trạng xuống 25. Đề xuất 3 ngày nghỉ/tuần trong 2 tuần (hiện 2 ngày). Đã gửi QL Bùi Mỹ Linh (Chăm sóc 6) cân nhắc.",
+  "o": [
+   "yes|Áp dụng ngay",
+   "no|Giữ lịch hiện tại",
+   "mgr|Để QL Bùi Mỹ Linh cân nhắc"
+  ]
+ },
+ "hsNoM": {
+  "ic": "🩺",
+  "t": "Chuyên gia: An Khang cần nghỉ nhiều hơn",
+  "d": "BS. Test phát hiện TTS An Khang: mệt. Đề xuất 2 ngày nghỉ/tuần trong 2 tuần (hiện 2 ngày). Chưa có quản lý, cần Giám đốc quyết định.",
+  "o": [
+   "yes|Áp dụng",
+   "no|Giữ lịch hiện tại"
+  ]
+ },
+ "md": {
+  "ic": "🎼",
+  "t": "GĐ Âm nhạc sáng tác «Bài Test» cho Test Group",
+  "d": "GĐ Âm nhạc tự sáng tác một bài Dễ thương 🔥, chất lượng 70/100, hạng A. \"Chất lượng cao, vượt mặt bằng chung thị trường.\" Đề xuất nghệ sĩ hợp: Test Group 62% (đang bận), Test Group 50% (đang bận), Test Group 42% (đang bận).",
+  "o": [
+   "give|Giao cho Test Group",
+   "no|Không dùng",
+   "keep|Lưu vào kho bài"
+  ]
+ },
+ "xcollab": {
+  "ic": "🎙️",
+  "t": "Tony Lý (Galaxy Star) mời Việt Hoàng hợp tác",
+  "d": "Tony Lý của Galaxy Star (45.5K fan, quan hệ -10) mời Việt Hoàng góp giọng một ca khúc. Mất 1 tuần, tiếp cận fan của công ty bạn, nhận thù lao.",
+  "o": [
+   "yes|Nhận lời",
+   "no|Từ chối"
+  ]
+ },
+ "xrumor": {
+  "ic": "📸",
+  "t": "Tin đồn hẹn hò: Việt Hoàng & Tony Lý",
+  "d": "Báo lá cải đăng ảnh Việt Hoàng đi ăn cùng Tony Lý (Galaxy Star). Fan hai bên đang tranh cãi.",
+  "o": [
+   "deny|Phủ nhận",
+   "admit|Xác nhận là bạn thân",
+   "quiet|Im lặng"
+  ]
+ },
+ "amgr": {
+  "ic": "😮‍💨",
+  "t": "Việt Hoàng than phiền về lịch của QL Bùi Mỹ Linh",
+  "d": "Việt Hoàng (năng lượng 0, tập 5/7 ngày) nói với Giám đốc rằng QL Bùi Mỹ Linh xếp lịch quá dày.",
+  "o": [
+   "rest|Yêu cầu QL giảm lịch",
+   "back|Ủng hộ quản lý"
+  ]
+ },
+ "mmclash": {
+  "ic": "⚡",
+  "t": "QL Bùi Mỹ Linh và QL Bùi Mỹ Linh tranh cãi",
+  "d": "Hai quản lý tranh lịch phòng tập cho nghệ sĩ mình phụ trách. Quan hệ hiện tại 22.",
+  "o": [
+   "meet|Họp hòa giải (5 tr)",
+   "x|Đứng về phía Bùi Mỹ Linh",
+   "y|Đứng về phía Bùi Mỹ Linh",
+   "none|Để họ tự giải quyết"
+  ]
+ },
+ "mmcoach": {
+  "ic": "👔",
+  "t": "QL Bùi Mỹ Linh đề nghị kèm cặp QL Bùi Mỹ Linh",
+  "d": "Bùi Mỹ Linh (cấp 3) muốn nhận Bùi Mỹ Linh (cấp 1) làm cấp dưới. Cấp dưới được cộng 20% kỹ năng cấp trên, cấp trên nhận một nửa kinh nghiệm cấp dưới.",
+  "o": [
+   "yes|Đồng ý",
+   "no|Không"
+  ]
+ },
+ "goneA": null,
+ "unknown": null,
+ "sheet": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card\"><b>🙋 Việt Hoàng muốn dẫn dắt TTS An Khang</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Việt Hoàng tự đề xuất làm tiền bối cho An Khang: \"Em thấy An Khang còn yếu Nhảy (17 so với 43 của em), em muốn kèm thêm.\" Hai người vốn thân thiết. Tập nhanh hơn tối đa +40%, tiền bối tốn chút năng lượng mỗi tuần. Đang dẫn dắt 0/2.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(528,'yes')\">Đồng ý</button><button class=\"btn sm \" onclick=\"resolveEv(528,'no')\">Từ chối</button></div></div><div class=\"card\"><b>💌 Việt Hoàng giới thiệu một gương mặt mới</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Việt Hoàng giới thiệu Ứng Viên Test (bạn thời cấp ba), năng khiếu Tạp kỹ, tố chất x1: \"Bạn ấy rất chăm chỉ, em tin sẽ hợp với công ty.\" Ký hợp đồng TTS 10 tr.</div><div class=\"card\" style=\"background:var(--bg)\"><div class=\"row\"><div class=\"chibi mini\"><div class=\"cw\"><div class=\"cb\"><div class=\"shd\"></div><div class=\"hb\" style=\"background:#5a3825\"></div><div class=\"lg l\"></div><div class=\"lg r\"></div><div class=\"sk\" style=\"background:#4aa3df\"></div><div class=\"ar l\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"ar r\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"bd\" style=\"background:#4aa3df\"><i></i></div><div class=\"hd\" style=\"background:#ffe0c7\"><div class=\"hf\" style=\"background:#5a3825\"></div><i class=\"e l\"></i><i class=\"e r\"></i><i class=\"bl l\"></i><i class=\"bl r\"></i><i class=\"mo\"></i></div></div></div></div><div class=\"small\"><b>Ứng Viên Test</b> · Nữ, 20 · năng khiếu Tạp kỹ · tố chất x1</div></div><div class=\"bars\"><span>Vocal</span><div class=\"bar\"><i style=\"width:14%\"></i></div><b>14</b><span>Nhảy</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Rap</span><div class=\"bar\"><i style=\"width:30%\"></i></div><b>30</b><span>Diễn xuất</span><div class=\"bar\"><i style=\"width:28%\"></i></div><b>28</b><span>Tạp kỹ</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Visual</span><div class=\"bar\"><i style=\"width:15%\"></i></div><b>15</b><span>Thể lực</span><div class=\"bar\"><i style=\"width:31%\"></i></div><b>31</b></div></div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(529,'yes')\">Mời làm TTS (10 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(529,'no')\">Bỏ qua</button></div></div><div class=\"card\"><b>🩺 Chuyên gia: Việt Hoàng cần nghỉ nhiều hơn</b><div class=\"small muted\" style=\"margin:4px 0 8px\">BS. Test phát hiện nghệ sĩ Việt Hoàng: năng lượng chỉ còn 20, tâm trạng xuống 25. Đề xuất 3 ngày nghỉ/tuần trong 2 tuần (hiện 2 ngày). Đã gửi QL Bùi Mỹ Linh (Chăm sóc 6) cân nhắc.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(530,'yes')\">Áp dụng ngay</button><button class=\"btn sm \" onclick=\"resolveEv(530,'no')\">Giữ lịch hiện tại</button><button class=\"btn sm \" onclick=\"resolveEv(530,'mgr')\">Để QL Bùi Mỹ Linh cân nhắc</button></div></div><div class=\"card\"><b>🎼 GĐ Âm nhạc sáng tác «Bài Test» cho Test Group</b><div class=\"small muted\" style=\"margin:4px 0 8px\">GĐ Âm nhạc tự sáng tác một bài Dễ thương 🔥, chất lượng 70/100, hạng A. \"Chất lượng cao, vượt mặt bằng chung thị trường.\" Đề xuất nghệ sĩ hợp: Test Group 62% (đang bận), Test Group 50% (đang bận), Test Group 42% (đang bận).</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(531,'give')\">Giao cho Test Group</button><button class=\"btn sm \" onclick=\"resolveEv(531,'no')\">Không dùng</button><button class=\"btn sm \" onclick=\"resolveEv(531,'keep')\">Lưu vào kho bài</button></div></div><div class=\"card\"><b>⚡ QL Bùi Mỹ Linh và QL Bùi Mỹ Linh tranh cãi</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hai quản lý tranh lịch phòng tập cho nghệ sĩ mình phụ trách. Quan hệ hiện tại 22.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(532,'meet')\">Họp hòa giải (5 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(532,'x')\">Đứng về phía Bùi Mỹ Linh</button><button class=\"btn sm \" onclick=\"resolveEv(532,'y')\">Đứng về phía Bùi Mỹ Linh</button><button class=\"btn sm \" onclick=\"resolveEv(532,'none')\">Để họ tự giải quyết</button></div></div></div>"
+}

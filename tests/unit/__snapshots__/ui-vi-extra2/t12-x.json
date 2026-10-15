@@ -1,0 +1,79 @@
+{
+ "asst": {
+  "ic": "🧑‍💻",
+  "t": "QL Bùi Mỹ Linh đề xuất tuyển trợ lý",
+  "d": "Bùi Mỹ Linh muốn tuyển trợ lý Trợ Lý Z chuyên Đàm phán để san sẻ việc. Kỹ năng Đàm phán của quản lý 1 → 3 (giúp mọi nghệ sĩ QL phụ trách). Phí tuyển 16 tr, lương 2 tr/tuần.",
+  "o": [
+   "yes|Tuyển (16 tr)",
+   "no|Từ chối"
+  ]
+ },
+ "scout": {
+  "ic": "🔎",
+  "t": "QL Bùi Mỹ Linh phát hiện một tài năng",
+  "d": "Khi đi cùng Việt Hoàng ở quán cà phê gần phim trường, Bùi Mỹ Linh để ý Ứng Viên Test có năng khiếu Tạp kỹ nổi bật, tố chất x1.2. Đề xuất mời về làm thực tập sinh.",
+  "o": [
+   "yes|Mời làm TTS (10 tr)",
+   "no|Bỏ qua"
+  ]
+ },
+ "scoutNoA": {
+  "ic": "🔎",
+  "t": "QL Bùi Mỹ Linh phát hiện một tài năng",
+  "d": "Khi đi cùng nghệ sĩ trên chuyến tàu đi quay ngoại cảnh, Bùi Mỹ Linh để ý Ứng Viên Test có năng khiếu Tạp kỹ nổi bật, tố chất x1.2. Đề xuất mời về làm thực tập sinh.",
+  "o": [
+   "yes|Mời làm TTS (10 tr)",
+   "no|Bỏ qua"
+  ]
+ },
+ "mpOther": null,
+ "mpNoM": null,
+ "disbandNoMgr": {
+  "ic": "💔",
+  "t": "Nhóm Test Group đứng trước nguy cơ tan rã",
+  "d": "Lý do: mâu thuẫn nội bộ kéo dài. Hòa hợp nhóm 0, chưa có quản lý. Tạm ngừng 8 tuần giúp các thành viên hồi phục nhưng không thể ra single hay concert.",
+  "o": [
+   "fix|Hòa giải (50 tr, ~50%)",
+   "split|Chấp nhận giải tán",
+   "pause|Tạm ngừng 8 tuần"
+  ]
+ },
+ "renew": {
+  "ic": "📄",
+  "t": "Tái ký hợp đồng: Việt Hoàng",
+  "d": "Hợp đồng của Việt Hoàng hết hạn sau 4 tuần. Nếu không tái ký, nghệ sĩ sẽ rời công ty.",
+  "o": [
+   "r1|Tái ký 1 năm (phí 80 tr)",
+   "r2|Tái ký 2 năm (phí 160 tr)",
+   "r3|Tái ký 3 năm (phí 240 tr)",
+   "end|Kết thúc hợp đồng",
+   "later|Để sau"
+  ]
+ },
+ "renew13": {
+  "ic": "📄",
+  "t": "Tái ký hợp đồng: Việt Hoàng",
+  "d": "Hợp đồng của Việt Hoàng hết hạn sau 4 tuần. Nếu không tái ký, nghệ sĩ sẽ rời công ty.",
+  "o": [
+   "r1|Tái ký 1 năm (phí 100 tr)",
+   "r2|Tái ký 2 năm (phí 200 tr)",
+   "r3|Tái ký 3 năm (phí 300 tr)",
+   "end|Kết thúc hợp đồng",
+   "later|Để sau"
+  ]
+ },
+ "goneG": null,
+ "disbandMgr": {
+  "ic": "💔",
+  "t": "Nhóm Test Group đứng trước nguy cơ tan rã",
+  "d": "Lý do: các thành viên kiệt sức, tâm trạng sa sút. Hòa hợp nhóm 0, QL Bùi Mỹ Linh (Chăm sóc 6). Tạm ngừng 8 tuần giúp các thành viên hồi phục nhưng không thể ra single hay concert.",
+  "o": [
+   "fix|Hòa giải (50 tr, ~80%)",
+   "split|Chấp nhận giải tán",
+   "pause|Tạm ngừng 8 tuần"
+  ]
+ },
+ "cand": "<div class=\"card\" style=\"background:var(--bg)\"><div class=\"row\"><div class=\"chibi mini\"><div class=\"cw\"><div class=\"cb\"><div class=\"shd\"></div><div class=\"hb\" style=\"background:#5a3825\"></div><div class=\"lg l\"></div><div class=\"lg r\"></div><div class=\"sk\" style=\"background:#4aa3df\"></div><div class=\"ar l\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"ar r\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"bd\" style=\"background:#4aa3df\"><i></i></div><div class=\"hd\" style=\"background:#ffe0c7\"><div class=\"hf\" style=\"background:#5a3825\"></div><i class=\"e l\"></i><i class=\"e r\"></i><i class=\"bl l\"></i><i class=\"bl r\"></i><i class=\"mo\"></i></div></div></div></div><div class=\"small\"><b>Ứng Viên Test</b> · Nữ, 20 · năng khiếu Tạp kỹ · tố chất x1.2</div></div><div class=\"bars\"><span>Vocal</span><div class=\"bar\"><i style=\"width:14%\"></i></div><b>14</b><span>Nhảy</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Rap</span><div class=\"bar\"><i style=\"width:30%\"></i></div><b>30</b><span>Diễn xuất</span><div class=\"bar\"><i style=\"width:28%\"></i></div><b>28</b><span>Tạp kỹ</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Visual</span><div class=\"bar\"><i style=\"width:15%\"></i></div><b>15</b><span>Thể lực</span><div class=\"bar\"><i style=\"width:31%\"></i></div><b>31</b></div></div>",
+ "candM": "<div class=\"card\" style=\"background:var(--bg)\"><div class=\"row\"><div class=\"chibi mini\"><div class=\"cw\"><div class=\"cb\"><div class=\"shd\"></div><div class=\"lg l\"></div><div class=\"lg r\"></div><div class=\"ar l\" style=\"--o:#16b98f;--s:#eebf98\"></div><div class=\"ar r\" style=\"--o:#16b98f;--s:#eebf98\"></div><div class=\"bd\" style=\"background:#16b98f\"><i></i></div><div class=\"hd\" style=\"background:#eebf98\"><div class=\"hf\" style=\"background:#f3d27a\"></div><i class=\"e l\"></i><i class=\"e r\"></i><i class=\"bl l\"></i><i class=\"bl r\"></i><i class=\"mo\"></i></div></div></div></div><div class=\"small\"><b>Ứng Viên Nam</b> · Nam, 18 · năng khiếu Diễn xuất · tố chất x0.97</div></div><div class=\"bars\"><span>Vocal</span><div class=\"bar\"><i style=\"width:13%\"></i></div><b>13</b><span>Nhảy</span><div class=\"bar\"><i style=\"width:10%\"></i></div><b>10</b><span>Rap</span><div class=\"bar\"><i style=\"width:12%\"></i></div><b>12</b><span>Diễn xuất</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Tạp kỹ</span><div class=\"bar\"><i style=\"width:8%\"></i></div><b>8</b><span>Visual</span><div class=\"bar\"><i style=\"width:25%\"></i></div><b>25</b><span>Thể lực</span><div class=\"bar\"><i style=\"width:18%\"></i></div><b>18</b></div></div>",
+ "sheet": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card\"><b>🔎 QL Bùi Mỹ Linh phát hiện một tài năng</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Khi đi cùng Việt Hoàng khi xem một buổi diễn đường phố, Bùi Mỹ Linh để ý Ứng Viên Test có năng khiếu Tạp kỹ nổi bật, tố chất x1.2. Đề xuất mời về làm thực tập sinh.</div><div class=\"card\" style=\"background:var(--bg)\"><div class=\"row\"><div class=\"chibi mini\"><div class=\"cw\"><div class=\"cb\"><div class=\"shd\"></div><div class=\"hb\" style=\"background:#5a3825\"></div><div class=\"lg l\"></div><div class=\"lg r\"></div><div class=\"sk\" style=\"background:#4aa3df\"></div><div class=\"ar l\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"ar r\" style=\"--o:#4aa3df;--s:#ffe0c7\"></div><div class=\"bd\" style=\"background:#4aa3df\"><i></i></div><div class=\"hd\" style=\"background:#ffe0c7\"><div class=\"hf\" style=\"background:#5a3825\"></div><i class=\"e l\"></i><i class=\"e r\"></i><i class=\"bl l\"></i><i class=\"bl r\"></i><i class=\"mo\"></i></div></div></div></div><div class=\"small\"><b>Ứng Viên Test</b> · Nữ, 20 · năng khiếu Tạp kỹ · tố chất x1.2</div></div><div class=\"bars\"><span>Vocal</span><div class=\"bar\"><i style=\"width:14%\"></i></div><b>14</b><span>Nhảy</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Rap</span><div class=\"bar\"><i style=\"width:30%\"></i></div><b>30</b><span>Diễn xuất</span><div class=\"bar\"><i style=\"width:28%\"></i></div><b>28</b><span>Tạp kỹ</span><div class=\"bar\"><i style=\"width:29%\"></i></div><b>29</b><span>Visual</span><div class=\"bar\"><i style=\"width:15%\"></i></div><b>15</b><span>Thể lực</span><div class=\"bar\"><i style=\"width:31%\"></i></div><b>31</b></div></div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(528,'yes')\">Mời làm TTS (10 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(528,'no')\">Bỏ qua</button></div></div><div class=\"card\"><b>🧑‍💻 QL Bùi Mỹ Linh đề xuất tuyển trợ lý</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Bùi Mỹ Linh muốn tuyển trợ lý Trợ Lý Z chuyên Truyền thông để san sẻ việc. Kỹ năng Truyền thông của quản lý 8 → 9 (giúp mọi nghệ sĩ QL phụ trách). Phí tuyển 8 tr, lương 1 tr/tuần.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(529,'yes')\">Tuyển (8 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(529,'no')\">Từ chối</button></div></div><div class=\"card\"><b>💔 Nhóm Test Group đứng trước nguy cơ tan rã</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Lý do: bất đồng về định hướng âm nhạc. Hòa hợp nhóm 0, QL Bùi Mỹ Linh (Chăm sóc 6). Tạm ngừng 8 tuần giúp các thành viên hồi phục nhưng không thể ra single hay concert.</div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(530,'fix')\">Hòa giải (50 tr, ~80%)</button><button class=\"btn sm warn\" onclick=\"resolveEv(530,'split')\">Chấp nhận giải tán</button><button class=\"btn sm \" onclick=\"resolveEv(530,'pause')\">Tạm ngừng 8 tuần</button></div></div><div class=\"card\"><b>📄 Tái ký hợp đồng: Việt Hoàng</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Hợp đồng của Việt Hoàng hết hạn sau 4 tuần. Nếu không tái ký, nghệ sĩ sẽ rời công ty.</div><div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag m\">Nên tái ký</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:86%\"></i></div><div class=\"small muted\">Điểm 86/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 991 tr so với lương đã trả ~192 tr (x5.16)<br>💗 Fan +129.8K trong hợp đồng (+1710%)<br>⭐ Danh tiếng 37/100<br>📋 Đánh giá gần nhất: Đạt<br>🚨 Đang dính scandal</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>25 tr</b>/tuần (hiện 4 tr) · Khả năng đồng ý ~<b>97%</b> · Phí ký 100 tr/năm · Hết hạn sau <b>4</b> tuần<br>⚠️ Lần đàm phán thứ hai, nghệ sĩ đòi cao hơn 30%.</div></div><div class=\"row\"><button class=\"btn sm pri\" onclick=\"resolveEv(531,'r1')\">Tái ký 1 năm (phí 100 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(531,'r2')\">Tái ký 2 năm (phí 200 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(531,'r3')\">Tái ký 3 năm (phí 300 tr)</button><button class=\"btn sm warn\" onclick=\"resolveEv(531,'end')\">Kết thúc hợp đồng</button><button class=\"btn sm \" onclick=\"resolveEv(531,'later')\">Để sau</button></div></div></div>"
+}

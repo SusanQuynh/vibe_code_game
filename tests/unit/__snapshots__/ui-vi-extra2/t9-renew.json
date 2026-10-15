@@ -1,0 +1,183 @@
+{
+ "plain": [
+  {
+   "sc": 51,
+   "rec": [
+    "Cân nhắc kỹ",
+    "s"
+   ],
+   "L": [
+    "💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)",
+    "💗 Fan +129.8K trong hợp đồng (+1710%)",
+    "⭐ Danh tiếng 37/100"
+   ],
+   "dem": 20000000,
+   "p": 0.75
+  },
+  {
+   "sc": 51,
+   "rec": [
+    "Cân nhắc kỹ",
+    "s"
+   ],
+   "L": [
+    "💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)",
+    "💗 Fan +129.8K trong hợp đồng (+1710%)",
+    "⭐ Danh tiếng 37/100"
+   ],
+   "dem": 25000000,
+   "p": 0.97
+  }
+ ],
+ "block": "<div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag s\">Cân nhắc kỹ</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:51%\"></i></div><div class=\"small muted\">Điểm 51/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan +129.8K trong hợp đồng (+1710%)<br>⭐ Danh tiếng 37/100</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>20 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>75%</b> · Phí ký 80 tr/năm · Hết hạn sau <b>6</b> tuần</div></div>",
+ "block13": "<div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag s\">Cân nhắc kỹ</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:51%\"></i></div><div class=\"small muted\">Điểm 51/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan +129.8K trong hợp đồng (+1710%)<br>⭐ Danh tiếng 37/100</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>25 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>97%</b> · Phí ký 100 tr/năm · Hết hạn sau <b>6</b> tuần<br>⚠️ Lần đàm phán thứ hai, nghệ sĩ đòi cao hơn 30%.</div></div>",
+ "none": "",
+ "great": {
+  "ev": {
+   "sc": 100,
+   "rec": [
+    "Nên tái ký",
+    "m"
+   ],
+   "L": [
+    "💰 Doanh thu mang về 5 tỷ so với lương đã trả ~96 tr (x52.08)",
+    "💗 Fan +504.5K trong hợp đồng (+6647%)",
+    "⭐ Danh tiếng 72/100",
+    "📋 Đánh giá gần nhất: Xuất sắc"
+   ],
+   "dem": 37000000,
+   "p": 0.65
+  },
+  "blk": "<div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag m\">Nên tái ký</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:100%\"></i></div><div class=\"small muted\">Điểm 100/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 5 tỷ so với lương đã trả ~96 tr (x52.08)<br>💗 Fan +504.5K trong hợp đồng (+6647%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Xuất sắc</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>37 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>65%</b> · Phí ký 148 tr/năm · Hết hạn sau <b>6</b> tuần</div></div>",
+  "opts": [
+   {
+    "k": "r1",
+    "l": "Tái ký 1 năm (phí 148 tr)"
+   },
+   {
+    "k": "r2",
+    "l": "Tái ký 2 năm (phí 296 tr)"
+   },
+   {
+    "k": "r3",
+    "l": "Tái ký 3 năm (phí 444 tr)"
+   },
+   {
+    "k": "end",
+    "l": "Kết thúc hợp đồng"
+   },
+   {
+    "k": "later",
+    "l": "Để sau"
+   }
+  ]
+ },
+ "good-evFail": {
+  "ev": {
+   "sc": 97,
+   "rec": [
+    "Nên tái ký",
+    "m"
+   ],
+   "L": [
+    "💰 Doanh thu mang về 5 tỷ so với lương đã trả ~96 tr (x52.08)",
+    "💗 Fan +504.5K trong hợp đồng (+6647%)",
+    "⭐ Danh tiếng 72/100",
+    "📋 Đánh giá gần nhất: Đạt (trượt 2 lần liên tiếp)"
+   ],
+   "dem": 37000000,
+   "p": 0.65
+  },
+  "blk": "<div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag m\">Nên tái ký</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:97%\"></i></div><div class=\"small muted\">Điểm 97/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 5 tỷ so với lương đã trả ~96 tr (x52.08)<br>💗 Fan +504.5K trong hợp đồng (+6647%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Đạt (trượt 2 lần liên tiếp)</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>37 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>65%</b> · Phí ký 148 tr/năm · Hết hạn sau <b>6</b> tuần</div></div>",
+  "opts": [
+   {
+    "k": "r1",
+    "l": "Tái ký 1 năm (phí 148 tr)"
+   },
+   {
+    "k": "r2",
+    "l": "Tái ký 2 năm (phí 296 tr)"
+   },
+   {
+    "k": "r3",
+    "l": "Tái ký 3 năm (phí 444 tr)"
+   },
+   {
+    "k": "end",
+    "l": "Kết thúc hợp đồng"
+   },
+   {
+    "k": "later",
+    "l": "Để sau"
+   }
+  ]
+ },
+ "bad": {
+  "ev": {
+   "sc": 3,
+   "rec": [
+    "Nên kết thúc hợp đồng",
+    "r"
+   ],
+   "L": [
+    "💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)",
+    "💗 Fan -612107 trong hợp đồng (-54%)",
+    "⭐ Danh tiếng 72/100",
+    "📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)",
+    "🚨 Đang dính scandal",
+    "🙁 Tâm trạng thấp (20), dễ từ chối tái ký"
+   ],
+   "dem": 37000000,
+   "p": 0.15
+  },
+  "blk": "<div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag r\">Nên kết thúc hợp đồng</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:3%\"></i></div><div class=\"small muted\">Điểm 3/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan -612107 trong hợp đồng (-54%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)<br>🚨 Đang dính scandal<br>🙁 Tâm trạng thấp (20), dễ từ chối tái ký</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>37 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>15%</b> · Phí ký 148 tr/năm · Hết hạn sau <b>6</b> tuần</div></div>",
+  "opts": [
+   {
+    "k": "r1",
+    "l": "Tái ký 1 năm (phí 148 tr)"
+   },
+   {
+    "k": "r2",
+    "l": "Tái ký 2 năm (phí 296 tr)"
+   },
+   {
+    "k": "r3",
+    "l": "Tái ký 3 năm (phí 444 tr)"
+   },
+   {
+    "k": "end",
+    "l": "Kết thúc hợp đồng"
+   },
+   {
+    "k": "later",
+    "l": "Để sau"
+   }
+  ]
+ },
+ "optsSix": [
+  {
+   "k": "r1",
+   "l": "Tái ký 1 năm (phí 192 tr)"
+  },
+  {
+   "k": "r2",
+   "l": "Tái ký 2 năm (phí 384 tr)"
+  },
+  {
+   "k": "r3",
+   "l": "Tái ký 3 năm (phí 576 tr)"
+  },
+  {
+   "k": "end",
+   "l": "Kết thúc hợp đồng"
+  },
+  {
+   "k": "later",
+   "l": "Để sau"
+  }
+ ],
+ "view": "<div class=\"panel\" style=\"--hc:var(--r-hr)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>📄 Hợp đồng: Việt Hoàng</h2><div class=\"sub\"><span class=\"tag v\">👥 Test Group</span><span class=\"tag m\">Diễn viên</span><span class=\"tag r\">📄 HĐ còn 6t</span> · Lương 2 tr/tuần</div><div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag r\">Nên kết thúc hợp đồng</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:13%\"></i></div><div class=\"small muted\">Điểm 13/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan -612107 trong hợp đồng (-54%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>37 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>57%</b> · Phí ký 148 tr/năm · Hết hạn sau <b>6</b> tuần</div></div>\n  <div class=\"row\"><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r1',1,1)){view(()=>RV.hr());act()}\">Tái ký 1 năm (phí 148 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r2',1,1)){view(()=>RV.hr());act()}\">Tái ký 2 năm (phí 296 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r3',1,1)){view(()=>RV.hr());act()}\">Tái ký 3 năm (phí 444 tr)</button><button class=\"btn sm warn\" onclick=\"if(renewDo(8,'end',1,1)){view(()=>RV.hr());act()}\">Kết thúc hợp đồng</button></div>\n  <button class=\"btn\" style=\"margin-top:10px\" onclick=\"openRoom('hr')\">← Phòng Nhân sự</button></div>",
+ "viewNo": "<div class=\"panel\" style=\"--hc:var(--r-hr)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>📄 Hợp đồng: Việt Hoàng</h2><div class=\"sub\"><span class=\"tag v\">👥 Test Group</span><span class=\"tag m\">Diễn viên</span><span class=\"tag r\">📄 HĐ còn 6t</span> · Lương 2 tr/tuần</div><div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag r\">Nên kết thúc hợp đồng</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:13%\"></i></div><div class=\"small muted\">Điểm 13/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan -612107 trong hợp đồng (-54%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>37 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>57%</b> · Phí ký 148 tr/năm · Hết hạn sau <b>6</b> tuần</div></div><div class=\"card small bad\">Đã quyết định không tái ký. Vẫn có thể đề nghị lại bên dưới.</div>\n  <div class=\"row\"><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r1',1,1)){view(()=>RV.hr());act()}\">Tái ký 1 năm (phí 148 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r2',1,1)){view(()=>RV.hr());act()}\">Tái ký 2 năm (phí 296 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r3',1,1)){view(()=>RV.hr());act()}\">Tái ký 3 năm (phí 444 tr)</button><button class=\"btn sm warn\" onclick=\"if(renewDo(8,'end',1,1)){view(()=>RV.hr());act()}\">Kết thúc hợp đồng</button></div>\n  <button class=\"btn\" style=\"margin-top:10px\" onclick=\"openRoom('hr')\">← Phòng Nhân sự</button></div>",
+ "view13": "<div class=\"panel\" style=\"--hc:var(--r-hr)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>📄 Hợp đồng: Việt Hoàng</h2><div class=\"sub\"><span class=\"tag v\">👥 Test Group</span><span class=\"tag m\">Diễn viên</span><span class=\"tag r\">📄 HĐ còn 6t</span> · Lương 2 tr/tuần</div><div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag r\">Nên kết thúc hợp đồng</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:13%\"></i></div><div class=\"small muted\">Điểm 13/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan -612107 trong hợp đồng (-54%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>48 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>82%</b> · Phí ký 192 tr/năm · Hết hạn sau <b>6</b> tuần<br>⚠️ Lần đàm phán thứ hai, nghệ sĩ đòi cao hơn 30%.</div></div>\n  <div class=\"row\"><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r1',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 1 năm (phí 192 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r2',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 2 năm (phí 384 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r3',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 3 năm (phí 576 tr)</button><button class=\"btn sm warn\" onclick=\"if(renewDo(8,'end',1.3,1)){view(()=>RV.hr());act()}\">Kết thúc hợp đồng</button></div>\n  <button class=\"btn\" style=\"margin-top:10px\" onclick=\"openRoom('hr')\">← Phòng Nhân sự</button></div>",
+ "missing": "<div class=\"panel\" style=\"--hc:var(--r-hr)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>📄 Hợp đồng: Việt Hoàng</h2><div class=\"sub\"><span class=\"tag v\">👥 Test Group</span><span class=\"tag m\">Diễn viên</span><span class=\"tag r\">📄 HĐ còn 6t</span> · Lương 2 tr/tuần</div><div class=\"card\" style=\"background:var(--bg);margin-bottom:8px\"><div class=\"row\"><b>📊 Đánh giá tái ký</b><span class=\"sp\"></span><span class=\"tag r\">Nên kết thúc hợp đồng</span></div>\n  <div class=\"bar\" style=\"margin:4px 0\"><i style=\"width:13%\"></i></div><div class=\"small muted\">Điểm 13/100 (≥58 nên tái ký, &lt;40 nên kết thúc)</div>\n  <div class=\"small\" style=\"margin-top:4px\">💰 Doanh thu mang về 0k so với lương đã trả ~96 tr (x0.00)<br>💗 Fan -612107 trong hợp đồng (-54%)<br>⭐ Danh tiếng 72/100<br>📋 Đánh giá gần nhất: Không đạt (trượt 3 lần liên tiếp)</div>\n  <div class=\"small\" style=\"margin-top:6px\">Nghệ sĩ đòi lương <b>48 tr</b>/tuần (hiện 2 tr) · Khả năng đồng ý ~<b>82%</b> · Phí ký 192 tr/năm · Hết hạn sau <b>6</b> tuần<br>⚠️ Lần đàm phán thứ hai, nghệ sĩ đòi cao hơn 30%.</div></div>\n  <div class=\"row\"><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r1',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 1 năm (phí 192 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r2',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 2 năm (phí 384 tr)</button><button class=\"btn sm pri\" onclick=\"if(renewDo(8,'r3',1.3,1)){view(()=>RV.hr());act()}\">Tái ký 3 năm (phí 576 tr)</button><button class=\"btn sm warn\" onclick=\"if(renewDo(8,'end',1.3,1)){view(()=>RV.hr());act()}\">Kết thúc hợp đồng</button></div>\n  <button class=\"btn\" style=\"margin-top:10px\" onclick=\"openRoom('hr')\">← Phòng Nhân sự</button></div>"
+}

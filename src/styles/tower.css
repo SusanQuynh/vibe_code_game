@@ -1,0 +1,59 @@
+/* ===== the tower ===== */
+.bld{margin-top:18px;position:relative;border-radius:20px 20px 6px 6px;padding:18px 14px 0;overflow:hidden;
+  background:radial-gradient(ellipse 60% 45% at 85% 0%,rgba(164,151,214,.16),transparent 70%),linear-gradient(180deg,#120d1a 0%,#0d0a0f 75%);
+  border:1px solid var(--line);box-shadow:var(--shadow)}
+.stars{position:absolute;inset:0;opacity:.75;pointer-events:none;background-image:radial-gradient(1.2px 1.2px at 8% 12%,#fff,transparent),radial-gradient(1px 1px at 28% 6%,#fff,transparent),radial-gradient(1.2px 1.2px at 52% 14%,#fff,transparent),radial-gradient(1px 1px at 72% 4%,#fff,transparent),radial-gradient(1.2px 1.2px at 92% 22%,#fff,transparent),radial-gradient(1px 1px at 18% 22%,#fff,transparent),radial-gradient(1px 1px at 62% 24%,#fff,transparent),radial-gradient(1px 1px at 40% 3%,#fff,transparent)}
+.sun{position:absolute;top:14px;right:22px;width:30px;height:30px;border-radius:50%;background:#efe6da;box-shadow:inset -8px -3px 0 #c9bcae,0 0 30px 6px rgba(239,230,218,.18)}
+.cloud{position:absolute;height:10px;border-radius:999px;background:rgba(164,151,214,.10);animation:drift 90s linear infinite}
+.cloud::before{content:"";position:absolute;left:22%;top:-7px;width:48%;height:16px;border-radius:50%;background:inherit}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(900px)}}
+
+.roof{position:relative;z-index:2;margin:0 6px;height:92px}
+.bill{position:absolute;left:0;right:0;bottom:0;height:78px;border-radius:10px;background:#09070b;border:1px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  box-shadow:0 0 0 4px #09070b,0 0 0 5px var(--line),0 20px 40px -20px rgba(242,85,127,.45)}
+.bill::before{content:"";position:absolute;inset:6px;border-radius:6px;border:1px solid rgba(242,85,127,.35);box-shadow:inset 0 0 18px rgba(242,85,127,.12);pointer-events:none}
+.sign{font:italic 600 36px/0.9 var(--f-disp);letter-spacing:-.02em;color:var(--ink);text-shadow:0 0 18px rgba(242,85,127,.55),0 0 2px rgba(255,255,255,.4);animation:neon 9s infinite}
+.sign em{font-style:normal;font:500 11px var(--f-mono);letter-spacing:.3em;text-transform:uppercase;color:var(--accent);text-shadow:none;vertical-align:middle;margin-left:6px}
+@keyframes neon{0%,92%,100%{opacity:1}93%{opacity:.55}94%{opacity:1}96%{opacity:.7}}
+.bill small{font:400 10.5px var(--f-mono);letter-spacing:.08em;color:var(--muted)}
+.ant{position:absolute;bottom:83px;width:2px;height:12px;background:var(--line2)}
+.ant::after{content:"";position:absolute;top:-5px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:blinkr 1.8s infinite}
+@keyframes blinkr{50%{opacity:.2}}
+
+.facade{position:relative;margin-top:14px;display:flex;flex-direction:column;gap:16px;padding:16px 10px;background:#0a080c;border-inline:1px solid var(--line);
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 32px)}
+.shaft{position:absolute;top:16px;bottom:16px;left:50%;width:6px;margin-left:-3px;background:#050406;border-radius:3px;z-index:1}
+.car{position:absolute;left:0;width:6px;height:24px;border-radius:2px;background:#f6d79a;box-shadow:0 0 12px rgba(246,215,154,.7);animation:lift 24s ease-in-out infinite}
+@keyframes lift{0%,8%{top:90%}22%,32%{top:1%}48%,58%{top:52%}72%,80%{top:20%}94%,100%{top:90%}}
+.floor{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;position:relative;z-index:2}
+.fno{position:absolute;left:50%;top:-13px;transform:translateX(-50%);z-index:5;background:#0a080c;color:var(--muted);font:500 9.5px/1.6 var(--f-mono);letter-spacing:.08em;padding:0 5px;border:1px solid var(--line2);border-radius:4px}
+.room{position:relative;height:146px;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.06);padding:0;text-align:left;width:100%;
+  background:radial-gradient(ellipse 70% 85% at 50% -15%,rgba(255,236,214,.16),transparent 62%),var(--rc);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 20px -12px rgba(0,0,0,.9);transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s}
+.room::before{content:"";position:absolute;inset:0 0 20px 0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 14px);pointer-events:none}
+.room::after{content:"";position:absolute;left:0;right:0;bottom:0;height:20px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.10) 0 1px,transparent 1px),linear-gradient(180deg,#221a26,#141016)}
+.room:hover{border-color:rgba(242,85,127,.45);transform:translateY(-1px)}
+.room .rl{position:absolute;top:7px;left:7px;z-index:4;display:inline-flex;gap:5px;align-items:center;background:var(--plate);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:2px 7px 2px 4px;font:500 11.5px/1.35 var(--f-body);color:var(--ink);max-width:calc(100% - 14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room .ri{font-size:12px}
+.room .badge,.dock .badge{position:absolute;background:var(--bad);color:var(--on-accent);font:600 10.5px/1.6 var(--f-mono);border-radius:5px;padding:0 6px;z-index:5}
+.room .badge{right:7px;top:34px}
+.pp{position:absolute;pointer-events:none;z-index:1;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45)) saturate(.9)}
+.win{position:absolute;top:32px;width:30px;height:36px;border-radius:4px;background:linear-gradient(#1f2b52,#45366b);box-shadow:inset 0 0 0 2px rgba(255,255,255,.18),inset 15px 0 0 -14px rgba(255,255,255,.2),0 0 18px rgba(120,110,200,.25);pointer-events:none}
+.desk{position:absolute;bottom:20px;height:15px;background:linear-gradient(#5a4436,#3e2e25);border-radius:3px 3px 0 0;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.desk::before,.desk::after{content:"";position:absolute;bottom:-2px;width:3px;height:3px;background:#2a1f19}.desk::before{left:4px}.desk::after{right:4px}
+.mirror{position:absolute;top:30px;left:6px;right:6px;bottom:28px;background:linear-gradient(115deg,rgba(255,255,255,.16),rgba(255,255,255,.03) 35%,rgba(255,255,255,.12) 55%,rgba(255,255,255,.02) 75%);border:1px solid rgba(255,255,255,.22);border-radius:3px;pointer-events:none}
+.curtain{position:absolute;top:0;bottom:20px;width:14px;background:repeating-linear-gradient(90deg,#8e1f3e 0 4px,#6a1730 4px 8px);pointer-events:none}
+.board{position:absolute;top:30px;height:32px;background:#e8e1d8;border:2px solid #6c6474;border-radius:3px;pointer-events:none;display:grid;place-items:center;font-size:15px}
+.bed{position:absolute;bottom:20px;width:44px;height:15px;background:#4c5fa3;border-radius:5px 5px 0 0;pointer-events:none;box-shadow:inset 12px 0 0 #d9d3cc}
+.booth{position:absolute;top:30px;bottom:20px;right:6px;width:40%;border:1px solid rgba(255,255,255,.3);border-bottom:0;background:rgba(120,190,230,.10);border-radius:4px 4px 0 0;pointer-events:none}
+.city{position:absolute;left:0;right:0;bottom:20px;height:60px;pointer-events:none;--c:rgba(0,0,0,.45);background:linear-gradient(var(--c),var(--c)) 4% 100%/14% 70% no-repeat,linear-gradient(var(--c),var(--c)) 20% 100%/10% 100% no-repeat,linear-gradient(var(--c),var(--c)) 38% 100%/16% 55% no-repeat,linear-gradient(var(--c),var(--c)) 62% 100%/9% 85% no-repeat,linear-gradient(var(--c),var(--c)) 78% 100%/15% 65% no-repeat,linear-gradient(var(--c),var(--c)) 96% 100%/8% 90% no-repeat}
+.fence{position:absolute;left:0;right:0;bottom:20px;height:14px;border-top:1px solid rgba(255,255,255,.35);background:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 1px,transparent 1px 12px);pointer-events:none}
+/* street + lightstick crowd */
+.ground{height:44px;margin:0 -14px;position:relative;background:linear-gradient(180deg,#151018,#0b080c);border-top:1px solid var(--line2)}
+.ground::before{content:"";position:absolute;left:0;right:0;top:9px;height:12px;
+  background:radial-gradient(circle at 50% 50%,var(--accent) 0 2px,rgba(242,85,127,.25) 3px,transparent 5px) 0 0/18px 12px repeat-x,
+             radial-gradient(circle at 50% 50%,#f6d79a 0 1.6px,transparent 3px) 9px 4px/27px 12px repeat-x;filter:blur(.2px);animation:sway 3.2s ease-in-out infinite alternate}
+.ground::after{content:"";position:absolute;left:0;right:0;top:24px;height:12px;opacity:.6;
+  background:radial-gradient(circle at 50% 50%,var(--accent) 0 1.6px,transparent 4px) 6px 0/14px 12px repeat-x,radial-gradient(circle at 50% 50%,var(--info) 0 1.4px,transparent 3.5px) 0 2px/23px 12px repeat-x;animation:sway 2.6s ease-in-out infinite alternate-reverse}
+@keyframes sway{to{transform:translateX(4px)}}

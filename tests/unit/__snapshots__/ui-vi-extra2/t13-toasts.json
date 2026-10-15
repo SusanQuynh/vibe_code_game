@@ -1,0 +1,20 @@
+{
+ "sign.money": "Không đủ 20 tr",
+ "recast.money": "Không đủ tiền",
+ "copy.notReady": "Mã chưa sẵn sàng",
+ "copy.fallback": "Hãy sao chép mã đang được chọn",
+ "copy.ok": "Đã sao chép mã",
+ "download": "Đã tải file lưu",
+ "backup.ok": "Đã sao lưu đầy đủ",
+ "backup.fail": "Không sao lưu được (hết dung lượng?)",
+ "slot.none": "Chưa có bản lưu này",
+ "slot.c": "Đã xuất bản rút gọn",
+ "slot.f": "Đã xuất bản đầy đủ",
+ "errKeys": {
+  "bad": "Mã không hợp lệ",
+  "json": "File không phải JSON hợp lệ",
+  "notsave": "Dữ liệu không phải save Starlight",
+  "trunc": "Mã không hợp lệ hoặc bị cắt cụt",
+  "importCode": "Mã không hợp lệ"
+ }
+}

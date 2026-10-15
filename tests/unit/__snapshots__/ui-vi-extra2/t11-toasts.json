@@ -1,0 +1,13 @@
+{
+ "accept.none": "Chọn ít nhất 1 nghệ sĩ",
+ "accept.max": "Dự án chỉ nhận tối đa 1 người",
+ "accept.target": "Phải có người được mời đích danh",
+ "accept.reason": "Việt Hoàng: Đang bận",
+ "accept.busy": "Việt Hoàng: Đang bận",
+ "ocPrev.max": "Tối đa 2 người",
+ "invest.money": "Không đủ tiền góp vốn",
+ "cbNow.cant": "Chưa thể comeback (bận hoặc thiếu tiền)",
+ "prop.conflict": "Cần xử lý xung đột trước",
+ "prop.gone": "Lời mời đã hết hạn",
+ "prop.bad": "Đội hình không còn phù hợp"
+}

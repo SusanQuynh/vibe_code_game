@@ -1,0 +1,1576 @@
+[
+ {
+  "k": "aw.cat.actorF"
+ },
+ {
+  "k": "aw.cat.actorM"
+ },
+ {
+  "k": "aw.cat.artist"
+ },
+ {
+  "k": "aw.cat.concert"
+ },
+ {
+  "k": "aw.cat.film"
+ },
+ {
+  "k": "aw.cat.rookie"
+ },
+ {
+  "k": "aw.cat.song"
+ },
+ {
+  "k": "aw.cat.variety"
+ },
+ {
+  "k": "aw.me"
+ },
+ {
+  "k": "aw.note.actQ"
+ },
+ {
+  "k": "aw.note.aud"
+ },
+ {
+  "k": "aw.note.bestRank"
+ },
+ {
+  "k": "aw.note.fans"
+ },
+ {
+  "k": "aw.note.fansYr"
+ },
+ {
+  "k": "aw.note.film"
+ },
+ {
+  "k": "aw.note.shows"
+ },
+ {
+  "k": "b.collab"
+ },
+ {
+  "k": "b.comp"
+ },
+ {
+  "k": "b.concert"
+ },
+ {
+  "k": "b.fanmeet",
+  "logic": true
+ },
+ {
+  "k": "b.festival"
+ },
+ {
+  "k": "b.injury"
+ },
+ {
+  "k": "b.injuryWorse"
+ },
+ {
+  "k": "b.leave"
+ },
+ {
+  "k": "b.promo"
+ },
+ {
+  "k": "b.recover"
+ },
+ {
+  "k": "b.showcase"
+ },
+ {
+  "k": "b.therapy"
+ },
+ {
+  "k": "b.write"
+ },
+ {
+  "k": "batch.fresh"
+ },
+ {
+  "k": "batch.n"
+ },
+ {
+  "k": "biz.*"
+ },
+ {
+  "k": "common.gain"
+ },
+ {
+  "k": "common.wkLbl"
+ },
+ {
+  "k": "common.wkShort"
+ },
+ {
+  "k": "common.wkYear"
+ },
+ {
+  "k": "common.wkYearSfx"
+ },
+ {
+  "k": "comp.name.d0",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d1",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d2",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d3",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d4",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d5",
+  "logic": true
+ },
+ {
+  "k": "comp.name.d6",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t0",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t1",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t2",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t3",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t4",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t5",
+  "logic": true
+ },
+ {
+  "k": "comp.name.t6",
+  "logic": true
+ },
+ {
+  "k": "concept.*"
+ },
+ {
+  "k": "debut.short"
+ },
+ {
+  "k": "debut.short.*"
+ },
+ {
+  "k": "debut.typeShort.*"
+ },
+ {
+  "k": "debut.why.*"
+ },
+ {
+  "k": "dom.*"
+ },
+ {
+  "k": "dw.enemy"
+ },
+ {
+  "k": "dw.friends"
+ },
+ {
+  "k": "dw.group"
+ },
+ {
+  "k": "dw.solo"
+ },
+ {
+  "k": "ev.r.left"
+ },
+ {
+  "k": "ev.r.poach"
+ },
+ {
+  "k": "ev.r.poachFee"
+ },
+ {
+  "k": "ev.r.stay"
+ },
+ {
+  "k": "ev.why.disband.0"
+ },
+ {
+  "k": "ev.why.disband.1"
+ },
+ {
+  "k": "ev.why.disband.2"
+ },
+ {
+  "k": "ev.why.disband.3"
+ },
+ {
+  "k": "ev.why.fire"
+ },
+ {
+  "k": "ev.why.how.0"
+ },
+ {
+  "k": "ev.why.how.1"
+ },
+ {
+  "k": "ev.why.how.2"
+ },
+ {
+  "k": "ev.why.how.3"
+ },
+ {
+  "k": "ev.why.how.4"
+ },
+ {
+  "k": "ev.why.how.5"
+ },
+ {
+  "k": "ev.why.mm.0"
+ },
+ {
+  "k": "ev.why.mm.1"
+ },
+ {
+  "k": "ev.why.mm.2"
+ },
+ {
+  "k": "ev.why.mm.3"
+ },
+ {
+  "k": "ev.why.scout.0"
+ },
+ {
+  "k": "ev.why.scout.1"
+ },
+ {
+  "k": "ev.why.scout.2"
+ },
+ {
+  "k": "ev.why.scout.3"
+ },
+ {
+  "k": "ev.why.scout.4"
+ },
+ {
+  "k": "ev.why.scout.5"
+ },
+ {
+  "k": "film.st.out"
+ },
+ {
+  "k": "film.st.post"
+ },
+ {
+  "k": "film.st.shoot",
+  "logic": true
+ },
+ {
+  "k": "film.st.soon"
+ },
+ {
+  "k": "fund.0"
+ },
+ {
+  "k": "fund.1"
+ },
+ {
+  "k": "fund.2"
+ },
+ {
+  "k": "genre.*"
+ },
+ {
+  "k": "gmp.event"
+ },
+ {
+  "k": "gmp.mood"
+ },
+ {
+  "k": "gmp.retrain"
+ },
+ {
+  "k": "gmp.scandal"
+ },
+ {
+  "k": "gmp.tired"
+ },
+ {
+  "k": "gmp.unassigned"
+ },
+ {
+  "k": "grade.ex",
+  "logic": true
+ },
+ {
+  "k": "grade.fail",
+  "logic": true
+ },
+ {
+  "k": "grade.good",
+  "logic": true
+ },
+ {
+  "k": "grade.pass",
+  "logic": true
+ },
+ {
+  "k": "h.award"
+ },
+ {
+  "k": "h.collab"
+ },
+ {
+  "k": "h.comp"
+ },
+ {
+  "k": "h.compBonus"
+ },
+ {
+  "k": "h.disband"
+ },
+ {
+  "k": "h.film"
+ },
+ {
+  "k": "h.offer"
+ },
+ {
+  "k": "h.single"
+ },
+ {
+  "k": "h.write"
+ },
+ {
+  "k": "hsr.days"
+ },
+ {
+  "k": "hsr.energy"
+ },
+ {
+  "k": "hsr.fails"
+ },
+ {
+  "k": "hsr.forecast"
+ },
+ {
+  "k": "hsr.mood"
+ },
+ {
+  "k": "l.comp"
+ },
+ {
+  "k": "l.compLose"
+ },
+ {
+  "k": "l.compWin"
+ },
+ {
+  "k": "l.film"
+ },
+ {
+  "k": "l.filmLt"
+ },
+ {
+  "k": "l.live"
+ },
+ {
+  "k": "l.offer"
+ },
+ {
+  "k": "l.rep"
+ },
+ {
+  "k": "l.with"
+ },
+ {
+  "k": "ll.collab.0"
+ },
+ {
+  "k": "ll.collab.1"
+ },
+ {
+  "k": "ll.collab.2"
+ },
+ {
+  "k": "ll.concert.0"
+ },
+ {
+  "k": "ll.concert.1"
+ },
+ {
+  "k": "ll.concert.2"
+ },
+ {
+  "k": "ll.fanmeet.0"
+ },
+ {
+  "k": "ll.fanmeet.1"
+ },
+ {
+  "k": "ll.fanmeet.2"
+ },
+ {
+  "k": "ll.live.0"
+ },
+ {
+  "k": "ll.live.1"
+ },
+ {
+  "k": "ll.promo.0"
+ },
+ {
+  "k": "ll.promo.1"
+ },
+ {
+  "k": "ll.promo.2"
+ },
+ {
+  "k": "ll.showcase.0"
+ },
+ {
+  "k": "ll.showcase.1"
+ },
+ {
+  "k": "ll.showcase.2"
+ },
+ {
+  "k": "ll.write.0"
+ },
+ {
+  "k": "ll.write.1"
+ },
+ {
+  "k": "log.art.sign"
+ },
+ {
+  "k": "log.art.signBy"
+ },
+ {
+  "k": "log.aw.ceremony"
+ },
+ {
+  "k": "log.bat.auto"
+ },
+ {
+  "k": "log.bat.move"
+ },
+ {
+  "k": "log.bat.open"
+ },
+ {
+  "k": "log.cmp.go"
+ },
+ {
+  "k": "log.cmp.grp"
+ },
+ {
+  "k": "log.cmp.res"
+ },
+ {
+  "k": "log.cmp.win"
+ },
+ {
+  "k": "log.deb.grp"
+ },
+ {
+  "k": "log.deb.mt"
+ },
+ {
+  "k": "log.deb.one"
+ },
+ {
+  "k": "log.ev.date"
+ },
+ {
+  "k": "log.ev.denyF"
+ },
+ {
+  "k": "log.ev.denyOk"
+ },
+ {
+  "k": "log.ev.friend"
+ },
+ {
+  "k": "log.ev.inv"
+ },
+ {
+  "k": "log.ev.keep"
+ },
+ {
+  "k": "log.ev.leave"
+ },
+ {
+  "k": "log.ev.left"
+ },
+ {
+  "k": "log.ev.leftGrp"
+ },
+ {
+  "k": "log.ev.lose"
+ },
+ {
+  "k": "log.ev.noDate"
+ },
+ {
+  "k": "log.ev.peace"
+ },
+ {
+  "k": "log.ev.promise"
+ },
+ {
+  "k": "log.ev.public"
+ },
+ {
+  "k": "log.ev.raise"
+ },
+ {
+  "k": "log.ev.refuse"
+ },
+ {
+  "k": "log.ev.rival"
+ },
+ {
+  "k": "log.ev.scandal"
+ },
+ {
+  "k": "log.ev.silent"
+ },
+ {
+  "k": "log.ev.solo"
+ },
+ {
+  "k": "log.ev.soloNo"
+ },
+ {
+  "k": "log.ev.sorry"
+ },
+ {
+  "k": "log.ev.stay"
+ },
+ {
+  "k": "log.ev.stayRaise"
+ },
+ {
+  "k": "log.ev.win"
+ },
+ {
+  "k": "log.gm.demote"
+ },
+ {
+  "k": "log.gm.hire"
+ },
+ {
+  "k": "log.gm.rep"
+ },
+ {
+  "k": "log.gm.set"
+ },
+ {
+  "k": "log.mgr.auto"
+ },
+ {
+  "k": "log.mgr.autoPri"
+ },
+ {
+  "k": "log.mgr.dropA"
+ },
+ {
+  "k": "log.mgr.dropN"
+ },
+ {
+  "k": "log.mgr.fire"
+ },
+ {
+  "k": "log.mgr.gm"
+ },
+ {
+  "k": "log.mgr.hire"
+ },
+ {
+  "k": "log.mgr.lv"
+ },
+ {
+  "k": "log.mgr.lvSk"
+ },
+ {
+  "k": "log.mgr.mgr"
+ },
+ {
+  "k": "log.mgr.migDrop"
+ },
+ {
+  "k": "log.mgr.ready"
+ },
+ {
+  "k": "log.mgr.retrain"
+ },
+ {
+  "k": "log.mgr.rpt"
+ },
+ {
+  "k": "log.mgr.rptCeo"
+ },
+ {
+  "k": "log.mgr.rptGm"
+ },
+ {
+  "k": "log.mgr.split"
+ },
+ {
+  "k": "log.mgr.take"
+ },
+ {
+  "k": "log.mk.boom"
+ },
+ {
+  "k": "log.mk.buyback"
+ },
+ {
+  "k": "log.mk.cb"
+ },
+ {
+  "k": "log.mk.chal"
+ },
+ {
+  "k": "log.mk.cheap"
+ },
+ {
+  "k": "log.mk.crisis"
+ },
+ {
+  "k": "log.mk.fest"
+ },
+ {
+  "k": "log.mk.festNo"
+ },
+ {
+  "k": "log.mk.fixed"
+ },
+ {
+  "k": "log.mk.gift"
+ },
+ {
+  "k": "log.mk.injury"
+ },
+ {
+  "k": "log.mk.inv"
+ },
+ {
+  "k": "log.mk.leakIgn"
+ },
+ {
+  "k": "log.mk.leakNo"
+ },
+ {
+  "k": "log.mk.leakOk"
+ },
+ {
+  "k": "log.mk.leakSue"
+ },
+ {
+  "k": "log.mk.loanDone"
+ },
+ {
+  "k": "log.mk.open"
+ },
+ {
+  "k": "log.mk.raise"
+ },
+ {
+  "k": "log.mk.rscan"
+ },
+ {
+  "k": "log.mk.sell"
+ },
+ {
+  "k": "log.mk.spon"
+ },
+ {
+  "k": "log.mk.sponNo"
+ },
+ {
+  "k": "log.mk.stole"
+ },
+ {
+  "k": "log.mk.taxFine"
+ },
+ {
+  "k": "log.mk.taxPay"
+ },
+ {
+  "k": "log.mk.taxWin"
+ },
+ {
+  "k": "log.mk.trend"
+ },
+ {
+  "k": "log.mk.up"
+ },
+ {
+  "k": "log.mk.viral"
+ },
+ {
+  "k": "log.off.acc"
+ },
+ {
+  "k": "log.off.chemNeg"
+ },
+ {
+  "k": "log.off.chemPos"
+ },
+ {
+  "k": "log.off.invest"
+ },
+ {
+  "k": "log.off.mates"
+ },
+ {
+  "k": "log.pro.auto"
+ },
+ {
+  "k": "log.pro.chal"
+ },
+ {
+  "k": "log.pro.cup"
+ },
+ {
+  "k": "log.pro.end"
+ },
+ {
+  "k": "log.pro.live"
+ },
+ {
+  "k": "log.pro.perf"
+ },
+ {
+  "k": "log.pro.pre"
+ },
+ {
+  "k": "log.pro.radio"
+ },
+ {
+  "k": "log.pro.sign"
+ },
+ {
+  "k": "log.pro.var"
+ },
+ {
+  "k": "log.pro.viral"
+ },
+ {
+  "k": "log.pro.win"
+ },
+ {
+  "k": "log.prop.auto"
+ },
+ {
+  "k": "log.prop.boss"
+ },
+ {
+  "k": "log.prop.ceo"
+ },
+ {
+  "k": "log.prop.pend"
+ },
+ {
+  "k": "log.prop.res"
+ },
+ {
+  "k": "log.prop.sum"
+ },
+ {
+  "k": "log.rec.empty"
+ },
+ {
+  "k": "log.rec.fire"
+ },
+ {
+  "k": "log.rec.hire"
+ },
+ {
+  "k": "log.rec.open"
+ },
+ {
+  "k": "log.rec.sign"
+ },
+ {
+  "k": "log.rec.stop"
+ },
+ {
+  "k": "log.rec.sug"
+ },
+ {
+  "k": "log.rel.concert"
+ },
+ {
+  "k": "log.rel.discord"
+ },
+ {
+  "k": "log.rel.film"
+ },
+ {
+  "k": "log.rel.fm"
+ },
+ {
+  "k": "log.rel.hype"
+ },
+ {
+  "k": "log.rel.live"
+ },
+ {
+  "k": "log.rel.ppl"
+ },
+ {
+  "k": "log.rel.rival"
+ },
+ {
+  "k": "log.rel.single"
+ },
+ {
+  "k": "log.rel.slip"
+ },
+ {
+  "k": "log.rel.songw"
+ },
+ {
+  "k": "log.rel.trendDn"
+ },
+ {
+  "k": "log.rel.trendUp"
+ },
+ {
+  "k": "log.rv.actor"
+ },
+ {
+  "k": "log.rv.bonus"
+ },
+ {
+  "k": "log.rv.cut"
+ },
+ {
+  "k": "log.rv.hype"
+ },
+ {
+  "k": "log.rv.mag"
+ },
+ {
+  "k": "log.rv.press"
+ },
+ {
+  "k": "log.rv.sns"
+ },
+ {
+  "k": "log.rv.sum"
+ },
+ {
+  "k": "log.rv.tts"
+ },
+ {
+  "k": "log.rv.warnA"
+ },
+ {
+  "k": "log.rv.warnT"
+ },
+ {
+  "k": "log.sec.cancel"
+ },
+ {
+  "k": "log.sec.delayBusy"
+ },
+ {
+  "k": "log.sec.delayMoney"
+ },
+ {
+  "k": "log.sec.go"
+ },
+ {
+  "k": "log.sec.late"
+ },
+ {
+  "k": "log.sec.now"
+ },
+ {
+  "k": "log.sec.rec"
+ },
+ {
+  "k": "log.sec.sched"
+ },
+ {
+  "k": "log.st.office"
+ },
+ {
+  "k": "log.st.restore"
+ },
+ {
+  "k": "log.st.tip"
+ },
+ {
+  "k": "log.st.welcome"
+ },
+ {
+  "k": "log.sv.load"
+ },
+ {
+  "k": "log.wk.calm"
+ },
+ {
+  "k": "log.wk.concert"
+ },
+ {
+  "k": "log.wk.debt"
+ },
+ {
+  "k": "log.wk.done"
+ },
+ {
+  "k": "log.wk.film"
+ },
+ {
+  "k": "log.wk.filmShare"
+ },
+ {
+  "k": "log.wk.leave"
+ },
+ {
+  "k": "log.wk.promo"
+ },
+ {
+  "k": "log.wk.shoot"
+ },
+ {
+  "k": "log.wk.wantAct"
+ },
+ {
+  "k": "log.x2.apply"
+ },
+ {
+  "k": "log.x2.asstNo"
+ },
+ {
+  "k": "log.x2.batGone"
+ },
+ {
+  "k": "log.x2.brandNegN"
+ },
+ {
+  "k": "log.x2.brandNegY"
+ },
+ {
+  "k": "log.x2.brandNo"
+ },
+ {
+  "k": "log.x2.brandTake"
+ },
+ {
+  "k": "log.x2.burnN"
+ },
+ {
+  "k": "log.x2.burnOk"
+ },
+ {
+  "k": "log.x2.burnRaise"
+ },
+ {
+  "k": "log.x2.burnSk"
+ },
+ {
+  "k": "log.x2.clashArt"
+ },
+ {
+  "k": "log.x2.clashMgr"
+ },
+ {
+  "k": "log.x2.clashMixN"
+ },
+ {
+  "k": "log.x2.clashMixY"
+ },
+ {
+  "k": "log.x2.cryMgrN"
+ },
+ {
+  "k": "log.x2.cryMgrY"
+ },
+ {
+  "k": "log.x2.cryNo"
+ },
+ {
+  "k": "log.x2.cryRest"
+ },
+ {
+  "k": "log.x2.crySr"
+ },
+ {
+  "k": "log.x2.crySrNone"
+ },
+ {
+  "k": "log.x2.ct8"
+ },
+ {
+  "k": "log.x2.demoDone"
+ },
+ {
+  "k": "log.x2.demoSent"
+ },
+ {
+  "k": "log.x2.dig"
+ },
+ {
+  "k": "log.x2.disband"
+ },
+ {
+  "k": "log.x2.drop"
+ },
+ {
+  "k": "log.x2.fanGuard"
+ },
+ {
+  "k": "log.x2.fanMgrN"
+ },
+ {
+  "k": "log.x2.fanMgrY"
+ },
+ {
+  "k": "log.x2.fanNo"
+ },
+ {
+  "k": "log.x2.fanPolN"
+ },
+ {
+  "k": "log.x2.fanPolY"
+ },
+ {
+  "k": "log.x2.fightBoth"
+ },
+ {
+  "k": "log.x2.fightN"
+ },
+ {
+  "k": "log.x2.fightNo"
+ },
+ {
+  "k": "log.x2.fightY"
+ },
+ {
+  "k": "log.x2.fire"
+ },
+ {
+  "k": "log.x2.fixY"
+ },
+ {
+  "k": "log.x2.hiatusEnd"
+ },
+ {
+  "k": "log.x2.hire"
+ },
+ {
+  "k": "log.x2.holdOff"
+ },
+ {
+  "k": "log.x2.holdOn"
+ },
+ {
+  "k": "log.x2.injPushN"
+ },
+ {
+  "k": "log.x2.injPushY"
+ },
+ {
+  "k": "log.x2.injTreat"
+ },
+ {
+  "k": "log.x2.injVip"
+ },
+ {
+  "k": "log.x2.lateAN"
+ },
+ {
+  "k": "log.x2.lateANp"
+ },
+ {
+  "k": "log.x2.lateAY"
+ },
+ {
+  "k": "log.x2.lateFine"
+ },
+ {
+  "k": "log.x2.lateNo"
+ },
+ {
+  "k": "log.x2.lateTN"
+ },
+ {
+  "k": "log.x2.lateTY"
+ },
+ {
+  "k": "log.x2.lateTkN"
+ },
+ {
+  "k": "log.x2.lateTkY"
+ },
+ {
+  "k": "log.x2.leakCtN"
+ },
+ {
+  "k": "log.x2.leakCtY"
+ },
+ {
+  "k": "log.x2.leakPrN"
+ },
+ {
+  "k": "log.x2.leakPrY"
+ },
+ {
+  "k": "log.x2.leakSil"
+ },
+ {
+  "k": "log.x2.md"
+ },
+ {
+  "k": "log.x2.mentor"
+ },
+ {
+  "k": "log.x2.mentorFr"
+ },
+ {
+  "k": "log.x2.mgrIdle"
+ },
+ {
+  "k": "log.x2.mig1"
+ },
+ {
+  "k": "log.x2.mig1b"
+ },
+ {
+  "k": "log.x2.mig1w"
+ },
+ {
+  "k": "log.x2.mig2"
+ },
+ {
+  "k": "log.x2.pause"
+ },
+ {
+  "k": "log.x2.ready"
+ },
+ {
+  "k": "log.x2.redo"
+ },
+ {
+  "k": "log.x2.renew"
+ },
+ {
+  "k": "log.x2.renewEnd"
+ },
+ {
+  "k": "log.x2.renewNo"
+ },
+ {
+  "k": "log.x2.renewNo2"
+ },
+ {
+  "k": "log.x2.risk"
+ },
+ {
+  "k": "log.x2.scout"
+ },
+ {
+  "k": "log.x2.songNo"
+ },
+ {
+  "k": "log.x2.unmentor"
+ },
+ {
+  "k": "log.x2.write"
+ },
+ {
+  "k": "log.x3.admit"
+ },
+ {
+  "k": "log.x3.amgrSide"
+ },
+ {
+  "k": "log.x3.bff"
+ },
+ {
+  "k": "log.x3.coffee"
+ },
+ {
+  "k": "log.x3.collab"
+ },
+ {
+  "k": "log.x3.denyN"
+ },
+ {
+  "k": "log.x3.denyY"
+ },
+ {
+  "k": "log.x3.dqKeep"
+ },
+ {
+  "k": "log.x3.dqNo"
+ },
+ {
+  "k": "log.x3.dqYes"
+ },
+ {
+  "k": "log.x3.gift"
+ },
+ {
+  "k": "log.x3.hsFire"
+ },
+ {
+  "k": "log.x3.hsHire"
+ },
+ {
+  "k": "log.x3.hsWatch"
+ },
+ {
+  "k": "log.x3.intro"
+ },
+ {
+  "k": "log.x3.jobNo"
+ },
+ {
+  "k": "log.x3.jobYes"
+ },
+ {
+  "k": "log.x3.keep"
+ },
+ {
+  "k": "log.x3.mdGive"
+ },
+ {
+  "k": "log.x3.mdNo"
+ },
+ {
+  "k": "log.x3.mdStore"
+ },
+ {
+  "k": "log.x3.meet"
+ },
+ {
+  "k": "log.x3.meetClose"
+ },
+ {
+  "k": "log.x3.mgrKeep"
+ },
+ {
+  "k": "log.x3.mmCoach"
+ },
+ {
+  "k": "log.x3.mmMeet"
+ },
+ {
+  "k": "log.x3.mmSelf"
+ },
+ {
+  "k": "log.x3.mmSide"
+ },
+ {
+  "k": "log.x3.mtNo"
+ },
+ {
+  "k": "log.x3.mtYes"
+ },
+ {
+  "k": "log.x3.paCo"
+ },
+ {
+  "k": "log.x3.paFire"
+ },
+ {
+  "k": "log.x3.paSelf"
+ },
+ {
+  "k": "log.x3.quietN"
+ },
+ {
+  "k": "log.x3.quietY"
+ },
+ {
+  "k": "log.x3.rest"
+ },
+ {
+  "k": "log.x3.share"
+ },
+ {
+  "k": "log.x3.snub"
+ },
+ {
+  "k": "log.x3.tip"
+ },
+ {
+  "k": "log.x3.train"
+ },
+ {
+  "k": "mod.econ"
+ },
+ {
+  "k": "mod.pay"
+ },
+ {
+  "k": "mod.train"
+ },
+ {
+  "k": "mod.wave"
+ },
+ {
+  "k": "msk.*"
+ },
+ {
+  "k": "offer.*"
+ },
+ {
+  "k": "ol.ad.0"
+ },
+ {
+  "k": "ol.ad.1"
+ },
+ {
+  "k": "ol.backup.0"
+ },
+ {
+  "k": "ol.backup.1"
+ },
+ {
+  "k": "ol.drama.0"
+ },
+ {
+  "k": "ol.drama.1"
+ },
+ {
+  "k": "ol.drama.2"
+ },
+ {
+  "k": "ol.extra.0"
+ },
+ {
+  "k": "ol.extra.1"
+ },
+ {
+  "k": "ol.guide.0"
+ },
+ {
+  "k": "ol.guide.1"
+ },
+ {
+  "k": "ol.magazine.0"
+ },
+ {
+  "k": "ol.magazine.1"
+ },
+ {
+  "k": "ol.model.0"
+ },
+ {
+  "k": "ol.model.1"
+ },
+ {
+  "k": "ol.movie.0"
+ },
+ {
+  "k": "ol.movie.1"
+ },
+ {
+  "k": "ol.movie.2"
+ },
+ {
+  "k": "ol.music.0"
+ },
+ {
+  "k": "ol.music.1"
+ },
+ {
+  "k": "ol.survival.0"
+ },
+ {
+  "k": "ol.survival.1"
+ },
+ {
+  "k": "ol.variety.0"
+ },
+ {
+  "k": "ol.variety.1"
+ },
+ {
+  "k": "ol.web.0"
+ },
+ {
+  "k": "ol.web.1"
+ },
+ {
+  "k": "pr.hist"
+ },
+ {
+  "k": "pro.stage.s1"
+ },
+ {
+  "k": "pro.stage.s2"
+ },
+ {
+  "k": "pro.stage.s3"
+ },
+ {
+  "k": "pro.stage.s4"
+ },
+ {
+  "k": "promo.post.*"
+ },
+ {
+  "k": "promo.pre.*"
+ },
+ {
+  "k": "prop.ceo",
+  "logic": true
+ },
+ {
+  "k": "prop.cf.*"
+ },
+ {
+  "k": "prop.ctxt.enemy"
+ },
+ {
+  "k": "prop.ctxt.offer"
+ },
+ {
+  "k": "prop.ctxt.overlap"
+ },
+ {
+  "k": "prop.ctxt.scandal"
+ },
+ {
+  "k": "prop.ctxt.sched"
+ },
+ {
+  "k": "prop.ctxt.tired"
+ },
+ {
+  "k": "prop.self",
+  "logic": true
+ },
+ {
+  "k": "prop.why.lighter"
+ },
+ {
+  "k": "prop.why2.busy",
+  "logic": true
+ },
+ {
+  "k": "pwhy.act"
+ },
+ {
+  "k": "pwhy.energy"
+ },
+ {
+  "k": "pwhy.focus"
+ },
+ {
+  "k": "pwhy.mood"
+ },
+ {
+  "k": "q.ex"
+ },
+ {
+  "k": "q.good"
+ },
+ {
+  "k": "q.low"
+ },
+ {
+  "k": "q.ok"
+ },
+ {
+  "k": "riv.cb"
+ },
+ {
+  "k": "riv.scandal"
+ },
+ {
+  "k": "riv.stole"
+ },
+ {
+  "k": "rv.allTts"
+ },
+ {
+  "k": "rv.cut"
+ },
+ {
+  "k": "rv.term"
+ },
+ {
+  "k": "scandal.bts"
+ },
+ {
+  "k": "scandal.dating"
+ },
+ {
+  "k": "scandal.live"
+ },
+ {
+  "k": "scandal.t.0"
+ },
+ {
+  "k": "scandal.t.1"
+ },
+ {
+  "k": "scandal.t.2"
+ },
+ {
+  "k": "scandal.t.3"
+ },
+ {
+  "k": "scandal.t.4"
+ },
+ {
+  "k": "sec.q"
+ },
+ {
+  "k": "stat.*"
+ },
+ {
+  "k": "target.*"
+ },
+ {
+  "k": "x2.f"
+ },
+ {
+  "k": "x2.m"
+ },
+ {
+  "k": "x2.r.expired"
+ },
+ {
+  "k": "x2.r.failed"
+ },
+ {
+  "k": "x2.r.quit"
+ },
+ {
+  "k": "x2.senior"
+ },
+ {
+  "k": "x3.byMgr"
+ },
+ {
+  "k": "log.sys.shortImport"
+ }
+]
