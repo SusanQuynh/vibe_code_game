@@ -1,0 +1,5029 @@
+{
+ "v": 1,
+ "year": 2,
+ "week": 5,
+ "money": 1514640000,
+ "nid": 526,
+ "planOn": true,
+ "managers": [
+  {
+   "id": 5,
+   "name": "Vũ Hoài Nam",
+   "look": {
+    "hair": "#e86a92",
+    "skin": "#eebf98",
+    "out": "#2f4f4f",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 3,
+    "care": 9,
+    "pr": 1,
+    "plan": 3
+   },
+   "spec": "care",
+   "lv": 1,
+   "exp": 0,
+   "salary": 8000000,
+   "fee": 48000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "actor",
+   "gm": 1,
+   "boss": null,
+   "gmRaise": 3000000
+  },
+  {
+   "id": 72,
+   "name": "Bùi Mỹ Linh",
+   "look": {
+    "hair": "#b23a48",
+    "skin": "#eebf98",
+    "out": "#2f4f4f",
+    "style": "pony",
+    "long": true,
+    "skirt": true
+   },
+   "sk": {
+    "nego": 1,
+    "care": 5,
+    "pr": 8,
+    "plan": 1
+   },
+   "spec": "pr",
+   "lv": 1,
+   "exp": 0,
+   "salary": 5000000,
+   "fee": 45000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "actor",
+   "boss": 5
+  },
+  {
+   "id": 135,
+   "name": "Bùi Mỹ Linh",
+   "look": {
+    "hair": "#d9d4e8",
+    "skin": "#f8d0b0",
+    "out": "#7a7f8c",
+    "style": "bun",
+    "long": true,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 5,
+    "care": 4,
+    "pr": 6,
+    "plan": 2
+   },
+   "spec": "pr",
+   "lv": 1,
+   "exp": 0,
+   "salary": 5000000,
+   "fee": 51000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "group",
+   "boss": 5
+  }
+ ],
+ "mgrPool": [
+  {
+   "id": 434,
+   "name": "Trần Thanh Bình",
+   "look": {
+    "hair": "#d9d4e8",
+    "skin": "#d9a27c",
+    "out": "#333a56",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 3,
+    "care": 5,
+    "pr": 3,
+    "plan": 3
+   },
+   "spec": "care",
+   "lv": 1,
+   "exp": 0,
+   "salary": 4000000,
+   "fee": 42000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "trainee"
+  },
+  {
+   "id": 435,
+   "name": "Vũ Đức Thắng",
+   "look": {
+    "hair": "#d9d4e8",
+    "skin": "#f8d0b0",
+    "out": "#7a7f8c",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 4,
+    "care": 7,
+    "pr": 5,
+    "plan": 5
+   },
+   "spec": "care",
+   "lv": 1,
+   "exp": 0,
+   "salary": 6000000,
+   "fee": 63000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "actor"
+  },
+  {
+   "id": 436,
+   "name": "Bùi Quốc Huy",
+   "look": {
+    "hair": "#e86a92",
+    "skin": "#d9a27c",
+    "out": "#5b6b8c",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 4,
+    "care": 4,
+    "pr": 5,
+    "plan": 3
+   },
+   "spec": "pr",
+   "lv": 1,
+   "exp": 0,
+   "salary": 5000000,
+   "fee": 48000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "solo"
+  }
+ ],
+ "artists": [
+  {
+   "id": 8,
+   "name": "Việt Hoàng",
+   "g": "M",
+   "age": 19,
+   "look": {
+    "hair": "#e86a92",
+    "skin": "#f8d0b0",
+    "out": "#6d4bff",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 76.7,
+    "dance": 42.8,
+    "rap": 19.3,
+    "acting": 59.6,
+    "variety": 42.9,
+    "visual": 42.5,
+    "stamina": 27.4
+   },
+   "talent": 0.84,
+   "spec": "acting",
+   "energy": 0,
+   "mood": 97,
+   "fans": 137369,
+   "status": "debuted",
+   "solo": false,
+   "actor": true,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "offer",
+    "type": "web",
+    "title": "Mùa Hạ Cuối Cùng",
+    "partner": "YouStar",
+    "costar": "Hồ Thu Trang",
+    "left": 1,
+    "total": 5,
+    "pay": 100000000,
+    "genre": "drama",
+    "w": {
+     "acting": 0.9,
+     "visual": 0.1
+    },
+    "L": 23,
+    "offerId": 447,
+    "mates": [
+     8
+    ],
+    "chem": 0
+   },
+   "salary": 4000000,
+   "co": {
+    "Lý Gia Bảo": 15,
+    "Lê Hữu Thắng": 26,
+    "Vũ Diệu Linh": 10,
+    "Hồ Thu Trang": 12,
+    "Trần Bảo Châu": 12
+   },
+   "rel": {
+    "1": 46,
+    "2": 22,
+    "9": 9,
+    "44": 10,
+    "69": 19,
+    "103": 21,
+    "104": 26,
+    "132": 5,
+    "168": 13
+   },
+   "tag": {},
+   "pw": {
+    "PopTV": 1,
+    "Đài HTN": 2,
+    "Sân Khấu Sao": 1,
+    "Concert Mùa Hè": 2,
+    "Tạp chí Mốt": 2,
+    "Đài VTX": 1,
+    "Kênh Vui": 1,
+    "Produce Việt": 1,
+    "Phim Ngắn Việt": 1,
+    "Phim Mây Trắng": 1,
+    "Đài Âm Nhạc": 1
+   },
+   "scandal": {
+    "t": "Tin đồn thái độ với nhân viên",
+    "sev": 1,
+    "left": 6,
+    "truth": true,
+    "dating": false,
+    "other": 0,
+    "inv": {
+     "leads": [
+      {
+       "k": "photo",
+       "r": 0.85,
+       "says": true,
+       "open": false
+      },
+      {
+       "k": "schedule",
+       "r": 0.75,
+       "says": true,
+       "open": false
+      },
+      {
+       "k": "witness",
+       "r": 0.7,
+       "says": true,
+       "open": false
+      },
+      {
+       "k": "chat",
+       "r": 0.8,
+       "says": true,
+       "open": false
+      },
+      {
+       "k": "staff",
+       "r": 0.7,
+       "says": true,
+       "open": false
+      },
+      {
+       "k": "social",
+       "r": 0.55,
+       "says": true,
+       "open": false
+      }
+     ],
+     "ap": 3,
+     "p": 0.5
+    }
+   },
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu»",
+     "l": "Giữ hơi tốt hơn khi vừa hát vừa nhảy",
+     "s": "Vocal +2.5, Nhảy +2.5",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Nhà Chung Mùa Hè»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.9, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Phim điện ảnh «Đêm Đông Bất Tận»",
+     "l": "Rèn sức bền qua những cảnh quay khó",
+     "s": "Diễn xuất +7.6, Thể lực +1.3",
+     "y": 1
+    },
+    {
+     "t": "Diễn viên phụ MV «MV học đường»",
+     "l": "Biểu cảm tự nhiên hơn",
+     "s": "Diễn xuất +2.5, Visual +1.3",
+     "y": 1
+    },
+    {
+     "t": "Tạp chí «Phỏng vấn trang đôi»",
+     "l": "Biết tạo dáng và tìm góc đẹp",
+     "s": "Visual +3.9",
+     "y": 1
+    },
+    {
+     "t": "Show sống còn «Ngôi Sao Kế Tiếp»",
+     "l": "Trưởng thành qua áp lực loại trừ",
+     "s": "Vocal +3.6, Nhảy +3.6, Rap +2.4, Thể lực +2.4",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Cuộc Đua Kỳ Thú»",
+     "l": "Phản xạ nhanh và hài hước hơn",
+     "s": "Tạp kỹ +4.5, Thể lực +1.1",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Đường Đến Bếp Ngon»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.5, Thể lực +1.1",
+     "y": 1
+    },
+    {
+     "t": "Vũ công phụ họa «Sân khấu đặc biệt»",
+     "l": "Quen ánh đèn sân khấu lớn",
+     "s": "Nhảy +4.0, Thể lực +1.3",
+     "y": 1
+    },
+    {
+     "t": "Tạp chí «Bộ ảnh thời trang»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.7",
+     "y": 1
+    },
+    {
+     "t": "Vũ công phụ họa «Concert cuối năm»",
+     "l": "Học cách nhảy đồng đều với đội",
+     "s": "Nhảy +3.6, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Sân Khấu Đêm Thứ Sáu»",
+     "l": "Giữ hơi tốt hơn khi vừa hát vừa nhảy",
+     "s": "Vocal +2.5, Nhảy +2.5",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N1: 🏆 Nam diễn viên xuất sắc",
+    "N1: Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» – Xuất sắc",
+    "N1: Tạp kỹ «Nhà Chung Mùa Hè» – Xuất sắc",
+    "N1: Phim điện ảnh «Đêm Đông Bất Tận» – Xuất sắc",
+    "N1: Diễn viên phụ MV «MV học đường» – Xuất sắc",
+    "N1: Tạp chí «Phỏng vấn trang đôi» – Xuất sắc",
+    "N1: Show sống còn «Ngôi Sao Kế Tiếp» – Xuất sắc",
+    "N1: Tạp kỹ «Cuộc Đua Kỳ Thú» – Tốt",
+    "N1: Tạp kỹ «Đường Đến Bếp Ngon» – Tốt",
+    "N1: Vũ công phụ họa «Sân khấu đặc biệt» – Xuất sắc",
+    "N1: Tạp chí «Bộ ảnh thời trang» – Xuất sắc",
+    "N1: Vũ công phụ họa «Concert cuối năm» – Xuất sắc",
+    "N1: Show âm nhạc «Sân Khấu Đêm Thứ Sáu» – Xuất sắc",
+    "N1: Phim truyền hình «Bí Mật Của Em» – Tốt",
+    "N1: Web drama «Người Thừa Kế Bất Tận» – Xuất sắc",
+    "N1: Cuộc thi «Liên hoan Nhảy đường phố» – hạng 6"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "21": -10,
+    "22": 37,
+    "23": 15
+   },
+   "pg": {
+    "dance": 20.5,
+    "stamina": 11.2,
+    "vocal": 9.7,
+    "visual": 12.4,
+    "acting": 18.6,
+    "variety": 13.9,
+    "rap": 2.4
+   },
+   "wc": 15,
+   "ev": {
+    "st": 311.2,
+    "f": 144599,
+    "wc": 15,
+    "w": 56
+   },
+   "dw": {
+    "t": "solo",
+    "why": "Em tự tin vào Diễn xuất và muốn thử sức solo với concept Ballad.",
+    "w": 7
+   },
+   "dqName": "Seraph",
+   "ttsFail": 0,
+   "evG": "Đạt",
+   "ce": 61,
+   "cs0": 9,
+   "earnC": 991000000,
+   "cf0": 7590,
+   "evFail": 0,
+   "earn": 991000000,
+   "hsF": {
+    "w": 52,
+    "why": [
+     "năng lượng chỉ còn 0"
+    ],
+    "n": 3,
+    "st": "kept"
+   },
+   "mtRq": 49
+  },
+  {
+   "id": 9,
+   "name": "Hà Linh",
+   "g": "F",
+   "age": 21,
+   "look": {
+    "hair": "#8a6cff",
+    "skin": "#d9a27c",
+    "out": "#e9e9f2",
+    "style": "short",
+    "long": false,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 40.5,
+    "dance": 100,
+    "rap": 24.8,
+    "acting": 7.8,
+    "variety": 9,
+    "visual": 17,
+    "stamina": 47.3
+   },
+   "talent": 1.03,
+   "spec": "rap",
+   "energy": 15.5,
+   "mood": 98.80000000000001,
+   "fans": 235440,
+   "status": "debuted",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "offer",
+    "type": "survival",
+    "title": "Debut Hay Dừng Lại",
+    "partner": "Produce Việt",
+    "costar": null,
+    "left": 4,
+    "total": 8,
+    "pay": 24000000,
+    "genre": null,
+    "w": {
+     "vocal": 0.8,
+     "dance": 0.8,
+     "rap": 0.6
+    },
+    "L": 28,
+    "offerId": 448,
+    "mates": [
+     9
+    ],
+    "chem": 0
+   },
+   "salary": 4000000,
+   "co": {},
+   "rel": {
+    "1": -4,
+    "2": 19,
+    "8": 9,
+    "44": 30,
+    "69": 17,
+    "103": 7,
+    "104": -1,
+    "132": 13,
+    "168": 7
+   },
+   "tag": {},
+   "pw": {
+    "MV Factory": 1,
+    "Produce Việt": 1,
+    "Thời trang Teen": 1,
+    "Sân Khấu Sao": 1,
+    "Đài HTN": 2,
+    "Đài Âm Nhạc": 2
+   },
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Show sống còn «Thần Tượng 101»",
+     "l": "Học hỏi từ các thí sinh giỏi",
+     "s": "Vocal +3.7, Nhảy +3.7, Rap +2.5, Thể lực +2.5",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Bảng Xếp Hạng Tuần»",
+     "l": "Giữ hơi tốt hơn khi vừa hát vừa nhảy",
+     "s": "Vocal +2.6, Nhảy +2.6",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Bảng Xếp Hạng Tuần»",
+     "l": "Giữ hơi tốt hơn khi vừa hát vừa nhảy",
+     "s": "Vocal +2.4, Nhảy +2.4",
+     "y": 1
+    },
+    {
+     "t": "Show sống còn «Thần Tượng 101»",
+     "l": "Học hỏi từ các thí sinh giỏi",
+     "s": "Vocal +3.8, Nhảy +3.8, Rap +2.6, Thể lực +2.6",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu»",
+     "l": "Tự tin hơn trên sân khấu lớn",
+     "s": "Vocal +2.4, Nhảy +2.4",
+     "y": 1
+    },
+    {
+     "t": "Người mẫu ảnh online «Ảnh sản phẩm»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.6",
+     "y": 1
+    },
+    {
+     "t": "Quảng bá «Test Single 26»",
+     "l": "Học cách tương tác tự nhiên với MC và khán giả",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Show sống còn «Ngôi Sao Kế Tiếp»",
+     "l": "Học hỏi từ các thí sinh giỏi",
+     "s": "Vocal +3.8, Nhảy +3.8, Rap +2.5, Thể lực +2.5",
+     "y": 1
+    },
+    {
+     "t": "Diễn viên phụ MV «MV học đường»",
+     "l": "Làm quen với máy quay",
+     "s": "Diễn xuất +2.1, Visual +1.1",
+     "y": 1
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Biết kiểm soát hồi hộp trên sân khấu debut",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Liên hoan Nhảy đường phố»",
+     "l": "Học được nhiều từ đối thủ",
+     "s": "Nhảy +3.2, Thể lực +1.6",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N1: 🏆 Tân binh của năm",
+    "N1: 🏆 Nghệ sĩ của năm",
+    "N1: Show sống còn «Thần Tượng 101» – Xuất sắc",
+    "N1: Show âm nhạc «Bảng Xếp Hạng Tuần» – Xuất sắc",
+    "N1: Show âm nhạc «Bảng Xếp Hạng Tuần» – Xuất sắc",
+    "N1: Show sống còn «Thần Tượng 101» – Xuất sắc",
+    "N1: Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» – Xuất sắc",
+    "N1: Người mẫu ảnh online «Ảnh sản phẩm» – Xuất sắc",
+    "N1: Single «Test Single 26» – hạng 85",
+    "N1: Show sống còn «Ngôi Sao Kế Tiếp» – Xuất sắc",
+    "N1: Diễn viên phụ MV «MV học đường» – Ổn",
+    "N1: Cuộc thi «Liên hoan Nhảy đường phố» – hạng 6"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "21": 19,
+    "26": 11,
+    "28": -10
+   },
+   "pg": {
+    "dance": 9.5,
+    "stamina": 9.7,
+    "vocal": 21.4,
+    "visual": 5.8,
+    "acting": 2.1,
+    "rap": 7.6,
+    "variety": 1.1
+   },
+   "wc": 10,
+   "ev": {
+    "st": 246.40000000000003,
+    "f": 235440,
+    "wc": 10,
+    "w": 56
+   },
+   "ttsFail": 0,
+   "evG": "Xuất sắc",
+   "ce": 67,
+   "cs0": 15,
+   "earnC": 275533666.6666667,
+   "cf0": 6424,
+   "mtRq": 16,
+   "evFail": 0,
+   "earn": 275533666.6666667,
+   "hsF": {
+    "w": 52,
+    "why": [
+     "năng lượng chỉ còn 16"
+    ],
+    "n": 3,
+    "st": "kept"
+   }
+  },
+  {
+   "id": 1,
+   "name": "Minh Thư",
+   "g": "F",
+   "age": 21,
+   "look": {
+    "hair": "#e86a92",
+    "skin": "#f8d0b0",
+    "out": "#ff7a59",
+    "style": "twin",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 83.13,
+    "dance": 50.9,
+    "rap": 27.9,
+    "acting": 38.5,
+    "variety": 25.2,
+    "visual": 46.1,
+    "stamina": 37.8
+   },
+   "talent": 0.9,
+   "spec": "dance",
+   "energy": 30.000000000000078,
+   "mood": 93.80000000000003,
+   "fans": 126041,
+   "status": "debuted",
+   "solo": false,
+   "actor": true,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "offer",
+    "type": "movie",
+    "title": "Vệt Nắng Không Tên",
+    "partner": "Lotus Pictures",
+    "costar": "Đỗ Minh Hiếu",
+    "left": 1,
+    "total": 10,
+    "pay": 488000000,
+    "genre": "comedy",
+    "w": {
+     "acting": 0.4,
+     "variety": 0.6
+    },
+    "L": 23,
+    "offerId": 382,
+    "mates": [
+     1
+    ],
+    "chem": 0
+   },
+   "salary": 4000000,
+   "co": {
+    "Ngô Kiều Anh": 37,
+    "Lê Hữu Thắng": 20,
+    "Mai Tuyết Nhung": 14
+   },
+   "rel": {
+    "2": 25,
+    "8": 46,
+    "9": -4,
+    "44": 11,
+    "69": 24,
+    "103": 1,
+    "104": 6,
+    "132": 2,
+    "168": 0
+   },
+   "tag": {},
+   "pw": {
+    "Đài HTN": 1,
+    "PopTV": 2,
+    "Produce Việt": 1,
+    "Shop Mây": 1,
+    "Music Weekly": 1,
+    "Style VN": 1,
+    "Tạp chí Ngôi Sao": 1,
+    "Thời trang Teen": 1,
+    "Đài VTX": 1
+   },
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Web drama «Lời Nguyền Không Tên»",
+     "l": "Làm quen với máy quay",
+     "s": "Diễn xuất +4.0, Visual +1.3",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Đường Đến Bếp Ngon»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.6, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Người mẫu ảnh online «Lookbook học sinh»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +4.0",
+     "y": 1
+    },
+    {
+     "t": "Tạp chí «Bìa số tháng»",
+     "l": "Biết tạo dáng và tìm góc đẹp",
+     "s": "Visual +3.5",
+     "y": 1
+    },
+    {
+     "t": "Tạp chí «Bộ ảnh thời trang»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.8",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Bảng Xếp Hạng Tuần»",
+     "l": "Tự tin hơn trên sân khấu lớn",
+     "s": "Vocal +2.6, Nhảy +2.6",
+     "y": 1
+    },
+    {
+     "t": "Người mẫu ảnh online «Bộ sưu tập thu»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.7",
+     "y": 1
+    },
+    {
+     "t": "Show sống còn «Thần Tượng 101»",
+     "l": "Học hỏi từ các thí sinh giỏi",
+     "s": "Vocal +4.0, Nhảy +4.0, Rap +2.7, Thể lực +2.7",
+     "y": 1
+    },
+    {
+     "t": "Web drama «Gió Ngược Của Em»",
+     "l": "Diễn tự nhiên, gần gũi hơn",
+     "s": "Diễn xuất +3.5, Visual +1.2",
+     "y": 1
+    },
+    {
+     "t": "Phim truyền hình «Gió Ngược Màu Xanh»",
+     "l": "Phối hợp ăn ý hơn với bạn diễn",
+     "s": "Diễn xuất +4.8, Visual +1.2",
+     "y": 1
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Biết kiểm soát hồi hộp trên sân khấu debut",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Liên hoan Nhảy đường phố»",
+     "l": "Học được nhiều từ đối thủ",
+     "s": "Nhảy +3.2, Thể lực +1.6",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N1: 🏆 Nữ diễn viên xuất sắc",
+    "N1: Web drama «Lời Nguyền Không Tên» – Xuất sắc",
+    "N1: Tạp kỹ «Đường Đến Bếp Ngon» – Tốt",
+    "N1: Người mẫu ảnh online «Lookbook học sinh» – Xuất sắc",
+    "N1: Tạp chí «Bìa số tháng» – Tốt",
+    "N1: Tạp chí «Bộ ảnh thời trang» – Xuất sắc",
+    "N1: Show âm nhạc «Bảng Xếp Hạng Tuần» – Xuất sắc",
+    "N1: Người mẫu ảnh online «Bộ sưu tập thu» – Xuất sắc",
+    "N1: Show sống còn «Thần Tượng 101» – Xuất sắc",
+    "N1: Web drama «Gió Ngược Của Em» – Tốt",
+    "N1: Phim truyền hình «Gió Ngược Màu Xanh» – Xuất sắc",
+    "N1: Cuộc thi «Liên hoan Nhảy đường phố» – hạng 6"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "24": 4
+   },
+   "pg": {
+    "dance": 10.9,
+    "stamina": 5.5,
+    "vocal": 7.7,
+    "visual": 19.8,
+    "acting": 12.3,
+    "rap": 2.7,
+    "variety": 4.6
+   },
+   "wc": 11,
+   "ev": {
+    "st": 309.53000000000003,
+    "f": 126041,
+    "wc": 11,
+    "w": 56
+   },
+   "dw": {
+    "t": "solo",
+    "why": "Em tự tin vào Nhảy và muốn thử sức solo với concept Ballad.",
+    "w": 7
+   },
+   "dqName": "Prism",
+   "ttsFail": 0,
+   "evG": "Đạt",
+   "ce": 61,
+   "cs0": 9,
+   "earnC": 456000000,
+   "cf0": 5151,
+   "mtRq": 41,
+   "evFail": 0,
+   "earn": 456000000,
+   "hsF": {
+    "w": 47,
+    "why": [
+     "năng lượng chỉ còn 30"
+    ],
+    "n": 3,
+    "st": "kept"
+   },
+   "paAsk": 52
+  },
+  {
+   "id": 2,
+   "name": "Tuấn Kiệt",
+   "g": "M",
+   "age": 20,
+   "look": {
+    "hair": "#4aa3df",
+    "skin": "#d9a27c",
+    "out": "#333a56",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 82.69,
+    "dance": 31.5,
+    "rap": 21,
+    "acting": 30.3,
+    "variety": 54.8,
+    "visual": 53.3,
+    "stamina": 44.7
+   },
+   "talent": 1.16,
+   "spec": "stamina",
+   "energy": 60.00000000000003,
+   "mood": 100,
+   "fans": 81072,
+   "status": "debuted",
+   "solo": false,
+   "actor": true,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 4000000,
+   "co": {
+    "Vũ Diệu Linh": 36,
+    "Phạm Quốc Bảo": 40,
+    "Ngô Kiều Anh": 16
+   },
+   "rel": {
+    "1": 25,
+    "8": 22,
+    "9": 19,
+    "44": 21,
+    "69": 12,
+    "103": 12,
+    "104": -2,
+    "132": -2,
+    "168": 20
+   },
+   "tag": {},
+   "pw": {
+    "Style VN": 1,
+    "Đài HTN": 1,
+    "Studio Gió": 1,
+    "Kênh Vui": 3,
+    "Ngân Hà Studio": 1,
+    "Tạp chí Ngôi Sao": 1,
+    "Sân Khấu Sao": 1,
+    "Produce Việt": 1,
+    "Điện thoại Nova": 1,
+    "Đài VTX": 1,
+    "Tạp chí Mốt": 1
+   },
+   "scandal": null,
+   "yr": {
+    "fans": 13055,
+    "actQ": 0,
+    "variety": 1
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Tạp chí «Bộ ảnh thời trang»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.8",
+     "y": 2
+    },
+    {
+     "t": "Tạp kỹ «Ai Là Vua Trò Chơi»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.6, Thể lực +1.1",
+     "y": 2
+    },
+    {
+     "t": "Quảng cáo «Chiến dịch Tết»",
+     "l": "Tự nhiên hơn trước ống kính quảng cáo",
+     "s": "Visual +2.5, Tạp kỹ +1.2",
+     "y": 2
+    },
+    {
+     "t": "Tạp kỹ «Đường Đến Bếp Ngon»",
+     "l": "Phản xạ nhanh và hài hước hơn",
+     "s": "Tạp kỹ +4.8, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Show sống còn «Ngôi Sao Kế Tiếp»",
+     "l": "Học hỏi từ các thí sinh giỏi",
+     "s": "Vocal +3.9, Nhảy +3.9, Rap +2.6, Thể lực +2.6",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu»",
+     "l": "Tự tin hơn trên sân khấu lớn",
+     "s": "Vocal +2.7, Nhảy +2.7",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Vui Hết Cỡ»",
+     "l": "Phản xạ nhanh và hài hước hơn",
+     "s": "Tạp kỹ +5.1, Thể lực +1.3",
+     "y": 1
+    },
+    {
+     "t": "Tạp chí «Bộ ảnh thời trang»",
+     "l": "Biết tạo dáng và tìm góc đẹp",
+     "s": "Visual +3.4",
+     "y": 1
+    },
+    {
+     "t": "Phim điện ảnh «Ký Ức Năm Ấy»",
+     "l": "Biểu cảm bằng ánh mắt tinh tế hơn",
+     "s": "Diễn xuất +7.3, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Đường Đến Bếp Ngon»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.7, Thể lực +1.2",
+     "y": 1
+    },
+    {
+     "t": "Thu âm demo & hát bè «Bản thu thử»",
+     "l": "Hát bè chuẩn hơn",
+     "s": "Vocal +3.8",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Đường Đến Bếp Ngon»",
+     "l": "Phản xạ nhanh và hài hước hơn",
+     "s": "Tạp kỹ +5.1, Thể lực +1.3",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N2: Tạp chí «Bộ ảnh thời trang» – Xuất sắc",
+    "N2: Tạp kỹ «Ai Là Vua Trò Chơi» – Tốt",
+    "N2: Quảng cáo «Chiến dịch Tết» – Xuất sắc",
+    "N1: 🏆 Ngôi sao tạp kỹ",
+    "N1: Tạp kỹ «Đường Đến Bếp Ngon» – Xuất sắc",
+    "N1: Show sống còn «Ngôi Sao Kế Tiếp» – Xuất sắc",
+    "N1: Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» – Xuất sắc",
+    "N1: Tạp kỹ «Vui Hết Cỡ» – Xuất sắc",
+    "N1: Tạp chí «Bộ ảnh thời trang» – Tốt",
+    "N1: Phim điện ảnh «Ký Ức Năm Ấy» – Xuất sắc",
+    "N1: Tạp kỹ «Đường Đến Bếp Ngon» – Xuất sắc",
+    "N1: Thu âm demo & hát bè «Bản thu thử» – Xuất sắc",
+    "N1: Tạp kỹ «Đường Đến Bếp Ngon» – Xuất sắc",
+    "N1: Tạp chí «Phỏng vấn trang đôi» – Xuất sắc",
+    "N1: Cuộc thi «Gương mặt Teen» – hạng 1 · 🏅 Visual +3, Tạp kỹ +1.2",
+    "N1: Cuộc thi «Liên hoan Nhảy đường phố» – hạng 6"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "pg": {
+    "dance": 10.9,
+    "stamina": 11.5,
+    "visual": 21.3,
+    "variety": 28.2,
+    "vocal": 11.6,
+    "acting": 7.3,
+    "rap": 2.6
+   },
+   "wc": 15,
+   "dReady": 0,
+   "xr": {
+    "21": -10,
+    "24": -10,
+    "27": 8
+   },
+   "ev": {
+    "st": 318.29,
+    "f": 81072,
+    "wc": 15,
+    "w": 56
+   },
+   "ttsFail": 1,
+   "evG": "Xuất sắc",
+   "dqName": "StarPop",
+   "ce": 61,
+   "cs0": 9,
+   "earnC": 712000000,
+   "cf0": 12217,
+   "earn": 712000000,
+   "evFail": 0,
+   "mtRq": 50
+  },
+  {
+   "id": 44,
+   "name": "Bảo Ngọc",
+   "g": "F",
+   "age": 16,
+   "look": {
+    "hair": "#b23a48",
+    "skin": "#f8d0b0",
+    "out": "#ff4f8b",
+    "style": "long",
+    "long": true,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 94.3,
+    "dance": 18.8,
+    "rap": 38,
+    "acting": 28.4,
+    "variety": 42.4,
+    "visual": 26.5,
+    "stamina": 31.5
+   },
+   "talent": 1.08,
+   "spec": "rap",
+   "energy": 90.00000000000017,
+   "mood": 100,
+   "fans": 45927,
+   "status": "debuted",
+   "solo": false,
+   "actor": true,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "offer",
+    "type": "variety",
+    "title": "Ai Là Vua Trò Chơi",
+    "partner": "Kênh Vui",
+    "costar": "Trần Bảo Châu",
+    "left": 1,
+    "total": 2,
+    "pay": 57000000,
+    "genre": null,
+    "w": {
+     "variety": 1,
+     "stamina": 0.6
+    },
+    "L": 28,
+    "offerId": 481,
+    "mates": [
+     44
+    ],
+    "chem": 0
+   },
+   "salary": 4000000,
+   "co": {
+    "Lý Gia Bảo": 17,
+    "Hồ Thu Trang": 10,
+    "Tôn Đức Thịnh": 13
+   },
+   "rel": {
+    "1": 11,
+    "2": 21,
+    "8": 10,
+    "9": 30,
+    "69": 16,
+    "103": 44,
+    "104": 45,
+    "132": 8,
+    "168": 18
+   },
+   "tag": {},
+   "pw": {
+    "Mỹ phẩm Hoa Sen": 1,
+    "Đài HTN": 1,
+    "Kênh Vui": 1,
+    "MV Factory": 1,
+    "Phim Mây Trắng": 1,
+    "Shop Mây": 1,
+    "Điện thoại Nova": 1
+   },
+   "scandal": null,
+   "yr": {
+    "fans": 5751,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Quảng cáo «Chiến dịch Tết»",
+     "l": "Tự nhiên hơn trước ống kính quảng cáo",
+     "s": "Visual +2.6, Tạp kỹ +1.3",
+     "y": 2
+    },
+    {
+     "t": "Người mẫu ảnh online «Lookbook học sinh»",
+     "l": "Hiểu thêm về thời trang",
+     "s": "Visual +3.9",
+     "y": 1
+    },
+    {
+     "t": "Phim điện ảnh «Hẹn Ước Không Tên»",
+     "l": "Diễn tiết chế hơn trước ống kính lớn",
+     "s": "Diễn xuất +7.7, Thể lực +1.3",
+     "y": 1
+    },
+    {
+     "t": "Diễn viên phụ MV «MV ballad»",
+     "l": "Biểu cảm tự nhiên hơn",
+     "s": "Diễn xuất +2.5, Visual +1.2",
+     "y": 1
+    },
+    {
+     "t": "Quảng bá «Test Single 26»",
+     "l": "Học cách tương tác tự nhiên với MC và khán giả",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Tạp kỹ «Ai Là Vua Trò Chơi»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +5.1, Thể lực +1.3",
+     "y": 1
+    },
+    {
+     "t": "Tạp kỹ «Ai Là Vua Trò Chơi»",
+     "l": "Biết tạo khoảnh khắc đáng nhớ",
+     "s": "Tạp kỹ +4.5, Thể lực +1.1",
+     "y": 1
+    },
+    {
+     "t": "Quảng cáo «Đại sứ thương hiệu»",
+     "l": "Tự nhiên hơn trước ống kính quảng cáo",
+     "s": "Visual +2.4, Tạp kỹ +1.2",
+     "y": 1
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Biết kiểm soát hồi hộp trên sân khấu debut",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Giọng hát Tân binh»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Vocal +3.7",
+     "y": 1,
+     "b": "Vocal +3"
+    }
+   ],
+   "hist": [
+    "N2: Quảng cáo «Chiến dịch Tết» – Xuất sắc",
+    "N1: Người mẫu ảnh online «Lookbook học sinh» – Xuất sắc",
+    "N1: Phim điện ảnh «Hẹn Ước Không Tên» – Xuất sắc",
+    "N1: Diễn viên phụ MV «MV ballad» – Xuất sắc",
+    "N1: Single «Test Single 26» – hạng 85",
+    "N1: Tạp kỹ «Ai Là Vua Trò Chơi» – Xuất sắc",
+    "N1: Tạp kỹ «Ai Là Vua Trò Chơi» – Tốt",
+    "N1: Quảng cáo «Đại sứ thương hiệu» – Xuất sắc",
+    "N1: Cuộc thi «Giọng hát Tân binh» – hạng 1 · 🏅 Vocal +3"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "25": 3,
+    "27": 13
+   },
+   "ev": {
+    "st": 279.9,
+    "f": 45927,
+    "wc": 9,
+    "w": 56
+   },
+   "ttsFail": 1,
+   "evG": "Đạt",
+   "pg": {
+    "vocal": 9.4,
+    "dance": 2.8,
+    "visual": 11.2,
+    "variety": 13.2,
+    "stamina": 4.3,
+    "acting": 10.2
+   },
+   "wc": 9,
+   "dw": {
+    "t": "solo",
+    "why": "Em tự tin vào Rap và muốn thử sức solo với concept Ballad.",
+    "w": 15
+   },
+   "dqName": "Petal Nine",
+   "ce": 67,
+   "cs0": 15,
+   "earnC": 940533666.6666666,
+   "cf0": 11170,
+   "evFail": 0,
+   "earn": 940533666.6666666,
+   "paAsk": 27
+  },
+  {
+   "id": 69,
+   "name": "Thu Hà",
+   "g": "F",
+   "age": 19,
+   "look": {
+    "hair": "#2b2233",
+    "skin": "#ffe0c7",
+    "out": "#ff4f8b",
+    "style": "bun",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 100,
+    "dance": 39.9,
+    "rap": 18.3,
+    "acting": 28.1,
+    "variety": 16.1,
+    "visual": 35.7,
+    "stamina": 26.6
+   },
+   "talent": 1.25,
+   "spec": "visual",
+   "energy": 100,
+   "mood": 69.5000000000003,
+   "fans": 30392,
+   "status": "debuted",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 4000000,
+   "co": {},
+   "rel": {
+    "1": 24,
+    "2": 12,
+    "8": 19,
+    "9": 17,
+    "44": 16,
+    "103": 34,
+    "104": 30,
+    "132": 29,
+    "168": 42
+   },
+   "tag": {},
+   "pw": {
+    "Music Weekly": 2,
+    "Tạp chí Mốt": 1
+   },
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu»",
+     "l": "Tự tin hơn trên sân khấu lớn",
+     "s": "Vocal +2.6, Nhảy +2.6",
+     "y": 1
+    },
+    {
+     "t": "Quảng bá «Test Single 26»",
+     "l": "Học cách tương tác tự nhiên với MC và khán giả",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Tạp chí «Phỏng vấn trang đôi»",
+     "l": "Biết tạo dáng và tìm góc đẹp",
+     "s": "Visual +3.9",
+     "y": 1
+    },
+    {
+     "t": "Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu»",
+     "l": "Tự tin hơn trên sân khấu lớn",
+     "s": "Vocal +2.5, Nhảy +2.5",
+     "y": 1
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Biết kiểm soát hồi hộp trên sân khấu debut",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    }
+   ],
+   "hist": [
+    "N1: Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» – Xuất sắc",
+    "N1: Single «Test Single 26» – hạng 85",
+    "N1: Tạp chí «Phỏng vấn trang đôi» – Xuất sắc",
+    "N1: Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» – Xuất sắc"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "21": 17
+   },
+   "ev": {
+    "st": 264.70000000000005,
+    "f": 30392,
+    "wc": 4,
+    "w": 56
+   },
+   "dw": {
+    "t": "group",
+    "why": "Em nghĩ đứng chung nhóm sẽ bổ trợ nhau tốt hơn, concept Ballad rất hợp.",
+    "w": 15
+   },
+   "dqName": "Mirage",
+   "ce": 67,
+   "cs0": 15,
+   "earnC": 219533666.6666667,
+   "cf0": 3456,
+   "pg": {
+    "vocal": 7.9,
+    "dance": 7.9,
+    "visual": 5,
+    "variety": 1.1,
+    "stamina": 0.6
+   },
+   "evFail": 4,
+   "evG": "Không đạt",
+   "earn": 219533666.6666667,
+   "wc": 4,
+   "mtRq": 39
+  },
+  {
+   "id": 103,
+   "name": "Thành Đạt",
+   "g": "M",
+   "age": 21,
+   "look": {
+    "hair": "#1d1d2b",
+    "skin": "#eebf98",
+    "out": "#e9e9f2",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 94.95,
+    "dance": 19.5,
+    "rap": 22.9,
+    "acting": 33.9,
+    "variety": 17.1,
+    "visual": 20,
+    "stamina": 52.9
+   },
+   "talent": 0.79,
+   "spec": "stamina",
+   "energy": 32.00000000000004,
+   "mood": 100,
+   "fans": 26039,
+   "status": "debuted",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "promo",
+    "title": "Quảng bá «Test Single 54»",
+    "left": 1,
+    "total": 3,
+    "lk": "promo"
+   },
+   "salary": 4000000,
+   "co": {},
+   "rel": {
+    "1": 1,
+    "2": 12,
+    "8": 21,
+    "9": 7,
+    "44": 44,
+    "69": 34,
+    "104": 22,
+    "132": 7,
+    "168": 22
+   },
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 10868,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Quảng bá «Test Single 40»",
+     "l": "Biết cách giữ năng lượng suốt chuỗi lịch quảng bá",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Hiểu sức nặng của khoảnh khắc ra mắt",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Ban nhạc Học đường»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Vocal +2.7, Rap +1.4, Nhảy +1.4",
+     "y": 1,
+     "b": "Vocal +0.8, Rap +0.4, Nhảy +0.4"
+    },
+    {
+     "t": "Cuộc thi «Tài năng Diễn xuất Trẻ»",
+     "l": "Học được nhiều từ đối thủ",
+     "s": "Diễn xuất +3.2, Visual +1.0",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N2: Single «Test Single 54» – hạng 59",
+    "N1: Single «Test Single 40» – hạng 87",
+    "N1: Cuộc thi «Ban nhạc Học đường» – hạng 3 · 🏅 Vocal +0.8, Rap +0.4, Nhảy +0.4",
+    "N1: Cuộc thi «Tài năng Diễn xuất Trẻ» – hạng 8"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "25": 8,
+    "28": -10
+   },
+   "ev": {
+    "st": 261.25,
+    "f": 26039,
+    "wc": 4,
+    "w": 56
+   },
+   "pg": {
+    "acting": 3.2,
+    "visual": 2.1,
+    "vocal": 6.1,
+    "rap": 1.8,
+    "dance": 4.5,
+    "variety": 1.1,
+    "stamina": 0.5
+   },
+   "wc": 4,
+   "ttsFail": 0,
+   "evG": "Xuất sắc",
+   "dw": {
+    "t": "solo",
+    "why": "Em tự tin vào Thể lực và muốn thử sức solo với concept Ballad.",
+    "w": 24
+   },
+   "dqName": "Aurora",
+   "ce": 77,
+   "cs0": 25,
+   "earnC": 95781666.66666666,
+   "cf0": 6540,
+   "mtRq": 37,
+   "evFail": 0,
+   "earn": 95781666.66666666,
+   "hsF": {
+    "w": 43,
+    "why": [
+     "năng lượng chỉ còn 30"
+    ],
+    "n": 3,
+    "st": "kept"
+   }
+  },
+  {
+   "id": 104,
+   "name": "Quỳnh Như",
+   "g": "F",
+   "age": 20,
+   "look": {
+    "hair": "#2b2233",
+    "skin": "#d9a27c",
+    "out": "#00bbf9",
+    "style": "twin",
+    "long": true,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 87.06,
+    "dance": 13.6,
+    "rap": 19.5,
+    "acting": 11.2,
+    "variety": 12.7,
+    "visual": 23.1,
+    "stamina": 18.9
+   },
+   "talent": 0.82,
+   "spec": "stamina",
+   "energy": 32.00000000000004,
+   "mood": 96.00000000000043,
+   "fans": 25136,
+   "status": "debuted",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "promo",
+    "title": "Quảng bá «Test Single 54»",
+    "left": 1,
+    "total": 3,
+    "lk": "promo"
+   },
+   "salary": 4000000,
+   "co": {},
+   "rel": {
+    "1": 6,
+    "2": -2,
+    "8": 26,
+    "9": -1,
+    "44": 45,
+    "69": 30,
+    "103": 22,
+    "132": 18,
+    "168": 6
+   },
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 9316,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Quảng bá «Test Single 40»",
+     "l": "Biết cách giữ năng lượng suốt chuỗi lịch quảng bá",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Hiểu sức nặng của khoảnh khắc ra mắt",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Ban nhạc Học đường»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Vocal +2.7, Rap +1.4, Nhảy +1.4",
+     "y": 1,
+     "b": "Vocal +0.8, Rap +0.4, Nhảy +0.4"
+    },
+    {
+     "t": "Cuộc thi «Tài năng Diễn xuất Trẻ»",
+     "l": "Học được nhiều từ đối thủ",
+     "s": "Diễn xuất +3.2, Visual +1.0",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N2: Single «Test Single 54» – hạng 59",
+    "N1: Single «Test Single 40» – hạng 87",
+    "N1: Cuộc thi «Ban nhạc Học đường» – hạng 3 · 🏅 Vocal +0.8, Rap +0.4, Nhảy +0.4",
+    "N1: Cuộc thi «Tài năng Diễn xuất Trẻ» – hạng 8"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "27": -10
+   },
+   "ev": {
+    "st": 186.05999999999997,
+    "f": 25136,
+    "wc": 4,
+    "w": 56
+   },
+   "pg": {
+    "acting": 3.2,
+    "visual": 2.1,
+    "vocal": 6.2,
+    "rap": 1.8,
+    "dance": 4.6,
+    "variety": 1.1,
+    "stamina": 0.5
+   },
+   "wc": 4,
+   "ttsFail": 1,
+   "evG": "Xuất sắc",
+   "dqName": "Crimson",
+   "ce": 77,
+   "cs0": 25,
+   "earnC": 95781666.66666666,
+   "cf0": 7873,
+   "evFail": 0,
+   "mtRq": 29,
+   "earn": 95781666.66666666,
+   "hsF": {
+    "w": 43,
+    "why": [
+     "năng lượng chỉ còn 30"
+    ],
+    "n": 3,
+    "st": "new"
+   },
+   "paAsk": 51
+  },
+  {
+   "id": 132,
+   "name": "Lan Chi",
+   "g": "F",
+   "age": 19,
+   "look": {
+    "hair": "#4aa3df",
+    "skin": "#ffe0c7",
+    "out": "#ff4f8b",
+    "style": "bun",
+    "long": true,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 85.76,
+    "dance": 23.5,
+    "rap": 22.3,
+    "acting": 38.7,
+    "variety": 21.5,
+    "visual": 27.1,
+    "stamina": 17.8
+   },
+   "talent": 0.82,
+   "spec": "acting",
+   "energy": 32.00000000000004,
+   "mood": 100,
+   "fans": 24487,
+   "status": "debuted",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": {
+    "kind": "promo",
+    "title": "Quảng bá «Test Single 54»",
+    "left": 1,
+    "total": 3,
+    "lk": "promo"
+   },
+   "salary": 4000000,
+   "co": {},
+   "rel": {
+    "1": 2,
+    "2": -2,
+    "8": 5,
+    "9": 13,
+    "44": 8,
+    "69": 29,
+    "103": 7,
+    "104": 18,
+    "168": -4
+   },
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 11480,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 1,
+   "lessons": [
+    {
+     "t": "Quảng bá «Test Single 40»",
+     "l": "Biết cách giữ năng lượng suốt chuỗi lịch quảng bá",
+     "s": "Vocal +1.7, Nhảy +1.7, Tạp kỹ +1.1, Thể lực +0.6",
+     "y": 1,
+     "lk": "promo"
+    },
+    {
+     "t": "Showcase debut",
+     "l": "Hiểu sức nặng của khoảnh khắc ra mắt",
+     "s": "Vocal +1.1, Nhảy +1.1, Visual +1.1",
+     "y": 1,
+     "lk": "showcase"
+    },
+    {
+     "t": "Cuộc thi «Ban nhạc Học đường»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Vocal +2.7, Rap +1.4, Nhảy +1.4",
+     "y": 1,
+     "b": "Vocal +0.8, Rap +0.4, Nhảy +0.4"
+    }
+   ],
+   "hist": [
+    "N2: Single «Test Single 54» – hạng 59",
+    "N1: Single «Test Single 40» – hạng 87",
+    "N1: Cuộc thi «Ban nhạc Học đường» – hạng 3 · 🏅 Vocal +0.8, Rap +0.4, Nhảy +0.4"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 0,
+   "xr": {
+    "25": -10,
+    "28": -8
+   },
+   "pg": {
+    "vocal": 6.3,
+    "rap": 1.8,
+    "dance": 4.5,
+    "visual": 1.1,
+    "variety": 1.1,
+    "stamina": 0.6
+   },
+   "wc": 3,
+   "ev": {
+    "st": 236.66,
+    "f": 24487,
+    "wc": 3,
+    "w": 56
+   },
+   "dqName": "Aurora",
+   "ttsFail": 1,
+   "evG": "Xuất sắc",
+   "ce": 77,
+   "cs0": 25,
+   "earnC": 95781666.66666666,
+   "cf0": 4020,
+   "evFail": 0,
+   "mtRq": 31,
+   "earn": 95781666.66666666,
+   "hsF": {
+    "w": 43,
+    "why": [
+     "năng lượng chỉ còn 30"
+    ],
+    "n": 3,
+    "st": "new"
+   }
+  },
+  {
+   "id": 168,
+   "name": "An Khang",
+   "g": "M",
+   "age": 18,
+   "look": {
+    "hair": "#2b2233",
+    "skin": "#eebf98",
+    "out": "#e9e9f2",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 100,
+    "dance": 16.9,
+    "rap": 32.4,
+    "acting": 25,
+    "variety": 18.6,
+    "visual": 33.5,
+    "stamina": 15.8
+   },
+   "talent": 0.75,
+   "spec": "visual",
+   "energy": 100,
+   "mood": 100,
+   "fans": 6441,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {
+    "1": 0,
+    "2": 20,
+    "8": 13,
+    "9": 7,
+    "44": 18,
+    "69": 42,
+    "103": 22,
+    "104": 6,
+    "132": -4
+   },
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [
+    {
+     "t": "Cuộc thi «Giọng hát Tân binh»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Vocal +3.7",
+     "y": 1,
+     "b": "Vocal +3"
+    },
+    {
+     "t": "Cuộc thi «Đấu trường Rap Trẻ»",
+     "l": "Tự tin hơn khi thi đấu",
+     "s": "Rap +3.4, Tạp kỹ +1.0",
+     "y": 1,
+     "b": "Rap +2, Tạp kỹ +0.6"
+    },
+    {
+     "t": "Cuộc thi «Đấu trường Rap Trẻ»",
+     "l": "Học được nhiều từ đối thủ",
+     "s": "Rap +3.2, Tạp kỹ +1.0",
+     "y": 1
+    }
+   ],
+   "hist": [
+    "N1: Cuộc thi «Giọng hát Tân binh» – hạng 1 · 🏅 Vocal +3",
+    "N1: Cuộc thi «Đấu trường Rap Trẻ» – hạng 2 · 🏅 Rap +2, Tạp kỹ +0.6",
+    "N1: Cuộc thi «Đấu trường Rap Trẻ» – hạng 6"
+   ],
+   "wantAct": 0,
+   "batch": 10,
+   "dReady": 1,
+   "xr": {},
+   "pg": {
+    "rap": 8.6,
+    "variety": 2.6,
+    "vocal": 6.7
+   },
+   "wc": 3,
+   "ev": {
+    "st": 242.20000000000002,
+    "f": 6441,
+    "wc": 3,
+    "w": 56
+   },
+   "ttsFail": 0,
+   "evG": "Đạt"
+  }
+ ],
+ "groups": [
+  {
+   "id": 78,
+   "name": "Test Group",
+   "members": [
+    8,
+    1,
+    2
+   ],
+   "y": 1,
+   "concept": "ballad",
+   "hiatus": 0
+  },
+  {
+   "id": 118,
+   "name": "Test Group",
+   "members": [
+    9,
+    44,
+    69
+   ],
+   "y": 1,
+   "concept": "edm"
+  },
+  {
+   "id": 207,
+   "name": "Test Group",
+   "members": [
+    103,
+    104,
+    132
+   ],
+   "y": 1,
+   "concept": "ballad"
+  }
+ ],
+ "offers": [
+  {
+   "id": 483,
+   "type": "drama",
+   "partner": "Đài VTX",
+   "genre": "action",
+   "w": {
+    "acting": 0.4,
+    "stamina": 0.4,
+    "dance": 0.2
+   },
+   "req": {
+    "acting": 23,
+    "stamina": 23,
+    "dance": 12
+   },
+   "L": 23,
+   "fame": 4,
+   "weeks": 12,
+   "pay": 221000000,
+   "costar": "Ngô Kiều Anh",
+   "exp": 57,
+   "title": "Đêm Đông Cuối Cùng",
+   "target": null,
+   "invest": {
+    "budget": 3094000000,
+    "share": 0.05
+   },
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 484,
+   "type": "drama",
+   "partner": "Đài VTX",
+   "genre": "comedy",
+   "w": {
+    "acting": 0.4,
+    "variety": 0.6
+   },
+   "req": {
+    "acting": 14,
+    "variety": 21
+   },
+   "L": 21,
+   "fame": 7,
+   "weeks": 8,
+   "pay": 233000000,
+   "costar": "Tôn Đức Thịnh",
+   "exp": 57,
+   "title": "Người Thừa Kế Lặng Im",
+   "target": null,
+   "invest": {
+    "budget": 2097000000,
+    "share": 0.1
+   },
+   "invested": false,
+   "slots": 3
+  },
+  {
+   "id": 489,
+   "type": "web",
+   "partner": "YouStar",
+   "genre": "action",
+   "w": {
+    "acting": 0.4,
+    "stamina": 0.4,
+    "dance": 0.2
+   },
+   "req": {
+    "acting": 23,
+    "stamina": 23,
+    "dance": 12
+   },
+   "L": 23,
+   "fame": 0,
+   "weeks": 5,
+   "pay": 68000000,
+   "costar": "Vũ Diệu Linh",
+   "exp": 57,
+   "title": "Hoàng Cung Năm Ấy",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 492,
+   "type": "model",
+   "partner": "Shop Mây",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 16
+   },
+   "L": 16,
+   "fame": 0,
+   "weeks": 1,
+   "pay": 12000000,
+   "costar": null,
+   "exp": 58,
+   "title": "Bộ sưu tập thu",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 499,
+   "type": "variety",
+   "partner": "Đài HTN",
+   "genre": null,
+   "w": {
+    "variety": 1,
+    "stamina": 0.6
+   },
+   "req": {
+    "variety": 25,
+    "stamina": 15
+   },
+   "L": 25,
+   "fame": 1,
+   "weeks": 1,
+   "pay": 92000000,
+   "costar": "Phạm Quốc Bảo",
+   "exp": 59,
+   "title": "Ai Là Vua Trò Chơi",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 500,
+   "type": "ad",
+   "partner": "Nước ngọt Bờ Biển",
+   "genre": null,
+   "w": {
+    "visual": 1,
+    "variety": 0.6
+   },
+   "req": {
+    "visual": 26,
+    "variety": 16
+   },
+   "L": 26,
+   "fame": 1,
+   "weeks": 1,
+   "pay": 121000000,
+   "costar": null,
+   "exp": 59,
+   "title": "TVC mùa hè",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 501,
+   "type": "magazine",
+   "partner": "Tạp chí Mốt",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 22
+   },
+   "L": 22,
+   "fame": 5,
+   "weeks": 1,
+   "pay": 48000000,
+   "costar": null,
+   "exp": 59,
+   "title": "Bìa số tháng",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 502,
+   "type": "movie",
+   "partner": "Lotus Pictures",
+   "genre": "comedy",
+   "w": {
+    "acting": 0.4,
+    "variety": 0.6
+   },
+   "req": {
+    "acting": 12,
+    "variety": 18
+   },
+   "L": 18,
+   "fame": 2,
+   "weeks": 8,
+   "pay": 361000000,
+   "costar": "Hồ Thu Trang",
+   "exp": 58,
+   "title": "Đêm Đông Cuối Cùng",
+   "target": null,
+   "invest": {
+    "budget": 5054000000,
+    "share": 0.05
+   },
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 503,
+   "type": "guide",
+   "partner": "Âm Nhạc Mới",
+   "genre": null,
+   "w": {
+    "vocal": 1
+   },
+   "req": {
+    "vocal": 19
+   },
+   "L": 19,
+   "fame": 0,
+   "weeks": 1,
+   "pay": 9000000,
+   "costar": null,
+   "exp": 57,
+   "title": "Demo bài mới",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 508,
+   "type": "magazine",
+   "partner": "Style VN",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 30
+   },
+   "L": 30,
+   "fame": 5,
+   "weeks": 1,
+   "pay": 21000000,
+   "costar": null,
+   "exp": 59,
+   "title": "Phỏng vấn trang đôi",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 509,
+   "type": "drama",
+   "partner": "Đài VTX",
+   "genre": "comedy",
+   "w": {
+    "acting": 0.4,
+    "variety": 0.6
+   },
+   "req": {
+    "acting": 20,
+    "variety": 30
+   },
+   "L": 30,
+   "fame": 5,
+   "weeks": 11,
+   "pay": 176000000,
+   "costar": "Tôn Đức Thịnh",
+   "exp": 60,
+   "title": "Hẹn Ước Năm Ấy",
+   "target": null,
+   "invest": {
+    "budget": 1584000000,
+    "share": 0.05
+   },
+   "invested": false,
+   "slots": 2
+  },
+  {
+   "id": 510,
+   "type": "magazine",
+   "partner": "Tạp chí Mốt",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 35
+   },
+   "L": 35,
+   "fame": 5,
+   "weeks": 1,
+   "pay": 21000000,
+   "costar": null,
+   "exp": 59,
+   "title": "Bộ ảnh thời trang",
+   "target": 8,
+   "invest": null,
+   "invested": false,
+   "slots": 2
+  }
+ ],
+ "films": [],
+ "events": [
+  {
+   "kind": "renew",
+   "a": 8,
+   "mul": 1,
+   "id": 518
+  },
+  {
+   "kind": "renew",
+   "a": 1,
+   "mul": 1,
+   "id": 519
+  },
+  {
+   "kind": "renew",
+   "a": 2,
+   "mul": 1,
+   "id": 520
+  },
+  {
+   "kind": "v3",
+   "t": "md",
+   "song": {
+    "id": 522,
+    "t": "Lucky",
+    "ck": "ballad",
+    "q": 83,
+    "by": [],
+    "st": "ok",
+    "w": 56,
+    "doneAt": 56,
+    "y": 2,
+    "md": 1,
+    "rv": {
+     "g": "A",
+     "mk": 80
+    }
+   },
+   "k": "g78",
+   "id": 523
+  },
+  {
+   "kind": "req_solo",
+   "a": 69,
+   "id": 524
+  },
+  {
+   "kind": "scandal",
+   "a": 8,
+   "id": 525
+  }
+ ],
+ "log": [
+  {
+   "t": "🕵️ Mở hồ sơ điều tra scandal của Việt Hoàng.",
+   "c": "",
+   "w": "N2·T5"
+  },
+  {
+   "t": "🚨 Scandal: Việt Hoàng – Tin đồn thái độ với nhân viên!",
+   "c": "bad",
+   "w": "N2·T5"
+  },
+  {
+   "t": "📊 QL tổng Vũ Hoài Nam: 0 QL lên cấp · +0 fan · +0k doanh thu · 2 vấn đề",
+   "c": "",
+   "w": "N2·T5"
+  },
+  {
+   "t": "📋 Đánh giá định kỳ: TTS 1/1 đạt · Nghệ sĩ 5 xuất sắc (thưởng 40 tr), 1 không đạt (trừ 4 tr).",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "☕ QL Vũ Hoài Nam và QL Bùi Mỹ Linh đi cà phê, trao đổi công việc.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "😤 Luna Hồ (Hoa Mai Music) bóng gió chê Thành Đạt trên livestream. Thành Đạt hơi buồn nhưng có thêm động lực.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "📨 Minh Khôi (nam, 22) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.",
+   "c": "good",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 10 tr.",
+   "c": "good",
+   "w": "N2·T4"
+  },
+  {
+   "t": "📉 Bất ngờ: kinh tế suy thoái. 6 tuần tới thù lao giảm 20%, lợi nhuận kinh doanh giảm 30%.",
+   "c": "bad",
+   "w": "N2·T4"
+  },
+  {
+   "t": "📰 Galaxy Star dính scandal lớn, mất nhiều fan. Cơ hội cho bạn!",
+   "c": "good",
+   "w": "N2·T4"
+  },
+  {
+   "t": "⚔️ Moonlight Ent. comeback với «Starlight» (Dark Fantasy), hạng 22. Single ra tuần này sẽ bị cạnh tranh.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "✅ Tuấn Kiệt hoàn thành «Bộ ảnh thời trang» (Xuất sắc): +42 tr, +3.3K fan. Bài học: Hiểu thêm về thời trang (Visual +3.8).",
+   "c": "good",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🗒️ Thư ký tự xếp 4 hoạt động quảng bá cho Test Group.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Bảng Xếp Hạng Tuần.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Đài Âm Nhạc.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Sân Khấu Sao.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Music Weekly.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎪 Bảo Ngọc nhận Tạp kỹ «Ai Là Vua Trò Chơi» (Kênh Vui), 2 tuần.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "📸 Tuấn Kiệt nhận Tạp chí «Bộ ảnh thời trang» (Tạp chí Mốt), 1 tuần.",
+   "c": "",
+   "w": "N2·T4"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 180k.",
+   "c": "good",
+   "w": "N2·T3"
+  },
+  {
+   "t": "📉 Bất ngờ: kinh tế suy thoái. 6 tuần tới thù lao giảm 20%, lợi nhuận kinh doanh giảm 30%.",
+   "c": "bad",
+   "w": "N2·T3"
+  },
+  {
+   "t": "✅ Tuấn Kiệt hoàn thành «Ai Là Vua Trò Chơi» (Tốt): +99 tr, +7.4K fan. Bài học: Biết tạo khoảnh khắc đáng nhớ (Tạp kỹ +4.6, Thể lực +1.1).",
+   "c": "good",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🗒️ Thư ký tự xếp 4 hoạt động quảng bá cho Test Group.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Bảng Xếp Hạng Tuần.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Đài Âm Nhạc.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Sân Khấu Sao.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🎤 Test Group biểu diễn Sân khấu Music Weekly.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "💿 Single «Test Single 54» của Test Group (Dễ thương) đạt hạng 59! Doanh thu 140 tr. 🔥 Hợp xu hướng.",
+   "c": "good",
+   "w": "N2·T3"
+  },
+  {
+   "t": "🎪 Tuấn Kiệt nhận Tạp kỹ «Ai Là Vua Trò Chơi» (Đài VTX), 1 tuần.",
+   "c": "",
+   "w": "N2·T3"
+  },
+  {
+   "t": "📨 Minh Khôi (nam, 17) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.",
+   "c": "good",
+   "w": "N2·T2"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 200k.",
+   "c": "good",
+   "w": "N2·T2"
+  },
+  {
+   "t": "📰 Titan Media dính scandal lớn, mất nhiều fan. Cơ hội cho bạn!",
+   "c": "good",
+   "w": "N2·T2"
+  },
+  {
+   "t": "🔥 Xu hướng mới: Dễ thương và Hip-hop đang thịnh hành, Mạnh mẽ (Crush) hết thời.",
+   "c": "gold",
+   "w": "N2·T2"
+  },
+  {
+   "t": "✅ Bảo Ngọc hoàn thành «Chiến dịch Tết» (Xuất sắc): +136 tr, +5.8K fan. Bài học: Tự nhiên hơn trước ống kính quảng cáo (Visual +2.6, Tạp kỹ +1.3).",
+   "c": "good",
+   "w": "N2·T2"
+  },
+  {
+   "t": "✅ Tuấn Kiệt hoàn thành «Chiến dịch Tết» (Xuất sắc): +63 tr, +2.4K fan. Bài học: Tự nhiên hơn trước ống kính quảng cáo (Visual +2.5, Tạp kỹ +1.2).",
+   "c": "good",
+   "w": "N2·T2"
+  },
+  {
+   "t": "💄 Bảo Ngọc nhận Quảng cáo «Chiến dịch Tết» (Điện thoại Nova), 1 tuần.",
+   "c": "",
+   "w": "N2·T2"
+  },
+  {
+   "t": "💄 Tuấn Kiệt nhận Quảng cáo «Chiến dịch Tết» (Điện thoại Nova), 1 tuần.",
+   "c": "",
+   "w": "N2·T2"
+  },
+  {
+   "t": "📄 Hợp đồng của Tuấn Kiệt còn 8 tuần. Xem đánh giá tái ký ở Phòng Nhân sự.",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "📄 Hợp đồng của Minh Thư còn 8 tuần. Xem đánh giá tái ký ở Phòng Nhân sự.",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "📄 Hợp đồng của Việt Hoàng còn 8 tuần. Xem đánh giá tái ký ở Phòng Nhân sự.",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 240k.",
+   "c": "good",
+   "w": "N2·T1"
+  },
+  {
+   "t": "⚠️ Giữ nguyên lịch của Hà Linh dù chuyên gia khuyên nghỉ thêm.",
+   "c": "bad",
+   "w": "N2·T1"
+  },
+  {
+   "t": "⚠️ Giữ nguyên lịch của Việt Hoàng dù chuyên gia khuyên nghỉ thêm.",
+   "c": "bad",
+   "w": "N2·T1"
+  },
+  {
+   "t": "🔥 Hà Linh nhận Show sống còn «Debut Hay Dừng Lại» (Produce Việt), 8 tuần.",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "📱 Việt Hoàng nhận Web drama «Mùa Hạ Cuối Cùng» (YouStar), 5 tuần.",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "📊 QL tổng Vũ Hoài Nam: 0 QL lên cấp · +0 fan · +0k doanh thu · 2 vấn đề",
+   "c": "",
+   "w": "N2·T1"
+  },
+  {
+   "t": "🏆 Lễ trao giải năm 1: thắng 5/6 hạng mục. Công ty xếp hạng 3/6.",
+   "c": "gold",
+   "w": "N1·T53"
+  },
+  {
+   "t": "📋 Đánh giá định kỳ: TTS 1/1 đạt · Nghệ sĩ 2 xuất sắc (thưởng 16 tr), 7 không đạt (trừ 28 tr).",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "🤝 Việt Hoàng rủ Thành Đạt tập thêm buổi tối: Thể lực và Diễn xuất cùng tiến bộ.",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "🎤 Thu Hà làm quen với Tony Lý (Galaxy Star) ở hậu trường show âm nhạc.",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 280k.",
+   "c": "good",
+   "w": "N1·T52"
+  },
+  {
+   "t": "⚔️ Titan Media giành mất lời mời «Cánh Diều Không Tên» (Phim điện ảnh).",
+   "c": "bad",
+   "w": "N1·T52"
+  },
+  {
+   "t": "✅ Bảo Ngọc hoàn thành «Lookbook học sinh» (Xuất sắc): +7 tr, +640 fan. Bài học: Hiểu thêm về thời trang (Visual +3.9).",
+   "c": "good",
+   "w": "N1·T52"
+  },
+  {
+   "t": "✅ Tuấn Kiệt hoàn thành «Đường Đến Bếp Ngon» (Xuất sắc): +28 tr, +3.8K fan. Bài học: Phản xạ nhanh và hài hước hơn (Tạp kỹ +4.8, Thể lực +1.2).",
+   "c": "good",
+   "w": "N1·T52"
+  },
+  {
+   "t": "✅ Hà Linh hoàn thành «Thần Tượng 101» (Xuất sắc): +28 tr, +51K fan. Bài học: Học hỏi từ các thí sinh giỏi (Vocal +3.7, Nhảy +3.7, Rap +2.5, Thể lực +2.5).",
+   "c": "good",
+   "w": "N1·T52"
+  },
+  {
+   "t": "✅ Việt Hoàng hoàn thành «Lễ Hội Âm Nhạc Mùa Thu» (Xuất sắc): +55 tr, +5.6K fan. Bài học: Giữ hơi tốt hơn khi vừa hát vừa nhảy (Vocal +2.5, Nhảy +2.5).",
+   "c": "good",
+   "w": "N1·T52"
+  },
+  {
+   "t": "👗 Bảo Ngọc nhận Người mẫu ảnh online «Lookbook học sinh» (Shop Mây), 1 tuần.",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "🎪 Tuấn Kiệt nhận Tạp kỹ «Đường Đến Bếp Ngon» (Kênh Vui), 1 tuần.",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "🎶 Việt Hoàng nhận Show âm nhạc «Lễ Hội Âm Nhạc Mùa Thu» (Đài Âm Nhạc), 1 tuần.",
+   "c": "",
+   "w": "N1·T52"
+  },
+  {
+   "t": "📨 Hữu Phước (nam, 20) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.",
+   "c": "good",
+   "w": "N1·T51"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 320k.",
+   "c": "good",
+   "w": "N1·T51"
+  },
+  {
+   "t": "⚔️ Galaxy Star comeback với «Bad Love» (Dễ thương), hạng 19. Single ra tuần này sẽ bị cạnh tranh.",
+   "c": "",
+   "w": "N1·T51"
+  },
+  {
+   "t": "⚔️ Blue Wave comeback với «Pink Moon» (Ballad), hạng 13. Single ra tuần này sẽ bị cạnh tranh.",
+   "c": "",
+   "w": "N1·T51"
+  },
+  {
+   "t": "🌤️ Scandal của Bảo Ngọc đã lắng xuống.",
+   "c": "",
+   "w": "N1·T51"
+  },
+  {
+   "t": "🌤️ Scandal của Tuấn Kiệt đã lắng xuống.",
+   "c": "",
+   "w": "N1·T51"
+  },
+  {
+   "t": "✅ Việt Hoàng hoàn thành «Nhà Chung Mùa Hè» (Xuất sắc): +34 tr, +4.5K fan. Bài học: Biết tạo khoảnh khắc đáng nhớ (Tạp kỹ +4.9, Thể lực +1.2).",
+   "c": "good",
+   "w": "N1·T51"
+  },
+  {
+   "t": "🙅 Từ chối đề xuất dẫn dắt An Khang của Tuấn Kiệt.",
+   "c": "",
+   "w": "N1·T51"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 380k.",
+   "c": "good",
+   "w": "N1·T50"
+  },
+  {
+   "t": "⚠️ Giữ nguyên lịch của Việt Hoàng dù chuyên gia khuyên nghỉ thêm.",
+   "c": "bad",
+   "w": "N1·T50"
+  },
+  {
+   "t": "🙅 Từ chối đề xuất dẫn dắt An Khang của Việt Hoàng.",
+   "c": "",
+   "w": "N1·T50"
+  },
+  {
+   "t": "🎪 Việt Hoàng nhận Tạp kỹ «Nhà Chung Mùa Hè» (Đài HTN), 2 tuần.",
+   "c": "",
+   "w": "N1·T50"
+  },
+  {
+   "t": "🤝 Thu Hà rủ Tuấn Kiệt tập thêm buổi tối: Thể lực và Visual cùng tiến bộ.",
+   "c": "",
+   "w": "N1·T49"
+  },
+  {
+   "t": "🎤 Bảo Ngọc làm quen với Bella Vũ (Titan Media) ở hậu trường show âm nhạc.",
+   "c": "",
+   "w": "N1·T49"
+  },
+  {
+   "t": "📨 Cát Tường (nữ, 18) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.",
+   "c": "good",
+   "w": "N1·T49"
+  },
+  {
+   "t": "🎉 Nhóm Test Group kết thúc thời gian tạm ngừng, sẵn sàng hoạt động trở lại.",
+   "c": "good",
+   "w": "N1·T49"
+  },
+  {
+   "t": "🎧 Doanh thu nhạc số tuần này: 440k.",
+   "c": "good",
+   "w": "N1·T49"
+  },
+  {
+   "t": "✅ Việt Hoàng hoàn thành «Đêm Đông Bất Tận» (Xuất sắc): +469 tr, +26.2K fan. Bài học: Rèn sức bền qua những cảnh quay khó (Diễn xuất +7.6, Thể lực +1.3).",
+   "c": "good",
+   "w": "N1·T49"
+  },
+  {
+   "t": "📊 QL tổng Vũ Hoài Nam: 0 QL lên cấp · +0 fan · +0k doanh thu · 2 vấn đề",
+   "c": "",
+   "w": "N1·T49"
+  },
+  {
+   "t": "📋 Đánh giá định kỳ: TTS 1/1 đạt · Nghệ sĩ 1 xuất sắc (thưởng 8 tr), 7 không đạt (trừ 28 tr).",
+   "c": "",
+   "w": "N1·T48"
+  },
+  {
+   "t": "😤 Luna Hồ (Hoa Mai Music) bóng gió chê Hà Linh trên livestream. Hà Linh hơi buồn nhưng có thêm động lực.",
+   "c": "",
+   "w": "N1·T48"
+  }
+ ],
+ "partners": {
+  "Style VN": 29,
+  "PopTV": 40,
+  "Đài HTN": 100,
+  "Studio Gió": 10,
+  "Kênh Vui": 60,
+  "MV Factory": 19,
+  "Mỹ phẩm Hoa Sen": 16,
+  "Music Weekly": 47,
+  "Tạp chí Mốt": 54,
+  "Sân Khấu Sao": 42,
+  "Produce Việt": 52,
+  "Ngân Hà Studio": 15,
+  "Concert Mùa Hè": 26,
+  "Tạp chí Ngôi Sao": 16,
+  "Đài VTX": 33,
+  "Thời trang Teen": 30,
+  "Shop Mây": 33,
+  "Đài Âm Nhạc": 38,
+  "Phim Ngắn Việt": 13,
+  "Phim Mây Trắng": 31,
+  "Điện thoại Nova": 27
+ },
+ "singles": [
+  {
+   "title": "Test Single 54",
+   "act": "👥 Test Group",
+   "m": [
+    103,
+    104,
+    132
+   ],
+   "rank": 59,
+   "y": 2,
+   "concept": "Dễ thương",
+   "k": "g207",
+   "w": 55,
+   "dig": 11230000,
+   "dk": 0.86,
+   "dt": 9550000,
+   "roy": 0.15,
+   "sg": 0,
+   "dl": 9550000,
+   "dlw": 56
+  },
+  {
+   "title": "Test Single 40",
+   "act": "👥 Test Group",
+   "m": [
+    103,
+    104,
+    132
+   ],
+   "rank": 87,
+   "y": 1,
+   "concept": "Dễ thương",
+   "k": "g207",
+   "w": 41,
+   "dig": 1490000,
+   "dk": 0.86,
+   "dt": 8110000,
+   "roy": 0.15,
+   "sg": 0,
+   "dl": 150000,
+   "dlw": 56
+  },
+  {
+   "title": "Test Single 26",
+   "act": "👥 Test Group",
+   "m": [
+    9,
+    44,
+    69
+   ],
+   "rank": 85,
+   "y": 1,
+   "concept": "Dễ thương",
+   "k": "g118",
+   "w": 27,
+   "dig": 2080000,
+   "dk": 0.86,
+   "dt": 12110000,
+   "roy": 0.15,
+   "sg": 0,
+   "dl": 90000,
+   "dlw": 48,
+   "end": 1
+  }
+ ],
+ "concerts": [],
+ "awards": [
+  {
+   "y": 1,
+   "res": [
+    {
+     "cat": "Nghệ sĩ của năm",
+     "names": "Hà Linh",
+     "ok": true,
+     "note": "+179.9K fan trong năm"
+    },
+    {
+     "cat": "Tân binh của năm",
+     "names": "Hà Linh",
+     "ok": true,
+     "note": "+179.9K fan"
+    },
+    {
+     "cat": "Bài hát của năm",
+     "names": "«Test Single 26» –  Test Group",
+     "ok": false,
+     "note": "hạng cao nhất 85"
+    },
+    {
+     "cat": "Nam diễn viên xuất sắc",
+     "names": "Việt Hoàng",
+     "ok": true,
+     "note": "điểm diễn 72"
+    },
+    {
+     "cat": "Nữ diễn viên xuất sắc",
+     "names": "Minh Thư",
+     "ok": true,
+     "note": "điểm diễn 61"
+    },
+    {
+     "cat": "Ngôi sao tạp kỹ",
+     "names": "Tuấn Kiệt",
+     "ok": true,
+     "note": "4 show"
+    }
+   ],
+   "board": [
+    {
+     "n": "Titan Media",
+     "f": 2266451
+    },
+    {
+     "n": "Galaxy Star",
+     "f": 1121112
+    },
+    {
+     "n": "⭐ Starlight Ent. (bạn)",
+     "f": 703839,
+     "me": 1
+    },
+    {
+     "n": "Blue Wave",
+     "f": 551898
+    },
+    {
+     "n": "Moonlight Ent.",
+     "f": 242159
+    },
+    {
+     "n": "Hoa Mai Music",
+     "f": 221625
+    }
+   ],
+   "rank": 3
+  }
+ ],
+ "pool": [
+  {
+   "id": 512,
+   "name": "Hạ Vy",
+   "g": "F",
+   "age": 20,
+   "look": {
+    "hair": "#b23a48",
+    "skin": "#ffe0c7",
+    "out": "#16b98f",
+    "style": "twin",
+    "long": true,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 9,
+    "dance": 22,
+    "rap": 18,
+    "acting": 22,
+    "variety": 12,
+    "visual": 13,
+    "stamina": 9
+   },
+   "talent": 1.08,
+   "spec": "rap",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 513,
+   "name": "Hải Đăng",
+   "g": "M",
+   "age": 21,
+   "look": {
+    "hair": "#2b2233",
+    "skin": "#eebf98",
+    "out": "#00bbf9",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 12,
+    "dance": 19,
+    "rap": 5,
+    "acting": 18,
+    "variety": 6,
+    "visual": 11,
+    "stamina": 11
+   },
+   "talent": 0.99,
+   "spec": "dance",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 514,
+   "name": "Mai Phương",
+   "g": "F",
+   "age": 21,
+   "look": {
+    "hair": "#c98b4b",
+    "skin": "#ffe0c7",
+    "out": "#4aa3df",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 38,
+    "dance": 26,
+    "rap": 27,
+    "acting": 38,
+    "variety": 36,
+    "visual": 38,
+    "stamina": 35
+   },
+   "talent": 1.24,
+   "spec": "vocal",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 515,
+   "name": "Kim Ngân",
+   "g": "F",
+   "age": 18,
+   "look": {
+    "hair": "#3a7d5c",
+    "skin": "#eebf98",
+    "out": "#e9e9f2",
+    "style": "twin",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 21,
+    "dance": 17,
+    "rap": 11,
+    "acting": 15,
+    "variety": 8,
+    "visual": 22,
+    "stamina": 32
+   },
+   "talent": 1.07,
+   "spec": "stamina",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 516,
+   "name": "Hải Yến",
+   "g": "F",
+   "age": 21,
+   "look": {
+    "hair": "#f3d27a",
+    "skin": "#f8d0b0",
+    "out": "#16b98f",
+    "style": "long",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 36,
+    "dance": 31,
+    "rap": 36,
+    "acting": 33,
+    "variety": 49,
+    "visual": 24,
+    "stamina": 19
+   },
+   "talent": 0.75,
+   "spec": "variety",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 517,
+   "name": "Bảo Long",
+   "g": "M",
+   "age": 16,
+   "look": {
+    "hair": "#4aa3df",
+    "skin": "#eebf98",
+    "out": "#ff4f8b",
+    "style": "pony",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 18,
+    "dance": 18,
+    "rap": 24,
+    "acting": 22,
+    "variety": 28,
+    "visual": 6,
+    "stamina": 6
+   },
+   "talent": 1.07,
+   "spec": "variety",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 521,
+   "name": "Minh Khôi",
+   "g": "M",
+   "age": 22,
+   "look": {
+    "hair": "#f3d27a",
+    "skin": "#d9a27c",
+    "out": "#ffb21e",
+    "style": "short",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 12,
+    "dance": 6,
+    "rap": 14,
+    "acting": 5,
+    "variety": 16,
+    "visual": 4,
+    "stamina": 36
+   },
+   "talent": 0.8,
+   "spec": "stamina",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  }
+ ],
+ "assts": [],
+ "songs": [
+  {
+   "id": 421,
+   "t": "Pink Moon",
+   "ck": "cute",
+   "q": 54,
+   "by": [],
+   "st": "ok",
+   "w": 47,
+   "doneAt": 47,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "B",
+    "mk": 65
+   }
+  },
+  {
+   "id": 410,
+   "t": "Bay Lên",
+   "ck": "cute",
+   "q": 72,
+   "by": [],
+   "st": "ok",
+   "w": 46,
+   "doneAt": 46,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "S",
+    "mk": 83
+   }
+  },
+  {
+   "id": 403,
+   "t": "Butterfly",
+   "ck": "crush",
+   "q": 63,
+   "by": [],
+   "st": "ok",
+   "w": 45,
+   "doneAt": 45,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "C",
+    "mk": 53
+   }
+  },
+  {
+   "id": 320,
+   "t": "Sóng Vỗ",
+   "ck": "fantasy",
+   "q": 55,
+   "by": [],
+   "st": "ok",
+   "w": 37,
+   "doneAt": 37,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "A",
+    "mk": 69
+   }
+  },
+  {
+   "id": 311,
+   "t": "Wild Heart",
+   "ck": "cute",
+   "q": 62,
+   "by": [],
+   "st": "ok",
+   "w": 36,
+   "doneAt": 36,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "B",
+    "mk": 62
+   }
+  },
+  {
+   "id": 281,
+   "t": "Lạc Lối",
+   "ck": "fantasy",
+   "q": 45,
+   "by": [],
+   "st": "ok",
+   "w": 32,
+   "doneAt": 32,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "C",
+    "mk": 41
+   }
+  },
+  {
+   "id": 266,
+   "t": "Một Lần Nữa",
+   "ck": "hiphop",
+   "q": 66,
+   "by": [],
+   "st": "ok",
+   "w": 31,
+   "doneAt": 31,
+   "y": 1,
+   "md": 1,
+   "rv": {
+    "g": "A",
+    "mk": 73
+   }
+  }
+ ],
+ "fin": [
+  {
+   "w": 1,
+   "y": 1,
+   "wk": 1,
+   "i": {
+    "oth": 20000000
+   },
+   "x": {
+    "hr": 20000000,
+    "trn": 9000000,
+    "sal": 3000000
+   }
+  },
+  {
+   "w": 2,
+   "y": 1,
+   "wk": 2,
+   "i": {
+    "oth": 32000000
+   },
+   "x": {
+    "trn": 9000000,
+    "sal": 3000000
+   }
+  },
+  {
+   "w": 3,
+   "y": 1,
+   "wk": 3,
+   "i": {},
+   "x": {
+    "trn": 9000000,
+    "sal": 3000000,
+    "mgr": 5000000,
+    "oth": 36000000
+   }
+  },
+  {
+   "w": 4,
+   "y": 1,
+   "wk": 4,
+   "i": {
+    "oth": 59000000
+   },
+   "x": {
+    "hr": 20000000,
+    "sal": 4000000,
+    "mgr": 5000000
+   }
+  },
+  {
+   "w": 5,
+   "y": 1,
+   "wk": 5,
+   "i": {
+    "oth": 35000000
+   },
+   "x": {
+    "trn": 12000000,
+    "sal": 4000000,
+    "mgr": 5000000
+   }
+  },
+  {
+   "w": 6,
+   "y": 1,
+   "wk": 6,
+   "i": {
+    "oth": 21000000
+   },
+   "x": {
+    "trn": 12000000,
+    "sal": 4000000,
+    "mgr": 5000000
+   }
+  },
+  {
+   "w": 7,
+   "y": 1,
+   "wk": 7,
+   "i": {
+    "oth": 21000000
+   },
+   "x": {
+    "hr": 53500000,
+    "trn": 15000000,
+    "sal": 5000000,
+    "mgr": 5000000
+   }
+  },
+  {
+   "w": 8,
+   "y": 1,
+   "wk": 8,
+   "i": {
+    "oth": 168500000
+   },
+   "x": {
+    "trn": 12000000,
+    "sal": 5000000,
+    "mgr": 5000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 9,
+   "y": 1,
+   "wk": 9,
+   "i": {},
+   "x": {
+    "prod": 180000000,
+    "sal": 14000000,
+    "trn": 6000000,
+    "mgr": 5000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 10,
+   "y": 1,
+   "wk": 10,
+   "i": {
+    "oth": 148000000
+   },
+   "x": {
+    "hr": 25500000,
+    "sal": 15000000,
+    "trn": 9000000,
+    "mgr": 5000000
+   }
+  },
+  {
+   "w": 11,
+   "y": 1,
+   "wk": 11,
+   "i": {
+    "oth": 9500000
+   },
+   "x": {
+    "sal": 15000000,
+    "trn": 15000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 12,
+   "y": 1,
+   "wk": 12,
+   "i": {
+    "job": 19000000,
+    "oth": 64500000
+   },
+   "x": {
+    "sal": 15000000,
+    "trn": 6000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 13,
+   "y": 1,
+   "wk": 13,
+   "i": {
+    "job": 106000000,
+    "oth": 124500000
+   },
+   "x": {
+    "hr": 25500000,
+    "sal": 16000000,
+    "trn": 9000000,
+    "mgr": 10000000
+   }
+  },
+  {
+   "w": 14,
+   "y": 1,
+   "wk": 14,
+   "i": {
+    "job": 5000000
+   },
+   "x": {
+    "sal": 16000000,
+    "trn": 12000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 15,
+   "y": 1,
+   "wk": 15,
+   "i": {
+    "job": 35000000
+   },
+   "x": {
+    "prod": 180000000,
+    "sal": 25000000,
+    "trn": 3000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 16,
+   "y": 1,
+   "wk": 16,
+   "i": {
+    "biz": 4500000
+   },
+   "x": {
+    "hr": 25500000,
+    "sal": 26000000,
+    "mgr": 10000000,
+    "oth": 90500000
+   }
+  },
+  {
+   "w": 17,
+   "y": 1,
+   "wk": 17,
+   "i": {
+    "job": 7000000,
+    "biz": 4900000,
+    "oth": 248000000
+   },
+   "x": {
+    "sal": 26000000,
+    "trn": 6000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 18,
+   "y": 1,
+   "wk": 18,
+   "i": {
+    "biz": 5200000,
+    "oth": 35600000
+   },
+   "x": {
+    "sal": 26000000,
+    "trn": 15000000,
+    "mgr": 10000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 19,
+   "y": 1,
+   "wk": 19,
+   "i": {
+    "job": 153000000,
+    "biz": 5500000,
+    "oth": 51300000
+   },
+   "x": {
+    "hr": 65500000,
+    "sal": 27000000,
+    "trn": 12000000,
+    "mgr": 16000000
+   }
+  },
+  {
+   "w": 20,
+   "y": 1,
+   "wk": 20,
+   "i": {
+    "job": 153000000,
+    "biz": 3200000
+   },
+   "x": {
+    "sal": 27000000,
+    "mgr": 16000000,
+    "hr": 5500000,
+    "oth": 10000000
+   }
+  },
+  {
+   "w": 21,
+   "y": 1,
+   "wk": 21,
+   "i": {
+    "job": 36000000,
+    "biz": 5300000
+   },
+   "x": {
+    "sal": 27000000,
+    "trn": 12000000,
+    "mgr": 21000000,
+    "hr": 5500000,
+    "oth": 51000000
+   }
+  },
+  {
+   "w": 22,
+   "y": 1,
+   "wk": 22,
+   "i": {
+    "job": 88000000,
+    "biz": 5500000
+   },
+   "x": {
+    "hr": 25500000,
+    "sal": 28000000,
+    "trn": 12000000,
+    "mgr": 21000000
+   }
+  },
+  {
+   "w": 23,
+   "y": 1,
+   "wk": 23,
+   "i": {
+    "job": 182000000,
+    "biz": 4700000
+   },
+   "x": {
+    "sal": 28000000,
+    "trn": 18000000,
+    "mgr": 21000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 24,
+   "y": 1,
+   "wk": 24,
+   "i": {
+    "job": 65000000,
+    "biz": 6300000
+   },
+   "x": {
+    "sal": 28000000,
+    "trn": 15000000,
+    "mgr": 21000000,
+    "hr": 5500000,
+    "oth": 32000000
+   }
+  },
+  {
+   "w": 25,
+   "y": 1,
+   "wk": 25,
+   "i": {
+    "job": 199000000,
+    "biz": 10100000
+   },
+   "x": {
+    "mgr": 49000000,
+    "prod": 180000000,
+    "trn": 18000000,
+    "sal": 37000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 26,
+   "y": 1,
+   "wk": 26,
+   "i": {
+    "biz": 6800000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000,
+    "oth": 15000000
+   }
+  },
+  {
+   "w": 27,
+   "y": 1,
+   "wk": 27,
+   "i": {
+    "sgl": 25950000,
+    "live": 2500000,
+    "job": 5000000,
+    "biz": 10400000,
+    "oth": 21600000
+   },
+   "x": {
+    "prod": 20000000,
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 28,
+   "y": 1,
+   "wk": 28,
+   "i": {
+    "live": 289341000,
+    "job": 46000000,
+    "biz": 8700000,
+    "dig": 1770000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 12000000,
+    "mgr": 24000000,
+    "hr": 5500000,
+    "oth": 5350000
+   }
+  },
+  {
+   "w": 29,
+   "y": 1,
+   "wk": 29,
+   "i": {
+    "live": 1700000,
+    "job": 29000000,
+    "biz": 10500000,
+    "dig": 1520000,
+    "oth": 24000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 9000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 30,
+   "y": 1,
+   "wk": 30,
+   "i": {
+    "biz": 10200000,
+    "dig": 1310000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 24000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 31,
+   "y": 1,
+   "wk": 31,
+   "i": {
+    "job": 36000000,
+    "biz": 6000000,
+    "dig": 1120000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 24000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 32,
+   "y": 1,
+   "wk": 32,
+   "i": {
+    "job": 29000000,
+    "biz": 6400000,
+    "dig": 970000,
+    "oth": 6000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 33,
+   "y": 1,
+   "wk": 33,
+   "i": {
+    "job": 10000000,
+    "biz": 9900000,
+    "dig": 830000,
+    "oth": 84000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 34,
+   "y": 1,
+   "wk": 34,
+   "i": {
+    "job": 94000000,
+    "biz": 8600000,
+    "dig": 710000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 35,
+   "y": 1,
+   "wk": 35,
+   "i": {
+    "job": 78000000,
+    "biz": 11600000,
+    "dig": 610000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 36,
+   "y": 1,
+   "wk": 36,
+   "i": {
+    "job": 46000000,
+    "biz": 10200000,
+    "dig": 530000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000,
+    "oth": 4000000
+   }
+  },
+  {
+   "w": 37,
+   "y": 1,
+   "wk": 37,
+   "i": {
+    "job": 51000000,
+    "biz": 9300000,
+    "dig": 460000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 38,
+   "y": 1,
+   "wk": 38,
+   "i": {
+    "job": 22000000,
+    "biz": 9900000,
+    "dig": 390000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 39,
+   "y": 1,
+   "wk": 39,
+   "i": {
+    "job": 5000000,
+    "biz": 11400000,
+    "dig": 340000,
+    "oth": 32939000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 40,
+   "y": 1,
+   "wk": 40,
+   "i": {
+    "job": 95000000,
+    "biz": 11600000,
+    "dig": 290000,
+    "oth": 52760000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 12000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 41,
+   "y": 1,
+   "wk": 41,
+   "i": {
+    "sgl": 18675000,
+    "live": 2300000,
+    "job": 99000000,
+    "biz": 12000000,
+    "dig": 250000
+   },
+   "x": {
+    "prod": 20000000,
+    "sal": 37000000,
+    "trn": 6000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 42,
+   "y": 1,
+   "wk": 42,
+   "i": {
+    "live": 2500000,
+    "job": 6000000,
+    "biz": 9300000,
+    "dig": 1480000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 12000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 43,
+   "y": 1,
+   "wk": 43,
+   "i": {
+    "live": 87180000,
+    "job": 40000000,
+    "biz": 11600000,
+    "dig": 1280000,
+    "oth": 3105000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 12000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 44,
+   "y": 1,
+   "wk": 44,
+   "i": {
+    "job": 20000000,
+    "biz": 15100000,
+    "dig": 1100000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 18000000,
+    "mgr": 24000000,
+    "hr": 5500000,
+    "oth": 24000000
+   }
+  },
+  {
+   "w": 45,
+   "y": 1,
+   "wk": 45,
+   "i": {
+    "job": 473000000,
+    "biz": 11600000,
+    "dig": 950000,
+    "oth": 10740000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 46,
+   "y": 1,
+   "wk": 46,
+   "i": {
+    "biz": 14500000,
+    "dig": 820000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 24000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 47,
+   "y": 1,
+   "wk": 47,
+   "i": {
+    "job": 70000000,
+    "biz": 10900000,
+    "dig": 700000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 48,
+   "y": 1,
+   "wk": 48,
+   "i": {
+    "biz": 11500000,
+    "dig": 600000,
+    "oth": 20000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 49,
+   "y": 1,
+   "wk": 49,
+   "i": {
+    "job": 469000000,
+    "biz": 13000000,
+    "dig": 440000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 50,
+   "y": 1,
+   "wk": 50,
+   "i": {
+    "biz": 11500000,
+    "dig": 380000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 51,
+   "y": 1,
+   "wk": 51,
+   "i": {
+    "job": 34000000,
+    "biz": 10800000,
+    "dig": 320000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 52,
+   "y": 1,
+   "wk": 52,
+   "i": {
+    "job": 118000000,
+    "biz": 11600000,
+    "dig": 280000,
+    "oth": 12000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 53,
+   "y": 2,
+   "wk": 1,
+   "i": {
+    "biz": 9500000,
+    "dig": 240000,
+    "oth": 150000000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 21000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 54,
+   "y": 2,
+   "wk": 2,
+   "i": {
+    "job": 199000000,
+    "biz": 10200000,
+    "dig": 200000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 15000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 55,
+   "y": 2,
+   "wk": 3,
+   "i": {
+    "sgl": 140330000,
+    "live": 8700000,
+    "job": 99000000,
+    "biz": 8400000,
+    "dig": 180000
+   },
+   "x": {
+    "prod": 20000000,
+    "sal": 37000000,
+    "trn": 9000000,
+    "mgr": 24000000,
+    "hr": 5500000
+   }
+  },
+  {
+   "w": 56,
+   "y": 2,
+   "wk": 4,
+   "i": {
+    "live": 10000000,
+    "job": 42000000,
+    "biz": 11300000,
+    "dig": 9700000
+   },
+   "x": {
+    "sal": 37000000,
+    "trn": 6000000,
+    "mgr": 24000000,
+    "hr": 5500000,
+    "oth": 36000000
+   }
+  }
+ ],
+ "bno": 1,
+ "batches": [
+  {
+   "id": 10,
+   "n": "Lứa 1",
+   "w": 1,
+   "had": 1
+  }
+ ],
+ "curBatch": 10,
+ "comps": [
+  {
+   "id": 485,
+   "n": "Giọng hát Tân binh",
+   "ic": "🎙️",
+   "w": {
+    "vocal": 1
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 36,
+   "wk": 1,
+   "fee": 3000000,
+   "prize": [
+    57000000,
+    26000000,
+    11000000
+   ],
+   "exp": 58
+  },
+  {
+   "id": 493,
+   "n": "Tài năng Diễn xuất Trẻ",
+   "ic": "🎭",
+   "w": {
+    "acting": 1,
+    "visual": 0.3
+   },
+   "t": [
+    1,
+    2
+   ],
+   "lvl": 31,
+   "wk": 1,
+   "fee": 2000000,
+   "prize": [
+    122000000,
+    55000000,
+    24000000
+   ],
+   "exp": 59
+  },
+  {
+   "id": 494,
+   "k": "act",
+   "n": "Liên hoan Diễn xuất",
+   "ic": "🎬",
+   "w": {
+    "acting": 1,
+    "visual": 0.3
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 50,
+   "wk": 3,
+   "fee": 14000000,
+   "prize": [
+    223000000,
+    100000000,
+    45000000
+   ],
+   "exp": 57
+  },
+  {
+   "id": 504,
+   "k": "act",
+   "n": "Thử thách Độc thoại",
+   "ic": "🎭",
+   "w": {
+    "acting": 1,
+    "variety": 0.4
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 59,
+   "wk": 2,
+   "fee": 8000000,
+   "prize": [
+    329000000,
+    148000000,
+    66000000
+   ],
+   "exp": 59
+  },
+  {
+   "id": 511,
+   "n": "Gương mặt Teen",
+   "ic": "📸",
+   "w": {
+    "visual": 1,
+    "variety": 0.4
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 41,
+   "wk": 2,
+   "fee": 4000000,
+   "prize": [
+    93000000,
+    42000000,
+    19000000
+   ],
+   "exp": 60
+  }
+ ],
+ "compRuns": [],
+ "rivals": [
+  {
+   "id": 1,
+   "n": "Hoa Mai Music",
+   "fans": 232655,
+   "g": 0.0079,
+   "f0": 221625,
+   "last": "Dính scandal, mất 10% fan",
+   "stole": 3,
+   "cb": {
+    "w": 41,
+    "t": "Lucky",
+    "ck": "fantasy",
+    "p": 7,
+    "rank": 12
+   }
+  },
+  {
+   "id": 2,
+   "n": "Moonlight Ent.",
+   "fans": 258919,
+   "g": 0.0069,
+   "f0": 242159,
+   "last": "Comeback «Starlight» (Dark Fantasy) – hạng 22",
+   "stole": 4,
+   "cb": {
+    "w": 56,
+    "t": "Starlight",
+    "ck": "fantasy",
+    "p": 8,
+    "rank": 22
+   }
+  },
+  {
+   "id": 3,
+   "n": "Blue Wave",
+   "fans": 570374,
+   "g": 0.0072,
+   "f0": 551898,
+   "last": "Comeback «Pink Moon» (Ballad) – hạng 13",
+   "stole": 2,
+   "cb": {
+    "w": 51,
+    "t": "Pink Moon",
+    "ck": "ballad",
+    "p": 9,
+    "rank": 13
+   }
+  },
+  {
+   "id": 4,
+   "n": "Galaxy Star",
+   "fans": 1038671,
+   "g": 0.0072,
+   "f0": 1121112,
+   "last": "Dính scandal, mất 10% fan",
+   "stole": 1,
+   "cb": {
+    "w": 51,
+    "t": "Bad Love",
+    "ck": "cute",
+    "p": 8,
+    "rank": 19
+   }
+  },
+  {
+   "id": 5,
+   "n": "Titan Media",
+   "fans": 2127790,
+   "g": 0.0086,
+   "f0": 2266451,
+   "last": "Dính scandal, mất 10% fan",
+   "stole": 3,
+   "cb": {
+    "w": 30,
+    "t": "Wild Heart",
+    "ck": "edm",
+    "p": 10,
+    "rank": 18
+   }
+  }
+ ],
+ "trend": {
+  "hot": [
+   "cute",
+   "hiphop"
+  ],
+  "cold": "crush",
+  "until": 60
+ },
+ "mods": {
+  "pay": {
+   "v": 0.8,
+   "until": 62,
+   "n": "Suy thoái: thù lao −20%"
+  },
+  "econ": {
+   "v": 0.7,
+   "until": 62,
+   "n": "Suy thoái: kinh doanh −30%"
+  }
+ },
+ "biz": [
+  {
+   "k": "cafe",
+   "lv": 1,
+   "inv": 150000000,
+   "tot": 379500000,
+   "last": 11300000,
+   "y": 1
+  }
+ ],
+ "camp": {
+  "g207": {
+   "k": "g207",
+   "n": "👥 Test Group",
+   "ph": "post",
+   "t": "Test Single 54",
+   "ck": "cute",
+   "rank": 53,
+   "best": 48,
+   "wins": 0,
+   "stages": 8,
+   "wn": 2,
+   "used": {
+    "wk": 56,
+    "l": [
+     "s1",
+     "s2",
+     "s3",
+     "s4"
+    ]
+   },
+   "hype": 0,
+   "inc": 18700000
+  }
+ },
+ "ui": {},
+ "fc": {
+  "w": 57,
+  "m0": 1524640000,
+  "i": {},
+  "x": {}
+ },
+ "mrel": {
+  "5-72": 37,
+  "5-135": 39,
+  "72-135": 22
+ },
+ "ext": [
+  {
+   "id": 21,
+   "name": "Tony Lý",
+   "co": "Galaxy Star",
+   "fans": 45471
+  },
+  {
+   "id": 22,
+   "name": "Sky Nguyễn",
+   "co": "Titan Media",
+   "fans": 286571
+  },
+  {
+   "id": 23,
+   "name": "Zen Lâm",
+   "co": "Galaxy Star",
+   "fans": 85922
+  },
+  {
+   "id": 24,
+   "name": "Mia Cao",
+   "co": "Hoa Mai Music",
+   "fans": 12156
+  },
+  {
+   "id": 25,
+   "name": "Yuna Mai",
+   "co": "Moonlight Ent.",
+   "fans": 23078
+  },
+  {
+   "id": 26,
+   "name": "Rosie Trần",
+   "co": "Titan Media",
+   "fans": 377789
+  },
+  {
+   "id": 27,
+   "name": "Bella Vũ",
+   "co": "Titan Media",
+   "fans": 113313
+  },
+  {
+   "id": 28,
+   "name": "Luna Hồ",
+   "co": "Hoa Mai Music",
+   "fans": 2975
+  }
+ ],
+ "lastRep": {
+  "y": 2,
+  "w": 4,
+  "a": {
+   "1": {
+    "b": "Vệt Nắng Không Tên",
+    "f": -398
+   },
+   "2": {
+    "b": "Bộ ảnh thời trang",
+    "done": "Bộ ảnh thời trang",
+    "f": 3084
+   },
+   "8": {
+    "b": "Mùa Hạ Cuối Cùng",
+    "f": -466
+   },
+   "9": {
+    "b": "Debut Hay Dừng Lại",
+    "f": -798
+   },
+   "44": {
+    "b": "Ai Là Vua Trò Chơi",
+    "f": -121
+   },
+   "69": {
+    "d": [
+     [
+      "vocal",
+      0.17,
+      96,
+      74
+     ],
+     [
+      "vocal",
+      0.14,
+      93,
+      74
+     ],
+     [
+      "vocal",
+      0.18,
+      89,
+      74
+     ],
+     [
+      "vocal",
+      0.18,
+      86,
+      73
+     ],
+     [
+      "vocal",
+      0.18,
+      82,
+      73
+     ],
+     [
+      "rest",
+      0,
+      94,
+      74
+     ],
+     [
+      "rest",
+      0,
+      100,
+      76
+     ]
+    ],
+    "f": -71
+   },
+   "103": {
+    "b": "Quảng bá «Test Single 54»",
+    "f": 2809
+   },
+   "104": {
+    "b": "Quảng bá «Test Single 54»",
+    "f": 2812
+   },
+   "132": {
+    "b": "Quảng bá «Test Single 54»",
+    "f": 2815
+   },
+   "168": {
+    "d": [
+     [
+      "vocal",
+      0.3,
+      96,
+      100
+     ],
+     [
+      "vocal",
+      0.27,
+      93,
+      99
+     ],
+     [
+      "vocal",
+      0.25,
+      89,
+      99
+     ],
+     [
+      "vocal",
+      0.33,
+      86,
+      99
+     ],
+     [
+      "vocal",
+      0.26,
+      82,
+      99
+     ],
+     [
+      "rest",
+      0,
+      94,
+      100
+     ],
+     [
+      "rest",
+      0,
+      100,
+      100
+     ]
+    ],
+    "dec": 1.4,
+    "f": 0
+   }
+  },
+  "ev": [
+   "📋 Đánh giá định kỳ: TTS 1/1 đạt · Nghệ sĩ 5 xuất sắc (thưởng 40 tr), 1 không đạt (trừ 4 tr).",
+   "☕ QL Vũ Hoài Nam và QL Bùi Mỹ Linh đi cà phê, trao đổi công việc.",
+   "😤 Luna Hồ (Hoa Mai Music) bóng gió chê Thành Đạt trên livestream. Thành Đạt hơi buồn nhưng có thêm động lực.",
+   "📨 Minh Khôi (nam, 22) tự gửi đơn ứng tuyển thực tập sinh nhờ danh tiếng công ty.",
+   "🎧 Doanh thu nhạc số tuần này: 10 tr.",
+   "📉 Bất ngờ: kinh tế suy thoái. 6 tuần tới thù lao giảm 20%, lợi nhuận kinh doanh giảm 30%.",
+   "📰 Galaxy Star dính scandal lớn, mất nhiều fan. Cơ hội cho bạn!",
+   "⚔️ Moonlight Ent. comeback với «Starlight» (Dark Fantasy), hạng 22. Single ra tuần này sẽ bị cạnh tranh.",
+   "✅ Tuấn Kiệt hoàn thành «Bộ ảnh thời trang» (Xuất sắc): +42 tr, +3.3K fan. Bài học: Hiểu thêm về thời trang (Visual +3.8).",
+   "🗒️ Thư ký tự xếp 4 hoạt động quảng bá cho Test Group.",
+   "🎤 Test Group biểu diễn Bảng Xếp Hạng Tuần.",
+   "🎤 Test Group biểu diễn Sân khấu Đài Âm Nhạc.",
+   "🎤 Test Group biểu diễn Sân khấu Sân Khấu Sao.",
+   "🎤 Test Group biểu diễn Sân khấu Music Weekly."
+  ],
+  "m0": 1560140000,
+  "m1": 1524640000,
+  "evl": 1,
+  "biz": 11300000
+ },
+ "props": {
+  "w": 35,
+  "m": {},
+  "c": [],
+  "st": {
+   "auto": 0,
+   "boss": {},
+   "res": 0
+  }
+ },
+ "rec": {
+  "staff": [
+   {
+    "id": 57,
+    "name": "Trần Minh Tâm",
+    "eye": 7,
+    "fee": 28000000,
+    "sal": 5500000
+   }
+  ],
+  "cand": [
+   {
+    "id": 58,
+    "name": "Lê Đức Thắng",
+    "eye": 4,
+    "fee": 16000000,
+    "sal": 4000000
+   },
+   {
+    "id": 59,
+    "name": "Đặng Mỹ Linh",
+    "eye": 7,
+    "fee": 28000000,
+    "sal": 5500000
+   }
+  ],
+  "mode": "off",
+  "quota": 5,
+  "reserve": 100000000,
+  "sug": [],
+  "log": [],
+  "hunted": 1
+ },
+ "hsC": null,
+ "lastEval": {
+  "w": 56,
+  "y": 2,
+  "wk": 4,
+  "t": [
+   {
+    "id": 168,
+    "n": "An Khang",
+    "g": "Đạt",
+    "p": -1,
+    "f": 0
+   }
+  ],
+  "a": [
+   {
+    "id": 8,
+    "n": "Việt Hoàng",
+    "g": "Đạt",
+    "pts": 18,
+    "f": 0,
+    "money": 0
+   },
+   {
+    "id": 9,
+    "n": "Hà Linh",
+    "g": "Xuất sắc",
+    "pts": 37,
+    "f": 0,
+    "money": -8000000
+   },
+   {
+    "id": 1,
+    "n": "Minh Thư",
+    "g": "Đạt",
+    "pts": 18,
+    "f": 0,
+    "money": 0
+   },
+   {
+    "id": 2,
+    "n": "Tuấn Kiệt",
+    "g": "Xuất sắc",
+    "pts": 64,
+    "f": 0,
+    "money": -8000000
+   },
+   {
+    "id": 44,
+    "n": "Bảo Ngọc",
+    "g": "Đạt",
+    "pts": 19,
+    "f": 0,
+    "money": 0
+   },
+   {
+    "id": 69,
+    "n": "Thu Hà",
+    "g": "Không đạt",
+    "pts": -1,
+    "f": 4,
+    "money": 4000000
+   },
+   {
+    "id": 103,
+    "n": "Thành Đạt",
+    "g": "Xuất sắc",
+    "pts": 76,
+    "f": 0,
+    "money": -8000000
+   },
+   {
+    "id": 104,
+    "n": "Quỳnh Như",
+    "g": "Xuất sắc",
+    "pts": 63,
+    "f": 0,
+    "money": -8000000
+   },
+   {
+    "id": 132,
+    "n": "Lan Chi",
+    "g": "Xuất sắc",
+    "pts": 92,
+    "f": 0,
+    "money": -8000000
+   }
+  ]
+ },
+ "hs": {
+  "id": 140,
+  "name": "BS. Đỗ Thanh Trúc",
+  "sk": 5,
+  "sal": 6000000,
+  "fee": 40000000,
+  "look": {
+   "hair": "#4aa3df",
+   "skin": "#ffe0c7",
+   "out": "#e9e9f2",
+   "style": "long",
+   "long": true,
+   "skirt": true
+  }
+ },
+ "gmRep": {
+  "w": 56,
+  "y": 2,
+  "up": [],
+  "prob": [
+   "Bùi Mỹ Linh chưa được phân công",
+   "Bùi Mỹ Linh chưa được phân công"
+  ],
+  "teams": [
+   {
+    "mid": 72,
+    "n": 0,
+    "fans": 0,
+    "earn": 0,
+    "warn": 0
+   },
+   {
+    "mid": 135,
+    "n": 0,
+    "fans": 0,
+    "earn": 0,
+    "warn": 0
+   }
+  ]
+ },
+ "cbPlan": [],
+ "fmHint": {
+  "g118": 29,
+  "g207": 43
+ }
+}

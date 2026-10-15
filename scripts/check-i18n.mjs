@@ -29,8 +29,10 @@ function* walk(d) {
 }
 for (const f of [...walk('src'), 'index.html']) {
   const s = fs.readFileSync(f, 'utf8');
-  const keys = [...s.matchAll(/\bt(?:Vi)?\(\s*'([\w.]+)'/g), ...s.matchAll(/data-i18n(?:-aria)?="([\w.]+)"/g)].map(m => m[1]);
+  const keys = [...s.matchAll(/\b(?:t|tVi|Lk)\(\s*'([\w.]+)'/g), ...s.matchAll(/\bisK\([^,()]+,\s*'([\w.]+)'/g), ...s.matchAll(/data-i18n(?:-aria)?="([\w.]+)"/g)].map(m => m[1]);
   for (const k of new Set(keys)) if (!(k in base)) errs.push(`${f}: key '${k}' không có trong vi`);
+  // dynamic Lk(`prefix.${x}`) keys: the prefix must match at least one key
+  for (const m of s.matchAll(/\bLk\(\s*`([\w.]+)\$\{/g)) if (!Object.keys(base).some(k => k.startsWith(m[1]))) errs.push(`${f}: no key starts with '${m[1]}' (Lk template)`);
 }
 if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
 console.log(`OK: ${Object.keys(base).length} key × ${Object.keys(locs).length} ngôn ngữ`);

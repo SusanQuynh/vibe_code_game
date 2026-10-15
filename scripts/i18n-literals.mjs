@@ -1,14 +1,13 @@
 // Static scanner for Vietnamese string literals left in src/ (display code that is not translated yet).
 //   node scripts/i18n-literals.mjs --report [files…]   list findings (always exit 0)
 //   node scripts/i18n-literals.mjs --strict            exit 1 on findings missing from scripts/i18n-literal-allow.json
-// Ignored: comments, sink spans (text stored in S), the kept data/name tables (KEEP_CONSTS) and src/i18n/locales/**.
+// Sink spans (text stored in S) are scanned like any other code. Ignored: comments, the kept proper-noun tables (KEEP_CONSTS) and src/i18n/locales/**.
 import fs from 'node:fs';
 import path from 'node:path';
-import { spans, walk, skipBal, SINK_STARTS } from './lib/js-spans.mjs';
+import { walk, skipBal } from './lib/js-spans.mjs';
 
 const VI = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
-const KEEP_CONSTS = ['STATS', 'TRAIN', 'MSK', 'MSKD', 'MDOM', 'GENRES', 'CONCEPTS', 'OFFER', 'PLESSON', 'PARTNERS', 'TT', 'RIVALS',
-  'FN', 'MN', 'LNM', 'MGN', 'GNAMES', 'COSTARS', 'FT1', 'FT2', 'SONGS', 'SONGW', 'EXTN', 'SCOUT_W', 'COMP', 'DCOMP', 'DAYS', 'DAYN', 'DR', 'DRT', 'BIZ', 'PRE', 'POST', 'FIN_I', 'FIN_X', 'LEADS', 'BUDN', 'CFT', 'MXS'];
+const KEEP_CONSTS = ['PARTNERS', 'TT', 'RIVALS', 'FN', 'MN', 'LNM', 'MGN', 'GNAMES', 'COSTARS', 'FT1', 'FT2', 'SONGS', 'SONGW', 'EXTN'];
 const ALLOW_FILE = 'scripts/i18n-literal-allow.json';
 const blank = (s, a, b) => s.slice(0, a) + s.slice(a, b).replace(/[^\n]/g, ' ') + s.slice(b);
 
@@ -59,7 +58,6 @@ function eachLiteral(s, cb) {
 
 export function scanFile(file, src) {
   let s = stripComments(src);
-  for (const sp of spans(s, SINK_STARTS)) s = blank(s, sp.start, sp.start + sp.text.length);
   for (const n of KEEP_CONSTS) {
     const re = new RegExp(`(?:export\\s+)?(?:const|let)\\s+${n}\\s*=\\s*`, 'g');
     let m;

@@ -4,7 +4,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { noToggle } from './helpers.js';
 import { ROOMS } from '../../src/data/rules.js';
-import { richState, SURFACES, renderSurface, runToasts, skipped } from './sim.js';
+import { richState, SURFACES, renderSurface, renderLog, runToasts, skipped } from './sim.js';
 
 noToggle();
 let base, early;
@@ -21,6 +21,7 @@ describe('vi display golden (rich state)', () => {
     it(s.name, async () => {
       const html = renderSurface(s.name, base);
       if (html == null) return;
+      expect(html).not.toContain('[object Object]');
       await expect(html).toMatchFileSnapshot(`__snapshots__/ui-vi/${s.name}.html`);
     });
   }
@@ -33,6 +34,11 @@ describe('vi display golden (week 1)', () => {
       await expect(html).toMatchFileSnapshot(`__snapshots__/ui-vi/early-${r.id}.html`);
     });
   }
+});
+
+describe('vi company log', () => {
+  it('log', async () => { expect(renderLog(base)).not.toContain('[object Object]'); await expect(renderLog(base)).toMatchFileSnapshot('__snapshots__/ui-vi/log.html'); });
+  it('early-log', async () => { await expect(renderLog(early)).toMatchFileSnapshot('__snapshots__/ui-vi/early-log.html'); });
 });
 
 describe('vi toasts', () => {

@@ -1,6 +1,6 @@
 import { R, pick } from '../core/rng.js';
 import { $, clamp, fmt } from '../core/util.js';
-import { money, t } from '../i18n/index.js';
+import { Lk, money, t } from '../i18n/index.js';
 import { statName } from '../i18n/labels.js';
 import { COSTARS } from '../data/names.js';
 import { OFFER, PARTNERS } from '../data/offers.js';
@@ -50,7 +50,7 @@ export function canTake(of,a){
   if(a.status!=='debuted'&&!O.trainee)return t('offerCard.notDebuted');
   if(of.target&&of.target!==a.id&&slotsOf(of)<2)return t('offerCard.other');
   if(a.scandal&&a.scandal.sev>=2)return t('offerCard.scandal');
-  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return t('offerCard.cbHold',{w:wkLabel(h.w,t)})}
+  {const h=cbHold(a);if(h&&abs()+of.weeks>h.w)return t('offerCard.cbHold',{w:wkLabel(h.w)})}
   const d=disc(of,a);if(fame(a)<Math.round(of.fame*(1-d)))return t('offerCard.noFame');
   const r=effReq(of,a);for(const k in r)if(a.st[k]<r[k])return t('offerCard.lack',{s:statName(k)});
   return'';
@@ -79,7 +79,7 @@ export function acceptCast(ofId,ids,silent){
   for(const a of ms)a.busy={kind:'offer',type:of.type,title:of.title,partner:of.partner,costar:of.costar,left:of.weeks,total:of.weeks,pay:effPay(of,a),genre:of.genre,w:of.w,L:of.L,offerId:of.id,mates:ids,chem:c};
   S.offers=S.offers.filter(o=>o!==of);
   const f=S.films.find(x=>x.offerId===of.id);if(f)ids.forEach(i=>f.cast.push(i));
-  addLog(`${O.ic} ${ms.map(a=>a.name).join(', ')} nhận ${O.n} «${of.title}» (${of.partner}), ${of.weeks} tuần${ids.length>1?` · ${ids.length} người${c?(c>0?', ăn ý +':', lục đục ')+Math.round(Math.abs(c)*100)+'%':''}`:''}.`);
+  addLog(Lk('log.off.acc',{i:O.ic,n:ms.map(a=>a.name).join(', '),o:of.type,t:of.title,p:of.partner,w:of.weeks,x:ids.length>1?Lk('log.off.mates',{k:ids.length,c:c?Lk(c>0?'log.off.chemPos':'log.off.chemNeg',{p:Math.round(Math.abs(c)*100)+'%'}):''}):''}));
   if(!silent)act();
 }
 export function acceptSel(ofId){const ids=[...document.querySelectorAll('.oc'+ofId+':checked')].map(x=>+x.value);acceptCast(ofId,ids)}
@@ -93,6 +93,6 @@ export function investOffer(ofId){
   const cost=Math.round(of.invest.budget*of.invest.share);
   if(S.money<cost)return toast(t('offerCard.toast.noInvest'));
   S.money-=cost;of.invested=true;
-  S.films.push({id:uid(),title:of.title,genre:of.genre,own:false,budget:of.invest.budget,share:of.invest.share,cost,cast:[],offerId:of.id,status:'Sắp chiếu',releaseAt:abs()+of.weeks+R(1,3),done:false,y:S.year});
-  addLog(`💰 Góp vốn ${fmt(cost)} (${of.invest.share*100}%) vào phim «${of.title}».`);act();
+  S.films.push({id:uid(),title:of.title,genre:of.genre,own:false,budget:of.invest.budget,share:of.invest.share,cost,cast:[],offerId:of.id,status:Lk('film.st.soon'),releaseAt:abs()+of.weeks+R(1,3),done:false,y:S.year});
+  addLog(Lk('log.off.invest',{m:{$:cost},s:of.invest.share*100,t:of.title}));act();
 }

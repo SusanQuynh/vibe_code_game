@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { noToggle, seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL, viT } from './helpers.js';
 import { S, abs, uid, newGame } from '../../src/state.js';
 import { fame } from '../../src/systems/artists.js';
 import { enterComp, compDone, compBonus, compTick, kindOf } from '../../src/systems/contests.js';
@@ -39,10 +39,10 @@ describe('contests', () => {
     // values recorded from the pre-refactor engine (same RNG draw order)
     expect(S.money - m0).toBe(EXPECT.money);
     expect(x.fans - f0).toBe(EXPECT.fans);
-    expect(x.lessons[0].s).toBe(EXPECT.ls);
-    expect(x.hist[0]).toBe(EXPECT.h + ' · 🏅 Vocal +3');
-    expect(S.log.some(l => l.t.includes('Thưởng chỉ số mỗi người: Vocal +3'))).toBe(true); expect(+(x.st.vocal - EXPECT.vocal).toFixed(1)).toBe(3); // rank-1 bonus only: delta asserted, RNG unchanged
-    expect(x.lessons[0].b).toBe('Vocal +3');
+    expect(viT(x.lessons[0].s)).toBe(EXPECT.ls);
+    expect(viT(x.hist[0])).toBe(EXPECT.h + ' · 🏅 Vocal +3');
+    expect(S.log.some(l => viT(l.t).includes('Thưởng chỉ số mỗi người: Vocal +3'))).toBe(true); expect(+(x.st.vocal - EXPECT.vocal).toFixed(1)).toBe(3); // rank-1 bonus only: delta asserted, RNG unchanged
+    expect(viT(x.lessons[0].b)).toBe('Vocal +3');
   });
   it('enterComp từ chối TTS đang chừa lịch debut', () => {
     newGame();
@@ -73,11 +73,11 @@ describe('compBonus', () => {
     newGame();
     const [a] = S.artists, c = mkComp({ w: { dance: .8, vocal: .4 } });
     const d0 = a.st.dance, v0 = a.st.vocal;
-    expect(compBonus(a, c, 1)).toBe('Nhảy +2.4, Vocal +1.2');
+    expect(viT(compBonus(a, c, 1))).toBe('Nhảy +2.4, Vocal +1.2');
     expect(+(a.st.dance - d0).toFixed(1)).toBe(2.4);
     expect(+(a.st.vocal - v0).toFixed(1)).toBe(1.2);
     const s1 = { ...a.st };
-    expect(compBonus(a, c, 4)).toBe('');
+    expect(viT(compBonus(a, c, 4))).toBe('');
     expect(a.st).toEqual(s1);
   });
   it('kẹp ở 100', () => {
@@ -154,7 +154,7 @@ describe('cuộc thi nghệ sĩ đã debut', () => {
     expect(x.fans - f0).toBeGreaterThanOrEqual(Math.round(3000 * mult));
     expect(x.fans - f0).toBeLessThanOrEqual(Math.round(7000 * mult));
     expect(x.st.vocal).toBeGreaterThan(v0 + 3);
-    expect(x.lessons[0].b).toBe('Vocal +3');
-    expect(S.log[0].t).toContain('Nhóm Sao Mai');
+    expect(viT(x.lessons[0].b)).toBe('Vocal +3');
+    expect(viT(S.log[0].t)).toContain('Nhóm Sao Mai');
   });
 });

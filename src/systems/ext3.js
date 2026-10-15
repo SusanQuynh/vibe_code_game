@@ -1,15 +1,15 @@
-import { R, pick, rnd } from '../core/rng.js';
-import { money, t, t as tl, tVi } from '../i18n/index.js';
+import { R, pick, pickI, rnd } from '../core/rng.js';
+import { Lk, money, t, t as tl, tx } from '../i18n/index.js';
 import { conceptName, mskDesc, mskName, offerName, statName } from '../i18n/labels.js';
-import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
+import { $, clamp, esc, fmtN } from '../core/util.js';
 import { FN, GNAMES, LNM, MN, SONGS } from '../data/names.js';
 import { OFFER } from '../data/offers.js';
-import { CONCEPTS, GENRES, MSK, MSKD, STATS } from '../data/rules.js';
+import { CONCEPTS, GENRES, MSK, MSKD } from '../data/rules.js';
 import { save } from '../save/storage.js';
 import { S, abs, addLog, byId, uid } from '../state.js';
 import { fame, genArtist, mkLook } from './artists.js';
 import { batchOf } from './batches.js';
-import { DEBUT_COST, DEBUT_MIN, DRT, bestOf, debutIds, debutRec, lineupWith } from './debut.js';
+import { DEBUT_COST, DEBUT_MIN, bestOf, debutIds, debutRec, lineupWith } from './debut.js';
 import { pushEv } from './events.js';
 import { MOOD, SONGW, book, compRep, dHold, ensureCurBatch, gMgr, lowK, mdReview, menteesOf, mentorScore, mxP, songRelease } from './ext2.js';
 import { effSk, inSub, mBoss, mCap, mKids, mgrExp, mgrOf, targetName } from './managers.js';
@@ -40,7 +40,7 @@ export function mgrBossHTML(){
   const legend=`<div class="small" style="margin-bottom:6px">${t('mgr.legend')}</div>`;
   const row=m=>{const ks=mKids(m),cand=S.managers.filter(x=>canKid(m,x)).sort((a,b)=>(a.boss?1:0)-(b.boss?1:0)||a.lv-b.lv);
     return`<div class="card"><div class="row"><div class="chibi mini">${chibiHTML(m)}</div><div style="flex:1;min-width:0">${mNameH(m)} <span class="tag v">${t('mgr.lv',{n:m.lv})}</span>${m.gm?` <span class="tag s">${t('mgr.gmTitle')}</span>`:ks.length?` <span class="tag s">${t('mgr.lead')}</span>`:''}<div class="small muted">${mBoss(m)?t('mgr.rptTo',{b:mNameH(mBoss(m))}):t('mgr.rptCeo')}${t('mgr.mentoring',{k:ks.length,c:m.gm?'∞':mCap(m),a:teamOf(m).length})}</div></div></div>
-    ${ks.length?ks.map(k=>`<div class="prow">↳ ${mNameH(k)}<span class="small muted">${t('mgr.kidInfo',{l:k.lv,n:esc(targetName(k,t)),r:relTxt(mrel(m,k))})}${mKids(k).length?t('mgr.kidKids',{n:mKids(k).length}):''}</span><span class="sp"></span><button class="btn sm" onclick="setBoss(${k.id},'')">${t('mgr.detach')}</button></div>`).join(''):`<div class="small muted" style="margin-top:4px">${t('mgr.noKids')}</div>`}
+    ${ks.length?ks.map(k=>`<div class="prow">↳ ${mNameH(k)}<span class="small muted">${t('mgr.kidInfo',{l:k.lv,n:esc(tx(targetName(k))),r:relTxt(mrel(m,k))})}${mKids(k).length?t('mgr.kidKids',{n:mKids(k).length}):''}</span><span class="sp"></span><button class="btn sm" onclick="setBoss(${k.id},'')">${t('mgr.detach')}</button></div>`).join(''):`<div class="small muted" style="margin-top:4px">${t('mgr.noKids')}</div>`}
     ${cand.length?`<div class="row" style="margin-top:6px"><select onchange="if(this.value)setBoss(+this.value,${m.id})" style="flex:1;min-width:0" aria-label="${t('mgr.giveAria')}"><option value="">${t('mgr.give',{n:esc(m.name)})}</option>${cand.map(x=>`<option value="${x.id}">${esc(x.name)} (${t('mgr.lvLow',{n:x.lv})})${x.boss?t('mgr.under',{n:esc((mBoss(x)||{}).name||'')}):''}</option>`).join('')}</select></div>`:(ks.length>=mCap(m)?`<div class="small muted">${t('mgr.capFull')}</div>`:'')}</div>`};
   const pairs=[];for(let i=0;i<S.managers.length;i++)for(let j=i+1;j<S.managers.length;j++){const x=S.managers[i],y=S.managers[j],v=mrel(x,y);if(v)pairs.push({x,y,v})}
   pairs.sort((a,b)=>Math.abs(b.v)-Math.abs(a.v));
@@ -62,32 +62,32 @@ export function viewPA(id){const a=byId(id);if(!a)return closeM();if(!a.paC)genP
   <div class="row"><button class="btn" onclick="paRe(${a.id})">${t('pa.re',{f:money(3e6)})}</button><span class="sp"></span><button class="btn" onclick="view(()=>viewArtist(${a.id}))">${t('pa.back')}</button></div>`)}
 export function paHire(aid,cid){const a=byId(aid);if(!a)return;const c=(a.paC||[]).find(x=>x.id===cid);if(!c)return;if(S.money<c.fee)return toast(t('toast.noMoney'));
   const p=paPick(a);S.money-=c.fee;book('hr',-c.fee);a.pa={name:c.name,k:c.k,v:c.v,sal:c.sal};a.paC=null;
-  if(c===p){MOOD(a,6);addLog(`🧑‍💻 ${a.name} tự chọn trợ lý cá nhân ${c.name} (${MSK[c.k]} +${c.v}).`,'good')}else{MOOD(a,-3);addLog(`🧑‍💻 Công ty chọn trợ lý ${c.name} cho ${a.name} thay vì người ${a.name} thích.`)}
+  if(c===p){MOOD(a,6);addLog(Lk('log.x3.paSelf',{n:a.name,p:c.name,s:Lk(`msk.${c.k}`),v:c.v}),'good')}else{MOOD(a,-3);addLog(Lk('log.x3.paCo',{p:c.name,n:a.name}))}
   view(()=>viewArtist(aid));act()}
 export function paRe(aid){const a=byId(aid);if(!a)return;if(S.money<3e6)return toast(t('toast.noMoney'));S.money-=3e6;book('hr',-3e6);genPAC(a);act()}
-export function paFire(aid){const a=byId(aid);if(!a||!a.pa)return;addLog(`👋 Trợ lý cá nhân ${a.pa.name} của ${a.name} nghỉ việc.`);a.pa=null;MOOD(a,-3);act()}
+export function paFire(aid){const a=byId(aid);if(!a||!a.pa)return;addLog(Lk('log.x3.paFire',{p:a.pa.name,n:a.name}));a.pa=null;MOOD(a,-3);act()}
 /* ---- Health specialist ---- */
 export function genHSC(){S.hsC=[0,1].map(()=>{const sk=R(1,5);return{id:uid(),name:'BS. '+pick(LNM)+' '+pick(FN.concat(MN)),sk,sal:(sk+1)*1e6,fee:sk*8e6,look:mkLook(Math.random()<.5?'F':'M','#e9e9f2')}})}
-export function hsHire(id){const c=(S.hsC||[]).find(x=>x.id===id);if(!c)return;if(S.money<c.fee)return toast(t('toast.noMoney'));S.money-=c.fee;book('hr',-c.fee);S.hs=c;S.hsC=null;addLog(`🩺 Tuyển chuyên gia chăm sóc sức khỏe ${c.name} (chuyên môn ${c.sk}/5).`,'good');act()}
-export function hsFire(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}if(!S.hs)return;addLog(`👋 Chuyên gia ${S.hs.name} nghỉ việc.`);S.hs=null;act()}
+export function hsHire(id){const c=(S.hsC||[]).find(x=>x.id===id);if(!c)return;if(S.money<c.fee)return toast(t('toast.noMoney'));S.money-=c.fee;book('hr',-c.fee);S.hs=c;S.hsC=null;addLog(Lk('log.x3.hsHire',{n:c.name,k:c.sk}),'good');act()}
+export function hsFire(btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}if(!S.hs)return;addLog(Lk('log.x3.hsFire',{n:S.hs.name}));S.hs=null;act()}
 export const restN=a=>a.days.filter(k=>k==='rest').length;
-export function hsRisk(a){const td=trainDays(a),r=[];ensureDays(a);if(a.energy<35)r.push(`năng lượng chỉ còn ${Math.round(a.energy)}`);if(a.mood<30)r.push(`tâm trạng xuống ${Math.round(a.mood)}`);if(td>=6&&a.energy<65)r.push(`tập ${td}/7 ngày khi thể lực chưa hồi`);if(a.status==='trainee'&&(a.ttsFail||0)>=2&&a.mood<55)r.push('áp lực vì trượt đánh giá liên tiếp');const pe=projEnergy(a);if(pe[6]<20&&td>=4)r.push('dự báo cạn sức cuối tuần');return r}
+export function hsRisk(a){const td=trainDays(a),r=[];ensureDays(a);if(a.energy<35)r.push(Lk('hsr.energy',{v:Math.round(a.energy)}));if(a.mood<30)r.push(Lk('hsr.mood',{v:Math.round(a.mood)}));if(td>=6&&a.energy<65)r.push(Lk('hsr.days',{d:td}));if(a.status==='trainee'&&(a.ttsFail||0)>=2&&a.mood<55)r.push(Lk('hsr.fails'));const pe=projEnergy(a);if(pe[6]<20&&td>=4)r.push(Lk('hsr.forecast'));return r}
 export function applyRest(a,n){if(a.busy)return;ensureDays(a);const d=a.days.slice();let c=d.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<n;i--)if(d[i]!=='rest'){d[i]='rest';c++}a.days=d}
-export function restDo(a,n,by){applyRest(a,n);a.restRec=abs()+2;a.restN=n;if(a.hsF)a.hsF.st='ok';MOOD(a,4);addLog(`🛌 ${by} cho ${a.name} nghỉ ${n} ngày/tuần trong 2 tuần theo khuyến nghị sức khỏe.`,'good')}
-export function hsApply(id){const a=byId(id);if(!a||!a.hsF)return;restDo(a,a.hsF.n,'Giám đốc');S.events=S.events.filter(e=>!(e.kind==='v3'&&e.t==='hs'&&e.a===id));act()}
+export function restDo(a,n,by){applyRest(a,n);a.restRec=abs()+2;a.restN=n;if(a.hsF)a.hsF.st='ok';MOOD(a,4);addLog(Lk('log.x3.rest',{b:by,n:a.name,d:n}),'good')}
+export function hsApply(id){const a=byId(id);if(!a||!a.hsF)return;restDo(a,a.hsF.n,Lk('prop.ceo'));S.events=S.events.filter(e=>!(e.kind==='v3'&&e.t==='hs'&&e.a===id));act()}
 export function hsTick(){if(!S.hs)return;let n=0;const ch=.4+S.hs.sk*.12;
   const L=S.artists.filter(a=>!a.busy&&!(a.hsF&&a.hsF.w>abs()-3)&&!(a.restRec>abs())).map(a=>({a,r:hsRisk(a)})).filter(x=>x.r.length).sort((x,y)=>y.r.length-x.r.length);
   for(const {a,r} of L){if(Math.random()>ch)continue;const need=clamp(Math.max(restN(a)+1,2+r.length),2,5),m=mgrOf(a)||null;a.hsF={w:abs(),why:r,n:need,st:'new'};
     if(n<2&&!S.events.some(e=>e.t==='hs'&&e.a===a.id)){pushEv({kind:'v3',t:'hs',a:a.id,n:need,m:m?m.id:0});n++}}
-  if(L.length&&!n&&Math.random()<.3)addLog(`🩺 ${S.hs.name} đang theo dõi ${L.length} người có dấu hiệu mệt mỏi.`)}
+  if(L.length&&!n&&Math.random()<.3)addLog(Lk('log.x3.hsWatch',{n:S.hs.name,c:L.length}))}
 export function hsHTML(){const fl=S.artists.filter(a=>a.hsF&&a.hsF.w>=abs()-3).sort((x,y)=>(x.hsF.st==='ok')-(y.hsF.st==='ok')||y.hsF.why.length-x.hsF.why.length);
   let h=`<h3>${t('hs.h')}</h3>`;
   if(S.hs)h+=`<div class="card row"><div class="chibi mini">${chibiHTML(S.hs)}</div><div class="small" style="flex:1"><b>${esc(S.hs.name)}</b>${t('hs.info',{k:S.hs.sk,s:money(S.hs.sal)})}<br><span class="muted">${t('hs.desc')}</span></div><button class="btn sm warn" onclick="hsFire(this)">${t('hr.fire')}</button></div>`;
   else{if(!S.hsC)genHSC();h+=`<div class="small muted" style="margin-bottom:6px">${t('hs.none')}</div>${S.hsC.map(c=>`<div class="card row"><div class="chibi mini">${chibiHTML(c)}</div><div class="small" style="flex:1"><b>${esc(c.name)}</b><br>${t('hs.cand',{k:c.sk,s:money(c.sal)})}</div><button class="btn sm pri" onclick="hsHire(${c.id})">${t('hs.hire',{f:money(c.fee)})}</button></div>`).join('')}`}
-  h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>${t('hs.need',{n:fl.length})}</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?t('hs.tts'):''}${esc(a.hsF.why.join(', '))}${t('hs.suggest',{n:a.hsF.n})}${m?t('hs.mgr',{m:mNameH(m)}):''}</span><span class="sp"></span>${a.hsF.st==='ok'?`<span class="tag m">${t('hs.done')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('btn.apply')}</button>`}</div>`}).join('')}`:(S.hs?`<div class="small muted">${t('hs.noneFlag')}</div>`:'');
+  h+=fl.length?`<div class="small" style="margin:6px 0 4px"><b>${t('hs.need',{n:fl.length})}</b></div>${fl.map(a=>{const m=mgrOf(a);return`<div class="prow"><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${esc(a.name)}</button><span class="small muted">${a.status==='trainee'?t('hs.tts'):''}${esc(a.hsF.why.map(x=>tx(x)).join(', '))}${t('hs.suggest',{n:a.hsF.n})}${m?t('hs.mgr',{m:mNameH(m)}):''}</span><span class="sp"></span>${a.hsF.st==='ok'?`<span class="tag m">${t('hs.done')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('btn.apply')}</button>`}</div>`}).join('')}`:(S.hs?`<div class="small muted">${t('hs.noneFlag')}</div>`:'');
   return h}
 /* ---- Start-of-week debut: ask group or solo ---- */
-export function dOpts(a,tr=tVi){if(a.status!=='trainee')return null;const r=debutRec(a,tr);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];
+export function dOpts(a){if(a.status!=='trainee')return null;const r=debutRec(a);if(r.t==='wait')return null;const so=bestOf(a,CONCEPTS)[0];
   const pool=S.artists.filter(x=>x.status==='trainee'&&!x.busy&&!groupsOf(x).length);let grp=null,gk=null;
   for(const k in CONCEPTS){const l=lineupWith(a,pool,CONCEPTS[k].w);if(l&&(!grp||l.sc>grp.sc)){grp=l;gk=k}}
   const soloOK=so.f>DEBUT_MIN,grpOK=!!(grp&&grp.f>DEBUT_MIN),actOK=r.t==='actor';
@@ -95,18 +95,18 @@ export function dOpts(a,tr=tVi){if(a.status!=='trainee')return null;const r=debu
 export function dWish(a,o){if(a.dw&&a.dw.w>abs()-4)return a.dw;
   const mates=o.grp?o.grp.ids.filter(i=>i!==a.id).map(byId).filter(Boolean):[],fr=mates.filter(x=>a.tag[x.id]==='friend'),en=mates.filter(x=>a.tag[x.id]==='enemy');
   const s=(o.so.f-(o.grp?o.grp.f:0))*.6+(['vocal','rap'].includes(a.spec)?4:0)+(a.mood<40?-5:0)-fr.length*6+en.length*8+R(-4,4),t=s>0?'solo':'group';
-  const why=t==='solo'?(en.length?`Em không hợp với ${en[0].name}, em muốn tự đứng trên sân khấu của mình.`:`Em tự tin vào ${STATS[a.spec]} và muốn thử sức solo với concept ${CONCEPTS[o.so.k].n}.`):(fr.length?`Em muốn debut cùng ${fr.map(x=>x.name).join(', ')}, tụi em đã cùng cố gắng rất lâu.`:`Em nghĩ đứng chung nhóm sẽ bổ trợ nhau tốt hơn, concept ${CONCEPTS[o.gk].n} rất hợp.`);
+  const why=t==='solo'?(en.length?Lk('dw.enemy',{n:en[0].name}):Lk('dw.solo',{s:Lk(`stat.${a.spec}`),c:Lk(`concept.${o.so.k}`)})):(fr.length?Lk('dw.friends',{n:fr.map(x=>x.name).join(', ')}):Lk('dw.group',{c:Lk(`concept.${o.gk}`)}));
   a.dw={t,why,w:abs()};return a.dw}
 export const dqList=()=>S.artists.filter(a=>a.status==='trainee'&&a.dReady&&!a.busy&&(a.dqSkip||0)<=abs()).sort((x,y)=>debutRec(y).f-debutRec(x).f);
 export function dqBanner(){const L=dqList();return L.length?`<div class="card tg row"><span class="small" style="flex:1">🎊 <b>${t('dq.banner',{n:t('common.trainees',{n:L.length})})}</b> ${L.map(a=>esc(a.name)).join(', ')}</span><button class="btn sm pri" onclick="view(viewDebutQ)">${t('dq.decide')}</button></div>`:''}
 export function gName(a){if(!a.dqName||S.groups.some(g=>g.name===a.dqName))a.dqName=pick(GNAMES.filter(n=>!S.groups.some(g=>g.name===n)).concat(['Starlight '+R(2,9)]));return a.dqName}
 export function viewDebutQ(){setCurRC('var(--r-lobby)');const L=dqList();
-  const card=a=>{const o=dOpts(a,t);if(!o)return'';const w=o.both?dWish(a,o):null,gIds=o.grp?o.grp.ids:[],mates=gIds.filter(i=>i!==a.id).map(byId).filter(Boolean),notR=mates.filter(x=>!x.dReady);
+  const card=a=>{const o=dOpts(a);if(!o)return'';const w=o.both?dWish(a,o):null,gIds=o.grp?o.grp.ids:[],mates=gIds.filter(i=>i!==a.id).map(byId).filter(Boolean),notR=mates.filter(x=>!x.dReady);
     const btn=(t,lbl,cost)=>`<button class="btn sm ${(w?w.t===t:o.r.t===t)?'pri':''}" onclick="dqDo(${a.id},'${t}')">${lbl} (${money(cost)})</button>`;
-    return`<div class="card ${o.both?'wish':''}"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="tag s">${t('dq.eligible')}</span>${o.both?` <span class="tag v">${t('dq.both')}</span>`:''}<div class="small muted">${esc((batchOf(a)||{n:''}).n)} · ${t('dq.recommend')} ${t(`debut.type.${o.r.t}`)} · ${esc(o.r.why)}</div></div></div>
+    return`<div class="card ${o.both?'wish':''}"><div class="row"><div class="chibi mini">${chibiHTML(a)}</div><div style="flex:1;min-width:0"><b>${esc(a.name)}</b> <span class="tag s">${t('dq.eligible')}</span>${o.both?` <span class="tag v">${t('dq.both')}</span>`:''}<div class="small muted">${esc(tx((batchOf(a)||{n:''}).n))} · ${t('dq.recommend')} ${t(`debut.type.${o.r.t}`)} · ${esc(tx(o.r.why))}</div></div></div>
     ${o.grpOK?`<div class="small" style="margin-top:6px">${t('dq.grpLine',{m:mates.map(x=>esc(x.name)).join(', '),c:conceptName(o.gk)+trendTag(o.gk),f:Math.round(o.grp.f),h:(o.grp.hm>=0?'+':'')+o.grp.hm})}${notR.length?` <span class="muted">${t('dq.notReady',{n:notR.map(x=>esc(x.name)).join(', ')})}</span>`:''}</div><div class="row" style="margin-top:4px"><span class="small">${t('dq.groupName')}</span><input type="text" id="dqn${a.id}" value="${esc(gName(a))}" onchange="byId(${a.id}).dqName=this.value;save()" style="flex:1;min-width:0"></div>`:''}
     ${o.soloOK?`<div class="small" style="margin-top:4px">${t('dq.soloLine',{c:conceptName(o.so.k)+trendTag(o.so.k),f:Math.round(o.so.f)})}</div>`:''}
-    ${w?`<div class="card row" style="margin:6px 0 0;background:var(--bg)"><span class="small">${t('dq.ask',{n:esc(a.name),why:esc(w.why),d:t(`debut.typeShort.${w.t}`)})}</span></div>`:''}
+    ${w?`<div class="card row" style="margin:6px 0 0;background:var(--bg)"><span class="small">${t('dq.ask',{n:esc(a.name),why:esc(tx(w.why)),d:t(`debut.typeShort.${w.t}`)})}</span></div>`:''}
     <div class="row" style="margin-top:8px">${o.grpOK?btn('group',t('dq.btn.group'),DEBUT_COST.group(gIds.length)):''}${o.soloOK?btn('solo',t('dq.btn.solo'),DEBUT_COST.solo()):''}${o.actOK?btn('actor',t('dq.btn.actor'),DEBUT_COST.actor()):''}</div>
     <div class="row" style="margin-top:6px"><button class="btn sm" onclick="dqKeep(${a.id})">${t('dq.keep')}</button><button class="btn sm" onclick="dqLater(${a.id})">${t('dq.later')}</button><span class="sp"></span><button class="btn sm" onclick="view(()=>viewArtist(${a.id}))">${t('dq.profile')}</button></div></div>`};
   modal(`<h2>${t('dq.title',{w:S.week})}</h2><div class="sub">${t('dq.sub')}</div>
@@ -115,8 +115,8 @@ export function viewDebutQ(){setCurRC('var(--r-lobby)');const L=dqList();
   <div class="row" style="margin-top:8px">${S.lastRep?`<button class="btn pri" onclick="view(viewReport)">${t('dq.report')}</button>`:''}<span class="sp"></span><button class="btn" onclick="closeM()">${t('btn.close')}</button></div>`)}
 export function dqDo(id,t){const a=byId(id);if(!a)return;const o=dOpts(a);if(!o)return toast(tl('dq.toast.gone'));const w=o.both?a.dw:null;let ok=false;
   if(t==='group'){if(!o.grp)return toast(tl('dq.toast.nogroup'));ok=debutIds('group',o.grp.ids,($('#dqn'+id)?.value||gName(a)))}else ok=debutIds(t,[id]);
-  if(ok&&w){const h=w.t===t;MOOD(a,h?8:-8);addLog(h?`😊 ${a.name} vui vì được debut ${DRT[t]} đúng mong muốn.`:`😕 ${a.name} tiếc vì muốn debut ${DRT[w.t]} nhưng công ty chọn ${DRT[t]}.`,h?'good':'bad');act()}}
-export function dqKeep(id){const a=byId(id);if(!a)return;a.dqSkip=abs()+4;a.noHold=true;addLog(`🌱 ${a.name} tiếp tục làm thực tập sinh, mở lịch nhận dự án. Công ty sẽ hỏi lại sau 4 tuần.`);act()}
+  if(ok&&w){const h=w.t===t;MOOD(a,h?8:-8);addLog(h?Lk('log.x3.dqYes',{n:a.name,t:Lk(`debut.typeShort.${t}`)}):Lk('log.x3.dqNo',{n:a.name,w:Lk(`debut.typeShort.${w.t}`),t:Lk(`debut.typeShort.${t}`)}),h?'good':'bad');act()}}
+export function dqKeep(id){const a=byId(id);if(!a)return;a.dqSkip=abs()+4;a.noHold=true;addLog(Lk('log.x3.dqKeep',{n:a.name}));act()}
 export function dqLater(id){const a=byId(id);if(!a)return;a.dqSkip=abs()+1;act()}
 /* ---- People outside the company ---- */
 export const EXTN=['Jun Kai','Mina Lê','Rosie Trần','Leo Phạm','Hana Võ','Ryan Đỗ','Yuna Mai','Sky Nguyễn','Luna Hồ','Zen Lâm','Bella Vũ','Tony Lý','Coco Đinh','Nick Huỳnh','Amy Tô','Rin Đào','Kenji Bùi','Mia Cao'];
@@ -127,21 +127,21 @@ export function setXr(a,x,v){a.xr=a.xr||{};a.xr[x.id]=clamp(Math.round(v),-100,1
 export function interTick(){extFill();const now=abs(),deb=S.artists.filter(a=>a.status==='debuted'),free=S.artists.filter(a=>!a.busy),evN=()=>S.events.filter(e=>e.kind==='v3').length;
   /* artist ↔ outsider */
   if(deb.length&&Math.random()<.45){const a=pick(deb),x=pick(S.ext),r=Math.random();
-    if(r<.35){setXr(a,x,xRel(a,x)+R(10,22));addLog(`🎤 ${a.name} làm quen với ${x.name} (${x.co}) ở hậu trường show âm nhạc.${xRel(a,x)>=50?' Hai người đã khá thân.':''}`)}
-    else if(r<.55&&x.fans>a.fans){const k=lowK(a);a.st[k]=clamp(+(a.st[k]+2).toFixed(1),0,100);setXr(a,x,xRel(a,x)+8);addLog(`💡 Tiền bối ${x.name} (${x.co}) chỉ cho ${a.name} vài bí quyết: ${STATS[k]} +2.`,'good')}
+    if(r<.35){setXr(a,x,xRel(a,x)+R(10,22));addLog(Lk('log.x3.meet',{n:a.name,x:x.name,c:x.co,g:xRel(a,x)>=50?Lk('log.x3.meetClose'):''}))}
+    else if(r<.55&&x.fans>a.fans){const k=lowK(a);a.st[k]=clamp(+(a.st[k]+2).toFixed(1),0,100);setXr(a,x,xRel(a,x)+8);addLog(Lk('log.x3.tip',{x:x.name,c:x.co,n:a.name,s:Lk(`stat.${k}`)}),'good')}
     else if(r<.78&&!a.busy&&evN()<3)pushEv({kind:'v3',t:'xcollab',a:a.id,x:x.id})
     else if(r<.9&&a.fans>5000&&xRel(a,x)>=25&&!a.scandal&&evN()<3)pushEv({kind:'v3',t:'xrumor',a:a.id,x:x.id})
-    else{MOOD(a,-3);setXr(a,x,xRel(a,x)-10);addLog(`😤 ${x.name} (${x.co}) bóng gió chê ${a.name} trên livestream. ${a.name} hơi buồn nhưng có thêm động lực.`)}}
+    else{MOOD(a,-3);setXr(a,x,xRel(a,x)-10);addLog(Lk('log.x3.snub',{x:x.name,c:x.co,n:a.name}))}}
   /* artist ↔ artist within the company */
-  if(free.length>=2&&Math.random()<.35){const a=pick(free),b=pick(free.filter(x=>x!==a&&x.tag[a.id]!=='enemy'));if(b){setRel(a,b,getRel(a,b)+R(4,10));a.st[b.spec]=clamp(+(a.st[b.spec]+1).toFixed(1),0,100);b.st[a.spec]=clamp(+(b.st[a.spec]+1).toFixed(1),0,100);addLog(`🤝 ${a.name} rủ ${b.name} tập thêm buổi tối: ${STATS[b.spec]} và ${STATS[a.spec]} cùng tiến bộ.`);if(!a.tag[b.id]&&getRel(a,b)>=60){setTag(a,b,'friend');addLog(`🤝 ${a.name} và ${b.name} trở thành bạn thân.`,'good')}}}
+  if(free.length>=2&&Math.random()<.35){const a=pick(free),b=pick(free.filter(x=>x!==a&&x.tag[a.id]!=='enemy'));if(b){setRel(a,b,getRel(a,b)+R(4,10));a.st[b.spec]=clamp(+(a.st[b.spec]+1).toFixed(1),0,100);b.st[a.spec]=clamp(+(b.st[a.spec]+1).toFixed(1),0,100);addLog(Lk('log.x3.train',{a:a.name,b:b.name,s:Lk(`stat.${b.spec}`),u:Lk(`stat.${a.spec}`)}));if(!a.tag[b.id]&&getRel(a,b)>=60){setTag(a,b,'friend');addLog(Lk('log.x3.bff',{a:a.name,b:b.name}),'good')}}}
   /* artist ↔ manager */
   if(Math.random()<.3){const a=pick(S.artists.filter(x=>!x.busy&&mgrOf(x))||[]);if(a){const m=mgrOf(a);
     if(a.energy<45&&trainDays(a)>=5&&evN()<3&&!S.events.some(e=>e.t==='amgr'))pushEv({kind:'v3',t:'amgr',a:a.id,m:m.id});
-    else if(a.mood>70&&effSk(m,'care')>=4){mgrExp(m,.5);addLog(`🎁 ${a.name} tặng quà cảm ơn QL ${m.name} vì đã chăm sóc chu đáo.`,'good')}}}
+    else if(a.mood>70&&effSk(m,'care')>=4){mgrExp(m,.5);addLog(Lk('log.x3.gift',{n:a.name,m:m.name}),'good')}}}
   /* manager ↔ manager */
   if(S.managers.length>=2&&Math.random()<.4){const x=pick(S.managers),y=pick(S.managers.filter(m=>m!==x)),r=Math.random();
-    if(r<.45){setMrel(x,y,mrel(x,y)+R(5,12));if(mrel(x,y)>=40&&x.sk[x.spec]>y.sk[x.spec]&&y.sk[x.spec]<10&&Math.random()<.4){y.sk[x.spec]++;addLog(`☕ QL ${x.name} chia sẻ kinh nghiệm ${MSK[x.spec]} cho QL ${y.name} (+1).`,'good')}else addLog(`☕ QL ${x.name} và QL ${y.name} đi cà phê, trao đổi công việc.`)}
-    else if(r<.7&&x.as&&y.as&&evN()<3&&!S.events.some(e=>e.t==='mmclash'))pushEv({kind:'v3',t:'mmclash',m:x.id,m2:y.id,why:pick(['tranh lịch phòng tập cho nghệ sĩ mình phụ trách','tranh lời mời béo bở','bất đồng cách xử lý truyền thông','đổ lỗi cho nhau về lịch trình trùng'])});
+    if(r<.45){setMrel(x,y,mrel(x,y)+R(5,12));if(mrel(x,y)>=40&&x.sk[x.spec]>y.sk[x.spec]&&y.sk[x.spec]<10&&Math.random()<.4){y.sk[x.spec]++;addLog(Lk('log.x3.share',{x:x.name,s:Lk(`msk.${x.spec}`),y:y.name}),'good')}else addLog(Lk('log.x3.coffee',{x:x.name,y:y.name}))}
+    else if(r<.7&&x.as&&y.as&&evN()<3&&!S.events.some(e=>e.t==='mmclash'))pushEv({kind:'v3',t:'mmclash',m:x.id,m2:y.id,why:Lk(`ev.why.mm.${pickI(4)}`)});
     else{const hi=x.lv>=y.lv?x:y,lo=hi===x?y:x;if(hi.lv>lo.lv&&!lo.boss&&canKid(hi,lo)&&evN()<3&&!S.events.some(e=>e.t==='mmcoach'))pushEv({kind:'v3',t:'mmcoach',m:hi.id,m2:lo.id})}}
   for(const m of S.managers){const b=mBoss(m);if(b)setMrel(m,b,mrel(m,b)+1)}
 }
@@ -155,7 +155,7 @@ export function v3Tick(){const evN=()=>S.events.filter(e=>e.kind==='v3').length;
     const ofs=S.offers.filter(o=>OFFER[o.type].trainee&&(!o.target||o.target===t.id)&&slotsOf(o)>=1).filter(o=>{const old=o.target;o.target=t.id;const ok=!canTake(o,t);o.target=old;return ok});
     if(ofs.length){const of=ofs.sort((x,y)=>y.pay-x.pay)[0];pushEv({kind:'v3',t:'mtjob',a:m.id,b:t.id,of:of.id});break}}
   /* artist refers a new trainee */
-  {const deb=S.artists.filter(a=>a.status==='debuted');if(deb.length&&Math.random()<.07&&!S.events.some(e=>e.t==='intro')&&evN()<4){const a=pick(deb),c=genArtist();c.talent=+rnd(.95,1.25).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(4,12),0,75);pushEv({kind:'v3',t:'intro',a:a.id,cand:c,how:pick(['bạn thời cấp ba','đàn em cùng lớp nhảy','người quen ở phòng thu','em họ','bạn cùng xóm','đàn em ở câu lạc bộ âm nhạc'])})}}
+  {const deb=S.artists.filter(a=>a.status==='debuted');if(deb.length&&Math.random()<.07&&!S.events.some(e=>e.t==='intro')&&evN()<4){const a=pick(deb),c=genArtist();c.talent=+rnd(.95,1.25).toFixed(2);c.st[c.spec]=clamp(c.st[c.spec]+R(4,12),0,75);pushEv({kind:'v3',t:'intro',a:a.id,cand:c,how:Lk(`ev.why.how.${pickI(6)}`)})}}
   /* personal assistant: group artist asks to pick one */
   {const L=S.artists.filter(a=>paOK(a)&&!a.pa&&abs()-(a.paAsk||-99)>=10);if(L.length&&Math.random()<.08&&!S.events.some(e=>e.t==='paask')){const a=pick(L);a.paAsk=abs();pushEv({kind:'v3',t:'paask',a:a.id})}}
   /* Music Director writes a song */
@@ -176,7 +176,7 @@ export function v3Info(e){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
   case'intro':{if(!a||!e.cand)return null;const c=e.cand;return{ic:'💌',t:t('v3.intro.t',{a:a.name}),d:t('v3.intro.d',{a:a.name,c:c.name,h:e.how,s:statName(c.spec),k:c.talent,m:money(10e6)}),o:[{k:'yes',l:t('ev.scout.o.yes',{m:money(10e6)})},{k:'no',l:t('ev.o.ignore')}]}}
   case'paask':{if(!a||!paOK(a)||a.pa)return null;const gm=groupsOf(a).map(g=>gMgr(g)).find(Boolean);return{ic:'🧑‍💻',t:t('v3.paask.t',{a:a.name}),d:t('v3.paask.d',{a:a.name,g:gm?t('v3.paask.by',{n:gm.name}):''}),o:[{k:'yes',l:t('v3.paask.o.yes')},{k:'no',l:t('v3.paask.o.no')}]}}
   case'hs':{if(!a||!S.hs||!a.hsF)return null;const m=e.m?S.managers.find(x=>x.id===e.m):null;
-    return{ic:'🩺',t:t('v3.hs.t',{a:a.name}),d:t('v3.hs.d',{h:S.hs.name,k:a.status==='trainee'?t('v3.hs.kT'):t('v3.hs.kA'),a:a.name,w:a.hsF.why.join(', '),n:e.n,r:restN(a),s:m?t('v3.hs.sent',{n:m.name,c:effSk(m,'care')}):t('v3.hs.noMgr')}),o:m?[{k:'yes',l:t('v3.hs.o.yesNow')},{k:'no',l:t('v3.hs.o.keep')},{k:'mgr',l:t('v3.hs.o.mgr',{n:m.name})}]:[{k:'yes',l:t('v3.hs.o.yes')},{k:'no',l:t('v3.hs.o.keep')}]}}
+    return{ic:'🩺',t:t('v3.hs.t',{a:a.name}),d:t('v3.hs.d',{h:S.hs.name,k:a.status==='trainee'?t('v3.hs.kT'):t('v3.hs.kA'),a:a.name,w:a.hsF.why.map(x=>tx(x)).join(', '),n:e.n,r:restN(a),s:m?t('v3.hs.sent',{n:m.name,c:effSk(m,'care')}):t('v3.hs.noMgr')}),o:m?[{k:'yes',l:t('v3.hs.o.yesNow')},{k:'no',l:t('v3.hs.o.keep')},{k:'mgr',l:t('v3.hs.o.mgr',{n:m.name})}]:[{k:'yes',l:t('v3.hs.o.yes')},{k:'no',l:t('v3.hs.o.keep')}]}}
   case'md':{const s=e.song,x=actByKey(e.k);if(!s||!x)return null;const r=mdReview(s);
     return{ic:'🎼',t:t('v3.md.t',{s:s.t,n:x.n.slice(2).trim()}),d:t('v3.md.d',{c:conceptName(s.ck)+trendTag(s.ck),q:s.q,g:r.g,cm:r.cm,l:r.sug.map(z=>`${z.n.slice(2).trim()} ${z.f}%${z.free?'':t('v3.md.busy')}`).join(', ')}),o:[{k:'give',l:t('v3.md.o.give',{n:x.n.slice(2).trim()})},{k:'no',l:t('v3.md.o.no')},{k:'keep',l:t('v3.md.o.keep')}]}}
   case'xcollab':{const x=extById(e.x);if(!a||!x||a.busy)return null;return{ic:'🎙️',t:t('v3.xcollab.t',{x:x.name,c:x.co,a:a.name}),d:t('v3.xcollab.d',{x:x.name,c:x.co,f:fmtN(x.fans),r:xRel(a,x),a:a.name}),o:[{k:'yes',l:t('v3.xcollab.o.yes')},{k:'no',l:t('ev.o.refuse')}]}}
@@ -187,35 +187,35 @@ export function v3Info(e){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
   }return null}
 export function v3Resolve(e,k){const a=e.a!=null?byId(e.a):null,b=e.b?byId(e.b):null;
   switch(e.t){
-  case'mtreq':if(!a||!b)return;if(k==='yes'){if(b.status!=='trainee'||b.mt||menteesOf(a).length>=2)return toast(t('v3.toast.gone'));b.mt=a.id;setRel(a,b,getRel(a,b)+10);MOOD(a,6);MOOD(b,4);addLog(`👩‍🏫 ${a.name} tự đề xuất và được duyệt dẫn dắt TTS ${b.name}.`,'good')}else{MOOD(a,-3);addLog(`🙅 Từ chối đề xuất dẫn dắt ${b.name} của ${a.name}.`)}return;
-  case'mtjob':{const of=S.offers.find(o=>o.id===e.of);if(!a||!b||!of)return;if(k!=='yes'){addLog(`🙅 Từ chối dự án ${a.name} giới thiệu cho ${b.name}.`);return}
+  case'mtreq':if(!a||!b)return;if(k==='yes'){if(b.status!=='trainee'||b.mt||menteesOf(a).length>=2)return toast(t('v3.toast.gone'));b.mt=a.id;setRel(a,b,getRel(a,b)+10);MOOD(a,6);MOOD(b,4);addLog(Lk('log.x3.mtYes',{a:a.name,b:b.name}),'good')}else{MOOD(a,-3);addLog(Lk('log.x3.mtNo',{b:b.name,a:a.name}))}return;
+  case'mtjob':{const of=S.offers.find(o=>o.id===e.of);if(!a||!b||!of)return;if(k!=='yes'){addLog(Lk('log.x3.jobNo',{a:a.name,b:b.name}));return}
     const old=of.target;of.target=b.id;const why=canTake(of,b);if(why){of.target=old;toast(b.name+': '+why);return}acceptCast(of.id,[b.id],true);
-    if(!S.offers.includes(of)){S.partners[of.partner]=(S.partners[of.partner]||0)+2;setRel(a,b,getRel(a,b)+5);MOOD(a,4);MOOD(b,5);addLog(`🤝 Nhờ tiền bối ${a.name} giới thiệu, ${b.name} nhận «${of.title}».`,'good')}return}
-  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(`💌 ${c.name} được ${a.name} giới thiệu, ký hợp đồng TTS vào ${(S.batches.find(x=>x.id===c.batch)||{n:''}).n}.`,'gold');return}
+    if(!S.offers.includes(of)){S.partners[of.partner]=(S.partners[of.partner]||0)+2;setRel(a,b,getRel(a,b)+5);MOOD(a,4);MOOD(b,5);addLog(Lk('log.x3.jobYes',{a:a.name,b:b.name,t:of.title}),'good')}return}
+  case'intro':{if(!a||!e.cand)return;if(k!=='yes'){MOOD(a,-2);return}if(S.money<10e6){toast(t('toast.noMoney'));S.events.push(e);return}const c=e.cand;if(S.artists.some(x=>x.id===c.id))return;S.money-=10e6;book('hr',-10e6);c.batch=ensureCurBatch();c.xr={};S.artists.push(c);setRel(a,c,45);setTag(a,c,'friend');MOOD(a,5);addLog(Lk('log.x3.intro',{c:c.name,a:a.name,b:(S.batches.find(x=>x.id===c.batch)||{n:''}).n}),'gold');return}
   case'paask':if(!a)return;if(k==='yes')setTimeout(()=>paOpen(a.id),0);else MOOD(a,-3);return;
-  case'hs':{if(!a)return;const m=e.m?S.managers.find(x=>x.id===e.m):null;if(k==='yes')restDo(a,e.n,'Giám đốc');
-    else if(k==='mgr'&&m){if(Math.random()<mxP(m,'care',.45)){restDo(a,e.n,'QL '+m.name);mgrExp(m,.5)}else{if(a.hsF)a.hsF.st='kept';MOOD(a,-2);addLog(`📋 QL ${m.name} cân nhắc và giữ lịch hiện tại cho ${a.name} vì lịch trình đang quan trọng.`)}}
-    else{if(a.hsF)a.hsF.st='kept';MOOD(a,-3);addLog(`⚠️ Giữ nguyên lịch của ${a.name} dù chuyên gia khuyên nghỉ thêm.`,'bad')}return}
-  case'md':{const s=e.song;if(!s)return;if(k==='no'){addLog(`🎼 Bài «${s.t}» của GĐ Âm nhạc không được sử dụng.`);return}S.songs=S.songs||[];S.songs.unshift(s);if(S.songs.length>40)S.songs.length=40;
-    if(k==='give'){s.for=e.k;const x=actByKey(e.k);addLog(`🎼 GĐ Âm nhạc giao bài «${s.t}» (hạng ${s.rv.g}) cho ${x?x.n.slice(2).trim():''}.`,'good');if(x&&actFree(x))setTimeout(()=>songRelease(s.id,e.k),0)}else addLog(`🎼 Lưu bài «${s.t}» của GĐ Âm nhạc vào kho.`);return}
+  case'hs':{if(!a)return;const m=e.m?S.managers.find(x=>x.id===e.m):null;if(k==='yes')restDo(a,e.n,Lk('prop.ceo'));
+    else if(k==='mgr'&&m){if(Math.random()<mxP(m,'care',.45)){restDo(a,e.n,Lk('x3.byMgr',{n:m.name}));mgrExp(m,.5)}else{if(a.hsF)a.hsF.st='kept';MOOD(a,-2);addLog(Lk('log.x3.mgrKeep',{m:m.name,n:a.name}))}}
+    else{if(a.hsF)a.hsF.st='kept';MOOD(a,-3);addLog(Lk('log.x3.keep',{n:a.name}),'bad')}return}
+  case'md':{const s=e.song;if(!s)return;if(k==='no'){addLog(Lk('log.x3.mdNo',{t:s.t}));return}S.songs=S.songs||[];S.songs.unshift(s);if(S.songs.length>40)S.songs.length=40;
+    if(k==='give'){s.for=e.k;const x=actByKey(e.k);addLog(Lk('log.x3.mdGive',{t:s.t,g:s.rv.g,x:x?x.n.slice(2).trim():''}),'good');if(x&&actFree(x))setTimeout(()=>songRelease(s.id,e.k),0)}else addLog(Lk('log.x3.mdStore',{t:s.t}));return}
   case'xcollab':{const x=extById(e.x);if(!a||!x)return;if(k!=='yes'){setXr(a,x,xRel(a,x)-8);return}if(a.busy)return toast(t('offerCard.busy'));
-    const g=Math.round(Math.min(x.fans,a.fans*3+20000)*rnd(.03,.08)),pay=R(10,40)*1e6;a.fans+=g;a.yr.fans+=g;S.money+=pay;book('job',pay,[a]);setXr(a,x,xRel(a,x)+15);a.busy={kind:'promo',title:'Hợp tác với '+x.name,left:1,total:1,lk:'collab'};a.hist.unshift(`N${S.year} T${S.week}: hợp tác với ${x.name} (${x.co})`);addLog(`🎙️ ${a.name} hợp tác với ${x.name} (${x.co}): +${fmtN(g)} fan, +${fmt(pay)}.`,'good');return}
+    const g=Math.round(Math.min(x.fans,a.fans*3+20000)*rnd(.03,.08)),pay=R(10,40)*1e6;a.fans+=g;a.yr.fans+=g;S.money+=pay;book('job',pay,[a]);setXr(a,x,xRel(a,x)+15);a.busy={kind:'promo',title:Lk('b.collab',{n:x.name}),left:1,total:1,lk:'collab'};a.hist.unshift(Lk('h.collab',{y:S.year,w:S.week,n:x.name,c:x.co}));addLog(Lk('log.x3.collab',{n:a.name,x:x.name,c:x.co,g:fmtN(g),m:{$:pay}}),'good');return}
   case'xrumor':{const x=extById(e.x);if(!a||!x)return;
-    if(k==='deny'){if(Math.random()<.7){MOOD(a,-2);addLog(`📰 ${a.name} phủ nhận tin đồn với ${x.name}, dư luận lắng xuống.`)}else{a.fans=Math.round(a.fans*.97);addLog(`📰 Lời phủ nhận của ${a.name} bị nghi ngờ, fan giảm 3%.`,'bad')}}
-    else if(k==='admit'){a.fans=Math.round(a.fans*.99);setXr(a,x,xRel(a,x)+10);MOOD(a,5);addLog(`📰 ${a.name} xác nhận chỉ là bạn thân với ${x.name}. Fan thông cảm.`)}
-    else if(Math.random()<.5){a.fans=Math.round(a.fans*.96);addLog(`📰 ${a.name} im lặng trước tin đồn với ${x.name}, fan giảm 4%.`,'bad')}else addLog(`📰 Tin đồn ${a.name} & ${x.name} tự lắng xuống.`);return}
-  case'amgr':{const m=S.managers.find(x=>x.id===e.m);if(!a||!m)return;if(k==='rest'){restDo(a,3,'QL '+m.name);MOOD(a,4)}else{MOOD(a,-6);mgrExp(m,.3);addLog(`📋 Giám đốc ủng hộ QL ${m.name}, ${a.name} không vui.`,'bad')}return}
+    if(k==='deny'){if(Math.random()<.7){MOOD(a,-2);addLog(Lk('log.x3.denyY',{n:a.name,x:x.name}))}else{a.fans=Math.round(a.fans*.97);addLog(Lk('log.x3.denyN',{n:a.name}),'bad')}}
+    else if(k==='admit'){a.fans=Math.round(a.fans*.99);setXr(a,x,xRel(a,x)+10);MOOD(a,5);addLog(Lk('log.x3.admit',{n:a.name,x:x.name}))}
+    else if(Math.random()<.5){a.fans=Math.round(a.fans*.96);addLog(Lk('log.x3.quietN',{n:a.name,x:x.name}),'bad')}else addLog(Lk('log.x3.quietY',{n:a.name,x:x.name}));return}
+  case'amgr':{const m=S.managers.find(x=>x.id===e.m);if(!a||!m)return;if(k==='rest'){restDo(a,3,Lk('x3.byMgr',{n:m.name}));MOOD(a,4)}else{MOOD(a,-6);mgrExp(m,.3);addLog(Lk('log.x3.amgrSide',{m:m.name,n:a.name}),'bad')}return}
   case'mmclash':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;
-    if(k==='meet'){if(S.money<5e6){toast(t('toast.noMoney'));S.events.push(e);return}S.money-=5e6;book('oth',-5e6);setMrel(x,y,mrel(x,y)+20);mgrExp(x,.3);mgrExp(y,.3);addLog(`🕊️ Buổi họp hòa giải giúp QL ${x.name} và ${y.name} hiểu nhau hơn.`,'good')}
-    else if(k==='x'||k==='y'){const w=k==='x'?x:y,l=k==='x'?y:x;mgrExp(w,.6);setMrel(x,y,mrel(x,y)-15);addLog(`⚖️ Giám đốc đứng về phía QL ${w.name}; QL ${l.name} không phục.`)}
-    else{setMrel(x,y,mrel(x,y)-10);addLog(`⚡ QL ${x.name} và ${y.name} tự giải quyết nhưng vẫn còn khúc mắc.`)}return}
-  case'mmcoach':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;if(k==='yes'&&canKid(x,y)){y.boss=x.id;setMrel(x,y,mrel(x,y)+10);addLog(`👔 QL ${x.name} nhận kèm cặp QL ${y.name}.`,'good')}else setMrel(x,y,mrel(x,y)-5);return}
+    if(k==='meet'){if(S.money<5e6){toast(t('toast.noMoney'));S.events.push(e);return}S.money-=5e6;book('oth',-5e6);setMrel(x,y,mrel(x,y)+20);mgrExp(x,.3);mgrExp(y,.3);addLog(Lk('log.x3.mmMeet',{x:x.name,y:y.name}),'good')}
+    else if(k==='x'||k==='y'){const w=k==='x'?x:y,l=k==='x'?y:x;mgrExp(w,.6);setMrel(x,y,mrel(x,y)-15);addLog(Lk('log.x3.mmSide',{w:w.name,l:l.name}))}
+    else{setMrel(x,y,mrel(x,y)-10);addLog(Lk('log.x3.mmSelf',{x:x.name,y:y.name}))}return}
+  case'mmcoach':{const x=S.managers.find(z=>z.id===e.m),y=S.managers.find(z=>z.id===e.m2);if(!x||!y)return;if(k==='yes'&&canKid(x,y)){y.boss=x.id;setMrel(x,y,mrel(x,y)+10);addLog(Lk('log.x3.mmCoach',{x:x.name,y:y.name}),'good')}else setMrel(x,y,mrel(x,y)-5);return}
   }}
 /* ---- Artist profile & rooms ---- */
 export function v3ArtistHTML(a){let h='';
   if(paOK(a))h+=`<div class="card small">${t('pa.h')} ${a.pa?t('pa.line',{n:esc(a.pa.name),k:mskName(a.pa.k),v:a.pa.v,s:money(a.pa.sal)}):`<span class="muted">${t('art.noneYet')}</span>`} <button class="btn sm" onclick="paOpen(${a.id})">${a.pa?t('pa.change'):t('pa.letPick',{n:esc(a.name)})}</button><br><span class="muted">${t('pa.note')}</span></div>`;
-  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">${t('hs.card',{w:esc(a.hsF.why.join(', ')),n:a.hsF.n})} ${a.restRec>abs()?`<span class="good">${t('hs.applied')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('btn.apply')}</button>`}</div>`;
-  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">${t('art.wish',{d:t(`debut.typeShort.${w.t}`),w:esc(w.why)})} <button class="btn sm pri" onclick="view(viewDebutQ)">${t('art.decide')}</button></div>`}}
+  if(a.hsF&&a.hsF.w>=abs()-3)h+=`<div class="card small">${t('hs.card',{w:esc(a.hsF.why.map(x=>tx(x)).join(', ')),n:a.hsF.n})} ${a.restRec>abs()?`<span class="good">${t('hs.applied')}</span>`:`<button class="btn sm pri" onclick="hsApply(${a.id})">${t('btn.apply')}</button>`}</div>`;
+  if(a.status==='trainee'&&a.dReady){const o=dOpts(a);if(o&&o.both){const w=dWish(a,o);h+=`<div class="card small wish">${t('art.wish',{d:t(`debut.typeShort.${w.t}`),w:esc(tx(w.why))})} <button class="btn sm pri" onclick="view(viewDebutQ)">${t('art.decide')}</button></div>`}}
   if(a.status==='debuted'&&menteesOf(a).length<2){const t=S.artists.filter(x=>x.status==='trainee'&&!x.mt&&x.tag[a.id]!=='enemy').sort((x,y)=>mentorScore(a,y)-mentorScore(a,x))[0];if(t&&mentorScore(a,t)>3)h+=`<div class="card small">${tl('art.suggestMentor',{n:esc(a.name)})} ${esc(t.name)} (+${Math.round(mentorScore(a,t))}) <button class="btn sm" onclick="setMentor(${t.id},${a.id})">${tl('art.agree')}</button></div>`}
   const xs=Object.keys(a.xr||{}).map(id=>({x:extById(+id),v:a.xr[id]})).filter(z=>z.x).sort((p,q)=>q.v-p.v).slice(0,5);
   if(xs.length)h+=`<div class="card small">${t('pa.extH')} ${xs.map(z=>`${esc(z.x.name)} (${esc(z.x.co)}) ${relTxt(z.v)}`).join(' · ')}</div>`;

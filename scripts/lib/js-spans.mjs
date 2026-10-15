@@ -35,10 +35,24 @@ function skipBal(s, i) {
   }
   return i;
 }
-export { skipBal, skipStr, skipTpl };
+// index just past the value expression that starts at i: stops at a top-level , ; ) ] } (for sink tokens that end in = or :)
+function skipExpr(s, i) {
+  for (; i < s.length; i++) {
+    const c = s[i];
+    if (c === "'" || c === '"') i = skipStr(s, i) - 1;
+    else if (c === '`') i = skipTpl(s, i) - 1;
+    else if (CLOSE[c]) i = skipBal(s, i) - 1;
+    else if (c === ',' || c === ';' || c === ')' || c === ']' || c === '}') return i;
+  }
+  return i;
+}
+export { skipBal, skipStr, skipTpl, skipExpr };
 
-// Calls whose text lands in S (log, history, lessons, busy title, PR history, GM problems, events). Never translate these in phase 2.
-export const SINK_STARTS = ['addLog(', 'recLog(', 'pushEv(', '.hist.unshift(', '.lessons.unshift(', 'busy={', 'S.prHist.unshift(', 'prob.push('];
+// Calls and assignments whose text lands in S (log, history, lessons, busy title, PR history, GM problems, events, reasons…).
+export const SINK_STARTS = ['addLog(', 'recLog(', 'pushEv(', '.hist.unshift(', '.lessons.unshift(', 'busy={', 'S.prHist.unshift(', 'prob.push(',
+  // phase 3: helpers and fields whose text lands in S
+  'removeArtist(', 'disbandGroup(', 'restDo(', 'setMod(', 'give(', '.last=', 'scandal={', 'S.loan={', 'hsF={', '.dw={', 'why2=', '.why=', 'c.by=', 'path.push(',
+  'status:', 'film.status=', 'f.status=', 'concept:', 'S.comps.push(', 'S.batches=[', 'b={id:uid(),'];
 
 // [{start, text}] for each occurrence of a start token (the token ends with its opening bracket).
 // Occurrences preceded by an identifier character are skipped (`recLog(` is not matched inside `xrecLog(`).
@@ -49,8 +63,9 @@ export function spans(src, starts) {
     while ((at = src.indexOf(tok, at)) >= 0) {
       const prev = src[at - 1];
       if (!(ID.test(tok[0]) && prev !== undefined && ID.test(prev))) {
-        const open = at + tok.length - 1;
-        out.push({ start: at, text: src.slice(at, skipBal(src, open)) });
+        const open = at + tok.length - 1, last = tok[tok.length - 1];
+        if (last === '=' && src[at + tok.length] === '=') { at += tok.length; continue; } // a comparison, not an assignment
+        out.push({ start: at, text: src.slice(at, '([{'.includes(last) ? skipBal(src, open) : skipExpr(src, open + 1)) });
       }
       at += tok.length;
     }

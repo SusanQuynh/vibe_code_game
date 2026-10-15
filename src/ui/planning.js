@@ -6,7 +6,7 @@ import { mNameH } from '../systems/ext3.js';
 import { mgrOf } from '../systems/managers.js';
 import { propCount, viewProps } from '../systems/proposals.js';
 import { DAYS, TIC, daysMini, defaultDays, mgrScheduleAll, mgrSchedules, nextWeek, planWeek, planWhy, projEnergy, trainDays, weekCost } from '../systems/week.js';
-import { money, t } from '../i18n/index.js';
+import { money, t, tx } from '../i18n/index.js';
 import { dayName, dayShort, statName, trainName } from '../i18n/labels.js';
 import { act, blinkD, chibiHTML, render } from './building.js';
 import { closeM, modal, view } from './modal.js';
@@ -44,7 +44,7 @@ export function viewPlan(){
     modal(`<h2>${t('plan.sumH',{w:S.week})}</h2><div class="sub">${t('plan.sumSub',{c:money(cost)})}</div>
     ${me.length?det('pl-me',t('plan.me',{n:me.length}),me.map(line).join(''),true):''}
     ${mg.length?det('pl-mg',t('plan.mg',{n:mg.length}),mg.map(a=>line(a).replace('<span class="sp"></span>',`<span class="small muted">📋 ${esc((mgrSchedules(a)||mgrOf(a)||{name:'—'}).name)}</span><span class="sp"></span>`)).join(''),false):''}
-    ${busy.length?det('pl-out',t('plan.out',{n:busy.length}),`<div class="small">${busy.map(a=>t('plan.outLine',{n:esc(a.name),t:esc(a.busy.title),w:t('common.weeks',{n:a.busy.left})})).join('<br>')}</div>`,false):''}
+    ${busy.length?det('pl-out',t('plan.out',{n:busy.length}),`<div class="small">${busy.map(a=>t('plan.outLine',{n:esc(a.name),t:esc(tx(a.busy.title)),w:t('common.weeks',{n:a.busy.left})})).join('<br>')}</div>`,false):''}
     <label class="row small" style="margin:14px 0"><input type="checkbox" ${S.planOn!==false?'checked':''} onchange="S.planOn=this.checked;save()"> ${t('plan.show')}</label>
     <div class="row">${n?`<button class="btn" onclick="planBack()">${t('plan.edit')}</button>`:''}<span class="sp"></span><button class="btn pink" onclick="planGo()">${t('plan.start',{w:S.week})}</button></div>`);
     return;
@@ -66,7 +66,7 @@ export function viewPlan(){
   <div class="small" style="margin:8px 0 0"><b>${dayName(d)}:</b> ${TIC[a.days[d]]} ${trainName(a.days[d])}</div>
   <div class="tiles">${tiles}</div>
   <div class="card small">${t('plan.rec')} <span class="dmini">${recW.map(k=>TIC[k]).join('')}</span> — ${planWhy(a)}.${a.scandal?t('plan.scandal'):''}
-  ${(()=>{const m=mgrOf(a),pr=m&&S.props&&S.props.w===abs()&&S.props.m[m.id]?S.props.m[m.id].s.find(x=>x.a===a.id):null;return pr?`<div style="margin-top:6px">${t('plan.mgrProp',{m:mNameH(m)})} <span class="dmini">${pr.days.map(k=>TIC[k]).join('')}</span> — ${esc(pr.why)} <button class="btn sm" onclick="planMgr()">${t('plan.use')}</button></div>`:''})()}
+  ${(()=>{const m=mgrOf(a),pr=m&&S.props&&S.props.w===abs()&&S.props.m[m.id]?S.props.m[m.id].s.find(x=>x.a===a.id):null;return pr?`<div style="margin-top:6px">${t('plan.mgrProp',{m:mNameH(m)})} <span class="dmini">${pr.days.map(k=>TIC[k]).join('')}</span> — ${esc(tx(pr.why))} <button class="btn sm" onclick="planMgr()">${t('plan.use')}</button></div>`:''})()}
   <div class="row" style="margin-top:6px"><button class="btn sm" onclick="planRec()">${t('plan.useRec')}</button><button class="btn sm" onclick="planFill()">${t('plan.fillWeek',{d:dayShort(d)})}</button></div></div>
   <div class="row">${P.i>0?`<button class="btn" onclick="planBack()">${t('plan.prev')}</button>`:''}${!P.single?`<button class="btn sm" onclick="planSkip()">${t('plan.keep',{n:n-P.i})}</button>`:''}<span class="sp"></span><button class="btn pri" onclick="planNext()">${P.single?t('plan.save'):last?t('plan.done'):t('plan.next')}</button></div>
   ${P.single?'':`<div class="small muted" style="margin-top:8px">${t('plan.tip')}</div>`}`);

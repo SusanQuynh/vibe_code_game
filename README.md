@@ -163,7 +163,7 @@ npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 Vietnamese (`vi`) is the default and the source of truth; English (`en`) is in beta. Players switch with the 🌐 button and the game re-renders in place without touching game state. The choice is stored in `localStorage['starlight_lang']`, separately from the save.
 
 > [!NOTE]
-> Phases 1 and 2 are done: every screen the player reads (top bar, dock, tutorial, every room and view, cards, selects, tables, toasts, `aria-label`s, tooltips and placeholders) is translated. Text **stored in the save** is still Vietnamese in English mode until phase 3: the log, artist history and lessons, `busy` titles, stored event and proposal reasons, award categories, rival news, market modifier names and generated names and titles. The plans are in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md) and [`docs/plans/2026-10-13-i18n-phase-2.md`](docs/plans/2026-10-13-i18n-phase-2.md) (phase 2, with the hand-off list for phase 3).
+> Phases 1, 2 and 3 are done. Every screen the player reads is translated (phases 1 and 2), and **text stored in the save is language-aware** (phase 3): the log, artist history and lessons, `busy` titles, award categories, rival news, market modifiers, proposal and event reasons, health-check reasons and debut wishes are stored as keys plus parameters and rendered in the current language, so the history re-renders when you switch language. Saves made before phase 3 keep their Vietnamese lines (no migration): only new entries follow the language. Names and generated titles (artists, managers, offers, songs, partners, rivals) are proper nouns and stay as generated. The plans are in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md), [`docs/plans/2026-10-13-i18n-phase-2.md`](docs/plans/2026-10-13-i18n-phase-2.md) and [`docs/plans/2026-10-14-i18n-phase-3.md`](docs/plans/2026-10-14-i18n-phase-3.md).
 
 **Adding a language**
 
@@ -176,22 +176,32 @@ Keys are flat and dot-separated (`top.*`, `room.<id>.{name,dock,desc}`, `npc.<id
 **How the dictionaries are organised**
 
 - `src/i18n/locales/{vi,en}.js` only merge per-area part files (`locales/<lang>/core.js`, `common.js`, `labels.js`, `lobby.js`, `mgr.js`, ...). A new part is one import plus one `['name', part]` entry in `parts` of both locale files. `npm run check:i18n` fails on duplicate keys across parts, on missing or extra keys, and on mismatched placeholders; a value that is a function in `vi` must be a function in every locale (plurals).
-- `src/i18n/labels.js` has the display names for the data tables, looked up by id: `statName`, `trainName`, `conceptName`, `genreName`, `offerName`, `mskName`, `mskDesc`, `domName`, `dayShort`, `dayName`, `bizName`, `relTagName`. The Vietnamese data tables keep their `n` fields because log code still reads them; `tests/unit/i18n-labels.test.js` proves that the `vi` helpers reproduce each table exactly and that every id has a key.
+- `src/i18n/labels.js` has the display names for the data tables, looked up by id: `statName`, `trainName`, `conceptName`, `genreName`, `offerName`, `mskName`, `mskDesc`, `domName`, `dayShort`, `dayName`, `bizName`, `relTagName`. The data tables hold ids and numbers only (their Vietnamese text lives in the locales and is pinned by the phase 1/2 snapshots and `tests/unit/p3-equiv.test.js`); `tests/unit/i18n-labels.test.js` checks that every id has a key in every locale.
 - Dynamic keys must be template literals (`` t(`debut.type.${x}`) ``) so `check:i18n` can see them.
 
 **Rules**
 
 - Don't call `t()` at module top level; look strings up at render time.
 - Dictionaries are trusted HTML: escape user data with `esc()` before passing it to `t()`.
-- Never store translated text in `S`. `addLog`, `hist`, `lessons`, `busy` titles and the other sinks keep Vietnamese and `fmt()` units so the state (and golden snapshots) stay language-independent; use `money()` for display only. **Never translate a sink.** `tests/unit/i18n-sinks.test.js` snapshots every sink call and fails on any edit inside one.
-- A helper whose output goes both to the screen and into `S` (`targetName`, `bonusTxt`, `wkLabel`, `debutRec`, `dOpts`) takes a translator argument that defaults to `tVi` (always Vietnamese). UI call sites pass `t`, sink call sites keep the default. If a local variable named `t` shadows the translator, import it under another name (`import { t as tl }`).
+- A sink stores `Lk(...)`, never a rendered string. `addLog`, `hist`, `lessons`, `busy` titles and the other sinks (`SINK_STARTS` in `scripts/lib/js-spans.mjs`) get a key plus parameters; money is `{$: n}`, stat gains `{$g: {stat: '1.5'}}`, lists `{$l: [...], j: ', '}`. `tests/unit/i18n-sinks.test.js` fails on a Vietnamese letter, on `fmt(` or on a string first argument inside a sink, and requires every `addLog`/`recLog` first argument to be a key.
+- Stored keys are append-only: every key that can be written into `S` is listed in `tests/fixtures/stored-keys.json` (`tests/unit/i18n-stored-keys.test.js`). Never remove or rename an entry once a build has shipped, and never change the Vietnamese value of a `logic: true` key (legacy saves are compared with it through `isK`, see `tests/fixtures/legacy-enums.json`).
+- Logic never compares stored text: use `isK(value, 'key')`. Helpers whose result goes both to the screen and into `S` (`targetName`, `bonusTxt`, `wkLabel`, `debutRec`, `dOpts`) return a `Txt`; display with `esc(tx(...))`. If a local variable named `t` shadows the translator, import it under another name (`import { t as tl }`).
 - `src/i18n/` never imports systems or UI, touches the DOM, or calls the RNG.
 - Static markup in `index.html` uses `data-i18n` / `data-i18n-aria`.
 - Adding a template keeps the markup byte-identical in Vietnamese: replace only the text run, never reflow a line. `tests/unit/ui-vi*.test.js` compare the rendered HTML of every room and view with files recorded before phase 2.
 
+**Stored text (phase 3)**
+
+A text field in `S` is a `Txt`: `string` (a proper noun, or a legacy Vietnamese line from an old save) `| {k, p?}` (a key plus parameters, built with `Lk(k, p)`) `| {$: n}` (money) `| {$g: {stat: 'x.y'}}` (stat gains) `| {$l: [Txt...], j}` (a joined list). Parameters can be nested `Txt`s; `{x:ns}` in a template renders the label key `ns.<value>` (so a stored offer type or grade is just its id).
+
+- `tx(v)` renders a `Txt` in the current language, `txVi(v)` in Vietnamese (tests and `p3-equiv` only), `isK(v, key)` compares, `wkTok('N2·T7')` renders the log week stamp, `pickI(n)` is the single RNG draw behind `pick(arr)` for pools that became keys (`ev.why.mm.<i>`).
+- `tests/unit/p3-equiv.test.js` proves that the state, rendered back to Vietnamese, equals the state recorded before phase 3, that `S` is language independent and that the save stays within +10 % of the pre-phase-3 size. Keys are short on purpose (`h.*` history, `l.*`/`ll.*` lessons, `b.*` busy titles, `ol.*` offer lesson lines) because they are stored in every save.
+- `tests/unit/i18n-stored.test.js` counts Vietnamese strings left in every stored-text category after the rich state and every extra scenario; it must be 0. `tests/unit/ui-en.test.js` renders the log and every surface in English with no long-string exemptions.
+- Conversion recipe: `addLog(`💸 Lương ${a.name} tăng lên ${fmt(a.salary)}/tuần.`)` becomes `addLog(Lk('log.ev.raise', {n: a.name, m: {$: a.salary}}))` with the Vietnamese copied verbatim to `locales/vi/st-*.js` and the English wording in `locales/en/st-*.js`. Keep params in template order (RNG calls inside a template keep their position), never `esc()` a param, never mutate a stored `Msg`.
+
 **The literal scanner and the allowlist**
 
-`node scripts/i18n-literals.mjs --report [files]` lists every Vietnamese string literal left in `src/` outside comments, sink calls, the kept data tables and the locale files. `--strict` (part of `npm run check:i18n`) exits 1 on a finding that is not in `scripts/i18n-literal-allow.json`. Each allowlist entry is `{ file, text, why }` and must name a real reason: text that is stored in `S` (phase 3), compared as logic against a stored value, or an error message kept for a test. Display-only text never goes there. The render-based guard `tests/unit/ui-en.test.js` renders every surface and runs every failing-action toast with `lang=en` and fails on any leftover Vietnamese word; `tests/unit/i18n-state.test.js` proves that `S` and the RNG call count are identical in both languages.
+`node scripts/i18n-literals.mjs --report [files]` lists every Vietnamese string literal left in `src/` outside comments, the kept proper-noun tables (`KEEP_CONSTS`) and the locale files. Sink calls are scanned like any other code. `--strict` (part of `npm run check:i18n`) exits 1 on a finding that is not in `scripts/i18n-literal-allow.json`. Each allowlist entry is `{ file, text, why }` and must name a real reason; the only entries left are the `transfer.js` error messages kept Vietnamese for `transfer.test.js`. Display-only text never goes there. The render-based guard `tests/unit/ui-en.test.js` renders every surface and runs every failing-action toast with `lang=en` and fails on any leftover Vietnamese word; `tests/unit/i18n-state.test.js` proves that `S` and the RNG call count are identical in both languages.
 
 ## Deployment
 
@@ -221,7 +231,7 @@ The repository ships [Claude Code](https://claude.com/claude-code) subagents in 
 From the plans in [`docs/plans/`](docs/plans/):
 
 - [x] Translate room contents, views and data labels (i18n phase 2)
-- [ ] Store logs, events and offers as keys + parameters so they can be translated (i18n phase 3)
+- [x] Store logs, events and offers as keys + parameters so they can be translated (i18n phase 3)
 - [ ] Replace inline handlers with `data-action` event delegation
 - [ ] PWA / offline support
 - [ ] Gameplay balancing, with intentional golden updates

@@ -1,0 +1,711 @@
+{
+ "v": 1,
+ "year": 1,
+ "week": 1,
+ "money": 600000000,
+ "nid": 18,
+ "planOn": true,
+ "managers": [],
+ "mgrPool": [
+  {
+   "id": 5,
+   "name": "Vũ Quốc Huy",
+   "look": {
+    "hair": "#3a7d5c",
+    "skin": "#eebf98",
+    "out": "#5b6b8c",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 5,
+    "care": 3,
+    "pr": 8,
+    "plan": 3
+   },
+   "spec": "pr",
+   "lv": 1,
+   "exp": 0,
+   "salary": 6000000,
+   "fee": 57000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "trainee"
+  },
+  {
+   "id": 6,
+   "name": "Phạm Hoài Nam",
+   "look": {
+    "hair": "#3a7d5c",
+    "skin": "#ffe0c7",
+    "out": "#333a56",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "sk": {
+    "nego": 9,
+    "care": 3,
+    "pr": 3,
+    "plan": 2
+   },
+   "spec": "nego",
+   "lv": 1,
+   "exp": 0,
+   "salary": 5000000,
+   "fee": 51000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "trainee"
+  },
+  {
+   "id": 7,
+   "name": "Đặng Ngọc Lan",
+   "look": {
+    "hair": "#f3d27a",
+    "skin": "#d9a27c",
+    "out": "#6b4f3a",
+    "style": "long",
+    "long": true,
+    "skirt": true
+   },
+   "sk": {
+    "nego": 1,
+    "care": 6,
+    "pr": 4,
+    "plan": 2
+   },
+   "spec": "care",
+   "lv": 1,
+   "exp": 0,
+   "salary": 4000000,
+   "fee": 39000000,
+   "as": null,
+   "auto": "off",
+   "ps": 2,
+   "dom": "group"
+  }
+ ],
+ "artists": [
+  {
+   "id": 8,
+   "name": "Thành Đạt",
+   "g": "M",
+   "age": 20,
+   "look": {
+    "hair": "#f3d27a",
+    "skin": "#f8d0b0",
+    "out": "#e9e9f2",
+    "style": "spiky",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 15,
+    "dance": 23,
+    "rap": 18,
+    "acting": 19,
+    "variety": 4,
+    "visual": 12,
+    "stamina": 10
+   },
+   "talent": 0.76,
+   "spec": "dance",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0,
+   "batch": 10
+  },
+  {
+   "id": 9,
+   "name": "Khả Hân",
+   "g": "F",
+   "age": 18,
+   "look": {
+    "hair": "#f3d27a",
+    "skin": "#f8d0b0",
+    "out": "#ffb21e",
+    "style": "long",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 30,
+    "dance": 13,
+    "rap": 31,
+    "acting": 21,
+    "variety": 16,
+    "visual": 18,
+    "stamina": 19
+   },
+   "talent": 1.02,
+   "spec": "rap",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0,
+   "batch": 10
+  }
+ ],
+ "groups": [],
+ "offers": [
+  {
+   "id": 13,
+   "type": "drama",
+   "partner": "Đài HTN",
+   "genre": "comedy",
+   "w": {
+    "acting": 0.4,
+    "variety": 0.6
+   },
+   "req": {
+    "acting": 10,
+    "variety": 15
+   },
+   "L": 15,
+   "fame": 2,
+   "weeks": 11,
+   "pay": 226000000,
+   "costar": "Mai Tuyết Nhung",
+   "exp": 4,
+   "title": "Thành Phố Tan Vỡ",
+   "target": null,
+   "invest": {
+    "budget": 2938000000,
+    "share": 0.2
+   },
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 14,
+   "type": "variety",
+   "partner": "Đài VTX",
+   "genre": null,
+   "w": {
+    "variety": 1,
+    "stamina": 0.6
+   },
+   "req": {
+    "variety": 23,
+    "stamina": 14
+   },
+   "L": 23,
+   "fame": 2,
+   "weeks": 1,
+   "pay": 43000000,
+   "costar": "Đỗ Minh Hiếu",
+   "exp": 5,
+   "title": "Đường Đến Bếp Ngon",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 15,
+   "type": "magazine",
+   "partner": "Style VN",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 13
+   },
+   "L": 13,
+   "fame": 0,
+   "weeks": 1,
+   "pay": 30000000,
+   "costar": null,
+   "exp": 5,
+   "title": "Phỏng vấn trang đôi",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 16,
+   "type": "model",
+   "partner": "Thời trang Teen",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 18
+   },
+   "L": 18,
+   "fame": 0,
+   "weeks": 1,
+   "pay": 7000000,
+   "costar": null,
+   "exp": 4,
+   "title": "Ảnh sản phẩm",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  },
+  {
+   "id": 17,
+   "type": "model",
+   "partner": "Thời trang Teen",
+   "genre": null,
+   "w": {
+    "visual": 1
+   },
+   "req": {
+    "visual": 12
+   },
+   "L": 12,
+   "fame": 0,
+   "weeks": 1,
+   "pay": 7000000,
+   "costar": null,
+   "exp": 3,
+   "title": "Bộ sưu tập thu",
+   "target": null,
+   "invest": null,
+   "invested": false,
+   "slots": 1
+  }
+ ],
+ "films": [],
+ "events": [],
+ "log": [
+  {
+   "t": "Mẹo: chạm vào từng phòng để dùng chức năng, chạm vào nhân vật để xem chi tiết.",
+   "c": "",
+   "w": "N1·T1"
+  },
+  {
+   "t": "🎉 Chào mừng giám đốc! Starlight Ent. bắt đầu với vốn 600 triệu và 2 thực tập sinh.",
+   "c": "gold",
+   "w": "N1·T1"
+  },
+  {
+   "t": "🔥 Xu hướng mới: Retro và EDM đang thịnh hành, Hip-hop hết thời.",
+   "c": "gold",
+   "w": "N1·T1"
+  }
+ ],
+ "partners": {},
+ "singles": [],
+ "concerts": [],
+ "awards": [],
+ "pool": [
+  {
+   "id": 1,
+   "name": "Phúc An",
+   "g": "M",
+   "age": 21,
+   "look": {
+    "hair": "#8a6cff",
+    "skin": "#eebf98",
+    "out": "#ffb21e",
+    "style": "short",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 30,
+    "dance": 40,
+    "rap": 27,
+    "acting": 21,
+    "variety": 29,
+    "visual": 34,
+    "stamina": 25
+   },
+   "talent": 1.06,
+   "spec": "dance",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 2,
+   "name": "Quỳnh Như",
+   "g": "F",
+   "age": 17,
+   "look": {
+    "hair": "#b23a48",
+    "skin": "#f8d0b0",
+    "out": "#9b5de5",
+    "style": "pony",
+    "long": true,
+    "skirt": true
+   },
+   "st": {
+    "vocal": 16,
+    "dance": 27,
+    "rap": 15,
+    "acting": 30,
+    "variety": 16,
+    "visual": 18,
+    "stamina": 31
+   },
+   "talent": 0.77,
+   "spec": "acting",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 3,
+   "name": "Yến Nhi",
+   "g": "F",
+   "age": 18,
+   "look": {
+    "hair": "#d9d4e8",
+    "skin": "#eebf98",
+    "out": "#ff4f8b",
+    "style": "bun",
+    "long": true,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 16,
+    "dance": 37,
+    "rap": 15,
+    "acting": 17,
+    "variety": 26,
+    "visual": 29,
+    "stamina": 21
+   },
+   "talent": 0.79,
+   "spec": "dance",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  },
+  {
+   "id": 4,
+   "name": "Khánh Duy",
+   "g": "M",
+   "age": 17,
+   "look": {
+    "hair": "#8a6cff",
+    "skin": "#d9a27c",
+    "out": "#e9e9f2",
+    "style": "short",
+    "long": false,
+    "skirt": false
+   },
+   "st": {
+    "vocal": 4,
+    "dance": 3,
+    "rap": 9,
+    "acting": 12,
+    "variety": 14,
+    "visual": 42,
+    "stamina": 3
+   },
+   "talent": 0.81,
+   "spec": "visual",
+   "energy": 100,
+   "mood": 70,
+   "fans": 0,
+   "status": "trainee",
+   "solo": false,
+   "actor": false,
+   "sched": "vocal",
+   "days": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "rest",
+    "rest"
+   ],
+   "busy": null,
+   "salary": 1000000,
+   "co": {},
+   "rel": {},
+   "tag": {},
+   "pw": {},
+   "scandal": null,
+   "yr": {
+    "fans": 0,
+    "actQ": 0,
+    "variety": 0
+   },
+   "debutYear": 0,
+   "lessons": [],
+   "hist": [],
+   "wantAct": 0
+  }
+ ],
+ "assts": [],
+ "songs": [],
+ "fin": [],
+ "bno": 1,
+ "batches": [
+  {
+   "id": 10,
+   "n": "Lứa 1",
+   "w": 1
+  }
+ ],
+ "curBatch": 10,
+ "comps": [
+  {
+   "id": 11,
+   "n": "Gương mặt Teen",
+   "ic": "📸",
+   "w": {
+    "visual": 1,
+    "variety": 0.4
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 22,
+   "wk": 1,
+   "fee": 3000000,
+   "prize": [
+    67000000,
+    30000000,
+    13000000
+   ],
+   "exp": 6
+  },
+  {
+   "id": 12,
+   "n": "Đấu trường Rap Trẻ",
+   "ic": "🎤",
+   "w": {
+    "rap": 1,
+    "variety": 0.3
+   },
+   "t": [
+    1,
+    1
+   ],
+   "lvl": 21,
+   "wk": 1,
+   "fee": 2000000,
+   "prize": [
+    88000000,
+    40000000,
+    18000000
+   ],
+   "exp": 4
+  }
+ ],
+ "compRuns": [],
+ "rivals": [
+  {
+   "id": 1,
+   "n": "Hoa Mai Music",
+   "fans": 60000,
+   "g": 0.0088,
+   "f0": 60000,
+   "last": "",
+   "stole": 0,
+   "cb": null
+  },
+  {
+   "id": 2,
+   "n": "Moonlight Ent.",
+   "fans": 160000,
+   "g": 0.0085,
+   "f0": 160000,
+   "last": "",
+   "stole": 0,
+   "cb": null
+  },
+  {
+   "id": 3,
+   "n": "Blue Wave",
+   "fans": 380000,
+   "g": 0.0069,
+   "f0": 380000,
+   "last": "",
+   "stole": 0,
+   "cb": null
+  },
+  {
+   "id": 4,
+   "n": "Galaxy Star",
+   "fans": 800000,
+   "g": 0.0078,
+   "f0": 800000,
+   "last": "",
+   "stole": 0,
+   "cb": null
+  },
+  {
+   "id": 5,
+   "n": "Titan Media",
+   "fans": 1500000,
+   "g": 0.0056,
+   "f0": 1500000,
+   "last": "",
+   "stole": 0,
+   "cb": null
+  }
+ ],
+ "trend": {
+  "hot": [
+   "retro",
+   "edm"
+  ],
+  "cold": "hiphop",
+  "until": 10
+ },
+ "mods": {},
+ "biz": [],
+ "camp": {},
+ "ui": {}
+}

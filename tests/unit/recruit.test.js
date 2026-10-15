@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { noToggle, seed, SHELL } from './helpers.js';
+import { noToggle, seed, SHELL, viT } from './helpers.js';
 import { S, newGame } from '../../src/state.js';
 import { genArtist, sign } from '../../src/systems/artists.js';
 import { bMem } from '../../src/systems/batches.js';
@@ -66,7 +66,7 @@ describe('nhân viên tuyển dụng', () => {
     expect(bMem(second)).toHaveLength(2);
     expect(S.pool).toHaveLength(1);
     expect(S.money).toBe(m0 - 3 * 20e6 - (2e6 + 10 * .5e6));
-    expect(S.log.filter(l => l.t.includes('NV tuyển dụng Test NV ký')).length).toBe(3);
+    expect(S.log.filter(l => viT(l.t).includes('NV tuyển dụng Test NV ký')).length).toBe(3);
     expect(S.rec.log.length).toBeGreaterThan(0);
   });
   it('dự trữ: tiền = dự trữ + 25 tr (+ lương) chỉ ký đúng một người', () => {
@@ -124,7 +124,7 @@ describe('nhân viên tuyển dụng', () => {
     const a = S.pool[0], m0 = S.money, bn = S.batches.find(b => b.id === S.curBatch).n;
     sign(a.id);
     expect(S.money).toBe(m0 - 20e6);
-    expect(S.log.some(l => l.t === `✍️ Ký hợp đồng thực tập sinh ${a.name} vào ${bn}.`)).toBe(true);
+    expect(S.log.some(l => viT(l.t) === `✍️ Ký hợp đồng thực tập sinh ${a.name} vào ${viT(bn)}.`)).toBe(true);
     expect(S.artists.includes(a)).toBe(true);
   });
   it('nextWeek gọi recruitTick: tự ký và trả lương', () => {
@@ -134,6 +134,6 @@ describe('nhân viên tuyển dụng', () => {
     const n0 = S.artists.length;
     nextWeek(true, true);
     expect(S.artists.length).toBeGreaterThan(n0);
-    expect(S.log.some(l => l.t.includes('NV tuyển dụng Test NV ký thực tập sinh'))).toBe(true);
+    expect(S.log.some(l => viT(l.t).includes('NV tuyển dụng Test NV ký thực tập sinh'))).toBe(true);
   });
 });

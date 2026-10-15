@@ -1,10 +1,10 @@
-import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { R, pickI, pick, rnd } from '../core/rng.js';
+import { Lk, isK, t } from '../i18n/index.js';
 import { statName } from '../i18n/labels.js';
-import { clamp, fmt, fmtN } from '../core/util.js';
+import { clamp, fmtN } from '../core/util.js';
 import { PLESSON } from '../data/lessons.js';
 import { OFFER } from '../data/offers.js';
-import { GENRES, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
+import { GENRES, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fame, fit, genPool } from './artists.js';
 import { awardToShow, awards, setAwardToShow } from './awards.js';
@@ -42,15 +42,15 @@ export function trainDay(a,k){
   if(a.energy<20)a.mood=clamp(a.mood-1.2,0,100);
   return +gs.toFixed(2);
 }
-export function qLabel(q){return q>=1.25?'Xuất sắc':q>=1?'Tốt':q>=.8?'Ổn':'Chưa tốt'}
+export function qId(q){return q>=1.25?'ex':q>=1?'good':q>=.8?'ok':'low'} // stored as an id, rendered by {q:q}
 /* a.pg: cumulative skill points from projects (lazy, real applied delta) */
 export function addPg(a,k,d){d=+d.toFixed(1);if(d){a.pg=a.pg||{};a.pg[k]=+((a.pg[k]||0)+d).toFixed(1)}}
-export function applyLesson(a,lesson,q){const out=[];for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out.push(`${STATS[k]} +${g.toFixed(1)}`)}return out.join(', ')}
+export function applyLesson(a,lesson,q){const out={};for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out[k]=g.toFixed(1)}return{$g:out}}
 /* deterministic project lesson (no RNG); consecutive livestreams merge into one entry */
-export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=P.lt[abs()%P.lt.length],b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
+export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=Lk(`ll.${key}.${abs()%P.ltN}`),b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
   if(key==='live'){const d={};for(const k in P.l)d[k]=+(a.st[k]-b0[k]).toFixed(1);   // real applied delta (clamp/rounding), matches a.pg
-    const txt=g=>Object.keys(g).map(k=>`${STATS[k]} +${g[k].toFixed(1)}`).join(', ');
-    if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=`${title} (×${L.n})`;L.s=txt(L.g);L.y=S.year;return L.s}
+    const txt=g=>{const o={};for(const k of Object.keys(g))o[k]=g[k].toFixed(1);return{$g:o}};
+    if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=Lk('l.rep',{t:title,n:L.n});L.s=txt(L.g);L.y=S.year;return L.s}
     a.lessons.unshift({t:title,l:lt,s:txt(d),g:d,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return txt(d)}
   const s=s0;
   a.lessons.unshift({t:title,l:lt,s,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return s}
@@ -61,8 +61,8 @@ export function completeBusy(a){
     const mates=(b.mates||[]).filter(i=>i!==a.id).map(byId).filter(Boolean);for(const m of mates)setRel(a,m,getRel(a,m)+R(2,5));
     const fg=Math.round(R(O.fans[0],O.fans[1])*.4*q*(1+fame(a)/150));
     a.fans+=fg;a.yr.fans+=fg;S.money+=b.pay;book('job',b.pay,[a]);
-    const ls=applyLesson(a,O.lesson,q),lt=pick(O.lt);
-    a.lessons.unshift({t:`${O.n} «${b.title}»`+(mates.length?' cùng '+mates.map(x=>x.name).join(', '):''),l:lt,s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
+    const ls=applyLesson(a,O.lesson,q),lt=Lk(`ol.${b.type}.${pickI(O.ltN)}`);
+    a.lessons.unshift({t:Lk('l.offer',{o:b.type,t:b.title,m:mates.length?Lk('l.with',{n:mates.map(x=>x.name).join(', ')}):''}),l:lt,s:ls,y:S.year});if(a.lessons.length>12)a.lessons.length=12;
     S.partners[b.partner]=clamp(Math.round((S.partners[b.partner]||0)+R(6,12)*q),0,100);
     a.pw[b.partner]=(a.pw[b.partner]||0)+1;
     if(b.costar)a.co[b.costar]=clamp((a.co[b.costar]||0)+R(10,20),0,100);
@@ -71,20 +71,20 @@ export function completeBusy(a){
     a.wc=(a.wc||0)+1;
     {const m=mgrOf(a);if(m)mgrExp(m)}
     a.mood=clamp(a.mood+6,0,100);a.energy=clamp(a.energy-10,0,100);
-    a.hist.unshift(`N${S.year}: ${O.n} «${b.title}» – ${qLabel(q)}`);
-    addLog(`✅ ${a.name} hoàn thành «${b.title}» (${qLabel(q)}): +${fmt(b.pay)}, +${fmtN(fg)} fan. Bài học: ${lt} (${ls}).`,'good');
+    a.hist.unshift(Lk('h.offer',{y:S.year,o:b.type,t:b.title,q:qId(q)}));
+    addLog(Lk('log.wk.done',{n:a.name,t:b.title,q:qId(q),m:{$:b.pay},f:fmtN(fg),l:lt,s:ls}),'good');
   }else if(b.kind==='shoot'){
     const film=S.films.find(x=>x.id===b.filmId);
     const q=rnd(.9,1.25),ls=applyLesson(a,{acting:5,stamina:1},q);
-    a.lessons.unshift({t:`Phim «${b.title}»`,l:'Hiểu cả công việc phía sau máy quay',s:ls,y:S.year});
+    a.lessons.unshift({t:Lk('l.film',{t:b.title}),l:Lk('l.filmLt'),s:ls,y:S.year});
     if(film){a.yr.actQ=Math.max(a.yr.actQ,Math.round(fit(a,GENRES[film.genre].w)*q));
-      if(!S.artists.some(x=>x.busy&&x.busy.filmId===film.id)){film.status='Hậu kỳ';film.releaseAt=abs()+2}}
-    a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(`N${S.year}: Đóng phim công ty «${b.title}»`);
-    addLog(`🎬 ${a.name} đóng máy phim «${b.title}». ${ls}.`,'good');
-  }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(`🎤 ${a.name} kết thúc đợt quảng bá. (${s})`)}
-  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(b.title==='Fan meeting'?'fanmeet':'concert'),b.title);addLog(`🏟️ ${a.name} trở về sau concert. (${s})`)}
+      if(!S.artists.some(x=>x.busy&&x.busy.filmId===film.id)){film.status=Lk('film.st.post');film.releaseAt=abs()+2}}
+    a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(Lk('h.film',{y:S.year,t:b.title}));
+    addLog(Lk('log.wk.shoot',{n:a.name,t:b.title,s:ls}),'good');
+  }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(Lk('log.wk.promo',{n:a.name,s}))}
+  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(isK(b.title,'b.fanmeet')?'fanmeet':'concert'),b.title);addLog(Lk('log.wk.concert',{n:a.name,s}))}
   else if(b.kind==='write')projLesson(a,'write',b.title);
-  else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(`🌴 ${a.name} quay lại sau kỳ nghỉ.`)}
+  else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(Lk('log.wk.leave',{n:a.name}))}
   else if(b.kind==='comp')compDone(a,b);
 }
 export function releaseFilm(f){
@@ -94,12 +94,11 @@ export function releaseFilm(f){
   const fm=cast.length?cast.reduce((s,a)=>s+fame(a),0)/cast.length:R(10,50);
   const mult=Math.max(.1,.2+ft/100*1.3+fm/100*.6+rnd(-.4,.5)+(f.own?0:.05));
   const rev=Math.round(f.budget*mult),inc=Math.round(rev*f.share);
-  S.money+=inc;book('film',inc,cast);f.done=true;f.mult=+mult.toFixed(2);f.rev=rev;f.inc=inc;f.status='Đã chiếu';f.y=S.year;
+  S.money+=inc;book('film',inc,cast);f.done=true;f.mult=+mult.toFixed(2);f.rev=rev;f.inc=inc;f.status=Lk('film.st.out');f.y=S.year;
   for(const a of cast){const g=Math.round(rev/1e6*R(15,30));a.fans+=g;a.yr.fans+=g}
-  addLog(`🎞️ Phim «${f.title}» ra rạp: doanh thu ${fmt(rev)} (x${f.mult}), công ty nhận ${fmt(inc)}${f.own?'':' từ phần góp vốn'}.`,mult>=1?'gold':'bad');
+  addLog(Lk('log.wk.film',{t:f.title,r:{$:rev},x:f.mult,i:{$:inc},o:f.own?'':Lk('log.wk.filmShare')}),mult>=1?'gold':'bad');
 }
-export const DAYS=['T2','T3','T4','T5','T6','T7','CN'];
-export const DAYN=['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'];
+export const DAYS=[0,1,2,3,4,5,6];
 export const defaultDays=k=>k==='rest'?Array(7).fill('rest'):[k,k,k,k,k,'rest','rest'];
 export function ensureDays(a){if(!Array.isArray(a.days)||a.days.length!==7)a.days=defaultDays(a.sched||'vocal');a.days=a.days.map(k=>TRAIN[k]?k:'rest')}
 export const daysMini=a=>a.days.map(k=>TIC[k]).join('');
@@ -137,14 +136,14 @@ export function nextWeek(force,planned){
     if(a.busy){rep.a[a.id]={b:a.busy.title};a.busy.left--;if(a.busy.left<=0){const bk=a.busy.kind,bt=a.busy.title;completeBusy(a);if(bk==='offer'||bk==='shoot')rep.a[a.id].done=bt}}
     else{ensureDays(a);rep.a[a.id]={d:a.days.map(k=>{const g=trainDay(a,k);return[k,g,Math.round(a.energy),Math.round(a.mood)]})}}
     if(a.status==='trainee'&&rep.a[a.id]&&rep.a[a.id].d){const dc=ttsDecay(a);if(dc)rep.a[a.id].dec=dc}
-    if(a.scandal){a.fans=Math.round(a.fans*(1-.02*a.scandal.sev));a.scandal.left--;if(a.scandal.left<=0){a.scandal=null;addLog(`🌤️ Scandal của ${a.name} đã lắng xuống.`)}}
+    if(a.scandal){a.fans=Math.round(a.fans*(1-.02*a.scandal.sev));a.scandal.left--;if(a.scandal.left<=0){a.scandal=null;addLog(Lk('log.wk.calm',{n:a.name}))}}
     if(a.status==='debuted')a.fans=Math.max(0,Math.round(a.fans*.996+fame(a)*3*modV('fan')*(1+bizLv('media')*.15)));
-    if(a.wantAct&&now>=a.wantAct){a.wantAct=0;a.mood=clamp(a.mood-20,0,100);addLog(`😞 ${a.name} thất vọng vì lời hứa tìm vai diễn chưa thành.`,'bad')}
+    if(a.wantAct&&now>=a.wantAct){a.wantAct=0;a.mood=clamp(a.mood-20,0,100);addLog(Lk('log.wk.wantAct',{n:a.name}),'bad')}
     S.money-=a.salary;book('sal',-a.salary);
     {const c=msk(a,'care');if(c)a.mood=clamp(a.mood+c*.25,0,100)}
     if(S.money<0)a.mood=clamp(a.mood-2,0,100);
   }
-  for(const f of S.films)if(!f.done&&f.status!=='Đang quay'&&f.releaseAt&&f.releaseAt<=now)releaseFilm(f);
+  for(const f of S.films)if(!f.done&&!isK(f.status,'film.st.shoot')&&f.releaseAt&&f.releaseAt<=now)releaseFilm(f);
   S.offers=S.offers.filter(o=>o.exp>now);
   genOffers(R(2,4)+(S.artists.length>6?1:0)+(S.artists.length>12?1:0));
   {const nt=S.artists.filter(a=>a.status==='trainee').length,ho=S.offers.filter(o=>OFFER[o.type].tj).length;if(nt&&ho<Math.min(5,1+Math.ceil(nt/3)))genOffers(R(1,2),1)}
@@ -161,7 +160,7 @@ export function nextWeek(force,planned){
   randomEvents();
   weekV2();
   recruitTick();
-  if(S.money<0)addLog(`⚠️ Công ty đang âm ${fmt(-S.money)}. Nghệ sĩ bắt đầu lo lắng!`,'bad');
+  if(S.money<0)addLog(Lk('log.wk.debt',{m:{$:-S.money}}),'bad');
   if(abs()%4===0)evalAll();
   finClose();
   S.week++;

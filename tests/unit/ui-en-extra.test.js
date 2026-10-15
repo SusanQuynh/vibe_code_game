@@ -13,7 +13,7 @@ import { recHTML, recSignSug, recHunt, recSet } from '../../src/systems/recruit.
 import { batchHTML, batchLive, openBatch } from '../../src/systems/batches.js';
 import { debutRec, recLine, debutIds } from '../../src/systems/debut.js';
 import { dqBanner, viewDebutQ, dqDo } from '../../src/systems/ext3.js';
-import { t } from '../../src/i18n/index.js';
+import { t, tx } from '../../src/i18n/index.js';
 
 noToggle(true);
 let base, early;
@@ -79,8 +79,8 @@ describe('en: contests, recruiters, batches, debut', () => {
       setLang('en');
       const box = document.getElementById('sheet');
       for (const a of S.artists) {
-        const r = debutRec(a, t);
-        check(n + '-why', r.why + ' ' + r.short);
+        const r = debutRec(a);
+        check(n + '-why', tx(r.why) + ' ' + tx(r.short));
       }
       box.innerHTML = S.artists.filter(a => a.status === 'trainee').map(recLine).join('') + dqBanner(); check(n + '-lines', sheetText());
       viewDebutQ(); check(n + '-dq', sheetText());

@@ -1,5 +1,5 @@
 import { $, esc } from '../core/util.js';
-import { money, t } from '../i18n/index.js';
+import { Lk, money, t } from '../i18n/index.js';
 import { KEY, KEY_FULL, lastLoadSource, lastSaveError, replaceSave, save, saveMeta, slotInfo } from '../save/storage.js';
 import { exportCode, exportFile, importFile, parseSaveText } from '../save/transfer.js';
 import { S, addLog } from '../state.js';
@@ -99,6 +99,6 @@ export function saveImportApply() {
   if (!replaceSave(preview.d)) { ioMsg = { k: lastSaveError() === 'quota' ? 'save.msg.quota' : 'save.msg.bad' }; preview = null; return refresh(); }
   preview = null; ioMsg = { k: 'save.msg.ok' };
   setPos({});
-  addLog('🔑 Đã nạp game từ mã / file lưu.', 'gold');
+  addLog(Lk('log.sv.load'), 'gold');
   act();
 }

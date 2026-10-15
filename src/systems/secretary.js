@@ -2,7 +2,7 @@ import { R } from '../core/rng.js';
 import { $, clamp, esc, fmt, fmtN } from '../core/util.js';
 import { CONCEPTS } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
-import { money, t, tVi } from '../i18n/index.js';
+import { Lk, money, t } from '../i18n/index.js';
 import { conceptName } from '../i18n/labels.js';
 import { fame } from './artists.js';
 import { avgFit } from './debut.js';
@@ -21,7 +21,7 @@ export const actFree=x=>x.m.length&&!gHiatus(x.k)&&x.m.every(id=>{const a=byId(i
 export function conceptRec(x){const m=x.m.map(byId).filter(Boolean);return Object.keys(CONCEPTS).map(k=>{const f=avgFit(m,CONCEPTS[k].w);return{k,f,s:f+trendB(k)}}).sort((a,b)=>b.s-a.s)}
 export function studioPick(k,c){if(!$('#sAct'))return;$('#sAct').value=k;$('#sCon').value=c;$('#sCon').onchange();$('#sAct').scrollIntoView({behavior:'smooth',block:'center'})}
 /* ---- Secretary: comeback planning ---- */
-export const BUDN={30e6:'Tiết kiệm',80e6:'Tiêu chuẩn',200e6:'Bom tấn'};
+export const BUDN={30e6:1,80e6:1,200e6:1};
 export function lastSingleW(x){const s=S.singles.find(z=>z.k?z.k===x.k:z.act===x.n);return s?(s.w||(s.y-1)*52+1):null}
 export function estRank(x,ck,bud,rp){const mem=x.m.map(byId).filter(Boolean);if(!mem.length)return 100;const ft=avgFit(mem,CONCEPTS[ck].w),fm=mem.reduce((t,a)=>t+fame(a),0)/mem.length,bb=bud>=200e6?16:bud>=80e6?8:0;
   return clamp(Math.round(118-(ft*.6+fm*.3+bb+10+harmony(x.m)+trendB(ck)-(rp==null?rivalPress():rp))),1,100)}
@@ -43,30 +43,30 @@ export function secPlan(x){
 }
 export function secPlans(){return acts().map(secPlan).filter(Boolean).sort((a,b)=>(a.plan?1:0)-(b.plan?1:0)||a.wait-b.wait||a.rank-b.rank)}
 export function secSchedRec(){return secPlans().filter(p=>!p.plan&&!(S.camp[p.k]&&S.camp[p.k].ph==='post')&&p.wait>=1&&p.wait<=6&&S.money>=p.bud).sort((a,b)=>a.rank-b.rank||a.wait-b.wait).slice(0,3).map(p=>(p.recWhy=t('sec.recWhy',{r:p.rank,w:p.wait,why:p.why[0]}),p))}
-export function cbSchedRec(){const L=secSchedRec();if(!L.length)return;L.forEach(p=>cbSched(p.k));addLog(`🗒️ Thư ký hẹn comeback theo khuyến nghị cho: ${L.map(p=>p.n.slice(2).trim()).join(', ')}.`);act()}
-export function cbNow(k){const p=secPlan(actByKey(k));if(!p)return;if(doSingle(k,p.ck,p.bud,null,true)){addLog(`🗒️ Thư ký triển khai comeback theo kế hoạch.`);act()}else toast(t('sec.toast.cant'))}
+export function cbSchedRec(){const L=secSchedRec();if(!L.length)return;L.forEach(p=>cbSched(p.k));addLog(Lk('log.sec.rec',{l:L.map(p=>p.n.slice(2).trim()).join(', ')}));act()}
+export function cbNow(k){const p=secPlan(actByKey(k));if(!p)return;if(doSingle(k,p.ck,p.bud,null,true)){addLog(Lk('log.sec.now'));act()}else toast(t('sec.toast.cant'))}
 export function cbSched(k){const x=actByKey(k),p=secPlan(x);if(!p)return;S.cbPlan=(S.cbPlan||[]).filter(z=>z.k!==k);const w=abs()+Math.max(1,p.wait);S.cbPlan.push({k,n:p.n,w,ck:p.ck,bud:p.bud,tries:0});
-  addLog(`🗒️ Hẹn comeback cho ${p.n.slice(2).trim()} vào tuần ${((w-1)%52)+1}. Đã tự chừa lịch: thành viên không nhận dự án hay cuộc thi kéo dài qua tuần này.`);
-  const late=x.m.map(byId).filter(a=>a&&a.busy&&abs()+a.busy.left>w);if(late.length)addLog(`⚠️ ${late.map(a=>a.name).join(', ')} đang bận ${late.map(a=>'«'+a.busy.title+'»').join(', ')} quá tuần comeback, có thể phải lùi lịch.`,'bad');act()}
+  addLog(Lk('log.sec.sched',{n:p.n.slice(2).trim(),w:((w-1)%52)+1}));
+  const late=x.m.map(byId).filter(a=>a&&a.busy&&abs()+a.busy.left>w);if(late.length)addLog(Lk('log.sec.late',{n:late.map(a=>a.name).join(', '),l:{$l:late.map(a=>Lk('sec.q',{t:a.busy.title})),j:', '}}),'bad');act()}
 export function cbCancel(k){S.cbPlan=(S.cbPlan||[]).filter(x=>x.k!==k);act()}
-export const wkLabel=(w,tr=tVi)=>tr('common.wkShort',{w:((w-1)%52)+1})+(Math.ceil(w/52)!==S.year?' '+tr('common.wkYear',{y:Math.ceil(w/52)}):'');
+export const wkLabel=w=>Lk('common.wkLbl',{w:Lk('common.wkShort',{w:((w-1)%52)+1}),y:Math.ceil(w/52)!==S.year?Lk('common.wkYearSfx',{y:Math.ceil(w/52)}):''});
 export function runCbPlans(){if(!S.cbPlan||!S.cbPlan.length)return;const now=abs();
   for(const p of [...S.cbPlan]){if(p.w>now)continue;const x=actByKey(p.k);if(!x){S.cbPlan=S.cbPlan.filter(z=>z!==p);continue}
     const q=secPlan(x),ck=q?q.ck:p.ck;
-    if(actFree(x)&&S.money>=p.bud&&doSingle(p.k,ck,p.bud,null,true))addLog(`🗒️ Thư ký triển khai comeback đã hẹn cho ${p.n.slice(2).trim()} (${CONCEPTS[ck].n}).`,'good');
-    else{p.tries++;p.w=now+1;if(p.tries>3){S.cbPlan=S.cbPlan.filter(z=>z!==p);addLog(`🗒️ Hủy lịch comeback của ${p.n.slice(2).trim()} vì hoãn quá 3 lần.`,'bad')}else addLog(`🗒️ Lùi comeback của ${p.n.slice(2).trim()} 1 tuần (${actFree(x)?'thiếu tiền':'thành viên đang bận'}).`)}}}
+    if(actFree(x)&&S.money>=p.bud&&doSingle(p.k,ck,p.bud,null,true))addLog(Lk('log.sec.go',{n:p.n.slice(2).trim(),c:Lk(`concept.${ck}`)}),'good');
+    else{p.tries++;p.w=now+1;if(p.tries>3){S.cbPlan=S.cbPlan.filter(z=>z!==p);addLog(Lk('log.sec.cancel',{n:p.n.slice(2).trim()}),'bad')}else addLog(Lk(actFree(x)?'log.sec.delayMoney':'log.sec.delayBusy',{n:p.n.slice(2).trim()}))}}}
 export function secCard(p,rec){const name=esc(p.n);
-  const st=p.plan?`<span class="tag v">${t('sec.planned',{w:wkLabel(p.plan.w,t)})}</span>`:p.wait?`<span class="tag">${t('sec.waitTag',{w:p.wait})}</span>`:`<span class="tag m">${t('sec.readyTag')}</span>`;
+  const st=p.plan?`<span class="tag v">${t('sec.planned',{w:wkLabel(p.plan.w)})}</span>`:p.wait?`<span class="tag">${t('sec.waitTag',{w:p.wait})}</span>`:`<span class="tag m">${t('sec.readyTag')}</span>`;
   const body=`<div class="small">${t('sec.line',{c:conceptName(p.ck)+trendTag(p.ck),f:Math.round(p.fit),b:t(`sec.bud.${p.bud/1e6}`),m:money(p.bud),r:p.rank})}</div>
   <div class="small muted">💬 ${esc(p.why.join('; '))}.</div>
   ${(()=>{const c=S.camp[p.k];return c&&c.ph==='post'?`<div class="small">${t('sec.post',{t:esc(c.t),r:c.rank,w:c.wins,k:c.wn+1,x:PROMO_WK})}</div>`:(p.wait||p.plan)?`<div class="small">${t('sec.pre',{h:c?t('sec.hype',{n:c.hype}):t('sec.noTeaser')})}</div>`:c&&c.hype?`<div class="small">${t('sec.hypeReady',{n:c.hype})}</div>`:''})()}
   ${p.concert?`<div class="small">${t('sec.concert',{n:fmtN(p.tf),m:money(200e6)})} <button class="btn sm" onclick="holdConcert('${p.k}')">${t('sec.hold')}</button></div>`:''}
-  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="view(()=>viewCamp('${p.k}'))">${t('sec.promo')}</button><span class="sp"></span>${p.plan?`<button class="btn sm" onclick="cbCancel('${p.k}')">${t('sec.cancel')}</button>`:p.wait?`<button class="btn sm pri" onclick="cbSched('${p.k}')">${t('sec.schedAt',{w:wkLabel(abs()+p.wait,t)})}</button>`:`<button class="btn sm" onclick="cbSched('${p.k}')">${t('sec.schedNext')}</button><button class="btn sm pink" onclick="cbNow('${p.k}')">${t('sec.now')}</button>`}</div>`;
+  <div class="row" style="margin-top:6px"><button class="btn sm" onclick="view(()=>viewCamp('${p.k}'))">${t('sec.promo')}</button><span class="sp"></span>${p.plan?`<button class="btn sm" onclick="cbCancel('${p.k}')">${t('sec.cancel')}</button>`:p.wait?`<button class="btn sm pri" onclick="cbSched('${p.k}')">${t('sec.schedAt',{w:wkLabel(abs()+p.wait)})}</button>`:`<button class="btn sm" onclick="cbSched('${p.k}')">${t('sec.schedNext')}</button><button class="btn sm pink" onclick="cbNow('${p.k}')">${t('sec.now')}</button>`}</div>`;
   return det('sec-c'+p.k,`<b>${name}</b> ${st} <span class="small muted">${t('sec.rankTag',{r:p.rank})}${rec?' ⭐':''}</span>`,body,rec||(!p.wait&&!p.plan))}
 export function viewSec(){const L=secPlans(),R=secSchedRec(),rk=new Set(R.map(p=>p.k)),due=L.filter(p=>rk.has(p.k)||(!p.wait&&!p.plan)),rest=L.filter(p=>!due.includes(p)),ready=L.filter(p=>!p.wait&&!p.plan).length,cb=S.rivals.filter(r=>r.cb&&r.cb.w>=abs()-1);
   modal(`<div class="row" style="padding-right:42px"><div class="chibi mini">${chibiHTML(NPC[1])}</div><div><h2 style="margin:0;font-size:21px">${t('sec.h')}</h2><div class="small muted">${t('sec.sub')}</div></div></div>
   <div class="card small">${t('sec.hot',{c:S.trend.hot.map(conceptName).join(', '),w:t('common.weeks',{n:S.trend.until-abs()})})}${cb.length?t('sec.rivCb',{n:cb.map(r=>esc(r.n)).join(', ')}):t('sec.noRivCb')}${t('sec.fund',{m:money(S.money)})}<br>${L.length?`👉 ${ready?t('sec.readyN',{n:ready}):t('sec.nobody')}`:t('sec.noActs')}</div>
-  <div class="card small">🗒️ ${R.length?`<b>${t('sec.recH')}</b> ${R.map(p=>t('sec.recItem',{n:esc(p.n.slice(2).trim()),w:wkLabel(abs()+p.wait,t),r:esc(p.recWhy)})).join(' · ')} <button class="btn sm pri" onclick="cbSchedRec()">${t('sec.schedRec')}</button>`:t('sec.noRec')}</div>
+  <div class="card small">🗒️ ${R.length?`<b>${t('sec.recH')}</b> ${R.map(p=>t('sec.recItem',{n:esc(p.n.slice(2).trim()),w:wkLabel(abs()+p.wait),r:esc(p.recWhy)})).join(' · ')} <button class="btn sm pri" onclick="cbSchedRec()">${t('sec.schedRec')}</button>`:t('sec.noRec')}</div>
   ${L.length?`<div class="row" style="margin-bottom:6px"><span class="sp"></span><button class="btn sm" onclick="setAllD('sec-',false)">${t('mgr.collapseAll')}</button><button class="btn sm" onclick="setAllD('sec-',true)">${t('mgr.expandAll')}</button></div>`:''}
   ${due.length?det('sec-due',t('sec.dueH',{n:due.length}),due.map(p=>secCard(p,rk.has(p.k))).join(''),true):''}
   ${rest.length?det('sec-rest',t('sec.restH',{n:rest.length}),rest.map(p=>secCard(p,rk.has(p.k))).join(''),false):''}

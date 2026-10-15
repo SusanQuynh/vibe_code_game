@@ -3,6 +3,7 @@
 // Read the DOM synchronously: building.js's interval mutates it between awaits.
 import { S, abs, byId, setState, uid } from '../../src/state.js';
 import { seed } from './helpers.js';
+import { Lk } from '../../src/i18n/index.js';
 import { openRoom } from '../../src/ui/rooms.js';
 import { closeM } from '../../src/ui/modal.js';
 import { genManager, gmOf, hireMgr, setBoss, setDom, assignMgr, toggleMA, rehuntMgr, retrain } from '../../src/systems/managers.js';
@@ -29,7 +30,7 @@ add('t5-mgr-nogm', ctx => { ctx.fresh(ctx.base); demoteGM(null); openRoom('mgr')
 add('t5-mgr-variants', ctx => {
   ctx.fresh(ctx.base);
   const ms = nonGm(), tr = S.artists.find(a => a.status === 'trainee'), ds = S.artists.filter(a => a.status !== 'trainee');
-  if (tr) tr.batch = 9999; S.batches.push({ id: 9999, n: 'Lứa 9', w: 1 });
+  if (tr) tr.batch = 9999; S.batches.push({ id: 9999, n: Lk('batch.n', { i: 9 }), w: 1 });
   if (ds[0]) ds[0].pm = { id: -1, name: 'PM Test', sk: { nego: 5, care: 5, pr: 5, plan: 5 }, lv: 1, ps: 1, boss: null };
   const kinds = [{ t: 'l', id: 0, ids: ds.slice(1, 3).map(a => a.id) }, { t: 'b', id: S.batches[0].id }, S.groups[0] && { t: 'g', id: S.groups[0].id }, ds[2] && { t: 'a', id: ds[2].id }, { t: 't', id: 0 }, { t: 's', id: 0 }, { t: 'd', id: 0 }];
   ms.forEach((m, i) => { m.as = kinds[i % kinds.length] || null; m.auto = ['off', 'short', 'all'][i % 3]; m.ps = i % 3; });
@@ -105,7 +106,7 @@ add('t6-art-variants', ctx => {
   const deb = S.artists.filter(a => a.status === 'debuted'), tr = S.artists.filter(a => a.status === 'trainee');
   const d0 = deb[0], d1 = deb[1];
   if (d0) { d0.pm = { id: -d0.id, name: 'PM Test', sk: { nego: 5, care: 4, pr: 3, plan: 2 }, lv: 1, ps: 1, boss: null }; out.pm = view(d0); d0.pm = null; }
-  if (d0) { d0.scandal = { t: 'Tin đồn test', sev: 2, left: 3, truth: false, dating: false, other: 0 }; d0.wantAct = abs() + 4; d0.ceNo = 1; d0.ce = abs() + 9; d0.cs = 3; d0.busy = { kind: 'x', title: 'Việc test', left: 2, total: 3 }; out.scandalBusy = view(d0); }
+  if (d0) { d0.scandal = { t: { $l: ['Tin đồn test'], j: '' }, sev: 2, left: 3, truth: false, dating: false, other: 0 }; d0.wantAct = abs() + 4; d0.ceNo = 1; d0.ce = abs() + 9; d0.cs = 3; d0.busy = { kind: 'x', title: 'Việc test', left: 2, total: 3 }; out.scandalBusy = view(d0); }
   if (d1) { d1.lessons = [{ t: 'Bài học test', y: 1, l: 'Nội dung', s: '+3 fan', b: 'Huy hiệu' }]; d1.pg = { vocal: 2.5, dance: 1 }; d1.hist = []; d1.ev = undefined; d1.evG = 'A'; d1.evFail = 4; out.lessons = view(d1); d1.pg = {}; d1.evG = ''; d1.ce = 0; d1.cs = 0; out.bare = view(d1); }
   if (tr[0] && d0) { tr[0].mt = d0.id; tr[0].dReady = 1; tr[0].noHold = false; tr[0].ev = { st: 100 }; tr[0].ttsFail = 3; out.mentored = view(tr[0]); tr[0].noHold = true; tr[0].ev = undefined; out.mentoredOpen = view(tr[0]); }
   if (tr[0] && d0) { tr[0].dReady = 0; tr[0].mt = 0; d0.mt = 0; S.artists.filter(x => x.status === 'trainee').forEach(x => { x.mt = d0.id; }); out.mentorFull = view(d0); S.artists.forEach(x => { x.mt = 0; }); }
@@ -122,7 +123,7 @@ add('t6-v3art', ctx => {
     ctx.fresh(b); if (n === 'early') boost();
     S.artists.forEach((a, i) => { out[n + i] = v3ArtistHTML(a); });
     const a = S.artists.find(paOK);
-    if (a) { a.hsF = { w: abs(), why: ['mệt', 'kiệt sức'], n: 2, st: 'new' }; a.restRec = 0; out[n + 'hs'] = v3ArtistHTML(a); a.restRec = abs() + 3; out[n + 'hs2'] = v3ArtistHTML(a); a.pa = { name: 'Trợ lý Test', k: 'care', v: 2, sal: 2e6 }; out[n + 'pa'] = v3ArtistHTML(a); a.xr = { 1: 20 }; out[n + 'xr'] = v3ArtistHTML(a); }
+    if (a) { a.hsF = { w: abs(), why: [{ $l: ['mệt'], j: '' }, { $l: ['kiệt sức'], j: '' }], n: 2, st: 'new' }; a.restRec = 0; out[n + 'hs'] = v3ArtistHTML(a); a.restRec = abs() + 3; out[n + 'hs2'] = v3ArtistHTML(a); a.pa = { name: 'Trợ lý Test', k: 'care', v: 2, sal: 2e6 }; out[n + 'pa'] = v3ArtistHTML(a); a.xr = { 1: 20 }; out[n + 'xr'] = v3ArtistHTML(a); }
   }
   return out;
 }, ['mệt','kiệt sức','Trợ lý Test']);
@@ -185,7 +186,7 @@ const fab = () => {
   S.managers.forEach(m => { m.as = null; });
   ms.forEach((m, i) => { m.dom = null; m.as = { t: 'l', id: 0, ids: arts.filter((_, j) => j % Math.max(ms.length, 1) === i).map(a => a.id) }; });
   const mk = (e, mo) => Array.from({ length: 7 }, (_, k) => [['vocal', 'dance', 'rest', 'gym', 'rap', 'acting', 'variety'][k], k === 2 ? 0 : 1.2, e, mo]);
-  arts.forEach((a, i) => { const v = i % 6; if (v === 5) delete S.lastRep.a[a.id]; else S.lastRep.a[a.id] = v === 0 ? { d: mk(70, 70), f: 12 } : v === 1 ? { d: mk(10, 70), f: -3 } : v === 2 ? { d: mk(70, 10), f: 0, done: 'Phim test' } : v === 3 ? { b: 'Việc ngoài test', f: 5 } : { d: mk(70, 70), f: 1, dec: 1.5, done: 'Phim test' }; });
+  arts.forEach((a, i) => { const v = i % 6; if (v === 5) delete S.lastRep.a[a.id]; else S.lastRep.a[a.id] = v === 0 ? { d: mk(70, 70), f: 12 } : v === 1 ? { d: mk(10, 70), f: -3 } : v === 2 ? { d: mk(70, 10), f: 0, done: 'Phim test' } : v === 3 ? { b: { $l: ['Việc ngoài test'], j: '' }, f: 5 } : { d: mk(70, 70), f: 1, dec: 1.5, done: 'Phim test' }; });
 };
 const full = d => (setRepDay(d), viewReportFull(), sheet());
 add('t7-report', ctx => {
@@ -193,7 +194,7 @@ add('t7-report', ctx => {
   ctx.fresh(ctx.early); out.none = rep(); out.noneFull = full(0);
   ctx.fresh(ctx.base); out.base = rep();
   S.lastRep.m1 = null; S.lastRep.biz = -5e6; out.nullMoney = rep();
-  ctx.fresh(ctx.base); S.lastRep.biz = 0; S.lastRep.evl = 0; S.lastRep.m1 = S.lastRep.m0 - 3e6; S.lastRep.ev = ['dòng 1', 'dòng 2', 'dòng 3', 'dòng 4', 'dòng 5', 'dòng 6', 'dòng 7']; out.neg = rep();
+  ctx.fresh(ctx.base); S.lastRep.biz = 0; S.lastRep.evl = 0; S.lastRep.m1 = S.lastRep.m0 - 3e6; S.lastRep.ev = [1, 2, 3, 4, 5, 6, 7].map(i => ({ $l: ['dòng ' + i], j: '' })); out.neg = rep();
   S.lastRep.ev = []; S.lastRep.evl = 1; out.noEv = rep();
   ctx.fresh(ctx.base);
   fab();
@@ -223,7 +224,7 @@ add('t7-brief', ctx => {
   tr.forEach((a, i) => { S.lastRep.a[a.id] = { d: Array.from({ length: 7 }, (_, k) => ['vocal', i % 2 ? 1.5 : 0, 70 - i * 20, 60]), f: 10, dec: i ? 0.5 : 0 }; });
   out.ok = briefCard('<b>T</b>', tr);
   S.lastRep.a[tr[0].id].d[6][2] = 5; out.warn = briefCard('<b>T</b>', tr);
-  S.lastRep.a[tr[0].id] = { b: 'Việc test' }; delete S.lastRep.a[tr[1].id]; out.out = briefCard('<b>T</b>', tr);
+  S.lastRep.a[tr[0].id] = { b: { $l: ['Việc test'], j: '' } }; delete S.lastRep.a[tr[1].id]; out.out = briefCard('<b>T</b>', tr);
   S.lastRep.a[tr[0].id] = { done: 'Phim test' }; out.done = briefCard('<b>T</b>', tr);
   ctx.fresh(ctx.base); out.empty = briefCard('<b>E</b>', []);
   return out;
@@ -271,9 +272,9 @@ add('t7-plan', ctx => {
   out.lowEnergy = setup(() => { a.energy = 20; });
   out.lowMood = setup(() => { a.energy = 90; a.mood = 10; });
   out.wantAct = setup(() => { a.mood = 90; a.wantAct = abs() + 3; });
-  out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: 'Tin đồn test', sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
+  out.scandal = setup(() => { a.wantAct = 0; a.scandal = { t: { $l: ['Tin đồn test'], j: '' }, sev: 1, left: 2, truth: false, dating: false, other: 0 }; });
   out.plain = setup(() => { a.scandal = null; });
-  if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: 'Lý do test', ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
+  if (m) { a.pm = null; m.as = { t: 'a', id: a.id }; S.props = { w: abs(), m: { [m.id]: { s: [{ a: a.id, days: ['vocal', 'vocal', 'dance', 'rest', 'rest', 'gym', 'rest'], why: { $l: ['Lý do test'], j: '' }, ok: 0 }] } }, c: [], st: { boss: {}, auto: 0, res: 0 } }; out.prop = setup(() => { }); }
   startPlanOne(a.id); out.single = sheet(); planSel(2); out.singleD2 = sheet();
   out.why = [20, 90].map(e => { a.energy = e; a.mood = e < 50 ? 90 : 10; return planWhy(a); });
   a.energy = 90; a.mood = 90; a.wantAct = abs() + 1; out.why.push(planWhy(a)); a.wantAct = 0; out.why.push(planWhy(a));
@@ -313,9 +314,9 @@ add('t8-acting', ctx => {
   ctx.fresh(ctx.base);
   const d = S.artists.find(a => a.status === 'debuted');
   S.films = [
-    { id: 901, title: 'Phim A', genre: 'romance', own: true, budget: 3e8, share: 1, cost: 3e8, cast: [d.id], status: 'Đang quay', releaseAt: 0, done: false, y: 2 },
-    { id: 902, title: 'Phim B', genre: 'action', own: false, budget: 8e8, share: .3, cost: 2.4e8, cast: [], status: 'Hậu kỳ', releaseAt: abs() + 2, done: false, y: 2 },
-    { id: 903, title: 'Phim C', genre: 'horror', own: true, budget: 2e9, share: 1, cost: 2e9, cast: [d.id, 999999], status: 'Đã chiếu', releaseAt: 0, done: true, rev: 5e9, mult: 1.5, inc: 5e9, y: 2 }];
+    { id: 901, title: 'Phim A', genre: 'romance', own: true, budget: 3e8, share: 1, cost: 3e8, cast: [d.id], status: Lk('film.st.shoot'), releaseAt: 0, done: false, y: 2 },
+    { id: 902, title: 'Phim B', genre: 'action', own: false, budget: 8e8, share: .3, cost: 2.4e8, cast: [], status: Lk('film.st.post'), releaseAt: abs() + 2, done: false, y: 2 },
+    { id: 903, title: 'Phim C', genre: 'horror', own: true, budget: 2e9, share: 1, cost: 2e9, cast: [d.id, 999999], status: Lk('film.st.out'), releaseAt: 0, done: true, rev: 5e9, mult: 1.5, inc: 5e9, y: 2 }];
   out.films = room('acting');
   const sel = document.getElementById('fGen'); const fits = {}; for (const k of ['romance', 'horror', 'musical']) { sel.value = k; sel.onchange(); fits[k] = [...document.querySelectorAll('[data-f]')].map(e => e.textContent); } out.fits = fits;
   S.artists.forEach(a => { a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; }); out.noCands = room('acting');
@@ -454,9 +455,9 @@ add('t9-renew', ctx => {
   out.plain = [renewEval(a), renewEval(a, 1.3)].map(e => ({ ...e }));
   out.block = renewBlock(a); out.block13 = renewBlock(a, 1.3); out.none = renewBlock(null);
   const var1 = (k, f) => { f(); out[k] = { ev: renewEval(a), blk: renewBlock(a), opts: renewOpts(a) }; };
-  var1('great', () => { a.earnC = 5e9; a.fans = a.fans * 3 + 1e5; a.evG = 'Xuất sắc'; a.evFail = 0; });
-  var1('good-evFail', () => { a.evG = 'Đạt'; a.evFail = 2; });
-  var1('bad', () => { a.earnC = 0; a.cf0 = a.fans * 2 + 1e5; a.evG = 'Không đạt'; a.evFail = 3; a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.mood = 20; });
+  var1('great', () => { a.earnC = 5e9; a.fans = a.fans * 3 + 1e5; a.evG = Lk('grade.ex'); a.evFail = 0; });
+  var1('good-evFail', () => { a.evG = Lk('grade.pass'); a.evFail = 2; });
+  var1('bad', () => { a.earnC = 0; a.cf0 = a.fans * 2 + 1e5; a.evG = Lk('grade.fail'); a.evFail = 3; a.scandal = { t: 'x', sev: 1, left: 2, truth: true, dating: false, other: 0 }; a.mood = 20; });
   out.optsSix = renewOpts(a, 1.3);
   a.scandal = null; a.mood = 70; a.ce = abs() + 6; a.ceNo = 0;
   S.events = []; out.view = (viewRenew(a.id), sheet());
@@ -473,7 +474,7 @@ add('t9-gym', ctx => {
   S.hs = { id: 9100, name: 'BS. Test', sk: 3, sal: 4e6, fee: 24e6, look: S.hsC ? S.hsC[0].look : S.managers[0].look };
   S.hsC = null; out.hired = room('gym');
   const ds = S.artists.slice(0, 3); const mg = S.managers[0];
-  ds.forEach((a, i) => { a.hsF = { w: abs(), why: ['năng lượng chỉ còn 20', 'tâm trạng xuống 25'].slice(0, i + 1), n: 3, st: i === 1 ? 'ok' : 'new' }; });
+  ds.forEach((a, i) => { a.hsF = { w: abs(), why: [Lk('hsr.energy', { v: 20 }), Lk('hsr.mood', { v: 25 })].slice(0, i + 1), n: 3, st: i === 1 ? 'ok' : 'new' }; });
   out.flagged = room('gym');
   return out;
 }, ['BS. Test', 'năng lượng chỉ còn 20', 'tâm trạng xuống 25']);
@@ -490,13 +491,13 @@ add('t9-toasts', ctx => {
 import { BIZ, setMod, buyBiz, upBiz, raiseBiz, buybackBiz } from '../../src/systems/market.js';
 import { prPlans, prHTML, prGo, prDo, evalTable } from '../../src/systems/review.js';
 import { invStart, invOpen, invBuy, viewInv, invBlock, invVerdict, invRec, LEADS, pushEv } from '../../src/systems/events.js';
-const scand = (a, o = {}) => { a.scandal = { t: 'Tin đồn thái độ', sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; if (!S.events.some(e => e.kind === 'scandal' && e.a === a.id)) pushEv({ kind: 'scandal', a: a.id }, true); return a; };
+const scand = (a, o = {}) => { a.scandal = { t: { $l: ['Tin đồn thái độ'], j: '' }, sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; if (!S.events.some(e => e.kind === 'scandal' && e.a === a.id)) pushEv({ kind: 'scandal', a: a.id }, true); return a; };
 add('t10-invest', ctx => {
   const out = {};
   for (const [n, b] of [['base', ctx.base], ['early', ctx.early]]) { ctx.fresh(b); out[n] = room('invest'); }
   ctx.fresh(ctx.base);
   S.biz = [{ k: 'cafe', lv: 2, inv: 150e6, tot: 12e6, last: 3e6, y: 1, own: .7, rw: abs() - 1 }, { k: 'game', lv: 5, inv: 900e6, tot: -5e6, last: -4e6, y: 1 }, { k: 'estate', lv: 1, inv: 1200e6, tot: 0, last: 0, y: 1, own: .9, rw: abs() - 20 }];
-  S.loan = { pay: 5e6, left: 12, n: 'Quỹ Sao Mai' }; setMod('econ', .7, 6, 'Suy thoái: kinh doanh −30%');
+  S.loan = { pay: 5e6, left: 12, n: Lk('fund.0') }; setMod('econ', .7, 6, Lk('mod.econ'));
   out.rich = room('invest');
   S.biz = Object.keys(BIZ).map(k => ({ k, lv: 1, inv: BIZ[k].cost, tot: 1, last: 1e6, y: 1 })); S.loan = null; S.mods = {}; out.all = room('invest');
   S.biz = []; out.none = room('invest');
@@ -539,7 +540,7 @@ add('t10-pr', ctx => {
   S.cbPlan = [{ k: x.k, w: abs() + 2 }]; snap('cbplan');
   S.cbPlan = []; S.camp[x.k] = { k: x.k, n: x.n, ph: 'pre', t: 'x', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 20, inc: 0 }; snap('pre');
   S.camp[x.k] = { k: x.k, n: x.n, ph: 'post', t: 'Bài X', ck: 'cute', rank: 5, best: 5, wins: 0, stages: 0, wn: 0, used: { wk: abs() - 3, l: [] }, hype: 0, inc: 0 }; snap('post');
-  S.camp = {}; byId(x.m[0]).scandal = { t: 'Tin đồn', sev: 1, left: 3, truth: false, dating: false, other: 0 }; snap('press');
+  S.camp = {}; byId(x.m[0]).scandal = { t: { $l: ['Tin đồn'], j: '' }, sev: 1, left: 3, truth: false, dating: false, other: 0 }; snap('press');
   byId(x.m[0]).scandal = null; S.singles = [{ k: x.k, act: x.n, w: abs() - 6, t: 'Bài Y', rank: 5 }]; S.artists.forEach(a => { a.st.visual = 80; }); snap('mag');
   S.artists.forEach(a => { if (a.status !== 'trainee') a.actor = 1; a.wantAct = 1; }); snap('actor');
   S.prUsed = { 'sns:g1': abs() }; S.prHist = ['T3: Chạy quảng cáo SNS cho Test']; out.hist = room('pr');
@@ -574,11 +575,11 @@ add('t10-toasts', ctx => {
   T('buyback.money', B, () => { S.biz = [{ k: 'cafe', lv: 1, inv: 150e6, tot: 0, last: 0, y: 1, own: .7 }]; S.money = 0; buybackBiz('cafe'); });
   return out;
 }, ['Tin đồn thái độ']);
-add('t10-prgo', ctx => { // prGo stores the Vietnamese data-t in S.prHist whatever the language
+add('t10-prgo', ctx => { // prGo stores a language-independent Msg in S.prHist (viewed through vt)
   ctx.fresh(ctx.base); const x = acts()[0]; x.m.forEach(id => { const a = byId(id); a.busy = null; a.energy = 100; }); S.camp = {}; S.singles = []; S.prHist = [];
   const L = prPlans(), out = { dataT: L.map(p => p.t) };
   const d = document.createElement('div'); d.innerHTML = prHTML(L); const b = d.querySelector('button[data-t]');
-  Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.slice(); out.sheetAfter = null;
+  Object.assign(globalThis, { prDo }); S.money = 1e10; if (b) { out.btnT = b.dataset.t; prGo(b); } out.hist = S.prHist.map(vt); out.sheetAfter = null;
   return out;
 }, [], ['dataT', 'btnT', 'hist']);
 
@@ -586,8 +587,8 @@ add('t10-prgo', ctx => { // prGo stores the Vietnamese data-t in S.prHist whatev
 import { OFFER, PARTNERS } from '../../src/data/offers.js';
 import { GENRES } from '../../src/data/rules.js';
 import { canTake, acceptCast, acceptSel, ocPrev, ocPick, investOffer } from '../../src/systems/offers.js';
-import { buildProps, viewProps, itDesc, stTag, propOk, cfPick, CFT } from '../../src/systems/proposals.js';
-import { secPlan, secPlans, secSchedRec, viewSec, cbNow, cbSched, cbSchedRec, BUDN } from '../../src/systems/secretary.js';
+import { buildProps, viewProps, itDesc, stTag, propOk, cfPick } from '../../src/systems/proposals.js';
+import { secPlan, secPlans, secSchedRec, viewSec, cbNow, cbSched, cbSchedRec } from '../../src/systems/secretary.js';
 const mkOffer = (o = {}) => { const type = o.type || 'drama', O = OFFER[type], genre = O.film ? (o.genre || 'romance') : null;
   const of = { id: uid(), type, partner: PARTNERS[type][0], genre, w: genre ? GENRES[genre].w : O.req, req: O.film ? { acting: 20, visual: 10 } : { ...O.req }, L: 20, fame: 0, weeks: 3, pay: 50e6, costar: null, exp: abs() + 3, title: 'Dự án thử ' + type, target: null, invest: null, invested: false, slots: 1, ...o };
   Object.keys(of.req).forEach(k => { of.req[k] = Math.min(of.req[k], 20); }); S.offers.push(of); return of; };
@@ -718,7 +719,7 @@ import { SXD } from '../../src/systems/market.js';
 const evOut = e => { const i = evInfo(e); return i === null ? null : i === undefined ? 'undef' : { ic: i.ic, t: i.t, d: i.d, o: i.o.map(o => o.k + '|' + o.l) }; };
 const evAll = (out, E) => { for (const [k, e] of Object.entries(E)) out[k] = evOut(e); };
 const trs = () => S.artists.filter(a => a.status === 'trainee');
-const sc0 = (a, o = {}) => { a.scandal = { t: 'Tin đồn thái độ', sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; return a; };
+const sc0 = (a, o = {}) => { a.scandal = { t: { $l: ['Tin đồn thái độ'], j: '' }, sev: 2, left: 4, truth: true, dating: false, other: 0, ...o }; return a; };
 add('t12-basic', ctx => {
   ctx.fresh(ctx.base); const out = {}, [a, b, c] = deb();
   sc0(a); sc0(b, { dating: true, other: a.id });
@@ -733,7 +734,7 @@ add('t12-basic', ctx => {
 }, ['Tin đồn thái độ', 'Moonlight Ent.']);
 add('t12-sx', ctx => {
   ctx.fresh(ctx.base); const out = {}, P = acts()[0];
-  evAll(out, { fire: { kind: 'sx', sx: 'fire' }, sponsor: { kind: 'sx', sx: 'sponsor', p: 'Hãng Tài Trợ', v: 60e6 }, tax: { kind: 'sx', sx: 'tax' }, festival: { kind: 'sx', sx: 'festival', act: P.k, n: P.n.slice(2) }, leak: { kind: 'sx', sx: 'leak' }, investor: { kind: 'sx', sx: 'investor', p: 'Quỹ Sao Mai', v: 300e6 }, unknown: { kind: 'sx', sx: 'zzz' } });
+  evAll(out, { fire: { kind: 'sx', sx: 'fire' }, sponsor: { kind: 'sx', sx: 'sponsor', p: 'Hãng Tài Trợ', v: 60e6 }, tax: { kind: 'sx', sx: 'tax' }, festival: { kind: 'sx', sx: 'festival', act: P.k, n: P.n.slice(2) }, leak: { kind: 'sx', sx: 'leak' }, investor: { kind: 'sx', sx: 'investor', p: Lk('fund.0'), v: 300e6 }, unknown: { kind: 'sx', sx: 'zzz' } });
   out.keys = Object.keys(SXD);
   S.events = []; for (const k of ['sponsor', 'investor']) pushEv({ kind: 'sx', sx: k, p: 'Hãng Tài Trợ', v: 60e6 }, true); viewEvents(); out.sheet = sheet();
   return out;
@@ -755,11 +756,11 @@ add('t12-x', ctx => {
   ctx.fresh(ctx.base); const out = {}, m = nonGm()[0], a = deb()[0], g = S.groups[0];
   const cand = genArtist(); cand.name = 'Ứng Viên Test'; cand.talent = 1.2;
   S.managers.forEach(x => { x.as = null; });
-  evAll(out, { asst: { kind: 'mp', t: 'asst', m: m.id, k: 'nego', v: 2, name: 'Trợ Lý Z', fee: 16e6, sal: 2e6 }, scout: { kind: 'mp', t: 'scout', m: m.id, a: a.id, cand, where: 'ở quán cà phê gần phim trường' }, scoutNoA: { kind: 'mp', t: 'scout', m: m.id, a: 424242, cand, where: 'trên chuyến tàu đi quay ngoại cảnh' }, mpOther: { kind: 'mp', t: 'zz', m: m.id }, mpNoM: { kind: 'mp', t: 'asst', m: 424242, k: 'nego', v: 1, name: 'x', fee: 1, sal: 1 },
-    disbandNoMgr: { kind: 'disband', g: g.id, why: 'mâu thuẫn nội bộ kéo dài' }, renew: { kind: 'renew', a: a.id }, renew13: { kind: 'renew', a: a.id, mul: 1.3 }, goneG: { kind: 'disband', g: 424242, why: 'x' } });
-  m.as = { t: 'g', id: g.id }; out.disbandMgr = evOut({ kind: 'disband', g: g.id, why: 'các thành viên kiệt sức, tâm trạng sa sút' });
+  evAll(out, { asst: { kind: 'mp', t: 'asst', m: m.id, k: 'nego', v: 2, name: 'Trợ Lý Z', fee: 16e6, sal: 2e6 }, scout: { kind: 'mp', t: 'scout', m: m.id, a: a.id, cand, where: Lk('ev.why.scout.0') }, scoutNoA: { kind: 'mp', t: 'scout', m: m.id, a: 424242, cand, where: Lk('ev.why.scout.4') }, mpOther: { kind: 'mp', t: 'zz', m: m.id }, mpNoM: { kind: 'mp', t: 'asst', m: 424242, k: 'nego', v: 1, name: 'x', fee: 1, sal: 1 },
+    disbandNoMgr: { kind: 'disband', g: g.id, why: Lk('ev.why.disband.0') }, renew: { kind: 'renew', a: a.id }, renew13: { kind: 'renew', a: a.id, mul: 1.3 }, goneG: { kind: 'disband', g: 424242, why: { $l: ['x'], j: '' } } });
+  m.as = { t: 'g', id: g.id }; out.disbandMgr = evOut({ kind: 'disband', g: g.id, why: Lk('ev.why.disband.1') });
   out.cand = candBlock(cand); const cm = genArtist(); cm.name = 'Ứng Viên Nam'; cm.g = 'M'; out.candM = candBlock(cm);
-  S.events = []; pushEv({ kind: 'mp', t: 'scout', m: m.id, a: a.id, cand, where: 'khi xem một buổi diễn đường phố' }, true); pushEv({ kind: 'mp', t: 'asst', m: m.id, k: 'pr', v: 1, name: 'Trợ Lý Z', fee: 8e6, sal: 1e6 }, true); pushEv({ kind: 'disband', g: g.id, why: 'bất đồng về định hướng âm nhạc' }, true); pushEv({ kind: 'renew', a: a.id, mul: 1.3 }, true);
+  S.events = []; pushEv({ kind: 'mp', t: 'scout', m: m.id, a: a.id, cand, where: Lk('ev.why.scout.5') }, true); pushEv({ kind: 'mp', t: 'asst', m: m.id, k: 'pr', v: 1, name: 'Trợ Lý Z', fee: 8e6, sal: 1e6 }, true); pushEv({ kind: 'disband', g: g.id, why: Lk('ev.why.disband.3') }, true); pushEv({ kind: 'renew', a: a.id, mul: 1.3 }, true);
   viewEvents(); out.sheet = sheet();
   return out;
 }, ['Ứng Viên Test', 'Ứng Viên Nam', 'Trợ Lý Z', 'ở quán cà phê gần phim trường', 'trên chuyến tàu đi quay ngoại cảnh', 'khi xem một buổi diễn đường phố', 'mâu thuẫn nội bộ kéo dài', 'các thành viên kiệt sức, tâm trạng sa sút', 'bất đồng về định hướng âm nhạc', 'x']);
@@ -767,14 +768,14 @@ add('t12-v3', ctx => {
   ctx.fresh(ctx.base); const out = {}, [a, b] = deb(), t0 = trs()[0], [m1, m2] = nonGm();
   S.offers = []; const of = mkOffer({ type: 'backup', slots: 1, req: { dance: 5 } }); extFill(); const x = S.ext[0];
   const cand = genArtist(); cand.name = 'Ứng Viên Test';
-  S.hs = { id: 9100, name: 'BS. Test', sk: 3, sal: 4e6, fee: 24e6 }; a.hsF = { w: abs(), why: ['năng lượng chỉ còn 20', 'tâm trạng xuống 25'], n: 3, st: 'new' }; t0.hsF = { w: abs(), why: ['mệt'], n: 2, st: 'new' };
+  S.hs = { id: 9100, name: 'BS. Test', sk: 3, sal: 4e6, fee: 24e6 }; a.hsF = { w: abs(), why: [Lk('hsr.energy', { v: 20 }), Lk('hsr.mood', { v: 25 })], n: 3, st: 'new' }; t0.hsF = { w: abs(), why: [{ $l: ['mệt'], j: '' }], n: 2, st: 'new' };
   a.busy = null; t0.mt = 0; a.tag[t0.id] = 'friend'; m1.lv = 3; m2.lv = 1; m2.boss = null; a.pa = null; a.pm = null;
   const song = { id: 1, t: 'Bài Test', ck: 'cute', q: 70, by: [a.id], st: 'ok' }, P = acts()[0];
   const ev = (t, o) => ({ kind: 'v3', t, ...o });
-  evAll(out, { mtreq: ev('mtreq', { a: a.id, b: t0.id }), mtjob: ev('mtjob', { a: a.id, b: t0.id, of: of.id }), intro: ev('intro', { a: a.id, cand, how: 'bạn thời cấp ba' }), paask: ev('paask', { a: a.id }), hsM: ev('hs', { a: a.id, n: 3, m: m1.id }), hsNoM: ev('hs', { a: t0.id, n: 2, m: 0 }),
-    md: ev('md', { song, k: P.k }), xcollab: ev('xcollab', { a: a.id, x: x.id }), xrumor: ev('xrumor', { a: a.id, x: x.id }), amgr: ev('amgr', { a: a.id, m: m1.id }), mmclash: ev('mmclash', { m: m1.id, m2: m2.id, why: 'tranh lịch phòng tập cho nghệ sĩ mình phụ trách' }), mmcoach: ev('mmcoach', { m: m1.id, m2: m2.id }),
+  evAll(out, { mtreq: ev('mtreq', { a: a.id, b: t0.id }), mtjob: ev('mtjob', { a: a.id, b: t0.id, of: of.id }), intro: ev('intro', { a: a.id, cand, how: Lk('ev.why.how.0') }), paask: ev('paask', { a: a.id }), hsM: ev('hs', { a: a.id, n: 3, m: m1.id }), hsNoM: ev('hs', { a: t0.id, n: 2, m: 0 }),
+    md: ev('md', { song, k: P.k }), xcollab: ev('xcollab', { a: a.id, x: x.id }), xrumor: ev('xrumor', { a: a.id, x: x.id }), amgr: ev('amgr', { a: a.id, m: m1.id }), mmclash: ev('mmclash', { m: m1.id, m2: m2.id, why: Lk('ev.why.mm.0') }), mmcoach: ev('mmcoach', { m: m1.id, m2: m2.id }),
     goneA: ev('mtreq', { a: 424242, b: t0.id }), unknown: ev('zzz', { a: a.id }) });
-  S.events = []; for (const [t, o] of [['mtreq', { a: a.id, b: t0.id }], ['intro', { a: a.id, cand, how: 'bạn thời cấp ba' }], ['hs', { a: a.id, n: 3, m: m1.id }], ['md', { song, k: P.k }], ['mmclash', { m: m1.id, m2: m2.id, why: 'tranh lịch phòng tập cho nghệ sĩ mình phụ trách' }]]) pushEv(ev(t, o), true);
+  S.events = []; for (const [t, o] of [['mtreq', { a: a.id, b: t0.id }], ['intro', { a: a.id, cand, how: Lk('ev.why.how.0') }], ['hs', { a: a.id, n: 3, m: m1.id }], ['md', { song, k: P.k }], ['mmclash', { m: m1.id, m2: m2.id, why: Lk('ev.why.mm.0') }]]) pushEv(ev(t, o), true);
   viewEvents(); out.sheet = sheet();
   return out;
 }, ['Ứng Viên Test', 'bạn thời cấp ba', 'BS. Test', 'năng lượng chỉ còn 20', 'tâm trạng xuống 25', 'mệt', 'Bài Test', 'tranh lịch phòng tập cho nghệ sĩ mình phụ trách', 'Dự án thử backup']);
@@ -787,7 +788,7 @@ add('t12-toasts', ctx => {
   T('scout.money', B, () => { const m = nonGm()[0], a = deb()[0]; const cand = genArtist(); S.money = 0; S.events = []; pushEv({ kind: 'mp', t: 'scout', m: m.id, a: a.id, cand, where: 'x' }, true); resolveEv(S.events[0].id, 'yes'); });
   T('mtreq.gone', B, () => { const [a] = deb(), t0 = trs()[0]; a.tag[t0.id] = 'friend'; t0.mt = a.id; S.events = []; pushEv({ kind: 'v3', t: 'mtreq', a: a.id, b: t0.id }, true); resolveEv(S.events[0].id, 'yes'); });
   T('mtjob.reason', B, () => { S.offers = []; const [a] = deb(), t0 = trs()[0], of = mkOffer({ type: 'backup', slots: 1, req: { dance: 5 } }); t0.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; S.events = []; pushEv({ kind: 'v3', t: 'mtjob', a: a.id, b: t0.id, of: of.id }, true); resolveEv(S.events[0].id, 'yes'); });
-  T('intro.money', B, () => { const [a] = deb(), cand = genArtist(); S.money = 0; S.events = []; pushEv({ kind: 'v3', t: 'intro', a: a.id, cand, how: 'x' }, true); resolveEv(S.events[0].id, 'yes'); });
+  T('intro.money', B, () => { const [a] = deb(), cand = genArtist(); S.money = 0; S.events = []; pushEv({ kind: 'v3', t: 'intro', a: a.id, cand, how: { $l: ['x'], j: '' } }, true); resolveEv(S.events[0].id, 'yes'); });
   T('xcollab.busy', B, () => { const [a] = deb(); extFill(); a.busy = { kind: 'x', title: 'x', left: 2, total: 2 }; S.events = []; pushEv({ kind: 'v3', t: 'xcollab', a: a.id, x: S.ext[0].id }, true); resolveEv(S.events[0].id, 'yes'); });
   return out;
 }, ['x']);
@@ -839,3 +840,163 @@ add('t13-toasts', async ctx => {
   out.errKeys = await (async () => { const r = {}; for (const [k, v] of [['bad', 'xyz'], ['json', '{oops'], ['notsave', '{"a":1}'], ['trunc', 'SL1.@@@']]) { try { await parseSaveText(v); r[k] = 'ok'; } catch (e) { r[k] = e.message; } } try { await importCode('xyz'); } catch (e) { r.importCode = e.message; } return r; })();
   return out;
 }, [], ['errKeys']);
+
+// ---------------- phase 3 task 1: rare stored texts (recorded on pre-phase-3 code; proves the sinks keep their vi bytes) ----------------
+// Keys starting with '~' are baseline-only probes (stored values rendered to Vietnamese, log rows): the en guard skips them.
+import * as I18N from '../../src/i18n/index.js';
+import { render } from '../../src/ui/building.js';
+import { surprise, bizTick } from '../../src/systems/market.js';
+import { disbandTick, mxTick } from '../../src/systems/ext2.js';
+import { interTick, v3Tick, hsTick, hsHTML as hsHTML3 } from '../../src/systems/ext3.js';
+import { makeScandal } from '../../src/systems/events.js';
+import { awards } from '../../src/systems/awards.js';
+import { nextWeek } from '../../src/systems/week.js';
+import { setTag } from '../../src/systems/relations.js';
+const vt = v => (v == null ? v : I18N.txVi ? I18N.txVi(v) : v);          // stored value as Vietnamese text (strings pass through)
+const logTop = (n = 4) => { render(); return [...document.querySelectorAll('#log > div')].slice(0, n).map(x => x.outerHTML).join('\n'); };
+const SAFE = f => { try { return f(); } catch (e) { return 'THROW ' + e.message; } };
+const J = v => JSON.stringify(v);
+// run f with Math.random returning vals in turn (then the case's own seeded stream resumes)
+const rstub = (vals, f) => { const o = Math.random; let i = 0; Math.random = () => vals[i++ % vals.length]; try { return f(); } finally { Math.random = o; } };
+// Search seeds 1..max for runs where probe() yields a new key; returns {key: seed}. `prep` builds the start state, `run` does the step.
+function hunt(ctx, base, prep, run, probe, want, max) {
+  const found = {};
+  for (let s = 1; s <= max && Object.keys(found).length < want; s++) {
+    ctx.fresh(base); prep(); seed(s);
+    try { run(); const k = probe(); if (k != null && !(k in found)) found[k] = s; } catch { /* seed did not work */ }
+  }
+  return found;
+}
+const replay = (ctx, base, prep, run, s) => { ctx.fresh(base); prep(); seed(s); run(); };
+// seed-hunt a pool of stored variants and render each: out['~found'] lists them, out[`${i}.sheet`] etc. come from `show`
+function pool(ctx, prep, run, probe, want, max, show) {
+  const found = hunt(ctx, ctx.base, prep, run, probe, want, max), out = { '~found': J(Object.keys(found).sort()) };
+  Object.entries(found).sort().forEach(([k, s], i) => { replay(ctx, ctx.base, prep, run, s); Object.assign(out, show(i)); });
+  return out;
+}
+const P3N = []; // names of generated candidates shown in event cards (proper nouns, treated like stored text by the en guard)
+const evSheet = i => { viewEvents(); for (const e of S.events) if (e.cand && e.cand.name) P3N.push(e.cand.name); return { [`ev${i}`]: sheet() }; };
+
+add('p3-loan', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.events = []; S.loan = null;
+  pushEv({ kind: 'sx', sx: 'investor', p: Lk('fund.0'), v: 300e6 }, true);
+  out['~res'] = SAFE(() => { resolveEv(S.events[0].id, 'yes'); return 'ok'; });
+  out['~log1'] = logTop(2); out.invest = room('invest'); out['~loan1'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
+  if (S.loan) S.loan.left = 1; bizTick(); out['~log2'] = logTop(2); out.invest2 = room('invest'); out['~loan2'] = J(S.loan);
+  S.events = []; pushEv({ kind: 'sx', sx: 'investor', p: Lk('fund.2'), v: 200e6 }, true); resolveEv(S.events[0].id, 'yes'); out.invest3 = room('invest'); out['~loan3'] = J(S.loan && { ...S.loan, n: vt(S.loan.n) });
+  return out;
+}, ['Quỹ Sao Mai', 'Quỹ Rồng Vàng']);
+
+add('p3-mods', ctx => {
+  ctx.fresh(ctx.base); const out = {};
+  S.events = []; pushEv({ kind: 'sx', sx: 'fire' }, true);
+  out['~cheap'] = SAFE(() => { resolveEv(S.events[0].id, 'cheap'); return 'ok'; }); out['~cheapLog'] = logTop(2); out.cheapMarket = room('market');
+  out['~cheapMods'] = J(Object.entries(S.mods).map(([k, m]) => [k, m.v, vt(m.n)]));
+  // surprise(): pick(pool) → boom / crisis for some seed
+  const prep = () => { S.mods = {}; };
+  const run = () => { for (let i = 0; i < 40 && !Object.keys(S.mods).length; i++) surprise(); };
+  const probe = () => Object.keys(S.mods).filter(k => k === 'fan' || k === 'pay').join('+') || null;
+  Object.assign(out, pool(ctx, prep, run, probe, 2, 400, i => ({ [`~mods${i}`]: J(Object.entries(S.mods).map(([a, m]) => [a, m.v, vt(m.n)])), [`~log${i}`]: logTop(2), [`market${i}`]: room('market') })));
+  return out;
+}, ['Phòng tập sửa tạm: luyện tập −20%', 'Làn sóng K-pop: fan tăng nhanh', 'Suy thoái: thù lao −20%', 'Suy thoái: kinh doanh −30%']);
+
+add('p3-disband', ctx => {
+  const out = {}, setup = (mood, rel, age) => { ctx.fresh(ctx.base); S.events = []; S.camp = {}; const g = S.groups[0]; if (!g) return null; g.hiatus = 0; g.y = S.year - age; const ms = g.members.map(byId).filter(Boolean); ms.forEach(a => { a.mood = mood; }); for (const a of ms) for (const b of ms) if (a !== b) setTag(a, b, rel < 0 ? 'enemy' : null); return g; };
+  const cases = { conflict: [80, -30, 1], tired: [10, 60, 1], old: [80, 60, 5], music: [80, 60, 1] };
+  for (const [k, [mood, rel, age]] of Object.entries(cases)) {
+    const g = setup(mood, rel, age); if (!g) return { skip: 'no group' };
+    SAFE(() => rstub([0], () => disbandTick()));
+    const e = S.events.find(x => x.kind === 'disband');
+    out['~' + k + '.why'] = e ? J(vt(e.why)) : 'none'; out['~' + k + '.log'] = logTop(1);
+    if (e) { viewEvents(); out[k + '.sheet'] = sheet(); const m0 = g.members[0]; SAFE(() => resolveEv(e.id, 'split')); out['~' + k + '.split'] = logTop(2); out['~' + k + '.hist'] = J(byId(m0) ? byId(m0).hist.slice(0, 1).map(vt) : null); }
+  }
+  return out;
+}, ['mâu thuẫn nội bộ kéo dài', 'các thành viên kiệt sức, tâm trạng sa sút', 'các thành viên muốn theo đuổi con đường riêng', 'bất đồng về định hướng âm nhạc']);
+
+add('p3-mmclash', ctx => pool(ctx, () => { S.events = []; S.managers.forEach(m => { m.as = m.as || { t: 't', id: 0 }; m.boss = null; }); }, () => { interTick(); },
+  () => { const e = S.events.find(x => x.t === 'mmclash'); return e ? vt(e.why) : null; }, 4, 1500, evSheet), ['tranh lịch phòng tập cho nghệ sĩ mình phụ trách', 'tranh lời mời béo bở', 'bất đồng cách xử lý truyền thông', 'đổ lỗi cho nhau về lịch trình trùng']);
+
+add('p3-intro', ctx => pool(ctx, () => { S.events = []; }, () => { v3Tick(); },
+  () => { const e = S.events.find(x => x.t === 'intro'); return e ? vt(e.how) : null; }, 6, 2500, evSheet), P3N);
+P3N.push('bạn thời cấp ba', 'đàn em cùng lớp nhảy', 'người quen ở phòng thu', 'em họ', 'bạn cùng xóm', 'đàn em ở câu lạc bộ âm nhạc');
+
+add('p3-scout', ctx => pool(ctx, () => { S.events = []; S.managers.forEach(m => { m.as = m.as || { t: 't', id: 0 }; }); },
+  () => { for (let i = 0; i < 12; i++) { mxTick(); if (S.events.some(x => x.kind === 'mp' && x.t === 'scout')) break; } },
+  () => { const e = S.events.find(x => x.kind === 'mp' && x.t === 'scout'); return e ? vt(e.where) : null; }, 6, 600, evSheet), P3N);
+P3N.push('ở quán cà phê gần phim trường', 'trong buổi fan meeting', 'ở một lễ hội âm nhạc trường học', 'tại cuộc thi hát karaoke khu phố', 'trên chuyến tàu đi quay ngoại cảnh', 'khi xem một buổi diễn đường phố');
+
+add('p3-scandal', ctx => {
+  const prep = () => { S.events = []; S.artists.forEach(a => { a.scandal = null; }); };
+  const run = () => { makeScandal(S.artists.filter(x => x.status === 'debuted')[0]); };
+  const probe = () => vt(S.artists.filter(x => x.status === 'debuted')[0].scandal.t);
+  const out = pool(ctx, prep, run, probe, 5, 300, i => { const a = S.artists.filter(x => x.status === 'debuted')[0]; return { [`~log${i}`]: logTop(1), [`artist${i}`]: (viewArtist(a.id), sheet()), [`pr${i}`]: room('pr') }; });
+  // dating variant: partner tagged 'dating'
+  const prepD = () => { prep(); const [a, b] = S.artists.filter(x => x.status === 'debuted'); a.tag[b.id] = 'dating'; b.tag[a.id] = 'dating'; };
+  const fd = hunt(ctx, ctx.base, prepD, run, probe, 6, 100);
+  for (const [k, s] of Object.entries(fd)) if (k.includes('hẹn hò')) { replay(ctx, ctx.base, prepD, run, s); out['~dating.t'] = k; out['~dating.log'] = logTop(1); out['dating.pr'] = room('pr'); }
+  return out;
+}, ['Tin đồn thái độ với nhân viên', 'Bị đào lại phát ngôn cũ', 'Tin đồn chèn ép đồng nghiệp', 'Lộ ảnh quá khứ gây tranh cãi', 'Tin đồn đạo nhái vũ đạo', 'Bị chụp ảnh hẹn hò với']);
+
+add('p3-prhist', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.prHist = [];
+  const plans = prPlans(); out['~plans'] = J(plans.map(p => [p.go, p.t]));
+  const mk = (go, tt) => { const b = document.createElement('button'); b.dataset.go = go; b.dataset.t = tt; return b; };
+  prGo(mk('void 0', '📣 Quảng bá <b>nhóm</b> thử')); prGo(mk('void 0', '🎤 Hậu quảng bá'));
+  if (plans[0]) prGo(mk('void 0', plans[0].t));
+  out['~hist'] = J(S.prHist.map(vt)); out.pr = room('pr');
+  return out;
+});
+
+add('p3-films', ctx => {
+  ctx.fresh(ctx.base); S.offers = []; S.films = []; const out = {}; S.money = Math.max(S.money, 5e9);
+  const seen = [], snap = tag => { const k = S.films.map(f => vt(f.status)).join('|'); if (seen.at(-1) !== k) { seen.push(k); out[`${tag}.acting`] = room('acting'); out[`~${tag}.st`] = k; } };
+  const of = mkOffer({ type: 'drama', slots: 1, invest: { budget: 2e9, share: .2 } }); of.invested = false;
+  SAFE(() => investOffer(of.id)); snap('invested');
+  openRoom('acting');
+  const gen = document.querySelector('#fGen'), bud = document.querySelector('#fBud'), ti = document.querySelector('#fTitle');
+  out['~produce'] = SAFE(() => { if (ti) ti.value = 'Phim Thử Nghiệm'; if (gen) gen.selectedIndex = 0; if (bud && bud.options && bud.options.length) bud.selectedIndex = 0; document.querySelectorAll('.fcast').forEach((c, i) => { c.checked = i === 0; }); produceFilm(); return 'ok'; });
+  snap('shooting');
+  for (let w = 0; w < 16; w++) { SAFE(() => nextWeek(true, true)); snap('w' + w); }
+  out['~log'] = logTop(3); out['~last'] = J(S.films.map(f => [f.title, vt(f.status)]));
+  return out;
+}, ['Phim Thử Nghiệm', 'Sắp chiếu', 'Đang quay', 'Hậu kỳ', 'Đã chiếu']);
+
+add('p3-award', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.awards = S.awards || [];
+  S.artists.forEach(a => { if (a.yr) { a.yr.fans = 900000; a.yr.actQ = 95; a.yr.variety = 9; } });
+  SAFE(() => awards()); const w = S.awards.at(-1);
+  out['~cats'] = J((w.res || []).map(r => [vt(r.cat), vt(r.note), r.ok]));
+  out['~board'] = J((w.board || []).filter(b => b.me).map(b => vt(b.n)));
+  out['~log'] = logTop(1); viewAward(w); out.sheet = sheet(); out.ceo = room('ceo');
+  out['~hist'] = J(S.artists.map(a => a.hist.filter(h => String(vt(h)).includes('🏆')).map(vt)).filter(h => h.length));
+  return out;
+});
+
+add('p3-hs', ctx => {
+  ctx.fresh(ctx.base); const out = {}; const ds = S.artists.filter(a => a.status === 'debuted' && !a.busy), tr = S.artists.find(a => a.status === 'trainee' && !a.busy);
+  S.hsC = null; genHSC(); S.hs = { ...S.hsC[0], sk: 5 }; S.hsC = [];
+  const tire = a => { a.busy = null; a.energy = 20; a.mood = 20; a.restRec = 0; a.hsF = null; a.days = ['vocal', 'dance', 'vocal', 'dance', 'vocal', 'dance', 'rap']; a.ttsFail = 3; };
+  [ds[0], tr].filter(Boolean).forEach(tire);
+  const a2 = ds[1]; if (a2) { a2.busy = null; a2.energy = 60; a2.mood = 80; a2.restRec = 0; a2.hsF = null; a2.days = ['vocal', 'dance', 'vocal', 'dance', 'vocal', 'dance', 'rap']; }
+  SAFE(() => rstub([0], () => hsTick()));
+  out['~flagged'] = J(S.artists.filter(a => a.hsF).map(a => [a.name, a.hsF.why.map(vt), a.hsF.n]));
+  out.gym = room('gym'); out.hs = hsHTML3(); out['~log'] = logTop(2);
+  const b = S.artists.find(a => a.hsF); if (b) { viewArtist(b.id); out.artist = sheet(); }
+  return out;
+});
+
+add('p3-props', ctx => {
+  ctx.fresh(ctx.base); const out = {}; S.offers = []; S.props = null; S.autoAppr = true;
+  S.money = Math.max(S.money, 5e9); while (nonGm().length < 3 && S.mgrPool.length) hireMgr(S.mgrPool[0].id);
+  S.artists.forEach(a => { a.busy = null; }); const ms = nonGm(), ds = S.artists.filter(a => a.status === 'debuted').concat(S.artists.filter(a => a.status === 'trainee')).slice(0, 5);
+  if (ms.length < 2 || ds.length < 3) return { skip: 'few managers ' + ms.length + ' ' + ds.length };
+  mkOffer({ type: 'drama', slots: 2, req: { acting: 1 } }); mkOffer({ type: 'music', slots: 1, req: { vocal: 1 } });
+  ds.forEach(a => { a.busy = null; a.energy = 100; a.scandal = null; a.appr = 0; });
+  ms.forEach((m, i) => { m.boss = i === 1 ? ms[0].id : null; m.ps = 2; m.auto = 'off'; m.dom = null; m.as = { t: 'l', id: 0, ids: ds.slice(0, 3).map(a => a.id) }; });
+  out['~built'] = SAFE(() => { const P = buildProps(); return J({ c: P.c.map(c => [c.type, vt(c.txt), vt(c.by), (c.path || []).map(vt), c.pend]), st: P.st }); });
+  out.sheet = SAFE(() => { viewProps(); return sheet(); });
+  out['~ceo'] = SAFE(() => { const c = S.props && S.props.c.find(x => x.pend); if (c) cfPick(c.id); return J(S.props.c.map(x => [vt(x.txt), vt(x.by), x.pend])); }); out['~ceoLog'] = logTop(2);
+  out.after = SAFE(() => { viewProps(); return sheet(); });
+  out['~items'] = SAFE(() => J(Object.values(S.props.m).map(it => ({ s: it.s.map(x => [vt(x.why), vt(x.why2), vt(x.by), x.ok]), p: it.p.map(x => [vt(x.why2), vt(x.by), x.ok]), d: it.d.map(x => vt(x.txt)) }))));
+  return out;
+}, ['Dự án thử drama', 'Dự án thử music']);

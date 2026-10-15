@@ -1,15 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { fmt, fmtN, FMT_VI, clamp, esc } from '../../src/core/util.js';
+import { fmt, fmtN, clamp, esc } from '../../src/core/util.js';
 
+const VI = { b: ' tỷ', m: ' tr', k: 'k' };
 describe('fmt', () => {
   it('tỷ / triệu / nghìn', () => {
-    expect(fmt(1.5e9)).toBe('1.5 tỷ');
-    expect(fmt(600e6)).toBe('600 tr');
-    expect(fmt(-2e6)).toBe('-2 tr');
-    expect(fmt(4500)).toBe('5k');
-  });
-  it('mặc định == FMT_VI trên cả dải giá trị', () => {
-    for (let x = -3e9; x <= 3e9; x += 7_654_321.5) expect(fmt(x)).toBe(fmt(x, FMT_VI));
+    expect(fmt(1.5e9, VI)).toBe('1.5 tỷ');
+    expect(fmt(600e6, VI)).toBe('600 tr');
+    expect(fmt(-2e6, VI)).toBe('-2 tr');
+    expect(fmt(4500, VI)).toBe('5k');
   });
   it('nhận bảng đơn vị khác', () => {
     const u = { b: 'B', m: 'M', k: 'K' };

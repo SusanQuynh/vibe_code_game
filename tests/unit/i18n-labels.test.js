@@ -1,16 +1,16 @@
-// Display-name helpers (src/i18n/labels.js) must reproduce the Vietnamese data tables exactly in vi,
-// and every table id must have a key in every locale.
+// Every id of the data tables (their Vietnamese text now lives only in the locales; pinned by p3-equiv and
+// the phase 1/2 vi snapshots) has a key in every locale.
 import { describe, it, expect, afterEach } from 'vitest';
-import { setLang, t } from '../../src/i18n/index.js';
+import { setLang } from '../../src/i18n/index.js';
 import { PRE, POST } from '../../src/systems/promo.js';
-import { FIN_I, FIN_X } from '../../src/systems/ext2.js';
+import { FIN_I, FIN_X, SCOUT_N } from '../../src/systems/ext2.js';
 import { LEADS } from '../../src/systems/events.js';
-import { CFT } from '../../src/systems/proposals.js';
+import { COMP, DCOMP } from '../../src/systems/contests.js';
+import { PLESSON } from '../../src/data/lessons.js';
 import { BUDN } from '../../src/systems/secretary.js';
-import { statName, trainName, conceptName, genreName, offerName, mskName, mskDesc, domName, dayShort, dayName, bizName } from '../../src/i18n/labels.js';
 import { STATS, TRAIN, CONCEPTS, GENRES, MSK, MSKD, MDOM } from '../../src/data/rules.js';
 import { OFFER } from '../../src/data/offers.js';
-import { DAYS, DAYN } from '../../src/systems/week.js';
+import { DAYS } from '../../src/systems/week.js';
 import { BIZ } from '../../src/systems/market.js';
 import viL from '../../src/i18n/locales/vi.js';
 import enL from '../../src/i18n/locales/en.js';
@@ -18,39 +18,40 @@ import enL from '../../src/i18n/locales/en.js';
 const VI_LETTER = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/i;
 afterEach(() => setLang('vi'));
 
-// [prefix, ids, vi value of an id, helper]
+// [prefix, ids]
+const CF_IDS = ['overlap', 'offer', 'tired', 'enemy', 'scandal'];
 const TABLES = [
-  ['stat', Object.keys(STATS), k => STATS[k], statName],
-  ['train', Object.keys(TRAIN), k => TRAIN[k].n, trainName],
-  ['concept', Object.keys(CONCEPTS), k => CONCEPTS[k].n, conceptName],
-  ['genre', Object.keys(GENRES), k => GENRES[k].n, genreName],
-  ['offer', Object.keys(OFFER), k => OFFER[k].n, offerName],
-  ['msk', Object.keys(MSK), k => MSK[k], mskName],
-  ['mskd', Object.keys(MSKD), k => MSKD[k], mskDesc],
-  ['dom', Object.keys(MDOM), k => MDOM[k], domName],
-  ['day', DAYS.map((_, i) => i), i => DAYS[i], dayShort],
-  ['dayn', DAYN.map((_, i) => i), i => DAYN[i], dayName],
-  ['biz', Object.keys(BIZ), k => BIZ[k].n, bizName],
-  ['promo.pre', Object.keys(PRE), k => PRE[k].n, k => t(`promo.pre.${k}`)],
-  ['promo.preD', Object.keys(PRE), k => PRE[k].d, k => t(`promo.preD.${k}`)],
-  ['promo.post', Object.keys(POST), k => POST[k].n, k => t(`promo.post.${k}`)],
-  ['biz.d', Object.keys(BIZ), k => BIZ[k].d, k => t(`biz.d.${k}`)],
-  ['inv.leadN', Object.keys(LEADS), k => LEADS[k].n, k => t(`inv.leadN.${k}`)],
-  ['inv.leadT', Object.keys(LEADS), k => LEADS[k].T, k => t(`inv.leadT.${k}`)],
-  ['inv.leadF', Object.keys(LEADS), k => LEADS[k].F, k => t(`inv.leadF.${k}`)],
-  ['prop.cf', Object.keys(CFT), k => CFT[k], k => t(`prop.cf.${k}`)],
-  ['sec.bud', Object.keys(BUDN).map(k => k / 1e6), k => BUDN[k * 1e6], k => t(`sec.bud.${k}`)],
-  ['fin.in', Object.keys(FIN_I), k => FIN_I[k], k => t(`fin.in.${k}`)],
-  ['fin.out', Object.keys(FIN_X), k => FIN_X[k], k => t(`fin.out.${k}`)],
+  ['stat', Object.keys(STATS)],
+  ['train', Object.keys(TRAIN)],
+  ['concept', Object.keys(CONCEPTS)],
+  ['genre', Object.keys(GENRES)],
+  ['offer', Object.keys(OFFER)],
+  ['msk', Object.keys(MSK)],
+  ['mskd', Object.keys(MSKD)],
+  ['dom', Object.keys(MDOM)],
+  ['day', DAYS],
+  ['dayn', DAYS],
+  ['biz', Object.keys(BIZ)],
+  ['promo.pre', Object.keys(PRE)],
+  ['promo.preD', Object.keys(PRE)],
+  ['promo.post', Object.keys(POST)],
+  ['biz.d', Object.keys(BIZ)],
+  ['inv.leadN', Object.keys(LEADS)],
+  ['inv.leadT', Object.keys(LEADS)],
+  ['inv.leadF', Object.keys(LEADS)],
+  ['prop.cf', CF_IDS],
+  ['sec.bud', Object.keys(BUDN).map(k => k / 1e6)],
+  ['fin.in', Object.keys(FIN_I)],
+  ['fin.out', Object.keys(FIN_X)],
+  ['comp.name', [...COMP.map((_, i) => 't' + i), ...DCOMP.map((_, i) => 'd' + i)]],
+  ...Object.keys(OFFER).map(k => ['ol.' + k, Array.from({ length: OFFER[k].ltN }, (_, i) => i)]),
+  ...Object.keys(PLESSON).map(k => ['ll.' + k, Array.from({ length: PLESSON[k].ltN }, (_, i) => i)]),
+  ['ev.why.scout', Array.from({ length: SCOUT_N }, (_, i) => i)],
 ];
 
 describe('label helpers', () => {
-  for (const [p, ids, tbl, fn] of TABLES) {
-    it(`vi ${p}: helper === data table`, () => {
-      setLang('vi');
-      expect(ids.length).toBeGreaterThan(0);
-      for (const k of ids) expect(fn(k)).toBe(tbl(k));
-    });
+  for (const [p, ids] of TABLES) {
+    it(`${p}: table is not empty`, () => expect(ids.length).toBeGreaterThan(0));
     for (const [code, L] of Object.entries({ vi: viL, en: enL })) {
       it(`${code} ${p}: every id has a key${code === 'en' ? ' and no Vietnamese' : ''}`, () => {
         for (const k of ids) {
