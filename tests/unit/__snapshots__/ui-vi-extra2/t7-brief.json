@@ -1,0 +1,7 @@
+{
+ "ok": "<div class=\"card rep\" style=\"margin:0 0 6px\"><b>T</b><div>2 người · 📈 +5.3/người · 📉 −0.5 (TTS sa sút) · 💗 +20</div><div>✅ Ổn định</div><div class=\"muted\">💡 Thành Đạt nên debut solo · Ballad 70%</div></div>",
+ "warn": "<div class=\"card rep\" style=\"margin:0 0 6px\"><b>T</b><div>2 người · 📈 +5.3/người · 📉 −0.5 (TTS sa sút) · 💗 +20</div><div><span class=\"w\">⚠️ Thành Đạt kiệt sức</span></div><div class=\"muted\">💡 cho Thành Đạt nghỉ 2–3 ngày</div></div>",
+ "out": "<div class=\"card rep\" style=\"margin:0 0 6px\"><b>T</b><div>2 người · 📈 +0.0/người · 💗 +0 · 🚶 1 đi làm</div><div>✅ Ổn định</div><div class=\"muted\">💡 Thành Đạt nên debut solo · Ballad 70%</div></div>",
+ "done": "<div class=\"card rep\" style=\"margin:0 0 6px\"><b>T</b><div>2 người · 📈 +0.0/người · 💗 +0</div><div>✅ Ổn định · 🎬 Xong Thành Đạt «Phim test»</div><div class=\"muted\">💡 Thành Đạt nên debut solo · Ballad 70%</div></div>",
+ "empty": "<div class=\"card rep\" style=\"margin:0 0 6px\"><b>E</b><div>0 người · 📈 +0.0/người · 💗 +0</div><div>✅ Ổn định</div></div>"
+}

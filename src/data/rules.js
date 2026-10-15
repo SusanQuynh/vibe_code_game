@@ -47,3 +47,6 @@ export const CONCEPTS={
   retro:{n:'Retro',w:{vocal:.4,dance:.3,variety:.3}},
   fantasy:{n:'Dark Fantasy',w:{dance:.4,visual:.4,acting:.2}}
 };
+export const CB=[3,2,1]; // contest stat bonus for ranks 1-3, scaled by skill weight
+export const MDOM={group:'👥 Nhóm nhạc',solo:'🎤 Solo',actor:'🎬 Diễn viên',trainee:'🌱 Thực tập sinh'}; // manager domains
+export const DOM_KEYS=Object.keys(MDOM);

@@ -1,0 +1,168 @@
+{
+ "fan": {
+  "ic": "🕵️",
+  "t": "Fan cuồng bám theo Việt Hoàng",
+  "d": "Quản lý Bùi Mỹ Linh báo: vài fan cuồng theo dõi Việt Hoàng tới tận ký túc xá và chụp lén. Việt Hoàng rất hoảng sợ.",
+  "o": [
+   "guard|Thuê vệ sĩ (20 tr)",
+   "mgr|QL tự nói chuyện với fan (~71%)",
+   "police|Báo công an & cảnh báo fan (~88%)",
+   "no|Mặc kệ"
+  ]
+ },
+ "late": {
+  "ic": "⏰",
+  "t": "Việt Hoàng đến muộn buổi ghi hình",
+  "d": "Đối tác gọi cho QL Bùi Mỹ Linh phàn nàn vì Việt Hoàng đến muộn, cả ê-kíp phải chờ.",
+  "o": [
+   "apol|QL xin lỗi & dàn xếp (~46%)",
+   "talk|Hỏi rõ lý do (~76%)",
+   "fine|Phạt nghệ sĩ",
+   "no|Bỏ qua"
+  ]
+ },
+ "cry": {
+  "ic": "😢",
+  "t": "TTS An Khang muốn bỏ cuộc",
+  "d": "QL Bùi Mỹ Linh thấy An Khang khóc sau buổi tập. Áp lực đánh giá khiến em muốn rời chương trình đào tạo.",
+  "o": [
+   "rest|Cho nghỉ 1 tuần",
+   "mgr|QL tâm sự (~76%)",
+   "senior|Nhờ tiền bối Tuấn Kiệt động viên",
+   "no|Mặc kệ"
+  ]
+ },
+ "clash": {
+  "ic": "🗯️",
+  "t": "QL Bùi Mỹ Linh và Việt Hoàng bất đồng lịch trình",
+  "d": "Bùi Mỹ Linh muốn Việt Hoàng tập thêm Visual đang yếu, còn Việt Hoàng muốn được nghỉ ngơi. Hai bên nhờ Giám đốc phân xử.",
+  "o": [
+   "mgr|Nghe theo quản lý",
+   "mix|Thỏa hiệp (~41%)",
+   "art|Nghe theo nghệ sĩ"
+  ]
+ },
+ "injury": {
+  "ic": "🩹",
+  "t": "Việt Hoàng bị chấn thương khi tập",
+  "d": "QL Bùi Mỹ Linh báo Việt Hoàng bị bong gân khi tập vũ đạo. Bác sĩ khuyên nên nghỉ.",
+  "o": [
+   "vip|Vật lý trị liệu cao cấp, nghỉ 1 tuần (30 tr)",
+   "push|Tập nhẹ tiếp (~76% ổn)",
+   "treat|Điều trị & nghỉ 2 tuần (10 tr)"
+  ]
+ },
+ "leak": {
+  "ic": "📸",
+  "t": "Ảnh hậu trường của Việt Hoàng bị lộ",
+  "d": "Một loạt ảnh hậu trường của Việt Hoàng lan truyền trên mạng. Dư luận đang chia hai phe.",
+  "o": [
+   "pr|QL xử lý truyền thông (~88%)",
+   "content|Biến thành nội dung quảng bá (~63%)",
+   "silent|Im lặng"
+  ]
+ },
+ "brand": {
+  "ic": "🛍️",
+  "t": "Nhãn hàng muốn ký gấp với Việt Hoàng",
+  "d": "Một nhãn hàng liên hệ QL Bùi Mỹ Linh, muốn Việt Hoàng quay quảng cáo ngay tuần này dù trùng lịch tập. Thù lao 27 tr.",
+  "o": [
+   "take|Nhận ngay",
+   "nego|QL đàm phán dời lịch (~41%)",
+   "no|Từ chối"
+  ]
+ },
+ "burn": {
+  "ic": "🥵",
+  "t": "QL Bùi Mỹ Linh kiệt sức",
+  "d": "Bùi Mỹ Linh ôm 0 người, chạy lịch cả cuối tuần. Việt Hoàng lo lắng vì quản lý hay quên việc.",
+  "o": [
+   "raise|Tăng lương QL 2 tr/tuần",
+   "asst|Tuyển trợ lý ngay (15 tr)",
+   "talk|Động viên tinh thần"
+  ]
+ },
+ "song": {
+  "ic": "✍️",
+  "t": "Việt Hoàng muốn tự sáng tác",
+  "d": "Việt Hoàng nhờ QL Bùi Mỹ Linh xin phép Giám đốc: cậu ấy đã viết sẵn một bản demo và muốn gửi cho GĐ Âm nhạc nghe thử.",
+  "o": [
+   "yes|Ủng hộ, gửi demo cho GĐ Âm nhạc",
+   "no|Để lần sau"
+  ]
+ },
+ "fight": {
+  "ic": "⚡",
+  "t": "TTS An Khang cãi nhau với An Khang",
+  "d": "QL Bùi Mỹ Linh báo hai TTS cùng lứa to tiếng trong phòng tập vì tranh vị trí center.",
+  "o": [
+   "mgr|QL hòa giải (~76%)",
+   "both|Phạt cả hai",
+   "no|Để tự giải quyết"
+  ]
+ },
+ "late.trainee": {
+  "ic": "⏰",
+  "t": "An Khang đến muộn buổi tập",
+  "d": "Huấn luyện viên phàn nàn với QL Bùi Mỹ Linh: An Khang đến muộn 40 phút, cả lứa phải chờ.",
+  "o": [
+   "apol|QL kèm riêng để bù buổi (~46%)",
+   "talk|Hỏi rõ lý do (~76%)",
+   "fine|Phạt nghệ sĩ",
+   "no|Bỏ qua"
+  ]
+ },
+ "cry.noSenior": {
+  "ic": "😢",
+  "t": "TTS An Khang muốn bỏ cuộc",
+  "d": "QL Bùi Mỹ Linh thấy An Khang khóc sau buổi tập. Áp lực đánh giá khiến em muốn rời chương trình đào tạo.",
+  "o": [
+   "rest|Cho nghỉ 1 tuần",
+   "mgr|QL tâm sự (~76%)",
+   "no|Mặc kệ"
+  ]
+ },
+ "cry.mentor": {
+  "ic": "😢",
+  "t": "TTS An Khang muốn bỏ cuộc",
+  "d": "QL Bùi Mỹ Linh thấy An Khang khóc sau buổi tập. Áp lực đánh giá khiến em muốn rời chương trình đào tạo.",
+  "o": [
+   "rest|Cho nghỉ 1 tuần",
+   "mgr|QL tâm sự (~76%)",
+   "senior|Nhờ tiền bối Việt Hoàng động viên",
+   "no|Mặc kệ"
+  ]
+ },
+ "burn.assts": {
+  "ic": "🥵",
+  "t": "QL Bùi Mỹ Linh kiệt sức",
+  "d": "Bùi Mỹ Linh ôm 0 người, chạy lịch cả cuối tuần. Việt Hoàng lo lắng vì quản lý hay quên việc.",
+  "o": [
+   "raise|Tăng lương QL 2 tr/tuần",
+   "talk|Động viên tinh thần"
+  ]
+ },
+ "fight.nob": {
+  "ic": "⚡",
+  "t": "TTS An Khang cãi nhau với bạn cùng lứa",
+  "d": "QL Bùi Mỹ Linh báo hai TTS cùng lứa to tiếng trong phòng tập vì tranh vị trí center.",
+  "o": [
+   "mgr|QL hòa giải (~76%)",
+   "both|Phạt cả hai",
+   "no|Để tự giải quyết"
+  ]
+ },
+ "fight.noB": {
+  "ic": "⚡",
+  "t": "TTS An Khang cãi nhau với bạn cùng lứa",
+  "d": "QL Bùi Mỹ Linh báo hai TTS cùng lứa to tiếng trong phòng tập vì tranh vị trí center.",
+  "o": [
+   "mgr|QL hòa giải (~76%)",
+   "both|Phạt cả hai",
+   "no|Để tự giải quyết"
+  ]
+ },
+ "gone": null,
+ "unknownMx": null,
+ "sheet": "<div class=\"panel\" style=\"--hc:var(--r-meet)\"><button class=\"x\" onclick=\"closeM()\" aria-label=\"Đóng\">✕</button><h2>🔔 Sự kiện</h2><div class=\"sub\">Yêu cầu của nghệ sĩ, tình huống quản lý báo lên, đề xuất, hợp đồng, quan hệ nội bộ và scandal.</div><div class=\"card\"><b>🕵️ Fan cuồng bám theo Việt Hoàng</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Quản lý Bùi Mỹ Linh báo: vài fan cuồng theo dõi Việt Hoàng tới tận ký túc xá và chụp lén. Việt Hoàng rất hoảng sợ.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(526,'guard')\">Thuê vệ sĩ (20 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(526,'mgr')\">QL tự nói chuyện với fan (~71%)</button><button class=\"btn sm \" onclick=\"resolveEv(526,'police')\">Báo công an &amp; cảnh báo fan (~88%)</button><button class=\"btn sm \" onclick=\"resolveEv(526,'no')\">Mặc kệ</button></div></div><div class=\"card\"><b>⏰ Việt Hoàng đến muộn buổi ghi hình</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Đối tác gọi cho QL Bùi Mỹ Linh phàn nàn vì Việt Hoàng đến muộn, cả ê-kíp phải chờ.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(527,'apol')\">QL xin lỗi &amp; dàn xếp (~46%)</button><button class=\"btn sm pri\" onclick=\"resolveEv(527,'talk')\">Hỏi rõ lý do (~76%)</button><button class=\"btn sm \" onclick=\"resolveEv(527,'fine')\">Phạt nghệ sĩ</button><button class=\"btn sm \" onclick=\"resolveEv(527,'no')\">Bỏ qua</button></div></div><div class=\"card\"><b>🗯️ QL Bùi Mỹ Linh và Việt Hoàng bất đồng lịch trình</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Bùi Mỹ Linh muốn Việt Hoàng tập thêm Visual đang yếu, còn Việt Hoàng muốn được nghỉ ngơi. Hai bên nhờ Giám đốc phân xử.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(528,'mgr')\">Nghe theo quản lý</button><button class=\"btn sm \" onclick=\"resolveEv(528,'mix')\">Thỏa hiệp (~41%)</button><button class=\"btn sm \" onclick=\"resolveEv(528,'art')\">Nghe theo nghệ sĩ</button></div></div><div class=\"card\"><b>🩹 Việt Hoàng bị chấn thương khi tập</b><div class=\"small muted\" style=\"margin:4px 0 8px\">QL Bùi Mỹ Linh báo Việt Hoàng bị bong gân khi tập vũ đạo. Bác sĩ khuyên nên nghỉ.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(529,'vip')\">Vật lý trị liệu cao cấp, nghỉ 1 tuần (30 tr)</button><button class=\"btn sm \" onclick=\"resolveEv(529,'push')\">Tập nhẹ tiếp (~76% ổn)</button><button class=\"btn sm \" onclick=\"resolveEv(529,'treat')\">Điều trị &amp; nghỉ 2 tuần (10 tr)</button></div></div><div class=\"card\"><b>📸 Ảnh hậu trường của Việt Hoàng bị lộ</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Một loạt ảnh hậu trường của Việt Hoàng lan truyền trên mạng. Dư luận đang chia hai phe.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(530,'pr')\">QL xử lý truyền thông (~88%)</button><button class=\"btn sm \" onclick=\"resolveEv(530,'content')\">Biến thành nội dung quảng bá (~63%)</button><button class=\"btn sm \" onclick=\"resolveEv(530,'silent')\">Im lặng</button></div></div><div class=\"card\"><b>🛍️ Nhãn hàng muốn ký gấp với Việt Hoàng</b><div class=\"small muted\" style=\"margin:4px 0 8px\">Một nhãn hàng liên hệ QL Bùi Mỹ Linh, muốn Việt Hoàng quay quảng cáo ngay tuần này dù trùng lịch tập. Thù lao 27 tr.</div><div class=\"row\"><button class=\"btn sm \" onclick=\"resolveEv(531,'take')\">Nhận ngay</button><button class=\"btn sm \" onclick=\"resolveEv(531,'nego')\">QL đàm phán dời lịch (~41%)</button><button class=\"btn sm \" onclick=\"resolveEv(531,'no')\">Từ chối</button></div></div></div>"
+}

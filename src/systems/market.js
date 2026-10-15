@@ -1,5 +1,5 @@
 import { R, pick, rnd } from '../core/rng.js';
-import { t } from '../i18n/index.js';
+import { money, t } from '../i18n/index.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
 import { SONGS } from '../data/names.js';
 import { OFFER, PARTNERS, RIVALS } from '../data/offers.js';
@@ -43,12 +43,12 @@ export function rivalsTick(){const now=abs();
   if(cand.length&&Math.random()<.06){const a=pick(cand);if(Math.random()<1.1-a.mood/100-msk(a,'care')*.03){const r=pick(S.rivals);pushEv({kind:'poach',a:a.id,r:r.n,fee:clamp(Math.round(a.fans*1500/1e6)*1e6,30e6,3e9)})}}
 }
 export const SXD={
-  fire:{ic:'🔥',t:'Sự cố chập điện phòng tập',d:()=>'Phòng tập hư hỏng. Sửa tạm thì 4 tuần tới luyện tập kém hiệu quả.',o:()=>[{k:'fix',l:'Sửa ngay (60 tr)'},{k:'cheap',l:'Sửa tạm (15 tr)'}]},
-  sponsor:{ic:'🤝',t:'Nhà tài trợ bất ngờ',d:e=>`${e.p} muốn tài trợ ${fmt(e.v)} để gắn logo vào hoạt động của công ty. Một số fan có thể chê "thương mại hóa".`,o:()=>[{k:'yes',l:'Nhận tài trợ'},{k:'no',l:'Từ chối'}]},
-  tax:{ic:'🧾',t:'Thanh tra thuế',d:()=>'Cơ quan thuế kiểm tra sổ sách. Luật sư giỏi có thể giúp thoát phạt.',o:()=>[{k:'law',l:'Thuê luật sư (40 tr)'},{k:'pay',l:'Nộp phạt luôn'}]},
-  festival:{ic:'🌏',t:'Lời mời lễ hội quốc tế',d:e=>`Lễ hội âm nhạc châu Á mời ${e.n} biểu diễn 1 tuần. Chi phí 50 tr, đổi lại nhiều fan quốc tế.`,o:()=>[{k:'yes',l:'Nhận lời (50 tr)'},{k:'no',l:'Từ chối'}]},
-  leak:{ic:'💧',t:'Bản demo bị rò rỉ',d:()=>'Một bài hát chưa phát hành lan truyền trên mạng.',o:()=>[{k:'embrace',l:'Biến thành teaser'},{k:'sue',l:'Kiện người phát tán (20 tr)'},{k:'ignore',l:'Lờ đi'}]},
-  investor:{ic:'💼',t:'Quỹ đầu tư muốn rót vốn',d:e=>`${e.p} rót ${fmt(e.v)} ngay. Công ty trả lại ${fmt(Math.round(e.v*1.3/26/1e6)*1e6)}/tuần trong 26 tuần.`,o:()=>[{k:'yes',l:'Nhận vốn'},{k:'no',l:'Từ chối'}]}
+  fire:{ic:'🔥',t:()=>t('sx.fire.t'),d:()=>t('sx.fire.d'),o:()=>[{k:'fix',l:t('sx.fire.o.fix',{m:money(60e6)})},{k:'cheap',l:t('sx.fire.o.cheap',{m:money(15e6)})}]},
+  sponsor:{ic:'🤝',t:()=>t('sx.sponsor.t'),d:e=>t('sx.sponsor.d',{p:e.p,m:money(e.v)}),o:()=>[{k:'yes',l:t('sx.sponsor.o.yes')},{k:'no',l:t('ev.o.refuse')}]},
+  tax:{ic:'🧾',t:()=>t('sx.tax.t'),d:()=>t('sx.tax.d'),o:()=>[{k:'law',l:t('sx.tax.o.law',{m:money(40e6)})},{k:'pay',l:t('sx.tax.o.pay')}]},
+  festival:{ic:'🌏',t:()=>t('sx.festival.t'),d:e=>t('sx.festival.d',{n:e.n,m:money(50e6)}),o:()=>[{k:'yes',l:t('sx.festival.o.yes',{m:money(50e6)})},{k:'no',l:t('ev.o.refuse')}]},
+  leak:{ic:'💧',t:()=>t('sx.leak.t'),d:()=>t('sx.leak.d'),o:()=>[{k:'embrace',l:t('sx.leak.o.embrace')},{k:'sue',l:t('sx.leak.o.sue',{m:money(20e6)})},{k:'ignore',l:t('sx.leak.o.ignore')}]},
+  investor:{ic:'💼',t:()=>t('sx.investor.t'),d:e=>t('sx.investor.d',{p:e.p,m:money(e.v),w:money(Math.round(e.v*1.3/26/1e6)*1e6)}),o:()=>[{k:'yes',l:t('sx.investor.o.yes')},{k:'no',l:t('ev.o.refuse')}]}
 };
 export function surprise(){
   if(Math.random()>.24)return;
@@ -66,7 +66,7 @@ export function surprise(){
   else if(k==='investor')pushEv({kind:'sx',sx:k,p:pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng']),v:Math.round(R(200,500)*(1+S.year*.2))*1e6},true);
   else if(k==='festival'){const x=pick(free);pushEv({kind:'sx',sx:k,act:x.k,n:x.n.slice(2)},true)}
   else pushEv({kind:'sx',sx:k},true);
-  toast('⚡ Có sự kiện bất ngờ!');
+  toast(t('sx.toast'));
 }
 export function sxResolve(e,k){
   const D=SXD[e.sx];
@@ -77,7 +77,7 @@ export function sxResolve(e,k){
     case'sponsor:no':S.artists.forEach(a=>a.mood=clamp(a.mood+3,0,100));addLog('Từ chối tài trợ, fan khen công ty có tâm.');break;
     case'tax:law':S.money-=40e6;if(Math.random()<.6)addLog('⚖️ Luật sư chứng minh sổ sách hợp lệ, không bị phạt.','good');else{const f=clamp(Math.round(Math.abs(S.money)*.05/1e6)*1e6,30e6,300e6);S.money-=f;addLog(`🧾 Vẫn bị phạt ${fmt(f)}.`,'bad')}break;
     case'tax:pay':{const f=clamp(Math.round(Math.abs(S.money)*.04/1e6)*1e6,20e6,250e6);S.money-=f;addLog(`🧾 Nộp phạt thuế ${fmt(f)}.`,'bad');break}
-    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog('Không thể cử người đi lễ hội lúc này.','bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:'Lễ hội quốc tế',left:1,total:1}}addLog(`🌏 ${e.n} biểu diễn ở lễ hội quốc tế, fan nước ngoài tăng mạnh!`,'gold');break}
+    case'festival:yes':{const A=actByKey(e.act);if(!A||!actFree(A)||S.money<50e6){addLog('Không thể cử người đi lễ hội lúc này.','bad');break}S.money-=50e6;for(const id of A.m){const a=byId(id),g=R(5000,15000);a.fans+=g;a.yr.fans+=g;a.busy={kind:'concert',title:'Lễ hội quốc tế',left:1,total:1,lk:'concert'}}addLog(`🌏 ${e.n} biểu diễn ở lễ hội quốc tế, fan nước ngoài tăng mạnh!`,'gold');break}
     case'festival:no':break;
     case'leak:embrace':if(Math.random()<.6){S.artists.filter(a=>a.status==='debuted').forEach(a=>a.fans+=R(500,2500));addLog('💧 Teaser bất đắc dĩ gây sốt, fan háo hức chờ bài mới!','good')}else addLog('💧 Teaser không tạo được tiếng vang.');break;
     case'leak:sue':S.money-=20e6;addLog('⚖️ Đã khởi kiện người phát tán bản demo.');break;
@@ -102,14 +102,14 @@ export function bizTick(){const fF=clamp(totalFans()/300000,0,2);let t=0;
   for(const b of S.biz){const B=BIZ[b.k];const p=Math.round(B.base*b.lv*(1+B.syn*fF)*rnd(1-B.vol,1+B.vol)*modV('econ')/1e5)*1e5;const q=Math.round(p*bizOwn(b));b.last=p;b.tot+=q;t+=q}
   S.money+=t;book('biz',t);if(S.loan){S.money-=S.loan.pay;S.loan.left--;if(S.loan.left<=0){addLog(`💼 Đã trả xong khoản vốn của ${S.loan.n}.`,'good');S.loan=null}}
   return t}
-export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast('Không đủ tiền');S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
-export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
+export function buyBiz(k){const B=BIZ[k];if(bizLv(k))return;if(S.money<B.cost)return toast(t('toast.noMoney'));S.money-=B.cost;S.biz.push({k,lv:1,inv:B.cost,tot:0,last:0,y:S.year});addLog(`${B.ic} Mở ${B.n} (${fmt(B.cost)}).`,'gold');act()}
+export function upBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||b.lv>=5)return;const c=upCost(b);if(S.money<c)return toast(t('toast.noMoney'));S.money-=c;b.inv+=c;b.lv++;addLog(`${BIZ[k].ic} Mở rộng ${BIZ[k].n} lên cấp ${b.lv}.`,'good');act()}
 export function sellBiz(k,btn){if(btn.dataset.c!=='1'){btn.dataset.c='1';btn.textContent=t('btn.tapAgain');return}const b=S.biz.find(x=>x.k===k);if(!b)return;const v=Math.round(b.inv*.6*bizOwn(b));S.money+=v;S.biz=S.biz.filter(x=>x!==b);addLog(`${BIZ[k].ic} Bán ${BIZ[k].n}, thu về ${fmt(v)}.`);act()}
 export const bizOwn=b=>b.own??1;
 export const bizVal=b=>{const B=BIZ[b.k],fF=clamp(totalFans()/300000,0,2),exp=B.base*b.lv*(1+B.syn*fF);return Math.round((b.inv+exp*26)/1e6)*1e6};
 export const bizWait=b=>Math.max(0,8-(abs()-(b.rw??-99)));
-export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast('Phải giữ tối thiểu 51% cổ phần');if(bizWait(b))return toast(`Chờ ${bizWait(b)} tuần nữa mới gọi vốn tiếp`);const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
-export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast('Không đủ tiền');S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
+export function raiseBiz(k,pct){const b=S.biz.find(x=>x.k===k);if(!b)return;if(Math.round((bizOwn(b)-pct)*100)<51)return toast(t('invest.toast.keep51'));if(bizWait(b))return toast(t('invest.toast.wait',{w:bizWait(b)}));const v=Math.round(bizVal(b)*pct);S.money+=v;b.own=bizOwn(b)-pct;b.rw=abs();addLog(`💼 ${BIZ[k].n} kêu gọi vốn: bán ${Math.round(pct*100)}% cổ phần cho ${pick(['Quỹ Sao Mai','Lotus Capital','Quỹ Rồng Vàng'])}, nhận ${fmt(v)}.`,'gold');act()}
+export function buybackBiz(k){const b=S.biz.find(x=>x.k===k);if(!b||bizOwn(b)>=1)return;const c=Math.round(bizVal(b)*(1-bizOwn(b))*1.15);if(S.money<c)return toast(t('toast.noMoney'));S.money-=c;b.own=1;addLog(`💼 Mua lại toàn bộ cổ phần ${BIZ[k].n} (${fmt(c)}).`,'good');act()}
 export function weekWorld(){
   if(!S.trend||abs()>=S.trend.until)newTrend();
   rivalsTick();surprise();

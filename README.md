@@ -79,13 +79,20 @@ npm run dev        # http://localhost:5173
 | `npm run preview` | Serve the build on port 4173 |
 | `npm test` | Unit tests (Vitest + jsdom) |
 | `npm run check:handlers` | Fail if an inline handler (`onclick="…"`) is not exposed on `window` |
-| `npm run check:i18n` | Fail if a locale has missing/extra keys or mismatched placeholders |
+| `npm run check:i18n` | Fail if a locale has missing/extra/duplicate keys or mismatched placeholders, or if a Vietnamese string literal in `src/` is neither translated nor allowlisted |
 | `npm run test:e2e` | Playwright golden master and smoke tests |
 | `npm run deploy` | Build and push `dist/` to the `gh-pages` branch |
 
 ### Saving
 
-The game autosaves to `localStorage` (`starlight_idol_save_v1`) after every action. The 🔑 button exports your game as an `SL1.…` code (gzipped JSON, base64url) or a `.json` file, and imports either one in another browser after a preview. Older saves are migrated on load.
+The game keeps two copies in `localStorage`:
+
+- **Compact** (`starlight_idol_save_v1`), written after every action. It drops history nothing in the game reads (older log lines, per-artist history and lessons, old finance weeks, finished films and concerts from past years). Singles, awards and everything gameplay uses are kept.
+- **Full backup** (`starlight_idol_save_v1_full`), written every 4 weeks and whenever you press "Sao lưu đầy đủ ngay" in 🔑.
+
+Sizes and times live in a separate `starlight_save_meta` key, never inside the game state. On load the compact copy is used; if it is missing or corrupt the full backup takes over (with a 🛟 log line), and if the backup is the very same game moment it is preferred because it keeps the full history. If the browser quota is hit, autosave first shrinks the compact copy, then drops the backup so the main save always survives (the `#saved` badge shows "compact" or "no backup"). The 🔑 view lists both copies (size, time), exports either one and can restore from the backup. Details: [`docs/plans/2026-10-13-staff-contests-managers.md`](docs/plans/2026-10-13-staff-contests-managers.md) (task 9).
+
+The 🔑 button exports your game as an `SL1.…` code (gzipped JSON, base64url) or a `.json` file, and imports either one in another browser after a preview. Older saves are migrated on load.
 
 ## Architecture
 
@@ -103,7 +110,7 @@ src/
 │   ├── market, events, awards
 │   └── ext2.js, ext3.js   Features added in later versions of the original (ledger, contracts, mentors, songwriting, health specialist, outside contacts…)
 ├── save/         storage.js (localStorage + migrations), transfer.js (SL1 code / .json)
-├── i18n/         t(), setLang, locale registry (locales/*.js)
+├── i18n/         t(), tVi(), setLang, locale registry (locales/*.js + parts), labels.js
 ├── ui/           building, rooms, views, planning, tutorial, saveView, modal, lang
 │   └── globals.js     The only place handlers are attached to window
 └── styles/       CSS split by area
@@ -134,9 +141,9 @@ npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 
 | Suite | Covers |
 | --- | --- |
-| `tests/unit/` | State, RNG, formatting, week cost and rollover, determinism, save/load and migration of a v1 save fixture, save transfer, i18n core and locale parity, Vietnamese UI snapshots |
+| `tests/unit/` | State, RNG, formatting, week cost and rollover, determinism, save/load and migration of a v1 save fixture, save transfer, i18n core and locale parity, byte-identical Vietnamese UI snapshots, the English leftover-Vietnamese guard, `S` language-independence, the sink snapshot |
 | `tests/e2e/golden.spec.js` | 30 weeks idle (seed 42) and 110 weeks with scripted actions (seed 7), compared byte-for-byte with snapshots recorded from the original, in both `vi` and `en` |
-| `tests/e2e/smoke.spec.js` | Every room opens and closes, 10 week cycles with autosave across reload, no horizontal scroll at 375px, language switching, export → wipe → import |
+| `tests/e2e/smoke.spec.js` | Every room opens and closes, 10 week cycles with autosave across reload, no horizontal scroll at 375px, language switching, every room in English at 375px, export → wipe → import |
 
 > [!TIP]
 > If Chromium is already installed, point Playwright to it instead of running `playwright install`:
@@ -156,7 +163,7 @@ npm test && npm run check:handlers && npm run check:i18n && npm run test:e2e
 Vietnamese (`vi`) is the default and the source of truth; English (`en`) is in beta. Players switch with the 🌐 button and the game re-renders in place without touching game state. The choice is stored in `localStorage['starlight_lang']`, separately from the save.
 
 > [!NOTE]
-> Phase 1 translates the fixed UI only: top bar, room names, dock, common buttons and the tutorial. Room contents, logs, events and offers are still Vietnamese. Later phases are outlined in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md).
+> Phases 1 and 2 are done: every screen the player reads (top bar, dock, tutorial, every room and view, cards, selects, tables, toasts, `aria-label`s, tooltips and placeholders) is translated. Text **stored in the save** is still Vietnamese in English mode until phase 3: the log, artist history and lessons, `busy` titles, stored event and proposal reasons, award categories, rival news, market modifier names and generated names and titles. The plans are in [`docs/plans/2026-10-10-i18n-phase-1.md`](docs/plans/2026-10-10-i18n-phase-1.md) and [`docs/plans/2026-10-13-i18n-phase-2.md`](docs/plans/2026-10-13-i18n-phase-2.md) (phase 2, with the hand-off list for phase 3).
 
 **Adding a language**
 
@@ -166,13 +173,25 @@ Vietnamese (`vi`) is the default and the source of truth; English (`en`) is in b
 
 Keys are flat and dot-separated (`top.*`, `room.<id>.{name,dock,desc}`, `npc.<id>`, `btn.*`, `tut.<id>.{t,d}`, `lang.*`, `saved.*`, `fmt.units`). Values are strings with `{x}` placeholders, or `(p) => string` functions for plurals.
 
+**How the dictionaries are organised**
+
+- `src/i18n/locales/{vi,en}.js` only merge per-area part files (`locales/<lang>/core.js`, `common.js`, `labels.js`, `lobby.js`, `mgr.js`, ...). A new part is one import plus one `['name', part]` entry in `parts` of both locale files. `npm run check:i18n` fails on duplicate keys across parts, on missing or extra keys, and on mismatched placeholders; a value that is a function in `vi` must be a function in every locale (plurals).
+- `src/i18n/labels.js` has the display names for the data tables, looked up by id: `statName`, `trainName`, `conceptName`, `genreName`, `offerName`, `mskName`, `mskDesc`, `domName`, `dayShort`, `dayName`, `bizName`, `relTagName`. The Vietnamese data tables keep their `n` fields because log code still reads them; `tests/unit/i18n-labels.test.js` proves that the `vi` helpers reproduce each table exactly and that every id has a key.
+- Dynamic keys must be template literals (`` t(`debut.type.${x}`) ``) so `check:i18n` can see them.
+
 **Rules**
 
 - Don't call `t()` at module top level; look strings up at render time.
 - Dictionaries are trusted HTML: escape user data with `esc()` before passing it to `t()`.
-- Never store translated text in `S`. `addLog` keeps Vietnamese and `fmt()` units so the state (and golden snapshots) stay language-independent; use `money()` for display only.
+- Never store translated text in `S`. `addLog`, `hist`, `lessons`, `busy` titles and the other sinks keep Vietnamese and `fmt()` units so the state (and golden snapshots) stay language-independent; use `money()` for display only. **Never translate a sink.** `tests/unit/i18n-sinks.test.js` snapshots every sink call and fails on any edit inside one.
+- A helper whose output goes both to the screen and into `S` (`targetName`, `bonusTxt`, `wkLabel`, `debutRec`, `dOpts`) takes a translator argument that defaults to `tVi` (always Vietnamese). UI call sites pass `t`, sink call sites keep the default. If a local variable named `t` shadows the translator, import it under another name (`import { t as tl }`).
 - `src/i18n/` never imports systems or UI, touches the DOM, or calls the RNG.
 - Static markup in `index.html` uses `data-i18n` / `data-i18n-aria`.
+- Adding a template keeps the markup byte-identical in Vietnamese: replace only the text run, never reflow a line. `tests/unit/ui-vi*.test.js` compare the rendered HTML of every room and view with files recorded before phase 2.
+
+**The literal scanner and the allowlist**
+
+`node scripts/i18n-literals.mjs --report [files]` lists every Vietnamese string literal left in `src/` outside comments, sink calls, the kept data tables and the locale files. `--strict` (part of `npm run check:i18n`) exits 1 on a finding that is not in `scripts/i18n-literal-allow.json`. Each allowlist entry is `{ file, text, why }` and must name a real reason: text that is stored in `S` (phase 3), compared as logic against a stored value, or an error message kept for a test. Display-only text never goes there. The render-based guard `tests/unit/ui-en.test.js` renders every surface and runs every failing-action toast with `lang=en` and fails on any leftover Vietnamese word; `tests/unit/i18n-state.test.js` proves that `S` and the RNG call count are identical in both languages.
 
 ## Deployment
 
@@ -201,7 +220,7 @@ The repository ships [Claude Code](https://claude.com/claude-code) subagents in 
 
 From the plans in [`docs/plans/`](docs/plans/):
 
-- [ ] Translate room contents, views and data labels (i18n phase 2)
+- [x] Translate room contents, views and data labels (i18n phase 2)
 - [ ] Store logs, events and offers as keys + parameters so they can be translated (i18n phase 3)
 - [ ] Replace inline handlers with `data-action` event delegation
 - [ ] PWA / offline support

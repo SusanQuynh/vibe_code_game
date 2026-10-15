@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { diffLocales } from '../src/i18n/check.js';
+import { diffLocales, dupKeys } from '../src/i18n/check.js';
 
 const DIR = 'src/i18n/locales';
 const locs = {};
@@ -12,6 +12,7 @@ if (!locs.vi) { console.error('Thiếu locale chuẩn vi.js'); process.exit(1); 
 const errs = [];
 const base = locs.vi.dict;
 for (const [code, L] of Object.entries(locs)) {
+  for (const d of dupKeys(L.parts || [])) errs.push(`${code}: key '${d.key}' trùng giữa các part ${d.parts.join(', ')}`);
   if (L.meta.code !== code) errs.push(`${code}.js: meta.code='${L.meta.code}' không khớp tên file`);
   if (code === 'vi') continue;
   const d = diffLocales(base, L.dict);
@@ -28,7 +29,7 @@ function* walk(d) {
 }
 for (const f of [...walk('src'), 'index.html']) {
   const s = fs.readFileSync(f, 'utf8');
-  const keys = [...s.matchAll(/\bt\(\s*'([\w.]+)'/g), ...s.matchAll(/data-i18n(?:-aria)?="([\w.]+)"/g)].map(m => m[1]);
+  const keys = [...s.matchAll(/\bt(?:Vi)?\(\s*'([\w.]+)'/g), ...s.matchAll(/data-i18n(?:-aria)?="([\w.]+)"/g)].map(m => m[1]);
   for (const k of new Set(keys)) if (!(k in base)) errs.push(`${f}: key '${k}' không có trong vi`);
 }
 if (errs.length) { console.error(errs.join('\n')); process.exit(1); }

@@ -1,0 +1,18 @@
+<div class="panel" style="--hc:var(--r-hr)"><button class="x" onclick="closeM()" aria-label="Đóng">✕</button><h2>🔑 Lưu &amp; chuyển game</h2><div class="sub">Game tự lưu trên trình duyệt này sau mỗi thao tác. Dùng mã hoặc file để sao lưu hoặc chơi tiếp trên thiết bị khác.</div>
+  
+  <div class="card"><b>📦 Bản lưu trên trình duyệt</b>
+    <div class="prow"><b>Bản rút gọn (tự lưu)</b><span class="small muted">Chưa có</span></div>
+    <div class="prow"><b>Bản đầy đủ (sao lưu)</b><span class="small muted">Chưa có</span></div>
+    <div class="small muted" style="margin:4px 0">Bản rút gọn ghi sau mỗi thao tác (bỏ bớt lịch sử cũ). Bản đầy đủ tự sao lưu mỗi 4 tuần hoặc khi bạn bấm nút.</div>
+    <div class="row"><button class="btn pri" onclick="saveBackupNow()">💾 Sao lưu đầy đủ ngay</button><button class="btn" onclick="saveExportSlot('c')" disabled="">Xuất bản rút gọn</button><button class="btn" onclick="saveExportSlot('f')" disabled="">Xuất bản đầy đủ</button><button class="btn warn" onclick="saveRestorePreview()" disabled="">🛟 Khôi phục từ bản sao lưu</button></div></div>
+  <h3>Xuất</h3>
+  <div class="card"><div class="small" style="margin-bottom:6px">Mã lưu (Năm 2 · Tuần 5):</div>
+    <textarea id="codeShow" readonly="" rows="3" style="width:100%;font:12px 'JetBrains Mono',monospace" placeholder="Đang tạo mã…"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn pri" onclick="saveCopyCode()">Sao chép mã</button><button class="btn" onclick="saveDownload()">Tải file .json</button></div></div>
+  <h3>Nhập</h3>
+  <div class="card"><textarea id="codeIn" rows="3" style="width:100%;font:12px 'JetBrains Mono',monospace" placeholder="Dán mã SL1.… hoặc nội dung file .json"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" onclick="saveImportText()">Xem trước</button>
+    <label class="btn" style="cursor:pointer">Chọn file…<input type="file" accept=".json,.txt,application/json" hidden="" onchange="saveImportFile(this)"></label></div>
+    
+  </div>
+  </div>

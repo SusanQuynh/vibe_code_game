@@ -1,21 +1,26 @@
 import { R, pick, rnd } from '../core/rng.js';
+import { t } from '../i18n/index.js';
+import { statName } from '../i18n/labels.js';
 import { clamp, fmt, fmtN } from '../core/util.js';
+import { PLESSON } from '../data/lessons.js';
 import { OFFER } from '../data/offers.js';
 import { GENRES, STATS, TRAIN, TRAIN_COST } from '../data/rules.js';
 import { S, abs, addLog, byId } from '../state.js';
 import { fame, fit, genPool } from './artists.js';
 import { awardToShow, awards, setAwardToShow } from './awards.js';
-import { compDone, compTick } from './batches.js';
+import { compDone, compTick } from './contests.js';
 import { evInfo, randomEvents, resolveEv } from './events.js';
 import { book, finClose, mtB, poolSize, weekV2 } from './ext2.js';
 import { dqList, viewDebutQ } from './ext3.js';
-import { effSk, genMgrPool, mgrAuto, mgrExp, mgrOf, msk } from './managers.js';
+import { gmReport } from './gm.js';
+import { effSk, genMgrPool, mgrAuto, mgrDomTick, mgrExp, mgrOf, msk } from './managers.js';
 import { bizLv, modV, weekWorld } from './market.js';
 import { genOffers } from './offers.js';
 import { promoWeek } from './promo.js';
 import { buildProps, propCount } from './proposals.js';
 import { getRel, groupsOf, setRel } from './relations.js';
 import { evalAll } from './review.js';
+import { recSal, recruitTick } from './recruit.js';
 import { runCbPlans } from './secretary.js';
 import { act } from '../ui/building.js';
 import { view } from '../ui/modal.js';
@@ -38,7 +43,17 @@ export function trainDay(a,k){
   return +gs.toFixed(2);
 }
 export function qLabel(q){return q>=1.25?'Xuất sắc':q>=1?'Tốt':q>=.8?'Ổn':'Chưa tốt'}
-export function applyLesson(a,lesson,q){const out=[];for(const k in lesson){const g=lesson[k]*(.8+q*.3);a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);out.push(`${STATS[k]} +${g.toFixed(1)}`)}return out.join(', ')}
+/* a.pg: cumulative skill points from projects (lazy, real applied delta) */
+export function addPg(a,k,d){d=+d.toFixed(1);if(d){a.pg=a.pg||{};a.pg[k]=+((a.pg[k]||0)+d).toFixed(1)}}
+export function applyLesson(a,lesson,q){const out=[];for(const k in lesson){const g=lesson[k]*(.8+q*.3),b=a.st[k];a.st[k]=clamp(+(a.st[k]+g).toFixed(1),0,100);addPg(a,k,a.st[k]-b);out.push(`${STATS[k]} +${g.toFixed(1)}`)}return out.join(', ')}
+/* deterministic project lesson (no RNG); consecutive livestreams merge into one entry */
+export function projLesson(a,key,title){const P=PLESSON[key];if(!P)return'';const L=a.lessons[0],lt=P.lt[abs()%P.lt.length],b0={};for(const k in P.l)b0[k]=a.st[k];const s0=applyLesson(a,P.l,1);
+  if(key==='live'){const d={};for(const k in P.l)d[k]=+(a.st[k]-b0[k]).toFixed(1);   // real applied delta (clamp/rounding), matches a.pg
+    const txt=g=>Object.keys(g).map(k=>`${STATS[k]} +${g[k].toFixed(1)}`).join(', ');
+    if(L&&L.lk==='live'){L.n=(L.n||1)+1;L.g=L.g||{};for(const k in d)L.g[k]=+((L.g[k]||0)+d[k]).toFixed(1);L.t=`${title} (×${L.n})`;L.s=txt(L.g);L.y=S.year;return L.s}
+    a.lessons.unshift({t:title,l:lt,s:txt(d),g:d,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return txt(d)}
+  const s=s0;
+  a.lessons.unshift({t:title,l:lt,s,y:S.year,lk:key});if(a.lessons.length>12)a.lessons.length=12;return s}
 export function completeBusy(a){
   const b=a.busy;a.busy=null;
   if(b.kind==='offer'){
@@ -66,8 +81,9 @@ export function completeBusy(a){
       if(!S.artists.some(x=>x.busy&&x.busy.filmId===film.id)){film.status='Hậu kỳ';film.releaseAt=abs()+2}}
     a.actor=true;a.wc=(a.wc||0)+1;a.hist.unshift(`N${S.year}: Đóng phim công ty «${b.title}»`);
     addLog(`🎬 ${a.name} đóng máy phim «${b.title}». ${ls}.`,'good');
-  }else if(b.kind==='promo'){addLog(`🎤 ${a.name} kết thúc đợt quảng bá.`)}
-  else if(b.kind==='concert'){addLog(`🏟️ ${a.name} trở về sau concert.`)}
+  }else if(b.kind==='promo'){const s=projLesson(a,b.lk||'promo',b.title);addLog(`🎤 ${a.name} kết thúc đợt quảng bá. (${s})`)}
+  else if(b.kind==='concert'){const s=projLesson(a,b.lk||(b.title==='Fan meeting'?'fanmeet':'concert'),b.title);addLog(`🏟️ ${a.name} trở về sau concert. (${s})`)}
+  else if(b.kind==='write')projLesson(a,'write',b.title);
   else if(b.kind==='leave'){a.mood=clamp(a.mood+10,0,100);addLog(`🌴 ${a.name} quay lại sau kỳ nghỉ.`)}
   else if(b.kind==='comp')compDone(a,b);
 }
@@ -88,7 +104,7 @@ export const defaultDays=k=>k==='rest'?Array(7).fill('rest'):[k,k,k,k,k,'rest','
 export function ensureDays(a){if(!Array.isArray(a.days)||a.days.length!==7)a.days=defaultDays(a.sched||'vocal');a.days=a.days.map(k=>TRAIN[k]?k:'rest')}
 export const daysMini=a=>a.days.map(k=>TIC[k]).join('');
 export const trainDays=a=>a.days.filter(k=>k!=='rest').length;
-export function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)}
+export function weekCost(){return S.artists.reduce((s,a)=>s+a.salary+(a.busy?0:trainDays(a)*TRAIN_COST/5),0)+S.managers.reduce((s,m)=>s+m.salary,0)+(S.assts||[]).reduce((s,x)=>s+x.sal,0)+S.artists.reduce((t,a)=>t+(a.pa?a.pa.sal:0),0)+(S.hs?S.hs.sal:0)+recSal()}
 export const TIC={vocal:'🎤',dance:'🪩',rap:'🎧',acting:'🎭',variety:'😂',gym:'🏋️',rest:'🛌'};
 export const STAT2T={vocal:'vocal',dance:'dance',rap:'rap',acting:'acting',variety:'variety',visual:'gym',stamina:'gym'};
 export function focusKeys(a){const idol=groupsOf(a).length||a.solo;if(a.status==='trainee')return['vocal','dance','rap','visual'];if(a.actor&&!idol)return['acting','visual','variety','stamina'];if(a.actor)return['vocal','dance','acting','visual','variety'];return['vocal','dance','rap','visual','variety','stamina']}
@@ -104,7 +120,7 @@ export function planWeek(a,skill=10){
   if(a.restRec&&a.restRec>abs()){let c=out.filter(k=>k==='rest').length;for(let i=6;i>=0&&c<(a.restN||3);i--)if(out[i]!=='rest'){out[i]='rest';c++}}
   return out;
 }
-export function planWhy(a){if(a.energy<40)return'năng lượng đang thấp nên cần nghỉ trước';if(a.mood<28)return'tâm trạng đang xấu';if(a.wantAct)return'đang muốn đóng phim';const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return`ưu tiên ${STATS[k]} đang yếu nhất (${Math.round(a.st[k])}), nghỉ để giữ năng lượng`}
+export function planWhy(a){if(a.energy<40)return t('plan.why.energy');if(a.mood<28)return t('plan.why.mood');if(a.wantAct)return t('plan.why.act');const k=focusKeys(a).reduce((m,x)=>a.st[x]<a.st[m]?x:m);return t('plan.why.focus',{s:statName(k),v:Math.round(a.st[k])})}
 export function projEnergy(a){let e=a.energy;return a.days.map(k=>{e=clamp(e+(k==='rest'?12:TRAIN[k].e*.3),0,100);return Math.round(e)})}
 export const mgrSchedules=a=>{if(a.pm)return a.pm;const m=mgrOf(a);return m&&m.ps===1?m:null};
 export function mgrScheduleAll(){for(const a of S.artists){if(a.busy)continue;const m=mgrSchedules(a);if(m)a.days=planWeek(a,effSk(m,'plan'))}}
@@ -115,7 +131,7 @@ export function nextWeek(force,planned){
   if(!planned&&((S.planOn!==false&&S.artists.some(a=>!a.busy))||propCount()))return startPlan(force);
   mgrScheduleAll();
   if(force)for(const e of [...S.events]){const inf=evInfo(e);if(inf)resolveEv(e.id,inf.o[inf.o.length-1].k,true);else S.events=S.events.filter(x=>x!==e)}
-  const now=abs(),logMark=S.log[0],rep={y:S.year,w:S.week,a:{},ev:[],m0:S.money},f0={};S.artists.forEach(a=>f0[a.id]=a.fans);
+  const now=abs(),logMark=S.log[0],rep={y:S.year,w:S.week,a:{},ev:[],m0:S.money},f0={},lv0={},e0={};S.artists.forEach(a=>{f0[a.id]=a.fans;e0[a.id]=a.earn||0});S.managers.forEach(m=>lv0[m.id]=m.lv);
   promoWeek();
   for(const a of [...S.artists]){
     if(a.busy){rep.a[a.id]={b:a.busy.title};a.busy.left--;if(a.busy.left<=0){const bk=a.busy.kind,bt=a.busy.title;completeBusy(a);if(bk==='offer'||bk==='shoot')rep.a[a.id].done=bt}}
@@ -141,16 +157,17 @@ export function nextWeek(force,planned){
   if(S.week%8===0)genMgrPool();
   for(const m of S.managers){S.money-=m.salary;book('mgr',-m.salary)}
   const bizP=weekWorld();
-  mgrAuto();
+  mgrDomTick();mgrAuto();
   randomEvents();
   weekV2();
+  recruitTick();
   if(S.money<0)addLog(`⚠️ Công ty đang âm ${fmt(-S.money)}. Nghệ sĩ bắt đầu lo lắng!`,'bad');
   if(abs()%4===0)evalAll();
   finClose();
   S.week++;
   if(S.week>52){awards();S.week=1;S.year++}
   runCbPlans();
-  {const ix=S.log.indexOf(logMark);rep.ev=(ix<0?S.log:S.log.slice(0,ix)).slice(0,30).map(l=>l.t);rep.m1=S.money;if(S.lastEval&&S.lastEval.w===abs()-1)rep.evl=1;rep.biz=bizP;for(const a of S.artists)if(rep.a[a.id])rep.a[a.id].f=a.fans-(f0[a.id]||0);S.lastRep=rep}
+  {const ix=S.log.indexOf(logMark);rep.ev=(ix<0?S.log:S.log.slice(0,ix)).slice(0,30).map(l=>l.t);rep.m1=S.money;if(S.lastEval&&S.lastEval.w===abs()-1)rep.evl=1;rep.biz=bizP;for(const a of S.artists)if(rep.a[a.id])rep.a[a.id].f=a.fans-(f0[a.id]||0);S.lastRep=rep;gmReport(rep,lv0,e0)}
   act();
   setRepDay(0);
   if(awardToShow){const e=awardToShow;setAwardToShow(null);view(()=>viewAward(e))}

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { t, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
-import { diffLocales } from '../../src/i18n/check.js';
+import { t, tVi, money, setLang, getLang, initLang, langs, LANG_KEY, __setDicts } from '../../src/i18n/index.js';
+import { diffLocales, dupKeys } from '../../src/i18n/check.js';
 import { noToggle, seed, SHELL } from './helpers.js';
 import { newGame } from '../../src/state.js';
 import { ROOMS } from '../../src/data/rules.js';
@@ -173,5 +173,23 @@ describe('chooseLang', () => {
     expect(document.querySelector('#sheet h2').textContent).toContain('Language');
     chooseLang('vi');
     expect(document.querySelector('#sheet h2').textContent).toContain('Ngôn ngữ');
+  });
+  it('tVi always reads vi, never calls Math.random', () => {
+    setLang('en');
+    const spy = vi.spyOn(Math, 'random');
+    expect(tVi('top.week')).toBe('Tuần');
+    expect(t('top.week')).toBe('Week');
+    expect(tVi('top.year', { n: 3 })).toBe(t('top.year', { n: 3 }).replace('Year', 'Năm'));
+    expect(tVi('no.such.key')).toBe('no.such.key');
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+  it('dupKeys reports keys defined in two locale parts', () => {
+    expect(dupKeys([['a', { x: 1, y: 2 }], ['b', { y: 3, z: 4 }], ['c', { y: 5 }]])).toEqual([{ key: 'y', parts: ['a', 'b', 'c'] }]);
+    expect(dupKeys([['a', { x: 1 }], ['b', { y: 2 }]])).toEqual([]);
+  });
+  it('real locales have no duplicate keys across parts', () => {
+    expect(dupKeys(viL.parts)).toEqual([]);
+    expect(dupKeys(enL.parts)).toEqual([]);
   });
 });

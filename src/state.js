@@ -1,12 +1,14 @@
 import { genArtist, genPool } from './systems/artists.js';
 import { t } from './i18n/index.js';
-import { genComp, initBatches } from './systems/batches.js';
+import { genComp } from './systems/contests.js';
+import { initBatches } from './systems/batches.js';
 import { genMgrPool } from './systems/managers.js';
 import { initWorld } from './systems/market.js';
 import { genOffers } from './systems/offers.js';
 import { defaultDays } from './systems/week.js';
 import { act } from './ui/building.js';
 import { closeM } from './ui/modal.js';
+import { markFresh } from './save/storage.js';
 
 /* ================= STATE ================= */
 export let S;
@@ -15,6 +17,7 @@ export const uid=()=>S.nid++;
 export const byId=id=>S.artists.find(a=>a.id===id);
 export function addLog(t,c=''){S.log.unshift({t,c,w:`N${S.year}·T${S.week}`});if(S.log.length>80)S.log.length=80}
 export function newGame(){
+  markFresh();
   S={v:1,year:1,week:1,money:600e6,nid:1,planOn:true,managers:[],mgrPool:[],artists:[],groups:[],offers:[],films:[],events:[],log:[],partners:{},singles:[],concerts:[],awards:[],pool:[]};
   S.assts=[];S.songs=[];S.fin=[];
   genPool(4);genMgrPool();
